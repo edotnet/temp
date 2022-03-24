@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import axios, { Method } from 'axios';
-axios.defaults.baseURL = 'https://api.publicapis.org/';
+axios.defaults.baseURL = 'http://localhost/';
 
 const initialState = {
   data: null,
@@ -16,7 +16,7 @@ const reducer = (state, action) => {
         loading: false,
       };
     case 'FAILURE':
-      alert('Failure');
+      console.log('Failure');
       return {
         ...state,
         error: action.payload,
@@ -32,29 +32,29 @@ const reducer = (state, action) => {
   }
 }
 
-export const useApiCall = (url, method, body = null) => {
+export const useApiCall = (url, method = 'GET', body = null, autofetch = true) => {
   const controller = new AbortController();
   const [state, dispatch] = useReducer(reducer, initialState);
   const fetch = useCallback(
-    () => {
-      dispatch({type: ActionType.ATTEMPT});
+    (url, method, body=null) => {
+      dispatch({type: 'ATTEMPT'});
       axios({
         method,
         url,
         data: body,
         signal: controller.signal,
       })
-        .then(res => dispatch({type: ActionType.SUCCESS, payload: res.data}))
-        .catch(err => dispatch({type: ActionType.FAILURE, payload: err.message}))
+        .then(res => dispatch({type: 'SUCCESS', payload: res.data}))
+        .catch(err => dispatch({type: 'FAILURE', payload: err.message}))
     },
-    [],
+    [url, method, body],
   );
   useEffect(() => {
-    fetch();
+    if (autofetch) fetch(url, method, body);
     return () => {
       controller.abort();
     }
   }, [method, url, body]);
 
-  return state;
+  return {...state, fetch};
 };

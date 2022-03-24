@@ -1,3 +1,9 @@
+import { ListDrugsFeature } from "../modules/drugbank/list-drugs/ListDrugs.feature";
+
 export const Drugbank = () => {
-  return <div>Drugbank </div>
+  return (
+    <>
+      <ListDrugsFeature />
+    </>
+  );
 }
