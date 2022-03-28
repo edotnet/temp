@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import axios, { Method } from 'axios';
-axios.defaults.baseURL = 'http://localhost/';
+axios.defaults.baseURL = 'http://prepaire.net:5000';
 
 const initialState = {
   data: null,
