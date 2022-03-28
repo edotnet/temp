@@ -14,6 +14,7 @@ const reducer = (state, action) => {
         ...state,
         data: action.payload,
         loading: false,
+        error: false,
       };
     case 'FAILURE':
       console.log('Failure');
@@ -25,6 +26,7 @@ const reducer = (state, action) => {
     case 'ATTEMPT':
       return {
         ...state,
+        error: false,
         loading: true,
       };
     default:

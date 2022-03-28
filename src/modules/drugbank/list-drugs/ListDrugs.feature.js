@@ -16,18 +16,19 @@ import ReactJson from "react-json-view";
 
 export const ListDrugsFeature = () => {
   const [search, setSearch] = useState('');
-  const [findBy, setFindBy] = useState('id');
+  const [findBy, setFindBy] = useState('query');
+  const [detail, setDetail] = useState(false);
   const {loading, data, error, fetch} = useApiCall("drugbank/query", 'GET', null, false);
   const executeSearch = () => {
     let url = "drugbank";
-    switch (findBy){
+    switch (findBy) {
       case 'id':
         url += `?id=${search}`;
         break;
       case 'name':
         url += `?name=${search}`;
         break;
-      case 'clinical_description':
+      case 'query':
         url += `/query/${encodeURIComponent(search)}`;
         break;
     }
@@ -37,19 +38,20 @@ export const ListDrugsFeature = () => {
     {
       field: 'drugbank_id',
       headerName: 'Drugbank ID',
-      width: 100
+      flex: 1,
     },
     {
       field: 'name',
       headerName: 'Drug',
-      width: 100
+      flex: 1,
     },
     {
-      field: 'smiles',
+      field: 'calculated_properties',
       headerName: 'Smiles',
-      width: 200
+      flex: 1,
+      valueFormatter: (params) => params.value.SMILES,
     },
-    {
+    /*{
       field: 'chemical_properties',
       headerName: 'Chemical Properties',
       width: 200
@@ -57,53 +59,85 @@ export const ListDrugsFeature = () => {
     {
       field: 'calculated_properties',
       headerName: 'Calculated Properties',
-      width: 200
-    },
+      width: 200,
+    },*/
   ];
-console.log(data)
-  return (
-    <Container>
-      <Box mt={2}>
-        <Box sx={{display: 'flex',  justifyContent: 'space-between', mb: 2}}>
-          <Box>
-            <FormControl component="fieldset" sx={{mt:2}}>
-              <FormLabel component="legend">Find by</FormLabel>
-              <RadioGroup row onChange={e => setFindBy(e.target.value)} value={findBy} >
-                <FormControlLabel value="id" control={<Radio />} label="Drugbank ID" />
-                <FormControlLabel value="name" control={<Radio />} label="Drugname" />
-                <FormControlLabel value="clinical_description" control={<Radio />} label="Clinical description" />
-              </RadioGroup>
-            </FormControl>
-          </Box>
-          <Box sx={{alignSelf: 'flex-end', display: 'flex'}}>
-            <TextField
-              fullWidth
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Find by clinical description, target or whatever"
-              InputProps={{
-                endAdornment: <Button variant="contained" onClick={() => executeSearch()}>Search</Button>
-              }}
-            />
-          </Box>
-        </Box>
 
-        {loading ? <div>Loading</div> : null}
-        {!loading && findBy === 'clinical_description' && data && <Box sx={{height: 200}}>
+  const renderContent = () => {
+    if (loading) {
+      return <div>Loading</div>;
+    }
+    if (error) {
+      return <div>Not found</div>;
+    }
+    if (!loading && findBy === 'query' && data) {
+      return (
+        <div style={{display: 'flex', height: '100%'}}>
+          <div style={{flexGrow: 1}}>
             <DataGrid
+              autoHeight
               rows={data || []}
               columns={columns}
               pageSize={10}
               disableSelectionClick
               getRowId={row => row.drugbank_id}
+              onRowClick={params => {
+                console.log(params)
+                setDetail(params.row)
+              }}
             />
-          </Box>
-        }
-        {!loading && findBy !== 'clinical_description' && data && <Box>
+            {detail ?
+              <Box p={2}>
+                <ReactJson src={detail} name={null} collapsed={false}/>
+              </Box> : null
+            }
+          </div>
+        </div>
+      );
+    }
+    if (!loading && findBy !== 'query' && data) {
+      return (
+        <Box>
           <ReactJson src={data} name={null} collapsed={true}/>
-        </Box>}
+        </Box>
+      );
+    }
+  }
 
+return (
+  <Container>
+    <Box mt={2}>
+      <Box sx={{display: 'flex', mb: 2, justifyContent: 'space-between'}}>
+        <Box>
+          <FormControl component="fieldset" sx={{mt: 2}}>
+            <FormLabel component="legend">Find by</FormLabel>
+            <RadioGroup row onChange={e => setFindBy(e.target.value)} value={findBy}>
+              <FormControlLabel value="id" control={<Radio/>} label="Drugbank ID"/>
+              <FormControlLabel value="name" control={<Radio/>} label="Drugname"/>
+              <FormControlLabel value="query" control={<Radio/>} label="Anything"/>
+            </RadioGroup>
+          </FormControl>
+        </Box>
+        <Box sx={{alignSelf: 'flex-end', display: 'flex', flexGrow: 1}}>
+          <TextField
+            fullWidth
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Find by clinical description, target or whatever"
+            InputProps={{
+              endAdornment: <Button variant="contained" onClick={() => executeSearch()}>Search</Button>,
+              type: 'search'
+            }}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter'){
+                executeSearch()
+              }
+            }}
+          />
+        </Box>
       </Box>
-    </Container>
-  )
+      {renderContent()}
+    </Box>
+  </Container>
+);
 }
