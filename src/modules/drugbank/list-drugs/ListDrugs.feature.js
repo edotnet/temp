@@ -1,5 +1,5 @@
 import { useApiCall } from "../../../infrastructure/hooks/useApiCall";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -21,6 +21,15 @@ export const ListDrugsFeature = () => {
   const [findBy, setFindBy] = useState('query');
   const [detail, setDetail] = useState(false);
   const {loading, data, error, fetch} = useApiCall("drugbank/query", 'GET', null, false);
+  const [rowCountState, setRowCountState] = useState(0);
+  useEffect(() => {
+    setRowCountState((prevRowCountState) =>
+      data && data.count !== undefined ? data.count : prevRowCountState,
+    );
+  }, [data, setRowCountState]);
+  useEffect(() => {
+    executeSearch();
+  }, [page])
   const options = {
     id: {
       url: `?id=${search}`,
@@ -69,7 +78,7 @@ export const ListDrugsFeature = () => {
   ];
 
   const renderContent = () => {
-    if (loading) {
+    if (loading && findBy !== 'query') {
       return <div>Loading</div>;
     }
     if (error) {
@@ -78,18 +87,22 @@ export const ListDrugsFeature = () => {
     if (!loading && findBy === 'query' && data) {
       return (
         <div style={{display: 'flex', height: '100%'}}>
-          <div style={{flexGrow: 1}}>
+          <div style={{flexGrow: 1, height: 800}}>
             <DataGrid
+              paginationMode="server"
+              loading={loading}
+              page={page}
+              autoPageSize
               autoHeight
-              rows={data || []}
+              rows={data.items || []}
               columns={columns}
-              pageSize={10}
               disableSelectionClick
               getRowId={row => row.drugbank_id}
               onRowClick={params => {
                 setDetail(params.row)
               }}
               onPageChange={(page) => setPage(page)}
+              rowCount={rowCountState}
             />
             {detail ?
               <Box p={2}>
