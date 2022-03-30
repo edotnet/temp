@@ -1,15 +1,10 @@
-import { useApiCall } from "../../../infrastructure/hooks/useApiCall";
-import { useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Container,
-  TextField
-} from "@mui/material";
+import { useState } from "react";
+import { Button, Container, Paper, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
-import { DataGrid } from '@mui/x-data-grid';
 import ReactJson from "react-json-view";
-import { FindBy } from "./FindBy.component";
 import { DrugsDataGrid } from "./DrugsDataGrid.component";
+import { ProductsDataGrid } from "./ProductsDataGrid.component";
+import { Detail } from "./Detail.component";
 
 export const ListDrugsFeature = () => {
   const [search, setSearch] = useState('');
@@ -64,12 +59,17 @@ export const ListDrugsFeature = () => {
         </Box>
         <div style={{display: 'flex', height: '100%'}}>
           <div style={{flexGrow: 1, height: 800}}>
-            <DrugsDataGrid onRowClick={params => setDetail(params.row)} url={url}/>
-            {detail ?
-              <Box p={2}>
-                <ReactJson src={detail} name={null} collapsed={false}/>
-              </Box> : null
-            }
+            <Box pt={4}>
+              <Paper elevation={8}>
+                <DrugsDataGrid onRowClick={params => setDetail(params.row)} url={url}/>
+              </Paper>
+            </Box>
+            <Box pt={4}>
+              <Paper elevation={8}>
+                <ProductsDataGrid onRowClick={params => setDetail(params.row)} url={url}/>
+              </Paper>
+            </Box>
+            {detail && <Detail detail={detail}/>}
           </div>
         </div>
       </Box>
