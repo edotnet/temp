@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Button, Container, Paper, TextField } from "@mui/material";
+import { Button, Container, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
-import ReactJson from "react-json-view";
 import { DrugsDataGrid } from "./DrugsDataGrid.component";
 import { ProductsDataGrid } from "./ProductsDataGrid.component";
 import { Detail } from "./Detail.component";
+import { Card } from "../../../infrastructure/components/Card";
 
 export const ListDrugsFeature = () => {
   const [search, setSearch] = useState('');
@@ -27,6 +27,7 @@ export const ListDrugsFeature = () => {
   }
 
   const executeSearch = () => {
+    setDetail(false);
     setUrl(options[findBy].url);
   }
 
@@ -59,16 +60,12 @@ export const ListDrugsFeature = () => {
         </Box>
         <div style={{display: 'flex', height: '100%'}}>
           <div style={{flexGrow: 1, height: 800}}>
-            <Box pt={4}>
-              <Paper elevation={8}>
-                <DrugsDataGrid onRowClick={params => setDetail(params.row)} url={url}/>
-              </Paper>
-            </Box>
-            <Box pt={4}>
-              <Paper elevation={8}>
-                <ProductsDataGrid onRowClick={params => setDetail(params.row)} url={url}/>
-              </Paper>
-            </Box>
+            <Card>
+              <DrugsDataGrid onRowClick={params => setDetail(params.row)} url={url}/>
+            </Card>
+            <Card>
+              <ProductsDataGrid onRowClick={params => setDetail(params.row)} url={url}/>
+            </Card>
             {detail && <Detail detail={detail}/>}
           </div>
         </div>

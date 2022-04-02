@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import axios from 'axios';
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'http://prepaire.net:5000';
 
 const initialState = {
   data: null,
@@ -20,12 +20,14 @@ const reducer = (state, action) => {
       console.log('Failure');
       return {
         ...state,
+        data: null,
         error: action.payload,
         loading: false,
       };
     case 'ATTEMPT':
       return {
         ...state,
+        data: null,
         error: false,
         loading: true,
       };
