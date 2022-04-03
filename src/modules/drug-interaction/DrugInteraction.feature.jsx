@@ -7,6 +7,8 @@ import { DrugAutocomplete } from "./DrugAutocomplete";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { darken, lighten } from '@mui/material/styles';
+import { FindBy } from "./FindBy.component";
+import { SmileSearcher } from "./SmileSearcher.component";
 
 const getBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
@@ -17,6 +19,7 @@ const getHoverBackgroundColor = (color, mode) =>
 export const DrugInteraction = () => {
   const [smile1, setSmile1] = useState(null)
   const [smile2, setSmile2] = useState(null)
+
   const [errorMessage, setErrorMessage] = useState("")
   const url = `drug-interaction`;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
@@ -29,17 +32,21 @@ export const DrugInteraction = () => {
           getHoverBackgroundColor(theme.palette.success.light, theme.palette.mode),
       },
     },
+    '& .row .MuiDataGrid-cellContent': {
+      whiteSpace: "normal",
+      wordWrap: "break-word",
+    }
   }
   const columns = [
     {
       field: 'label',
       headerName: 'Interaction',
-      flex: 1,
+      flex: 1
     },
     {
       field: 'value',
       headerName: 'Value',
-      flex: 1,
+      width: 100
     },
   ]
   useEffect(() => {
@@ -53,10 +60,10 @@ export const DrugInteraction = () => {
         <Box p={4}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <DrugAutocomplete label="Drug 1" onChange={setSmile1}/>
+              <SmileSearcher onChange={setSmile1} />
             </Grid>
             <Grid item xs={6}>
-              <DrugAutocomplete label="Drug 2" onChange={setSmile2}/>
+              <SmileSearcher onChange={setSmile2} />
             </Grid>
           </Grid>
           {errorMessage.length > 0 && <div>{errorMessage}</div>}
@@ -68,10 +75,7 @@ export const DrugInteraction = () => {
               disableSelectionClick
               getRowId={row => row.label}
               getRowClassName={(params) => {
-                if (params.row.value < 90) {
-                  return '';
-                }
-                return `probability--Positive`;
+                return `row ${params.row.value > 50 ? 'probability--Positive' : ''}`;
               }}
             />
           </Box>}

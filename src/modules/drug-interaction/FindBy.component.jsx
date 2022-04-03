@@ -6,9 +6,8 @@ export function FindBy(props) {
     <FormControl component="fieldset" sx={{mt: 2}}>
       <FormLabel component="legend">Find by</FormLabel>
       <RadioGroup row onChange={(e,v) => props.onChange(v)} value={props.value}>
-        <FormControlLabel value="id" control={<Radio/>} label="Drugbank ID"/>
-        <FormControlLabel value="name" control={<Radio/>} label="Drugname"/>
-        <FormControlLabel value="query" control={<Radio/>} label="Anything"/>
+        <FormControlLabel value="drug" control={<Radio/>} label="Drug"/>
+        <FormControlLabel value="natural_product" control={<Radio/>} label="Natural product"/>
       </RadioGroup>
     </FormControl>
   );
