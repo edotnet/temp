@@ -6,6 +6,13 @@ import Container from "@mui/material/Container";
 import { DrugAutocomplete } from "./DrugAutocomplete";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
+import { darken, lighten } from '@mui/material/styles';
+
+const getBackgroundColor = (color, mode) =>
+  mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
+
+const getHoverBackgroundColor = (color, mode) =>
+  mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
 
 export const DrugInteraction = () => {
   const [smile1, setSmile1] = useState(null)
@@ -13,6 +20,16 @@ export const DrugInteraction = () => {
   const [errorMessage, setErrorMessage] = useState("")
   const url = `drug-interaction`;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
+  const customClasses = {
+    '& .probability--Positive': {
+      bgcolor: (theme) =>
+        getBackgroundColor(theme.palette.success.light, theme.palette.mode),
+      '&:hover': {
+        bgcolor: (theme) =>
+          getHoverBackgroundColor(theme.palette.success.light, theme.palette.mode),
+      },
+    },
+  }
   const columns = [
     {
       field: 'label',
@@ -43,14 +60,21 @@ export const DrugInteraction = () => {
             </Grid>
           </Grid>
           {errorMessage.length > 0 && <div>{errorMessage}</div>}
-          {data && <DataGrid
-            autoHeight
-            rows={data ?? []}
-            columns={columns}
-            disableSelectionClick
-            getRowId={row => row.label}
-            pagination={false}
-          />}
+          {data && <Box pt={2} sx={customClasses}>
+            <DataGrid
+              autoHeight
+              rows={[...data.sort((a,b) => b.value - a.value)]}
+              columns={columns}
+              disableSelectionClick
+              getRowId={row => row.label}
+              getRowClassName={(params) => {
+                if (params.row.value < 90) {
+                  return '';
+                }
+                return `probability--Positive`;
+              }}
+            />
+          </Box>}
         </Box>
       </Card>
     </Container>
