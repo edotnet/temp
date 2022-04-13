@@ -23,7 +23,7 @@ export const NaturalProductAutocomplete = ({label, onChange}) => {
       fullWidth
       renderInput={(params) => <TextField {...params} label={label} fullWidth/>}
       onChange={(event, newValue) => {
-        onChange(newValue.id)
+        onChange(newValue)
       }}
       onInputChange={(event, newValue) => {
         clearTimeout(timeout)

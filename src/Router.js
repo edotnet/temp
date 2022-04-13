@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Dashboard } from "./pages/Dashboard.page";
 import { Drugbank } from "./pages/Drugbank";
 import { DrugInteractionPage } from "./pages/DrugInteraction";
+import { DTIPage } from "./pages/DTI";
 
 export const Router = () => (
   <Routes>
@@ -12,5 +13,6 @@ export const Router = () => (
       <Route path="" element={<Drugbank/>}/>
     </Route>
     <Route path="drug-interaction" element={<DrugInteractionPage />}/>
+    <Route path="dti" element={<DTIPage />}/>
   </Routes>
 );

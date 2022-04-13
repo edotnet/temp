@@ -1,12 +1,14 @@
 import { Card } from "../../infrastructure/components/Card";
-import { Grid } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import { Chip, Grid, Stack } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { darken, lighten } from '@mui/material/styles';
-import { SmileSearcher } from "./SmileSearcher.component";
+import Container from "@mui/material/Container";
+import { useEffect, useState } from "react";
+import { TargetAutocomplete } from "./TargetAutocomplete";
+import { DrugAutocomplete } from "../drug-interaction/DrugAutocomplete";
+import { useApiCall } from "../../infrastructure/hooks/useApiCall";
+import { darken, lighten } from "@mui/material/styles";
+import Button from "@mui/material/Button";
 
 const getBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
@@ -14,13 +16,23 @@ const getBackgroundColor = (color, mode) =>
 const getHoverBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
 
-export const DrugInteraction = () => {
-  const [smile1, setSmile1] = useState(null)
-  const [smile2, setSmile2] = useState(null)
+export const DTI = () => {
+  const url = `dti`;
+  const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
 
   const [errorMessage, setErrorMessage] = useState("")
-  const url = `drug-interaction`;
-  const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
+  const [target, setTarget] = useState(null);
+  const [drugs, setDrugs] = useState([]);
+
+  const onRun = () => {
+    fetch(url, 'POST', {target: target.id, drugs: drugs.map(drug => drug.id)});
+  }
+  const onChangeDrug = (drug) => {
+    setDrugs(prevDrugs => [...prevDrugs, drug]);
+  }
+  const handleDeleteDrug = (drugId) => () => {
+    setDrugs(prevDrugs => prevDrugs.filter(drug => drug.id !== drugId));
+  }
   const customClasses = {
     '& .probability--Positive': {
       bgcolor: (theme) =>
@@ -38,30 +50,31 @@ export const DrugInteraction = () => {
   const columns = [
     {
       field: 'label',
-      headerName: 'Interaction',
+      headerName: 'Drug',
       flex: 1
     },
     {
       field: 'value',
-      headerName: 'Value',
+      headerName: 'Binding Score',
       width: 100
     },
   ]
-  useEffect(() => {
-    if (smile1 && smile2) {
-      fetch(url, 'POST', {smile1, smile2})
-    }
-  }, [smile1, smile2])
   return (
     <Container>
       <Card>
         <Box p={4}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <SmileSearcher onChange={setSmile1}/>
+              <TargetAutocomplete onChange={setTarget} label="Target"/>
+              <Box pt={2}>
+                <Button color="primary" onClick={onRun} variant="contained" disabled={!target || !drugs.length}>Run DTI</Button>
+              </Box>
             </Grid>
             <Grid item xs={6}>
-              <SmileSearcher onChange={setSmile2}/>
+              <DrugAutocomplete onChange={onChangeDrug} label="Drugs"/>
+              <Stack direction="row" spacing={1} pt={2}>
+                {drugs.map(drug => <Chip label={drug.label} variant="outlined" onDelete={handleDeleteDrug(drug.id)}/>)}
+              </Stack>
             </Grid>
           </Grid>
           {errorMessage.length > 0 && <div>{errorMessage}</div>}
@@ -71,7 +84,7 @@ export const DrugInteraction = () => {
               rows={[...data.sort((a, b) => b.value - a.value)]}
               columns={columns}
               disableSelectionClick
-              getRowId={row => row.label}
+              getRowId={row => row.name}
               getRowClassName={(params) => {
                 return `row ${params.row.value > 50 ? 'probability--Positive' : ''}`;
               }}
@@ -80,5 +93,5 @@ export const DrugInteraction = () => {
         </Box>
       </Card>
     </Container>
-  );
+  )
 }
