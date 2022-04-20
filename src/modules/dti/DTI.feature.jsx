@@ -25,7 +25,7 @@ export const DTI = () => {
   const [drugs, setDrugs] = useState([]);
 
   const onRun = () => {
-    fetch(url, 'POST', {target: target.id, drugs: drugs.map(drug => drug.id)});
+    fetch(url, 'POST', {target, drugs});
   }
   const onChangeDrug = (drug) => {
     setDrugs(prevDrugs => [...prevDrugs, drug]);
@@ -56,7 +56,7 @@ export const DTI = () => {
     {
       field: 'value',
       headerName: 'Binding Score',
-      width: 100
+      flex: 1
     },
   ]
   return (
@@ -84,7 +84,7 @@ export const DTI = () => {
               rows={[...data.sort((a, b) => b.value - a.value)]}
               columns={columns}
               disableSelectionClick
-              getRowId={row => row.name}
+              getRowId={row => row.label}
               getRowClassName={(params) => {
                 return `row ${params.row.value > 50 ? 'probability--Positive' : ''}`;
               }}

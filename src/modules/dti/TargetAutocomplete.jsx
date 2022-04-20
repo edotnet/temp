@@ -2,7 +2,7 @@ import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Autocomplete, TextField } from "@mui/material";
 
 export const TargetAutocomplete = ({label, onChange}) => {
-  const url = `drugbank/targets/query/`;
+  const url = `drugbank/target/query/`;
   const {loading, data, error, fetch} = useApiCall(url, null, null, false);
   const executeSearch = (search) => {
     fetch(`${url}${search}`, 'GET')
