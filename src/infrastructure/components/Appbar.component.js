@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-const pages = ['Drugbank', 'Drug-Interaction', 'DTI'];
+const pages = ['Drugbank', 'Categories', 'Drug-Interaction', 'DTI'];
 const settings = ['Profile', 'Logout'];
 
 export const AppBarComponent = () => {
