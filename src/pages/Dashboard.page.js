@@ -6,6 +6,8 @@ import { DrugProperties } from "../modules/dashboard/DrugProperties";
 import { DrugInteraction } from "../modules/dashboard/DrugInteraction";
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
+import { TargetAutocomplete } from "../modules/dti/TargetAutocomplete";
+import { DTI } from "../modules/dashboard/DTI";
 
 export const Dashboard = () => {
   const [molecules, setMolecules] = useState([]);
@@ -58,6 +60,7 @@ export const Dashboard = () => {
           <DrugInteraction />
         </Grid>
         <Grid item xs={3}>
+          <DTI drugs={molecules} />
         </Grid>
       </Grid>
       <Grid container spacing={2}>

@@ -1,6 +1,7 @@
 import { Chip, Paper, styled } from "@mui/material";
 import { useDrag } from "react-dnd";
 import { useState } from "react";
+import { CustomChip } from "../../infrastructure/components/CustomChip";
 
 export const MoleculeCard = ({molecule, onClick, onDelete}) => {
   const [coordinates, setCoordinates] = useState({x: 0, y:0})
@@ -16,23 +17,6 @@ export const MoleculeCard = ({molecule, onClick, onDelete}) => {
     setCoordinates({x: e.screenX, y: e.screenY})
   }
 
-  const CustomChip = styled(Chip)({
-    '&.MuiChip-root': {
-      padding: 15,
-      paddingTop: 20,
-      paddingBottom: 20,
-      backgroundColor: 'white',
-      fontWeight: 'bold',
-      justifyContent: 'space-between',
-      display: 'flex',
-      '	.MuiChip-deleteIcon': {
-        display: 'none',
-      },
-    },
-    '&.MuiChip-root:hover	.MuiChip-deleteIcon': {
-      display: 'block',
-    }
-  })
   return (
     <div ref={drag} onMouseMove={onMouseMove} style={{transform: isDragging ? `translateX(${coordinates.x}px) translateY(${coordinates.y}px)` : 'initial'}}>
       <Paper

@@ -31,7 +31,7 @@ export const DTI = () => {
     setDrugs(prevDrugs => [...prevDrugs, drug]);
   }
   const handleDeleteDrug = (drugId) => () => {
-    setDrugs(prevDrugs => prevDrugs.filter(drug => drug.id !== drugId));
+    setDrugs(prevDrugs => prevDrugs.filter(drug => drug.drugbank_id !== drugId));
   }
   const customClasses = {
     '& .probability--Positive': {
@@ -73,7 +73,7 @@ export const DTI = () => {
             <Grid item xs={6}>
               <DrugAutocomplete onChange={onChangeDrug} label="Drugs"/>
               <Stack direction="row" spacing={1} pt={2}>
-                {drugs.map(drug => <Chip label={drug.label} variant="outlined" onDelete={handleDeleteDrug(drug.id)}/>)}
+                {drugs.map(drug => <Chip label={drug.name} variant="outlined" onDelete={handleDeleteDrug(drug.drugbank_id)}/>)}
               </Stack>
             </Grid>
           </Grid>
