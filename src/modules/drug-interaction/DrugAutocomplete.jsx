@@ -1,7 +1,7 @@
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Autocomplete, TextField } from "@mui/material";
 
-export const DrugAutocomplete = ({label, onChange}) => {
+export const DrugAutocomplete = ({label, onChange, variant}) => {
   const url = `drugbank/query/`;
   const {loading, data, error, fetch} = useApiCall(url, null, null, false);
   const executeSearch = (search) => {
@@ -11,7 +11,7 @@ export const DrugAutocomplete = ({label, onChange}) => {
   const validItems = item => item.calculated_properties && item.calculated_properties.SMILES;
   const options = data ? data.items.filter(validItems)
     .map(item => ({
-      id: item.calculated_properties.SMILES,
+      id: item.drugbank_id,
       label: item.name
     })) : [];
 
@@ -21,12 +21,13 @@ export const DrugAutocomplete = ({label, onChange}) => {
       id={label}
       options={options}
       fullWidth
-      renderInput={(params) => <TextField {...params} label={label} fullWidth/>}
+      renderInput={(params) => <TextField {...params} label={label} fullWidth variant={variant ?? "outlined"}/>}
       onChange={(event, newValue) => {
         if (!newValue) {
           return;
         }
-        onChange(newValue)
+        console.log('drug', data.items.find(item => item.drugbank_id === newValue.id))
+        onChange(data.items.find(item => item.drugbank_id === newValue.id))
       }}
       onInputChange={(event, newValue) => {
         clearTimeout(timeout)

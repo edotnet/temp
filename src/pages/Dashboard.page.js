@@ -1,55 +1,65 @@
-import { UnderConstruction } from "../infrastructure/components/UnderConstruction";
-import { Autocomplete, Box, Container, Grid, TextField, Typography, Card } from "@mui/material";
-
-function MoleculeCard({ text }) {
-  return <Box sx={{borderRadius: 10, pl: 2, pr: 3, pt: 2, pb: 2, m: 2, ml: 0, backgroundColor: "white"}}>
-    <Typography>{text}</Typography>
-  </Box>;
-}
+import { Box, Grid, Paper, Typography } from "@mui/material";
+import { DrugAutocomplete } from "../modules/drug-interaction/DrugAutocomplete";
+import { useState } from "react";
+import { MoleculeCard } from "../modules/dashboard/MoleculeCard";
+import { DrugProperties } from "../modules/dashboard/DrugProperties";
+import { DrugInteraction } from "../modules/dashboard/DrugInteraction";
+import { DndProvider } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
 
 export const Dashboard = () => {
+  const [molecules, setMolecules] = useState([]);
+  const [detail, setDetail] = useState(false);
+  const removeMolecule = (molecule) => () => {
+    setMolecules(prev => prev.filter(prevMolecule => prevMolecule.drugbank_id !== molecule.drugbank_id));
+  }
+
   return (
-    <Container>
+    <DndProvider backend={HTML5Backend}>
+    <Box pl={5} pr={5}>
       <Box mt={2}>
         <Typography variant="h1" textAlign="center" color="primary">Drug Combinations</Typography>
       </Box>
       <Grid container spacing={2}>
-        <Grid item>
+        <Grid item xs={3}>
           <Grid container spacing={2}>
             <Grid item>
-              <Typography>Target Disease</Typography>
+              <Typography variant="h5">Target Disease</Typography>
               <Typography>COVID-19</Typography>
             </Grid>
             <Grid item>
-              <Typography>Drugs</Typography>
+              <Typography variant="h5">Drugs</Typography>
               <Typography>Favipiravir</Typography>
             </Grid>
           </Grid>
-
-          <Box>
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={[]}
-              sx={{width: 300}}
-              renderInput={(params) => <TextField {...params} label="Add a molecule" variant="standard"/>}
-            />
-            <Grid container spacing={2}>
-              <Grid item>
-                <MoleculeCard text="Cetuximab" />
-                <MoleculeCard text="Leuprolide"/>
-                <MoleculeCard text="Etanercept" />
-              </Grid>
-              <Grid item>
-                <MoleculeCard text="Ritonavir" />
-                <MoleculeCard text="Tamoxifen" />
-                <MoleculeCard text="Ropinirole" />
-              </Grid>
+          <Box sx={{pt: 2}}>
+            <DrugAutocomplete
+              onChange={molecule => setMolecules(prev => [...prev, molecule])}
+              label="Add Molecule"
+              variant="standard"/>
+            <Grid container spacing={4} pt={2}>
+              {molecules.map(molecule => (
+                <Grid item>
+                  <MoleculeCard
+                    molecule={molecule}
+                    onClick={() => setDetail(molecule)}
+                    onDelete={removeMolecule(molecule)}
+                  />
+                </Grid>
+              ))}
             </Grid>
           </Box>
         </Grid>
-
+        <Grid item xs={6} sx={{justifyContent: 'center', display: 'flex'}}>
+          <DrugInteraction />
+        </Grid>
+        <Grid item xs={3}>
+        </Grid>
       </Grid>
-    </Container>
+      <Grid container spacing={2}>
+        {molecules.length > 0 && <DrugProperties drug={detail}/>}
+      </Grid>
+    </Box>
+    </DndProvider>
   )
 }

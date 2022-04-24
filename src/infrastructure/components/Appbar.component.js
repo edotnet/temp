@@ -105,7 +105,7 @@ export const AppBarComponent = () => {
               <Button
                 key={page}
                 onClick={() => goTo(page)}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, display: 'block' }}
               >
                 {page}
               </Button>
@@ -114,7 +114,7 @@ export const AppBarComponent = () => {
 
           <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={() => null} sx={{ p: 0 }}>
-              <PersonOutline />
+              <PersonOutline color="primary"/>
             </IconButton>
             <IconButton onClick={() => null} sx={{ p: 0 }}>
               <TuneOutlined />
