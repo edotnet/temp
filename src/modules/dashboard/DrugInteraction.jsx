@@ -11,6 +11,13 @@ export const DrugInteraction = () => {
   const [progress, setProgress] = useState(0);
   const theme = useTheme();
   const dragHandler = (item) => {
+    if (items.includes(item)){
+      return;
+    }
+    if (items.length >= 2 ){
+      setItems([item]);
+      return;
+    }
     setItems(prev => [...prev, item])
   }
   const [{isOver}, drop] = useDrop({

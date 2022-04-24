@@ -13,10 +13,6 @@ export const Dashboard = () => {
   const [molecules, setMolecules] = useState([]);
   const [detail, setDetail] = useState(false);
   const removeMolecule = (molecule) => () => {
-    if (molecules.length >= 2) {
-      setMolecules([molecule]);
-      return;
-    }
     setMolecules(prev => prev.filter(prevMolecule => prevMolecule.drugbank_id !== molecule.drugbank_id));
   }
 
