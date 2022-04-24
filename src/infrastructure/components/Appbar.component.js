@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { PersonOutline, TuneOutlined, VerifiedUserOutlined } from "@mui/icons-material";
 
-const pages = ['Drugbank', 'Drug-Interaction', 'DTI'];
+const pages = ['Drugbank', 'Categories', 'Drug-Interaction', 'DTI'];
 const settings = ['Profile', 'Logout'];
 
 export const AppBarComponent = () => {
