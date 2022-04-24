@@ -5,7 +5,7 @@ import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { CircularProgress } from "./CirculerProgress";
 
 const url = `drug-interaction`;
-export const DrugInteraction = () => {
+export const DrugInteraction = ({onNewItems}) => {
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const [items, setItems] = useState([])
   const [progress, setProgress] = useState(0);
@@ -15,10 +15,15 @@ export const DrugInteraction = () => {
       return;
     }
     if (items.length >= 2 ){
+      onNewItems([item])
       setItems([item]);
       return;
     }
-    setItems(prev => [...prev, item])
+    setItems(prev => {
+      const newItems = [...prev, item]
+      onNewItems(newItems)
+      return newItems;
+    })
   }
   const [{isOver}, drop] = useDrop({
     accept: 'MoleculeCard',
@@ -40,13 +45,19 @@ export const DrugInteraction = () => {
     }
   }, [items])
 
+  function getMaxValue() {
+    return Math.max.apply(Math, data.map(el => el.value));
+  }
+
   useEffect(() => {
     if (loading) {
       setTimeout(() => setProgress(Math.random() * 100), 500)
     }
 
     if (!loading && data) {
-      setProgress()
+      setTimeout(() => setProgress(Math.random() * 100), 500)
+      setTimeout(() => setProgress(Math.random() * 100), 1000)
+      setTimeout(() => setProgress(getMaxValue()), 1500)
     }
   }, [loading])
 
@@ -57,7 +68,9 @@ export const DrugInteraction = () => {
     return (
       <Box sx={{p: 4, textAlign: 'center'}}>
         <CircularProgress value={progress}/>
-        <Typography>{data.find(el => el.value === Math.max.apply(Math, data.map(el => el.value))).label}</Typography>
+        <Typography>{data.find(el => el.value === getMaxValue()).label
+          .replace('#Drug1', items[0].name)
+          .replace('#Drug2', items[1].name)}</Typography>
       </Box>
     )
   }
@@ -79,7 +92,7 @@ export const DrugInteraction = () => {
         {items.length > 0 && (
           <Box pb={2}>
             <Typography>Molecules added:</Typography>
-            {items.map(item => <Typography>{item.name}</Typography>)}
+            {items.map(item => <Typography key={item.name}>{item.name}</Typography>)}
           </Box>
         )}
         {renderResult()}

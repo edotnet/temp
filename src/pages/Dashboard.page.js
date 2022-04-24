@@ -11,6 +11,7 @@ import { DTI } from "../modules/dashboard/DTI";
 
 export const Dashboard = () => {
   const [molecules, setMolecules] = useState([]);
+  const [interactingMolecules, setInteractingMolecules] = useState([]);
   const [detail, setDetail] = useState(false);
   const removeMolecule = (molecule) => () => {
     setMolecules(prev => prev.filter(prevMolecule => prevMolecule.drugbank_id !== molecule.drugbank_id));
@@ -41,11 +42,12 @@ export const Dashboard = () => {
               variant="standard"/>
             <Grid container spacing={4} pt={2}>
               {molecules.map(molecule => (
-                <Grid item>
+                <Grid item key={molecule.drugbank_id}>
                   <MoleculeCard
                     molecule={molecule}
                     onClick={() => setDetail(molecule)}
                     onDelete={removeMolecule(molecule)}
+                    selected={interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)}
                   />
                 </Grid>
               ))}
@@ -53,7 +55,7 @@ export const Dashboard = () => {
           </Box>
         </Grid>
         <Grid item xs={6} sx={{justifyContent: 'center', display: 'flex'}}>
-          <DrugInteraction />
+          <DrugInteraction onNewItems={setInteractingMolecules} />
         </Grid>
         <Grid item xs={3}>
           <DTI drugs={molecules} />

@@ -1,9 +1,9 @@
-import { Chip, Paper, styled } from "@mui/material";
+import { Chip, Paper, styled, useTheme } from "@mui/material";
 import { useDrag } from "react-dnd";
 import { useState } from "react";
 import { CustomChip } from "../../infrastructure/components/CustomChip";
 
-export const MoleculeCard = ({molecule, onClick, onDelete}) => {
+export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
   const [coordinates, setCoordinates] = useState({x: 0, y:0})
   const [{isDragging, didDrop}, drag] = useDrag({
     type: 'MoleculeCard',
@@ -13,6 +13,7 @@ export const MoleculeCard = ({molecule, onClick, onDelete}) => {
       didDrop: !!monitor.didDrop(),
     })
   })
+  const theme = useTheme();
   const onMouseMove = (e) => {
     setCoordinates({x: e.screenX, y: e.screenY})
   }
@@ -21,9 +22,9 @@ export const MoleculeCard = ({molecule, onClick, onDelete}) => {
     <div ref={drag} onMouseMove={onMouseMove} style={{transform: isDragging ? `translateX(${coordinates.x}px) translateY(${coordinates.y}px)` : 'initial'}}>
       <Paper
         elevation={15}
-        color="primary"
-        sx={{borderRadius: 10, backgroundColor: didDrop? 'green' : 'white'}}>
+        sx={{borderRadius: 10, }}>
         <CustomChip
+          style={{backgroundColor: selected ? theme.palette.primary.main : 'white', color: selected ? 'white' : theme.palette.primary.main}}
           onClick={onClick}
           onDelete={onDelete}
           label={molecule.name}
