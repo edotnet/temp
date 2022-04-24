@@ -1,9 +1,9 @@
-import { Box, CircularProgress as MCriculerProgress, Typography } from "@mui/material";
+import { Box, CircularProgress as MCriculerProgress, Paper, Typography } from "@mui/material";
 
 export const CircularProgress = (props) => {
   return (
     <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-      <MCriculerProgress variant="determinate" {...props} />
+      <MCriculerProgress variant="determinate" color="primary" {...props} />
       <Box
         sx={{
           top: 0,
@@ -16,9 +16,9 @@ export const CircularProgress = (props) => {
           justifyContent: 'center',
         }}
       >
-        <Typography variant="caption" component="div" color="text.secondary">
-          {`${Math.round(props.value)}%`}
-        </Typography>
+          <Typography variant="caption" component="div" color="text.secondary">
+            {`${Math.round(props.value)}%`}
+          </Typography>
       </Box>
     </Box>
   );

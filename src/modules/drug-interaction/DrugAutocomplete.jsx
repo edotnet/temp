@@ -26,7 +26,6 @@ export const DrugAutocomplete = ({label, onChange, variant}) => {
         if (!newValue) {
           return;
         }
-        console.log('drug', data.items.find(item => item.drugbank_id === newValue.id))
         onChange(data.items.find(item => item.drugbank_id === newValue.id))
       }}
       onInputChange={(event, newValue) => {

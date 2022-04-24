@@ -9,7 +9,7 @@ export const DrugInteraction = () => {
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const [items, setItems] = useState([])
   const [progress, setProgress] = useState(0);
-
+  const theme = useTheme();
   const dragHandler = (item) => {
     setItems(prev => [...prev, item])
   }
@@ -20,7 +20,6 @@ export const DrugInteraction = () => {
       isOver: !!monitor.isOver()
     })
   })
-  const theme = useTheme();
 
   useEffect(() => {
     if (items.length === 2) {
@@ -34,10 +33,32 @@ export const DrugInteraction = () => {
     }
   }, [items])
 
+  useEffect(() => {
+    if (loading) {
+      setTimeout(() => setProgress(Math.random() * 100), 500)
+    }
+
+    if (!loading && data) {
+      setProgress()
+    }
+  }, [loading])
+
+  const renderResult = () => {
+    if (items.length !== 2 || !data || !data.length) {
+      return null;
+    }
+    return (
+      <Box sx={{p: 4, textAlign: 'center'}}>
+        <CircularProgress value={progress}/>
+        <Typography>{data.find(el => el.value === Math.max.apply(Math, data.map(el => el.value))).label}</Typography>
+      </Box>
+    )
+  }
+
   return (
     <Box pt={3} ref={drop}>
       <Paper sx={{
-        border: isOver ? '5px solid blue' : `3px dotted ${theme.palette.primary.main}`,
+        border: `${isOver ? '5px solid' : '3px dotted'} ${theme.palette.primary.main}`,
         width: 500,
         height: 500,
         flexGrow: 1,
@@ -54,7 +75,7 @@ export const DrugInteraction = () => {
             {items.map(item => <Typography>{item.name}</Typography>)}
           </Box>
         )}
-        {items.length === 2 && data && data.length && <CircularProgress value={Math.max.apply(Math, data.map(el => el.value))}/>}
+        {renderResult()}
       </Paper>
     </Box>
   );

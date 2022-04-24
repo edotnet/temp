@@ -1,4 +1,5 @@
 import { Box, CardContent, CardHeader, Grid, Paper, Typography } from "@mui/material";
+import {Fragment} from 'react';
 
 const keys = [
   {
@@ -64,14 +65,14 @@ export const DrugProperties = ({drug}) => {
           <Typography variant="h5" gutterBottom component="div">Drug Properties</Typography>
           <Grid container spacing={1}>
             {keys.map(key => (
-              <>
+              <Fragment key={key.title}>
                 <Grid item xs={7}>
                   <Typography>{key.title}</Typography>
                 </Grid>
                 <Grid item xs={4}>
                   <Typography>{fetchFromObject(drug, key.key)}</Typography>
                 </Grid>
-              </>
+              </Fragment>
             ))}
           </Grid>
         </CardContent>
