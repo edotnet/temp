@@ -17,7 +17,7 @@ export const DTI = ({drugs}) => {
     if (drugs.length){
       fetch(url, 'POST', {target, drugs});
     }
-  }, [target])
+  }, [target, drugs])
   return (
     <>
       <Typography variant="h5">Target Interaction</Typography>

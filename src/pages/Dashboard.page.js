@@ -34,7 +34,12 @@ export const Dashboard = () => {
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h5">Drugs</Typography>
-              <CategoryAutocomplete label="Without filter" onChange={setCategory} variant="standard" onEmpty={() => setCategory(null)}/>
+              <CategoryAutocomplete
+                label="Without filter"
+                onChange={setCategory}
+                onEmpty={() => setCategory(null)}
+                variant="standard"
+              />
             </Grid>
           </Grid>
           <Box sx={{pt: 2}}>
