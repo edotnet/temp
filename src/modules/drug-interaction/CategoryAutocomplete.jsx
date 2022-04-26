@@ -1,15 +1,14 @@
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Autocomplete } from "../../infrastructure/components/Autocomplete";
 
-export const DrugAutocomplete = ({label, onChange, variant}) => {
-  const url = `drugbank/query/`;
+export const CategoryAutocomplete = ({label, onChange, variant}) => {
+  const url = `drugbank/category/query/`;
   const {loading, data, error, fetch} = useApiCall(url, null, null, false);
   const executeSearch = (search) => {
     fetch(`${url}${search}?page=0`, 'GET')
   }
-  const validItems = item => item.calculated_properties && item.calculated_properties.SMILES;
-  const options = data ? data.items.filter(validItems)
-    .map(item => ({
+
+  const options = data ? data.items.map(item => ({
       id: item.drugbank_id,
       label: item.name
     })) : [];

@@ -1,5 +1,5 @@
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete } from "../../infrastructure/components/Autocomplete";
 
 export const NaturalProductAutocomplete = ({label, onChange}) => {
   const url = `natural_products/query/`;
@@ -17,22 +17,12 @@ export const NaturalProductAutocomplete = ({label, onChange}) => {
 
   return (
     <Autocomplete
-      disablePortal
-      id={label}
+      onChange={newValue => onChange(newValue.id)}
+      onInputChange={newValue => executeSearch(newValue)}
       options={options}
-      fullWidth
-      renderInput={(params) => <TextField {...params} label={label} fullWidth/>}
-      onChange={(event, newValue) => {
-        onChange(newValue)
-      }}
-      onInputChange={(event, newValue) => {
-        clearTimeout(timeout)
-        timeout = setTimeout(() => {
-          executeSearch(newValue)
-        }, 700)
-      }}
-      clearOnBlur={false}
       loading={loading}
+      label={label}
+      variant="standard"
     />
   );
 }

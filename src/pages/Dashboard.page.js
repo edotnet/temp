@@ -6,8 +6,9 @@ import { DrugProperties } from "../modules/dashboard/DrugProperties";
 import { DrugInteraction } from "../modules/dashboard/DrugInteraction";
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
-import { TargetAutocomplete } from "../modules/dti/TargetAutocomplete";
 import { DTI } from "../modules/dashboard/DTI";
+import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutocomplete";
+import { TargetDiseaseAutocomplete } from "../modules/drug-interaction/TargetAutocomplete";
 
 export const Dashboard = () => {
   const [molecules, setMolecules] = useState([]);
@@ -26,13 +27,13 @@ export const Dashboard = () => {
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Grid container spacing={2}>
-            <Grid item>
+            <Grid item xs={6}>
               <Typography variant="h5">Target Disease</Typography>
-              <Typography>COVID-19</Typography>
+              <TargetDiseaseAutocomplete label="Without filter" onChange={() => null} variant="standard"/>
             </Grid>
-            <Grid item>
+            <Grid item xs={6}>
               <Typography variant="h5">Drugs</Typography>
-              <Typography>Favipiravir</Typography>
+              <CategoryAutocomplete label="Without filter" onChange={() => null} variant="standard"/>
             </Grid>
           </Grid>
           <Box sx={{pt: 2}}>
