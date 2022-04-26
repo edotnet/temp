@@ -2,7 +2,7 @@ import { Box, Paper, Typography, useTheme } from "@mui/material";
 import { useDrop } from "react-dnd";
 import { useEffect, useState } from "react";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import { CircularProgress } from "./CirculerProgress";
+import { CircularProgress } from "./CircularProgress";
 
 const url = `drug-interaction`;
 export const DrugInteraction = ({onNewItems}) => {
