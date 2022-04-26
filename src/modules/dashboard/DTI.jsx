@@ -14,7 +14,9 @@ export const DTI = ({drugs}) => {
       id: molecule.calculated_properties.SMILES,
       label: molecule.name,
     }));
-    fetch(url, 'POST', {target, drugs});
+    if (drugs.length){
+      fetch(url, 'POST', {target, drugs});
+    }
   }, [target])
   return (
     <>

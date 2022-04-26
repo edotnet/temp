@@ -1,7 +1,7 @@
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Autocomplete } from "../../infrastructure/components/Autocomplete";
 
-export const CategoryAutocomplete = ({label, onChange, variant}) => {
+export const CategoryAutocomplete = ({label, onChange}) => {
   const url = `drugbank/category/query/`;
   const {loading, data, error, fetch} = useApiCall(url, null, null, false);
   const executeSearch = (search) => {
@@ -15,7 +15,7 @@ export const CategoryAutocomplete = ({label, onChange, variant}) => {
 
   return (
     <Autocomplete
-      onChange={newValue => onChange(data.items.find(item => item.drugbank_id === newValue.id))}
+      onChange={newValue => onChange(newValue.id)}
       onInputChange={newValue => executeSearch(newValue)}
       options={options}
       loading={loading}

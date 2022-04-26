@@ -1,10 +1,11 @@
 import { CircularProgress, TextField } from "@mui/material";
 import { Autocomplete as MAutocomplete } from '@mui/material';
-export const Autocomplete = ({ onChange, onInputChange, label, options, loading, variant}) => {
+export const Autocomplete = ({ onChange, onEmpty, onInputChange, label, options, loading, ...rest}) => {
   let timeout = null;
 
   return (
     <MAutocomplete
+      {...rest}
       disablePortal
       id={label}
       options={options}
@@ -14,7 +15,7 @@ export const Autocomplete = ({ onChange, onInputChange, label, options, loading,
           {...params}
           label={label}
           fullWidth
-          variant={variant ?? "outlined"}
+          variant={rest.variant ?? "outlined"}
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -28,6 +29,7 @@ export const Autocomplete = ({ onChange, onInputChange, label, options, loading,
       )}
       onChange={(event, newValue) => {
         if (!newValue) {
+          onEmpty()
           return;
         }
         onChange(newValue)

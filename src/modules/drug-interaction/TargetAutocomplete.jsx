@@ -21,6 +21,7 @@ export const TargetDiseaseAutocomplete = ({label, onChange, variant}) => {
       loading={loading}
       label={label}
       variant="standard"
+      disabled
     />
   );
 }

@@ -14,6 +14,7 @@ export const Dashboard = () => {
   const [molecules, setMolecules] = useState([]);
   const [interactingMolecules, setInteractingMolecules] = useState([]);
   const [detail, setDetail] = useState(false);
+  const [category, setCategory] = useState(null);
   const removeMolecule = (molecule) => () => {
     setMolecules(prev => prev.filter(prevMolecule => prevMolecule.drugbank_id !== molecule.drugbank_id));
   }
@@ -33,14 +34,14 @@ export const Dashboard = () => {
             </Grid>
             <Grid item xs={6}>
               <Typography variant="h5">Drugs</Typography>
-              <CategoryAutocomplete label="Without filter" onChange={() => null} variant="standard"/>
+              <CategoryAutocomplete label="Without filter" onChange={setCategory} variant="standard" onEmpty={() => setCategory(null)}/>
             </Grid>
           </Grid>
           <Box sx={{pt: 2}}>
             <DrugAutocomplete
               onChange={molecule => setMolecules(prev => [...prev, molecule])}
-              label="Add Molecule"
-              variant="standard"/>
+              category={category}
+              label="Add Molecule"/>
             <Grid container spacing={4} pt={2}>
               {molecules.map(molecule => (
                 <Grid item key={molecule.drugbank_id}>
