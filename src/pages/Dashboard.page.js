@@ -18,6 +18,7 @@ export const Dashboard = () => {
   const [category, setCategory] = useState(null);
   const [target, setTarget] = useState(null);
   const dispatch = useEventDispatch();
+  const [key, setKey] = useState(Math.random());
   const removeMolecule = (molecule) => () => {
     setMolecules(prev => prev.filter(prevMolecule => prevMolecule.drugbank_id !== molecule.drugbank_id));
   }
@@ -28,6 +29,7 @@ export const Dashboard = () => {
     setInteractingMolecules([]);
     setMolecules([]);
     setTarget('');
+    setKey(Math.random())
     dispatch(EventTypes.DASHBOARD.RESET, null);
   }
 
@@ -47,6 +49,7 @@ export const Dashboard = () => {
             <Grid item xs={12}>
               <Typography variant="h5">Category</Typography>
               <CategoryAutocomplete
+                key={key}
                 label="Without filter"
                 onChange={setCategory}
                 onEmpty={() => setCategory(null)}
