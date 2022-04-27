@@ -28,12 +28,12 @@ export const Dashboard = () => {
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            {/*<Grid item xs={6}>
               <Typography variant="h5">Target Disease</Typography>
               <TargetDiseaseAutocomplete label="Without filter" onChange={() => null} variant="standard"/>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="h5">Drugs</Typography>
+            </Grid>*/}
+            <Grid item xs={12}>
+              <Typography variant="h5">Category</Typography>
               <CategoryAutocomplete
                 label="Without filter"
                 onChange={setCategory}
