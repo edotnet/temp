@@ -23,7 +23,7 @@ export const DTI = ({drugs}) => {
       <Typography variant="h5">Target Interaction</Typography>
       <TargetAutocomplete onChange={setTarget} label="Add target"/>
       {data && data.map(el => (
-        <Paper elevation={15} sx={{borderRadius: 10, m: 2}}>
+        <Paper elevation={15} sx={{borderRadius: 10, m: 2}} key={el.label}>
           <CustomChip
             size="medium"
             label={`${el.label}: ${el.value}`} />

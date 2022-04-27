@@ -1,5 +1,6 @@
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Autocomplete } from "../../infrastructure/components/Autocomplete";
+import { useEffect, useState } from "react";
 
 export const DrugAutocomplete = ({label, onChange, category}) => {
   const url = `drugbank/query/`;
@@ -9,6 +10,12 @@ export const DrugAutocomplete = ({label, onChange, category}) => {
       fetch(`${url}${search}?page=0${category ? `&category=${category}`: ''}`, 'GET')
     }
   }
+
+  const _onChange = (newValue) => {
+    onChange(data.items.find(item => item.drugbank_id === newValue.id));
+  }
+
+
   const validItems = item => item.calculated_properties && item.calculated_properties.SMILES;
   const options = data ? data.items.filter(validItems)
     .map(item => ({
@@ -16,14 +23,18 @@ export const DrugAutocomplete = ({label, onChange, category}) => {
       label: item.name
     })) : [];
 
+
   return (
     <Autocomplete
-      onChange={newValue => onChange(data.items.find(item => item.drugbank_id === newValue.id))}
-      onInputChange={newValue => executeSearch(newValue)}
+      onChange={_onChange}
+      onInputChange={executeSearch}
       options={options}
       loading={loading}
       label={label}
       variant="standard"
+      value=""
+      clearOnBlur
+      blurOnSelect
     />
   );
 }
