@@ -21,7 +21,7 @@ export const TargetAutocomplete = ({label, onChange}) => {
       id={label}
       options={options}
       fullWidth
-      renderInput={(params) => <TextField {...params} label={label} fullWidth/>}
+      renderInput={(params) => <TextField {...params} label={label} fullWidth variant="standard"/>}
       onChange={(event, newValue) => {
         onChange(newValue)
       }}

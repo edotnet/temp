@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import axios from 'axios';
-axios.defaults.baseURL = 'http://prepaire.net:5000';
+import { Consts } from "../../config/Consts";
+axios.defaults.baseURL = Consts.API_URL;
 
 const initialState = {
   data: null,

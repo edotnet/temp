@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { Chip, Grid, Stack } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Container from "@mui/material/Container";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TargetAutocomplete } from "./TargetAutocomplete";
 import { DrugAutocomplete } from "../drug-interaction/DrugAutocomplete";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
@@ -25,13 +25,13 @@ export const DTI = () => {
   const [drugs, setDrugs] = useState([]);
 
   const onRun = () => {
-    fetch(url, 'POST', {target, drugs});
+    fetch(url, 'POST', {target, drugs: drugs.map(drug => ({id: drug.calculated_properties.SMILES, label: drug.name}))});
   }
   const onChangeDrug = (drug) => {
     setDrugs(prevDrugs => [...prevDrugs, drug]);
   }
   const handleDeleteDrug = (drugId) => () => {
-    setDrugs(prevDrugs => prevDrugs.filter(drug => drug.id !== drugId));
+    setDrugs(prevDrugs => prevDrugs.filter(drug => drug.drugbank_id !== drugId));
   }
   const customClasses = {
     '& .probability--Positive': {
@@ -67,13 +67,15 @@ export const DTI = () => {
             <Grid item xs={6}>
               <TargetAutocomplete onChange={setTarget} label="Target"/>
               <Box pt={2}>
-                <Button color="primary" onClick={onRun} variant="contained" disabled={!target || !drugs.length}>Run DTI</Button>
+                <Button color="primary" onClick={onRun} variant="contained" disabled={!target || !drugs.length}>Run
+                  DTI</Button>
               </Box>
             </Grid>
             <Grid item xs={6}>
               <DrugAutocomplete onChange={onChangeDrug} label="Drugs"/>
               <Stack direction="row" spacing={1} pt={2}>
-                {drugs.map(drug => <Chip label={drug.label} variant="outlined" onDelete={handleDeleteDrug(drug.id)}/>)}
+                {drugs.map(drug => <Chip label={drug.name} variant="outlined"
+                                         onDelete={handleDeleteDrug(drug.drugbank_id)}/>)}
               </Stack>
             </Grid>
           </Grid>

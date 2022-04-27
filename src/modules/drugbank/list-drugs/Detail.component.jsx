@@ -8,7 +8,9 @@ export const Detail = (props) => {
   const {loading, data, error, fetch} = useApiCall(`eval?smiles=null`, 'GET', null, false);
 
   useEffect(() => {
-    const smiles = "calculated_properties" in props.detail && "SMILES" in props.detail.calculated_properties ?
+    const smiles = "calculated_properties" in props.detail &&
+    props.detail.calculated_properties &&
+    "SMILES" in props.detail.calculated_properties ?
       props.detail.calculated_properties.SMILES :
       props.detail.SMILES;
     fetch(`eval?smiles=${smiles}`, 'GET');
