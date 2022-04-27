@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { DrugAutocomplete } from "../modules/drug-interaction/DrugAutocomplete";
 import { useState } from "react";
 import { MoleculeCard } from "../modules/dashboard/MoleculeCard";
@@ -8,15 +8,27 @@ import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { DTI } from "../modules/dashboard/DTI";
 import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutocomplete";
-import { TargetDiseaseAutocomplete } from "../modules/drug-interaction/TargetAutocomplete";
+import { useEventDispatch } from "../infrastructure/event-system/hooks/useEventDispatch";
+import { EventTypes } from "../infrastructure/event-system/Event.types";
 
 export const Dashboard = () => {
   const [molecules, setMolecules] = useState([]);
   const [interactingMolecules, setInteractingMolecules] = useState([]);
   const [detail, setDetail] = useState(false);
   const [category, setCategory] = useState(null);
+  const [target, setTarget] = useState(null);
+  const dispatch = useEventDispatch();
   const removeMolecule = (molecule) => () => {
     setMolecules(prev => prev.filter(prevMolecule => prevMolecule.drugbank_id !== molecule.drugbank_id));
+  }
+
+  const reset = () => {
+    setDetail(false);
+    setCategory(null);
+    setInteractingMolecules([]);
+    setMolecules([]);
+    setTarget('');
+    dispatch(EventTypes.DASHBOARD.RESET, null);
   }
 
   return (
@@ -62,15 +74,27 @@ export const Dashboard = () => {
           </Box>
         </Grid>
         <Grid item xs={6} sx={{justifyContent: 'center', display: 'flex'}}>
-          <DrugInteraction onNewItems={setInteractingMolecules} />
+          <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column'}}>
+            <DrugInteraction onNewItems={setInteractingMolecules} />
+
+          </Box>
         </Grid>
         <Grid item xs={3}>
-          <DTI drugs={molecules} />
+          <DTI molecules={molecules} setTarget={setTarget} target={target} />
         </Grid>
       </Grid>
-      <Grid container spacing={2}>
-        {molecules.length > 0 && <DrugProperties drug={detail}/>}
-      </Grid>
+
+        <Grid container spacing={2}>
+          <Grid item xs={3}>
+            {molecules.length > 0 && <DrugProperties drug={detail}/>}
+          </Grid>
+          <Grid item xs={6}>
+            <Box sx={{justifyContent: 'center', display: 'flex', mt: 3}}>
+              {(molecules.length > 0 || !!category || !!target) && <Button variant="outlined" onClick={reset}>Clear dashboard</Button>}
+            </Box>
+          </Grid>
+          <Grid item xs={3} />
+        </Grid>
     </Box>
     </DndProvider>
   )

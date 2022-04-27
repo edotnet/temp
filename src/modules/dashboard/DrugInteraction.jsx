@@ -3,6 +3,8 @@ import { useDrop } from "react-dnd";
 import { useEffect, useState } from "react";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { CircularProgress } from "./CircularProgress";
+import { EventTypes } from "../../infrastructure/event-system/Event.types";
+import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
 
 const url = `drug-interaction`;
 export const DrugInteraction = ({onNewItems}) => {
@@ -10,6 +12,10 @@ export const DrugInteraction = ({onNewItems}) => {
   const [items, setItems] = useState([])
   const [progress, setProgress] = useState(0);
   const theme = useTheme();
+
+  useEvent(EventTypes.DASHBOARD.RESET, () => {
+    setItems([]);
+  })
   const dragHandler = (item) => {
     if (items.includes(item)){
       return;
