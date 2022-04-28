@@ -29,7 +29,6 @@ export const Autocomplete = ({onChange, onEmpty, onInputChange, label, options, 
       onChange={_onChange}
       onInputChange={_onInputChange}
       loading={loading}
-      autoComplete
       renderInput={(params) => (
         <TextField
           {...params}
