@@ -1,11 +1,13 @@
-import { Box, Paper, Typography, useTheme } from "@mui/material";
+import { alpha, Box, Paper, useTheme } from "@mui/material";
 import { useDrop } from "react-dnd";
 import { useEffect, useState } from "react";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { CircularProgress } from "./CircularProgress";
 import { EventTypes } from "../../infrastructure/event-system/Event.types";
 import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
-import { Blob } from "./Blob";
+import { Blob } from "./blob/Blob";
+import { Canvas, events } from "@react-three/fiber";
+import { CameraShake, OrbitControls, OrthographicCamera } from "@react-three/drei";
 
 const url = `drug-interaction`;
 export const DrugInteraction = ({onNewItems}) => {
@@ -18,10 +20,10 @@ export const DrugInteraction = ({onNewItems}) => {
     setItems([]);
   })
   const dragHandler = (item) => {
-    if (items.includes(item)){
+    if (items.includes(item)) {
       return;
     }
-    if (items.length >= 2 ){
+    if (items.length >= 2) {
       onNewItems([item])
       setItems([item]);
       return;
@@ -82,6 +84,14 @@ export const DrugInteraction = ({onNewItems}) => {
     )
   }
 
+  const configuration = {
+    focus: 5,
+    speed: 50,
+    aperture: 1.8,
+    fov: 60,
+    curl: 0.25
+  }
+//
   return (
     <Box pt={3} ref={drop}>
       <Paper sx={{
@@ -93,8 +103,14 @@ export const DrugInteraction = ({onNewItems}) => {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
+        backgroundColor: '#252525'
       }}>
-        <Blob animated={data && progress !== getMaxValue()}/>
+        {/*camera={{ fov: 25, position: [0, 0, 6] }} orthographic linear events={events} gl={{antialias: true, alpha: true}}*/}
+        <Canvas>
+          <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} zoomSpeed={0.1} />
+          <CameraShake yawFrequency={1} maxYaw={0.05} pitchFrequency={1} maxPitch={0.05} rollFrequency={0.5} maxRoll={0.5} intensity={0.2} />
+          <Blob {...configuration}/>
+        </Canvas>
         {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
         {items.length < 2 && <Typography align="center">Drop {2 - items.length} molecules</Typography>}
