@@ -26,7 +26,7 @@ export const TargetAutocomplete = ({label, onChange, onEmpty}) => {
   return (
     <Autocomplete
       key={key}
-      onChange={newValue => onChange(newValue.id)}
+      onChange={onChange}
       onInputChange={newValue => executeSearch(newValue)}
       onEmpty={onEmpty}
       options={options}
