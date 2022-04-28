@@ -1,13 +1,21 @@
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete } from "../../infrastructure/components/Autocomplete";
+import { EventTypes } from "../../infrastructure/event-system/Event.types";
+import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
+import { useRef, useState } from "react";
 
-export const TargetAutocomplete = ({label, onChange}) => {
+export const TargetAutocomplete = ({label, onChange, onEmpty}) => {
   const url = `drugbank/target/query/`;
-  const {loading, data, error, fetch} = useApiCall(url, null, null, false);
+  const {loading, data, error, fetch, reset} = useApiCall(url, null, null, false);
+  const [key, setKey] = useState(Math.random());
+
+  useEvent(EventTypes.DASHBOARD.RESET, () => {
+    reset()
+    setKey(Math.random())
+  })
   const executeSearch = (search) => {
     fetch(`${url}${search}`, 'GET')
   }
-  let timeout = null;
 
   const options = data ? data
     .map(item => ({
@@ -17,22 +25,14 @@ export const TargetAutocomplete = ({label, onChange}) => {
 
   return (
     <Autocomplete
-      disablePortal
-      id={label}
+      key={key}
+      onChange={onChange}
+      onInputChange={newValue => executeSearch(newValue)}
+      onEmpty={onEmpty}
       options={options}
-      fullWidth
-      renderInput={(params) => <TextField {...params} label={label} fullWidth variant="standard"/>}
-      onChange={(event, newValue) => {
-        onChange(newValue)
-      }}
-      onInputChange={(event, newValue) => {
-        clearTimeout(timeout)
-        timeout = setTimeout(() => {
-          executeSearch(newValue)
-        }, 700)
-      }}
-      clearOnBlur={false}
       loading={loading}
+      label={label}
+      variant="standard"
     />
   );
 }
