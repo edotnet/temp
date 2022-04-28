@@ -7,7 +7,9 @@ import { EventTypes } from "../../infrastructure/event-system/Event.types";
 import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
 import { Blob } from "./blob/Blob";
 import { Canvas, events } from "@react-three/fiber";
-import { CameraShake, OrbitControls, OrthographicCamera } from "@react-three/drei";
+import { CameraShake, OrbitControls, OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
+import { useWindowSize } from "../../infrastructure/hooks/useWindowSize";
+import { Molecule } from "./molecule/Molecule";
 
 const url = `drug-interaction`;
 export const DrugInteraction = ({onNewItems}) => {
@@ -15,6 +17,7 @@ export const DrugInteraction = ({onNewItems}) => {
   const [items, setItems] = useState([])
   const [progress, setProgress] = useState(0);
   const theme = useTheme();
+  const {width, height} = useWindowSize();
 
   useEvent(EventTypes.DASHBOARD.RESET, () => {
     setItems([]);
@@ -86,7 +89,7 @@ export const DrugInteraction = ({onNewItems}) => {
 
   const configuration = {
     focus: 5,
-    speed: 50,
+    speed: 10,
     aperture: 1.8,
     fov: 60,
     curl: 0.25
@@ -103,13 +106,15 @@ export const DrugInteraction = ({onNewItems}) => {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        backgroundColor: '#252525'
+        backgroundColor: 'white'
       }}>
         {/*camera={{ fov: 25, position: [0, 0, 6] }} orthographic linear events={events} gl={{antialias: true, alpha: true}}*/}
         <Canvas>
           <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} zoomSpeed={0.1} />
           <CameraShake yawFrequency={1} maxYaw={0.05} pitchFrequency={1} maxPitch={0.05} rollFrequency={0.5} maxRoll={0.5} intensity={0.2} />
-          <Blob {...configuration}/>
+          <PerspectiveCamera args={[35, width/ height, 1, 1000]}>
+            <Molecule />
+          </PerspectiveCamera>
         </Canvas>
         {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
