@@ -5,6 +5,7 @@ import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { CircularProgress } from "./CircularProgress";
 import { EventTypes } from "../../infrastructure/event-system/Event.types";
 import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
+import { Blob } from "./Blob";
 
 const url = `drug-interaction`;
 export const DrugInteraction = ({onNewItems}) => {
@@ -61,9 +62,9 @@ export const DrugInteraction = ({onNewItems}) => {
     }
 
     if (!loading && data) {
-      setTimeout(() => setProgress(Math.random() * 100), 500)
-      setTimeout(() => setProgress(Math.random() * 100), 1000)
-      setTimeout(() => setProgress(getMaxValue()), 1500)
+      setTimeout(() => setProgress(Math.random() * 100), 100)
+      setTimeout(() => setProgress(Math.random() * 100), 2000)
+      setTimeout(() => setProgress(getMaxValue()), 3000)
     }
   }, [loading])
 
@@ -74,9 +75,9 @@ export const DrugInteraction = ({onNewItems}) => {
     return (
       <Box sx={{p: 4, textAlign: 'center'}}>
         <CircularProgress value={progress}/>
-        <Typography>{data.find(el => el.value === getMaxValue()).label
+        {/*<Typography>{data.find(el => el.value === getMaxValue()).label
           .replace('#Drug1', items[0].name)
-          .replace('#Drug2', items[1].name)}</Typography>
+          .replace('#Drug2', items[1].name)}</Typography>*/}
       </Box>
     )
   }
@@ -93,6 +94,8 @@ export const DrugInteraction = ({onNewItems}) => {
         justifyContent: 'center',
         flexDirection: 'column',
       }}>
+        <Blob animated={data && progress !== getMaxValue()}/>
+        {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
         {items.length < 2 && <Typography align="center">Drop {2 - items.length} molecules</Typography>}
         {items.length > 0 && (
@@ -100,8 +103,9 @@ export const DrugInteraction = ({onNewItems}) => {
             <Typography>Molecules added:</Typography>
             {items.map(item => <Typography key={item.name}>{item.name}</Typography>)}
           </Box>
-        )}
+        )}*/}
         {renderResult()}
+
       </Paper>
     </Box>
   );

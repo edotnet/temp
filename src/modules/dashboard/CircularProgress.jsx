@@ -2,8 +2,8 @@ import { Box, CircularProgress as MCriculerProgress, Paper, Typography } from "@
 
 export const CircularProgress = (props) => {
   return (
-    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-      <MCriculerProgress variant="determinate" color="primary" {...props} />
+    <Box sx={{ position: 'relative', display: 'inline-flex', borderRadius: 50, padding: 2, backgroundColor: 'white' }}>
+      <MCriculerProgress variant="determinate" color="primary" sx={{borderWidth: 2}} {...props} />
       <Box
         sx={{
           top: 0,

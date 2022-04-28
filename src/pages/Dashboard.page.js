@@ -79,7 +79,6 @@ export const Dashboard = () => {
         <Grid item xs={6} sx={{justifyContent: 'center', display: 'flex'}}>
           <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column'}}>
             <DrugInteraction onNewItems={setInteractingMolecules} />
-
           </Box>
         </Grid>
         <Grid item xs={3}>
