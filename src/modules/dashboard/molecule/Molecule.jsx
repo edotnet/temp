@@ -7,20 +7,21 @@ export const Molecule = () => {
   const renderRef = useRef()
   var options = {
     perlin: {
-      speed: 0.2,
+      //speed: 0.01,
+      speed: 0.3,
+      size: 2,
       perlins: 1.0,
-      decay: 4,
+      decay: 1.20,
+      displace: 1.00,
+      complex: 0.50,
+      waves: 3.7,
+      eqcolor: 10.0,
+      rcolor: 1.5,
+      gcolor: 1.5,
+      bcolor: 1.5,
       fragment: true,
       points: false,
-      redhell: false,
-      size: 0.7,
-      waves: 0.6,
-      complex: 1.0,
-      displace: 0.3,
-      eqcolor: 10.0,
-      rcolor: 0.62,
-      gcolor: 0.73,
-      bcolor: 1,
+      redhell: true
     },
   };
   useEffect(() => {

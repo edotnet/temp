@@ -89,7 +89,7 @@ export const DrugInteraction = ({onNewItems}) => {
 
   const configuration = {
     focus: 5,
-    speed: 10,
+    speed: 50,
     aperture: 1.8,
     fov: 60,
     curl: 0.25
@@ -97,8 +97,8 @@ export const DrugInteraction = ({onNewItems}) => {
 //
   return (
     <Box pt={3} ref={drop}>
-      <Paper sx={{
-        border: `${isOver ? '5px solid' : '3px dotted'} ${theme.palette.primary.main}`,
+      <Box sx={{
+        //border: `${isOver ? '5px solid' : '3px dotted'} ${theme.palette.primary.main}`,
         width: 500,
         height: 500,
         flexGrow: 1,
@@ -106,9 +106,10 @@ export const DrugInteraction = ({onNewItems}) => {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        backgroundColor: 'white'
+        backgroundColor: 'transparent'
       }}>
         {/*camera={{ fov: 25, position: [0, 0, 6] }} orthographic linear events={events} gl={{antialias: true, alpha: true}}*/}
+
         <Canvas>
           <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} zoomSpeed={0.1} />
           <CameraShake yawFrequency={1} maxYaw={0.05} pitchFrequency={1} maxPitch={0.05} rollFrequency={0.5} maxRoll={0.5} intensity={0.2} />
@@ -127,7 +128,7 @@ export const DrugInteraction = ({onNewItems}) => {
         )}*/}
         {renderResult()}
 
-      </Paper>
+      </Box>
     </Box>
   );
 }
