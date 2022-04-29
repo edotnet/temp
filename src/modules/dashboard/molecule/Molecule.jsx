@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { memo, useEffect, useRef } from "react";
 import './shaders/simulationMaterial';
-import { Points } from '@react-three/drei'
+import { Points } from "@react-three/drei";
 
 export const Molecule = memo((props) => {
   const set = useThree(state => state.set);
@@ -29,7 +29,7 @@ export const Molecule = memo((props) => {
       uniforms: {
         ...state.uniforms,
         ...newOptions
-      }
+      },
     }))
   }, [])
   var start = Date.now();
@@ -55,11 +55,10 @@ export const Molecule = memo((props) => {
     <group>
       <mesh>
         <simulationMaterial ref={renderRef}/>
-        <icosahedronBufferGeometry args={[2,6]} />
+        <icosahedronBufferGeometry args={[2, 10]} />
         <Points>
           <icosahedronBufferGeometry args={[2.3, 2]} />
         </Points>
-
       </mesh>
     </group>
   )

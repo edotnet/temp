@@ -1,7 +1,6 @@
 import { Canvas } from "@react-three/fiber";
-import { CameraShake, OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Molecule } from "./Molecule";
-import { alpha, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import { useWindowSize } from "../../../infrastructure/hooks/useWindowSize";
 
 export const MoleculeCanvas = (props) => {
@@ -12,10 +11,12 @@ export const MoleculeCanvas = (props) => {
    */
   return (
     <Box sx={{position: 'absolute', width: 500, height: 500}}>
-      <Canvas gl={{antialias: false}}>
-        <PerspectiveCamera args={[35, width/ height, 1, 1000]} /*position={[0, 0, 16]}*/>
-          <Molecule {...props} />
-        </PerspectiveCamera>
+      <Canvas gl={{antialias: true, alpha: true}}
+              shadows={true}
+              camera={{fov: 35, near: 1, far: 1000, position: [0, 0, 10]}}
+
+      >
+        <Molecule {...props} />
       </Canvas>
     </Box>
   );

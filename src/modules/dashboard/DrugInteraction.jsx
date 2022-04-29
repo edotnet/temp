@@ -74,12 +74,20 @@ export const DrugInteraction = memo(({onNewItems}) => {
     return (
       <Box sx={{p: 4, textAlign: 'center', zIndex: 10}}>
         <CircularProgress value={progress}/>
-        {/*<Paper>
-          <Typography>{data.find(el => el.value === getMaxValue()).label
-            .replace('#Drug1', items[0].name)
-            .replace('#Drug2', items[1].name)}</Typography>
-        </Paper>*/}
       </Box>
+    )
+  }
+
+  const renderTextResult = () => {
+    if (items.length !== 2 || !data || !data.length) {
+      return null;
+    }
+    return(
+      <Paper sx={{mt: 2}} elevation={8}>
+        <Typography>{data.find(el => el.value === getMaxValue()).label
+          .replace('#Drug1', items[0].name)
+          .replace('#Drug2', items[1].name)}</Typography>
+      </Paper>
     )
   }
 
@@ -109,6 +117,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
         {renderResult()}
 
       </Box>
+      {/*renderTextResult()*/}
     </Box>
   );
 })
