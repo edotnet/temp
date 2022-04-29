@@ -1,4 +1,4 @@
-import { Box, useTheme } from "@mui/material";
+import { Box, Paper, Typography, useTheme } from "@mui/material";
 import { useDrop } from "react-dnd";
 import { memo, useEffect, useState } from "react";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
@@ -12,8 +12,6 @@ export const DrugInteraction = memo(({onNewItems}) => {
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const [items, setItems] = useState([])
   const [progress, setProgress] = useState(0);
-  const theme = useTheme();
-
 
   useEvent(EventTypes.DASHBOARD.RESET, () => {
     setItems([]);
@@ -74,11 +72,13 @@ export const DrugInteraction = memo(({onNewItems}) => {
       return null;
     }
     return (
-      <Box sx={{p: 4, textAlign: 'center'}}>
+      <Box sx={{p: 4, textAlign: 'center', zIndex: 10}}>
         <CircularProgress value={progress}/>
-        {/*<Typography>{data.find(el => el.value === getMaxValue()).label
-          .replace('#Drug1', items[0].name)
-          .replace('#Drug2', items[1].name)}</Typography>*/}
+        {/*<Paper>
+          <Typography>{data.find(el => el.value === getMaxValue()).label
+            .replace('#Drug1', items[0].name)
+            .replace('#Drug2', items[1].name)}</Typography>
+        </Paper>*/}
       </Box>
     )
   }
@@ -96,7 +96,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
         flexDirection: 'column',
         backgroundColor: 'transparent'
       }}>
-        <MoleculeCanvas speed={loading || (data && progress !== getMaxValue()) ? 0.5 : 0.01}/>
+        <MoleculeCanvas speed={loading || (data && progress !== getMaxValue()) ? 0.5 : 0.4}/>
         {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
         {items.length < 2 && <Typography align="center">Drop {2 - items.length} molecules</Typography>}

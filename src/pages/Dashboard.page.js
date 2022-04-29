@@ -23,6 +23,13 @@ export const Dashboard = () => {
     setMolecules(prev => prev.filter(prevMolecule => prevMolecule.drugbank_id !== molecule.drugbank_id));
   }
 
+  const _onDrugSelected = (molecule) => {
+    if (molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)) {
+      return;
+    }
+    setMolecules(prev => [...prev, molecule])
+  }
+
   const reset = () => {
     setDetail(false);
     setCategory(null);
@@ -59,7 +66,7 @@ export const Dashboard = () => {
           </Grid>
           <Box sx={{pt: 2}}>
             <DrugAutocomplete
-              onChange={molecule => setMolecules(prev => [...prev, molecule])}
+              onChange={_onDrugSelected}
               category={category}
               label="Add Molecule"/>
             <Grid container spacing={4} pt={2}>

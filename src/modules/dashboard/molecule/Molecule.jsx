@@ -8,14 +8,14 @@ export const Molecule = memo(({ speed }) => {
 
   var newOptions = {
     perlin: {
-      //speed: 0.01,
-      speed: speed ?? 0.1,
-      size: 1.5,
+      speed: speed ?? 0.01,
+      //speed: springs.speed,
+      size: 1.4,
       perlins: 1.0,
       decay: 1.20,
       displace: 1.00,
       complex: 0.50,
-      waves: 3.7,
+      waves: 20,
       eqcolor: 10.0,
       rcolor: 1.5,
       gcolor: 1.5,
@@ -57,9 +57,10 @@ export const Molecule = memo(({ speed }) => {
   return (
     <group>
       <mesh>
-        <simulationMaterial ref={renderRef} />
+        <simulationMaterial ref={renderRef} >
           <icosahedronBufferGeometry args={[2,6]} />
           <icosahedronBufferGeometry args={[2.3, 2]} />
+        </simulationMaterial>
       </mesh>
     </group>
   )
