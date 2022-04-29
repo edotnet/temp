@@ -32,6 +32,11 @@ const reducer = (state, action) => {
         error: false,
         loading: true,
       };
+    case 'RESET':
+      return {
+        ...state,
+        ...initialState,
+      }
     default:
       return state;
   }
@@ -39,7 +44,7 @@ const reducer = (state, action) => {
 
 export const useApiCall = (url, method = 'GET', body = null, autofetch = true) => {
   const controller = new AbortController();
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState, () => {});
   const fetch = useCallback(
     (url, method, body=null) => {
       dispatch({type: 'ATTEMPT'});
@@ -54,6 +59,9 @@ export const useApiCall = (url, method = 'GET', body = null, autofetch = true) =
     },
     [url, method, body],
   );
+  const reset = () => {
+    dispatch({type: 'RESET'});
+  }
   useEffect(() => {
     if (autofetch) fetch(url, method, body);
     return () => {
@@ -61,5 +69,5 @@ export const useApiCall = (url, method = 'GET', body = null, autofetch = true) =
     }
   }, [method, url, body]);
 
-  return {...state, fetch};
+  return {...state, fetch, reset};
 };

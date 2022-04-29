@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CustomChip } from "../../infrastructure/components/CustomChip";
 
 export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
-  const [coordinates, setCoordinates] = useState({x: 0, y:0})
+
   const [{isDragging, didDrop}, drag] = useDrag({
     type: 'MoleculeCard',
     item: molecule,
@@ -14,12 +14,9 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
     })
   })
   const theme = useTheme();
-  const onMouseMove = (e) => {
-    setCoordinates({x: e.screenX, y: e.screenY})
-  }
 
   return (
-    <div ref={drag} onMouseMove={onMouseMove} style={{transform: isDragging ? `translateX(${coordinates.x}px) translateY(${coordinates.y}px)` : 'initial'}}>
+    <div ref={drag} style={{display: isDragging ? 'none' : 'block'}}>
       <Paper
         elevation={15}
         sx={{borderRadius: 10, }}>

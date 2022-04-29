@@ -1,12 +1,15 @@
 import './App.css';
 import { Router } from "./Router";
 import { CssBaseline } from "@mui/material";
+import { EventEmitter } from "./infrastructure/event-system/EventEmitter";
 
 function App() {
   return (
     <>
-      <CssBaseline />
-      <Router/>
+      <EventEmitter>
+        <CssBaseline />
+        <Router/>
+      </EventEmitter>
     </>
   );
 }
