@@ -9,6 +9,7 @@ import { HTML5Backend } from "react-dnd-html5-backend"
 import { DTI } from "../modules/dashboard/DTI";
 import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutocomplete";
 import { TargetDiseaseAutocomplete } from "../modules/drug-interaction/TargetAutocomplete";
+import { AppBarComponent } from "../infrastructure/components/Appbar.component";
 
 export const Dashboard = () => {
   const [molecules, setMolecules] = useState([]);
@@ -20,6 +21,8 @@ export const Dashboard = () => {
   }
 
   return (
+    <>
+    <AppBarComponent/> 
     <DndProvider backend={HTML5Backend}>
     <Box pl={5} pr={5}>
       <Box mt={2}>
@@ -73,5 +76,6 @@ export const Dashboard = () => {
       </Grid>
     </Box>
     </DndProvider>
+    </>
   )
 }
