@@ -96,7 +96,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
         flexDirection: 'column',
         backgroundColor: 'transparent'
       }}>
-        <MoleculeCanvas speed={loading || (data && progress !== getMaxValue()) ? 0.5 : 0.4}/>
+        <MoleculeCanvas speed={loading || (data && progress !== getMaxValue()) ? 0.5 : 0.04}/>
         {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
         {items.length < 2 && <Typography align="center">Drop {2 - items.length} molecules</Typography>}
