@@ -8,6 +8,7 @@ import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { DTI } from "../modules/dashboard/DTI";
 import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutocomplete";
+import { AppBarComponent } from "../infrastructure/components/Appbar.component";
 import { useEventDispatch } from "../infrastructure/event-system/hooks/useEventDispatch";
 import { EventTypes } from "../infrastructure/event-system/Event.types";
 
@@ -41,6 +42,8 @@ export const Dashboard = () => {
   }
 
   return (
+    <>
+    <AppBarComponent/>
     <DndProvider backend={HTML5Backend}>
     <Box pl={5} pr={5}>
       <Box mt={2}>
@@ -106,5 +109,6 @@ export const Dashboard = () => {
         </Grid>
     </Box>
     </DndProvider>
+    </>
   )
 }
