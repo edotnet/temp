@@ -87,14 +87,7 @@ export const DrugInteraction = ({onNewItems}) => {
     )
   }
 
-  const configuration = {
-    focus: 5,
-    speed: 50,
-    aperture: 1.8,
-    fov: 60,
-    curl: 0.25
-  }
-//
+
   return (
     <Box pt={3} ref={drop}>
       <Box sx={{
@@ -109,14 +102,15 @@ export const DrugInteraction = ({onNewItems}) => {
         backgroundColor: 'transparent'
       }}>
         {/*camera={{ fov: 25, position: [0, 0, 6] }} orthographic linear events={events} gl={{antialias: true, alpha: true}}*/}
-
-        <Canvas>
-          <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} zoomSpeed={0.1} />
-          <CameraShake yawFrequency={1} maxYaw={0.05} pitchFrequency={1} maxPitch={0.05} rollFrequency={0.5} maxRoll={0.5} intensity={0.2} />
-          <PerspectiveCamera args={[35, width/ height, 1, 1000]}>
-            <Molecule />
-          </PerspectiveCamera>
-        </Canvas>
+        <Box sx={{position: 'absolute', width: 500, height: 500}}>
+          <Canvas>
+            <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} zoomSpeed={0.1} />
+            <CameraShake yawFrequency={1} maxYaw={0.05} pitchFrequency={1} maxPitch={0.05} rollFrequency={0.5} maxRoll={0.5} intensity={0.2} />
+            <PerspectiveCamera args={[35, width/ height, 1, 1000]}>
+              <Molecule options={{speed: 0.1}}/>
+            </PerspectiveCamera>
+          </Canvas>
+        </Box>
         {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
         {items.length < 2 && <Typography align="center">Drop {2 - items.length} molecules</Typography>}

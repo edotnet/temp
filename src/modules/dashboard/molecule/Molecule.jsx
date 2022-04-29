@@ -9,7 +9,7 @@ export const Molecule = () => {
     perlin: {
       //speed: 0.01,
       speed: 0.3,
-      size: 2,
+      size: 1.5,
       perlins: 1.0,
       decay: 1.20,
       displace: 1.00,
