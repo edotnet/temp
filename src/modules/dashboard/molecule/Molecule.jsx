@@ -1,11 +1,11 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import './shaders/simulationMaterial';
 
-export const Molecule = () => {
+export const Molecule = memo(({ options }) => {
   const set = useThree(state => state.set);
   const renderRef = useRef()
-  var options = {
+  var newOptions = {
     perlin: {
       //speed: 0.01,
       speed: 0.3,
@@ -21,14 +21,15 @@ export const Molecule = () => {
       bcolor: 1.5,
       fragment: true,
       points: false,
-      redhell: true
+      redhell: true,
+      ...options
     },
   };
   useEffect(() => {
     set(state => ({
       uniforms: {
         ...state.uniforms,
-        ...options
+        ...newOptions
       }
     }))
   }, [set])
@@ -37,21 +38,21 @@ export const Molecule = () => {
   useFrame((state) => {
     //console.log(renderRef.current.uniforms)
     renderRef.current.uniforms["time"].value =
-      (options.perlin.speed / 1000) * (Date.now() - start);
+      (newOptions.perlin.speed / 1000) * (Date.now() - start);
 
-    renderRef.current.uniforms["pointscale"].value = options.perlin.perlins;
-    renderRef.current.uniforms["decay"].value = options.perlin.decay;
-    renderRef.current.uniforms["size"].value = options.perlin.size;
-    renderRef.current.uniforms["displace"].value = options.perlin.displace;
-    renderRef.current.uniforms["complex"].value = options.perlin.complex;
-    renderRef.current.uniforms["waves"].value = options.perlin.waves;
-    renderRef.current.uniforms["fragment"].value = options.perlin.fragment;
+    renderRef.current.uniforms["pointscale"].value = newOptions.perlin.perlins;
+    renderRef.current.uniforms["decay"].value = newOptions.perlin.decay;
+    renderRef.current.uniforms["size"].value = newOptions.perlin.size;
+    renderRef.current.uniforms["displace"].value = newOptions.perlin.displace;
+    renderRef.current.uniforms["complex"].value = newOptions.perlin.complex;
+    renderRef.current.uniforms["waves"].value = newOptions.perlin.waves;
+    renderRef.current.uniforms["fragment"].value = newOptions.perlin.fragment;
 
-    renderRef.current.uniforms["redhell"].value = options.perlin.redhell;
-    renderRef.current.uniforms["eqcolor"].value = options.perlin.eqcolor;
-    renderRef.current.uniforms["rcolor"].value = options.perlin.rcolor;
-    renderRef.current.uniforms["gcolor"].value = options.perlin.gcolor;
-    renderRef.current.uniforms["bcolor"].value = options.perlin.bcolor;
+    renderRef.current.uniforms["redhell"].value = newOptions.perlin.redhell;
+    renderRef.current.uniforms["eqcolor"].value = newOptions.perlin.eqcolor;
+    renderRef.current.uniforms["rcolor"].value = newOptions.perlin.rcolor;
+    renderRef.current.uniforms["gcolor"].value = newOptions.perlin.gcolor;
+    renderRef.current.uniforms["bcolor"].value = newOptions.perlin.bcolor;
   })
   return (
     <group>
@@ -62,4 +63,4 @@ export const Molecule = () => {
       </mesh>
     </group>
   )
-}
+})

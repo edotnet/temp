@@ -1,15 +1,11 @@
-import { alpha, Box, Paper, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { useDrop } from "react-dnd";
 import { useEffect, useState } from "react";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { CircularProgress } from "./CircularProgress";
 import { EventTypes } from "../../infrastructure/event-system/Event.types";
 import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
-import { Blob } from "./blob/Blob";
-import { Canvas, events } from "@react-three/fiber";
-import { CameraShake, OrbitControls, OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
-import { useWindowSize } from "../../infrastructure/hooks/useWindowSize";
-import { Molecule } from "./molecule/Molecule";
+import { MoleculeCanvas } from "./molecule/Canvas";
 
 const url = `drug-interaction`;
 export const DrugInteraction = ({onNewItems}) => {
@@ -17,7 +13,7 @@ export const DrugInteraction = ({onNewItems}) => {
   const [items, setItems] = useState([])
   const [progress, setProgress] = useState(0);
   const theme = useTheme();
-  const {width, height} = useWindowSize();
+
 
   useEvent(EventTypes.DASHBOARD.RESET, () => {
     setItems([]);
@@ -87,7 +83,6 @@ export const DrugInteraction = ({onNewItems}) => {
     )
   }
 
-
   return (
     <Box pt={3} ref={drop}>
       <Box sx={{
@@ -101,16 +96,7 @@ export const DrugInteraction = ({onNewItems}) => {
         flexDirection: 'column',
         backgroundColor: 'transparent'
       }}>
-        {/*camera={{ fov: 25, position: [0, 0, 6] }} orthographic linear events={events} gl={{antialias: true, alpha: true}}*/}
-        <Box sx={{position: 'absolute', width: 500, height: 500}}>
-          <Canvas>
-            <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} zoomSpeed={0.1} />
-            <CameraShake yawFrequency={1} maxYaw={0.05} pitchFrequency={1} maxPitch={0.05} rollFrequency={0.5} maxRoll={0.5} intensity={0.2} />
-            <PerspectiveCamera args={[35, width/ height, 1, 1000]}>
-              <Molecule options={{speed: 0.1}}/>
-            </PerspectiveCamera>
-          </Canvas>
-        </Box>
+        <MoleculeCanvas options={{speed: loading || (data && progress !== getMaxValue()) ? 1 : 0.01}}/>
         {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
         {items.length < 2 && <Typography align="center">Drop {2 - items.length} molecules</Typography>}
