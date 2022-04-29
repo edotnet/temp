@@ -55,7 +55,7 @@ export const Molecule = memo((props) => {
     <group>
       <mesh>
         <simulationMaterial ref={renderRef}/>
-        <icosahedronBufferGeometry args={[2, 10]} />
+        <icosahedronBufferGeometry args={[2, 15]} />
         <Points>
           <icosahedronBufferGeometry args={[2.3, 2]} />
         </Points>
