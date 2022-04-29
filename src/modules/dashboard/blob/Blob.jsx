@@ -69,7 +69,7 @@ export function Blob({speed, fov, aperture, focus, curl, size = 512, ...props}) 
       <points {...props}>
         <dofPointsMaterial ref={renderRef}/>
         <bufferGeometry>
-          <bufferAttribute attachObject={['attributes', 'position']}
+          <bufferAttribute attach="attributes-position"
                            count={particles.length / 3}
                            array={particles}
                            itemSize={3}/>
