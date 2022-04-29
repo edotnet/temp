@@ -1,6 +1,6 @@
 import { Box, useTheme } from "@mui/material";
 import { useDrop } from "react-dnd";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { CircularProgress } from "./CircularProgress";
 import { EventTypes } from "../../infrastructure/event-system/Event.types";
@@ -8,7 +8,7 @@ import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
 import { MoleculeCanvas } from "./molecule/Canvas";
 
 const url = `drug-interaction`;
-export const DrugInteraction = ({onNewItems}) => {
+export const DrugInteraction = memo(({onNewItems}) => {
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const [items, setItems] = useState([])
   const [progress, setProgress] = useState(0);
@@ -96,7 +96,7 @@ export const DrugInteraction = ({onNewItems}) => {
         flexDirection: 'column',
         backgroundColor: 'transparent'
       }}>
-        <MoleculeCanvas options={{speed: loading || (data && progress !== getMaxValue()) ? 1 : 0.01}}/>
+        <MoleculeCanvas speed={loading || (data && progress !== getMaxValue()) ? 0.5 : 0.01}/>
         {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
         {items.length < 2 && <Typography align="center">Drop {2 - items.length} molecules</Typography>}
@@ -111,4 +111,4 @@ export const DrugInteraction = ({onNewItems}) => {
       </Box>
     </Box>
   );
-}
+})

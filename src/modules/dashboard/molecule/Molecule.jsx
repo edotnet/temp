@@ -2,13 +2,14 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { memo, useEffect, useRef } from "react";
 import './shaders/simulationMaterial';
 
-export const Molecule = memo(({ options }) => {
+export const Molecule = memo(({ speed }) => {
   const set = useThree(state => state.set);
   const renderRef = useRef()
+
   var newOptions = {
     perlin: {
       //speed: 0.01,
-      speed: 0.3,
+      speed: speed ?? 0.1,
       size: 1.5,
       perlins: 1.0,
       decay: 1.20,
@@ -22,7 +23,6 @@ export const Molecule = memo(({ options }) => {
       fragment: true,
       points: false,
       redhell: true,
-      ...options
     },
   };
   useEffect(() => {
