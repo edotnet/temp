@@ -2,22 +2,27 @@ import { Paper, Typography } from "@mui/material";
 import { TargetAutocomplete } from "../dti/TargetAutocomplete";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from "react";
-import { MoleculeCard } from "./MoleculeCard";
 import { CustomChip } from "../../infrastructure/components/CustomChip";
+import { EventTypes } from "../../infrastructure/event-system/Event.types";
+import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
 
-export const DTI = ({drugs}) => {
+export const DTI = ({molecules, setTarget, target}) => {
   const url = '/dti'
-  const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
-  const [target, setTarget] = useState('');
+  const {loading, data, error, fetch, reset} = useApiCall(url, 'POST', null, false);
+
+  useEvent(EventTypes.DASHBOARD.RESET, () => {
+    reset();
+  })
+
   useEffect(() => {
-    drugs = drugs.map(molecule => ({
+    molecules = molecules.map(molecule => ({
       id: molecule.calculated_properties.SMILES,
       label: molecule.name,
     }));
-    if (drugs.length){
-      fetch(url, 'POST', {target, drugs});
+    if (molecules.length){
+      fetch(url, 'POST', {target, drugs: molecules});
     }
-  }, [target, drugs])
+  }, [target, molecules])
   return (
     <>
       <Typography variant="h5">Target Interaction</Typography>
