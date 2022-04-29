@@ -57,10 +57,9 @@ export const Dashboard = () => {
               <TargetDiseaseAutocomplete label="Without filter" onChange={() => null} variant="standard"/>
             </Grid>*/}
             <Grid item xs={12}>
-              <Typography variant="h5">Category</Typography>
+              <Typography variant="h5">Drug Category</Typography>
               <CategoryAutocomplete
                 key={key}
-                label="Without filter"
                 onChange={setCategory}
                 onEmpty={() => setCategory(null)}
                 variant="standard"
