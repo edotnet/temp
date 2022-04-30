@@ -115,7 +115,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
         justifyContent: 'center',
         flexDirection: 'column',
         background: `url(${BlobCircle})`,
-        backgroundWidth: 'contain'
+        backgroundSize: 'cover'
       }} id="blob-circle">
 
         <MoleculeCanvas speed={calculateSpeed()}/>
