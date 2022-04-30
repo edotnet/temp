@@ -5,6 +5,7 @@ import { useEffect, useMemo } from "react";
 import InfoProtein from '../../assets/info-protein.png';
 import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 import { Hr } from "../../infrastructure/components/Hr.component";
+import { useDashboardContext } from "./context/useDashboarContext";
 
 const Graph = ({ width }) => {
   const rest = 100 - width*10;
@@ -18,12 +19,14 @@ const Graph = ({ width }) => {
   )
 }
 
-export const DTI = ({molecules, setTarget, target}) => {
+export const DTI = () => {
+  const { state, dispatch} = useDashboardContext();
+  const {protein} = state;
   const url = '/dti'
   const {data, fetch} = useApiCall(url, 'POST', null, false);
 
   const result = useMemo( () => {
-    if (!data || !target) {
+    if (!data || !protein) {
       return null;
     }
 
@@ -36,7 +39,7 @@ export const DTI = ({molecules, setTarget, target}) => {
             </Avatar>
             <Box pl={2}>
               <Typography sx={{fontSize: 15, fontWeight: 500}}>Target Interaction, protein:</Typography>
-              <Typography sx={{fontSize: 18}}>{target.label}</Typography>
+              <Typography sx={{fontSize: 18}}>{protein.label}</Typography>
             </Box>
           </Box>
           <Hr/>
@@ -71,21 +74,25 @@ export const DTI = ({molecules, setTarget, target}) => {
         </Box>
       </ModalPaper>
     )
-  }, [data, target]);
+  }, [data, protein]);
+
+  const handleChange = (protein) => {
+    dispatch({type:'addProtein', payload: protein})
+  }
 
   useEffect(() => {
-    molecules = molecules.map(molecule => ({
+    const molecules = state.molecules.map(molecule => ({
       id: molecule.calculated_properties.SMILES,
       label: molecule.name,
     }));
-    if (molecules.length && target) {
-      fetch(url, 'POST', {target, drugs: molecules});
+    if (molecules.length && protein) {
+      fetch(url, 'POST', {target: protein, drugs: molecules});
     }
-  }, [target, molecules])
+  }, [protein, state.molecules])
   return (
     <>
       <Typography variant="h5">Target Interaction</Typography>
-      <TargetAutocomplete onChange={setTarget} label="Add target"/>
+      <TargetAutocomplete onChange={handleChange} label="Add target"/>
       <Box pt={3}>
         {result}
       </Box>

@@ -6,9 +6,10 @@ import { Points } from "@react-three/drei";
 export const Molecule = memo((props) => {
   const set = useThree(state => state.set);
   const renderRef = useRef()
+  const startRef = useRef(Date.now());
 
   const newOptions = {
-    speed: 0.04,
+    speed: props.speed ?? 0.04,
     size: 1.4,
     perlins: 1.0,
     decay: 1.20,
@@ -32,11 +33,10 @@ export const Molecule = memo((props) => {
       },
     }))
   }, [])
-  var start = Date.now();
 
   useFrame((state) => {
     //console.log(renderRef.current.uniforms)
-    renderRef.current.uniforms["time"].value = (newOptions.speed / 1000) * (Date.now() - start);
+    renderRef.current.uniforms["time"].value = (newOptions.speed / 1000) * (Date.now() - startRef.current);
     renderRef.current.uniforms["pointscale"].value = newOptions.perlins;
     renderRef.current.uniforms["decay"].value = newOptions.decay;
     renderRef.current.uniforms["size"].value = newOptions.size;
