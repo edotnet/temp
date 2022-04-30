@@ -13,6 +13,7 @@ import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
+import { LoginAppBarComponent } from '../infrastructure/components/loginAppbar.component';
 
 
 export const Login = () => {
@@ -47,7 +48,6 @@ export const Login = () => {
       backgroundImage: `url('https://res.cloudinary.com/djpepozcx/image/upload/v1650613711/background1_pbr16m.jpg`,
       backgroundSize: 'cover',
       height: '100vh',
-      paddingTop: '50px'
     }
   };
 
@@ -63,6 +63,7 @@ export const Login = () => {
   
   return(
     <div style={styles.paperContainer}>
+      <LoginAppBarComponent/>
       <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: '#fff', padding: '20px 40px 20px 40px', borderRadius: '40px', height: '615px', position: 'relative'}}>
