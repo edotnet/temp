@@ -7,6 +7,7 @@ import { EventTypes } from "../../infrastructure/event-system/Event.types";
 import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
 import { MoleculeCanvas } from "./molecule/Canvas";
 import BlobCircle from "../../assets/svg/blob-circle.svg";
+import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 
 const url = `drug-interaction`;
 export const DrugInteraction = memo(({onNewItems}) => {
@@ -55,13 +56,14 @@ export const DrugInteraction = memo(({onNewItems}) => {
   const getMaxValue = useCallback(() => {
     return Math.max.apply(Math, data.map(el => el.value));
   }, [data]);
-
+  let timeout = null;
   useEffect(() => {
     if (loading) {
-      setTimeout(() => setProgress(Math.random() * 100), 500)
+      timeout = setTimeout(() => setProgress(Math.random() * 100), 500)
     }
 
     if (!loading && data) {
+      clearTimeout(timeout);
       setTimeout(() => setProgress(Math.random() * 100), 100)
       setTimeout(() => setProgress(Math.random() * 100), 2000)
       setTimeout(() => setProgress(getMaxValue()), 3000)
@@ -84,13 +86,13 @@ export const DrugInteraction = memo(({onNewItems}) => {
       return null;
     }
     return(
-      <Paper sx={{p: 8, bottom: 0, position: 'absolute', maxWidth: 402}} elevation={8}>
+      <ModalPaper sx={{p: 8, bottom: 0, position: 'absolute', maxWidth: 402}} elevation={8}>
         {items.map(item => <Typography>Drug added: {item.name}</Typography>)}
         {data && data.length > 0 && items.length === 2 && getMaxValue() === progress &&
         <Typography>{data.find(el => el.value === getMaxValue()).label
           .replace('#Drug1', items[0].name)
           .replace('#Drug2', items[1].name)}</Typography> }
-      </Paper>
+      </ModalPaper>
     )
   }
   const calculateSpeed = useCallback(() => {

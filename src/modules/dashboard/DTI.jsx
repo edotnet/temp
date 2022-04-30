@@ -3,6 +3,7 @@ import { TargetAutocomplete } from "../dti/TargetAutocomplete";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useMemo } from "react";
 import InfoProtein from '../../assets/info-protein.png';
+import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 
 const Graph = ({ width }) => {
   const rest = 100 - width*10;
@@ -25,11 +26,7 @@ export const DTI = ({molecules, setTarget, target}) => {
     }
 
     return (
-      <Paper elevation={15} sx={{
-        borderRadius: 5,
-        backdropFilter: 'blur(28px)',
-        boxShadow: '-21px 9px 46px 0 rgba(87, 76, 153, 0.29)',
-        backgroundColor: 'rgba(255, 255, 255, 0.79)'}}>
+      <ModalPaper elevation={15}>
         <CardContent>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <Avatar>
@@ -67,7 +64,7 @@ export const DTI = ({molecules, setTarget, target}) => {
             </Grid>
           </Grid>
         </CardContent>
-      </Paper>
+      </ModalPaper>
     )
   }, [data, target]);
 
