@@ -79,7 +79,7 @@ export const DrugProperties = ({drug}) => {
                 fontSize: '13px',
                 textAlign: 'right',
                 marginTop: '5px'
-              }}>({drug.name})</Typography>
+              }}>({state.selectedMolecule.name})</Typography>
             </Grid>
           </Grid>
           <Paper sx={{height: 180, overflowY: 'auto', boxShadow: 'none'}}>

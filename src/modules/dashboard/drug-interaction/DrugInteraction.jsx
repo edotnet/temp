@@ -12,7 +12,7 @@ const url = `drug-interaction`;
 export const DrugInteraction = memo(({onNewItems}) => {
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const {state, dispatch} = useDashboardContext()
-  const {interactingMolecules, interactingMoleculesResult} = state;
+  console.log("drugInteraction",state)
   const dragHandler = (item) => {
     dispatch({type: 'addInteractingMolecule', payload: item})
   }
@@ -25,35 +25,37 @@ export const DrugInteraction = memo(({onNewItems}) => {
   })
 
   useEffect(() => {
-    if (interactingMolecules.length === 2 && !interactingMoleculesResult) {
+    if (state.interactingMolecules.length === 2 && !state.interactingMoleculesResult) {
       try {
-        const smile1 = interactingMolecules[0].calculated_properties.SMILES;
-        const smile2 = interactingMolecules[1].calculated_properties.SMILES;
+        const smile1 = state.interactingMolecules[0].calculated_properties.SMILES;
+        const smile2 = state.interactingMolecules[1].calculated_properties.SMILES;
         fetch(url, 'POST', {smile1, smile2})
       } catch (e) {
         console.log('Wrong smiles')
       }
     }
-  }, [interactingMolecules])
+  }, [state.interactingMolecules])
 
   useEffect(() => {
     if (!data) {
       return;
     }
     const maxValue = Math.max.apply(Math, data.map(el => el.value));
-    dispatch({type: 'setInteractingMoleculesResult', payload: data.find(res => res.value === maxValue)});
+    setTimeout(() => {
+      dispatch({type: 'setInteractingMoleculesResult', payload: data.find(res => res.value === maxValue)});
+    }, 2000)
   }, [data])
 
 
   const calculateSpeed = () => {
-    if (!interactingMolecules.length) {
+    if (!state.interactingMolecules.length) {
       return 0.04;
     }
-    if (interactingMolecules.length === 1) {
+    if (state.interactingMolecules.length === 1) {
       return 0.1;
     }
-    if (interactingMolecules.length === 2) {
-      if (!data) {
+    if (state.interactingMolecules.length === 2) {
+      if (!state.interactingMoleculesResult) {
         return 0.4;
       }
     }

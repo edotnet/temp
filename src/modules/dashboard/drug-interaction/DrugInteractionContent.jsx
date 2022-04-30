@@ -22,7 +22,7 @@ export const DrugInteractionContent = () => {
           <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
           <Box sx={{display: "flex", justifyContent: "space-around"}}>
             <CustomChip label={drug1.name}/>
-            <CustomChip label={drug2.name} sx={{marginLeft: 1}}/>}
+            <CustomChip label={drug2.name} sx={{marginLeft: 1}}/>
           </Box>
         </Box>
       </Box>
@@ -32,7 +32,7 @@ export const DrugInteractionContent = () => {
         {state.interactingMoleculesResult.label
           .replace("#Drug1", drug1.name)
           .replace("#Drug2", drug2.name)}
-      </Typography>}
+      </Typography>
     </ModalPaper>
   );
 }

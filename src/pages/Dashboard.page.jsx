@@ -1,6 +1,5 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { DrugAutocomplete } from "../modules/drug-interaction/DrugAutocomplete";
-import { useState } from "react";
 import { MoleculeCard } from "../modules/dashboard/MoleculeCard";
 import { DrugProperties } from "../modules/dashboard/DrugProperties";
 import { DrugInteraction } from "../modules/dashboard/drug-interaction/DrugInteraction";
@@ -15,7 +14,6 @@ import { useDashboardContext } from "../modules/dashboard/context/useDashboarCon
 export const DashboardPage = () => {
   const {state, dispatch} = useDashboardContext();
   const {molecules, category, interactingMolecules} = state;
-  const [target, setTarget] = useState(null);
 
   const setDetail = (molecule) => () => {
     dispatch({type: 'selectMolecule', payload: molecule})
@@ -84,17 +82,17 @@ export const DashboardPage = () => {
                 <Button variant="outlined" onClick={reset}>Clear</Button>}
               </Box>
               <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'row'}}>
-                <DrugInteraction />
+                <DrugInteraction/>
               </Box>
             </Grid>
             <Grid item xs={3}>
-              <DTI />
+              <DTI/>
             </Grid>
           </Grid>
 
           <Grid container spacing={2}>
             <Grid item xs={3}>
-              {molecules.length > 0 && <DrugProperties />}
+              {molecules.length > 0 && <DrugProperties/>}
             </Grid>
             <Grid item xs={6}>
 

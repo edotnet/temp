@@ -34,15 +34,13 @@ const reducer = (state, action) => {
       ...state,
       category,
     }),
-    selectMolecule: (molecule) => {
-      return {
+    selectMolecule: (molecule) => ({
         ...state,
-        selectMolecule: molecule,
-      }
-    },
+        selectedMolecule: molecule,
+    }),
     addInteractingMolecule: (molecule) => (
       state.interactingMolecules.length === 2 ||
-        state.interactingMolecules.map(mol => mol.drugbank_id === molecule.drugbank_id) ?
+        state.interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id) ?
         {...state} :
         {
           ...state,
@@ -56,7 +54,10 @@ const reducer = (state, action) => {
     }),
     setInteractingMoleculesResult: (interactingMoleculesResult) => ({
       ...state,
-      interactingMoleculesResult,
+      interactingMoleculesResult: {
+        ...interactingMoleculesResult,
+        value: interactingMoleculesResult.value.toFixed(0)
+      },
     }),
     addProtein: (protein) => ({
       ...state,
