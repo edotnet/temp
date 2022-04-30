@@ -1,6 +1,6 @@
 import { Box, Paper, Typography, useTheme } from "@mui/material";
 import { useDrop } from "react-dnd";
-import { memo, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { CircularProgress } from "./CircularProgress";
 import { EventTypes } from "../../infrastructure/event-system/Event.types";
@@ -35,7 +35,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
     accept: 'MoleculeCard',
     drop: (item, monitor) => dragHandler(item),
     collect: monitor => ({
-      isOver: !!monitor.isOver()
+      isOver: !!monitor.isOver(),
     })
   })
 
@@ -51,9 +51,9 @@ export const DrugInteraction = memo(({onNewItems}) => {
     }
   }, [items])
 
-  function getMaxValue() {
+  const getMaxValue = useCallback(() => {
     return Math.max.apply(Math, data.map(el => el.value));
-  }
+  }, [data]);
 
   useEffect(() => {
     if (loading) {
@@ -79,20 +79,30 @@ export const DrugInteraction = memo(({onNewItems}) => {
   }
 
   const renderTextResult = () => {
-    if (items.length !== 2 || !data || !data.length) {
+    if (!items.length) {
       return null;
     }
     return(
-      <Paper sx={{mt: 2}} elevation={8}>
+      <Paper sx={{p: 8, bottom: 0, position: 'absolute', maxWidth: 402}} elevation={8}>
+        {items.map(item => <Typography>Drug added: {item.name}</Typography>)}
+        {data && data.length > 0 && items.length === 2 && getMaxValue() === progress &&
         <Typography>{data.find(el => el.value === getMaxValue()).label
           .replace('#Drug1', items[0].name)
-          .replace('#Drug2', items[1].name)}</Typography>
+          .replace('#Drug2', items[1].name)}</Typography> }
       </Paper>
     )
   }
-
+  const calculateSpeed = useMemo(() => {
+    if (loading) {
+      return 0.5;
+    }
+    if (data && progress !== getMaxValue()) {
+      return 0.5
+    }
+    return 0.04;
+  }, [loading, data, progress, isOver]);
   return (
-    <Box pt={3} ref={drop}>
+    <Box pt={3} ref={drop} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <Box sx={{
         //border: `${isOver ? '5px solid' : '3px dotted'} ${theme.palette.primary.main}`,
         width: 500,
@@ -104,7 +114,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
         flexDirection: 'column',
         backgroundColor: 'transparent'
       }}>
-        <MoleculeCanvas speed={loading || (data && progress !== getMaxValue()) ? 0.5 : 0.04}/>
+        <MoleculeCanvas speed={calculateSpeed}/>
         {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
         {items.length < 2 && <Typography align="center">Drop {2 - items.length} molecules</Typography>}
@@ -115,9 +125,8 @@ export const DrugInteraction = memo(({onNewItems}) => {
           </Box>
         )}*/}
         {renderResult()}
-
       </Box>
-      {/*renderTextResult()*/}
+      {renderTextResult()}
     </Box>
   );
 })

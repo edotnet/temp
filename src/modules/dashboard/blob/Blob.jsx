@@ -32,19 +32,19 @@ export function Blob({speed, fov, aperture, focus, curl, size = 512, ...props}) 
   }, [size])
 
   // Update FBO and pointcloud every frame
-  /*useFrame((state) => {
+  useFrame((state) => {
     state.gl.setRenderTarget(target)
     state.gl.clear()
-    /*state.gl.render(scene, camera)
-    state.gl.setRenderTarget(null)*/
-    /*renderRef.current.uniforms.positions.value = target.texture
+    state.gl.render(scene, camera)
+    state.gl.setRenderTarget(null)
+    renderRef.current.uniforms.positions.value = target.texture
     renderRef.current.uniforms.uTime.value = state.clock.elapsedTime
     renderRef.current.uniforms.uFocus.value = THREE.MathUtils.lerp(renderRef.current.uniforms.uFocus.value, focus, 0.1)
     renderRef.current.uniforms.uFov.value = THREE.MathUtils.lerp(renderRef.current.uniforms.uFov.value, fov, 0.1)
     renderRef.current.uniforms.uBlur.value = THREE.MathUtils.lerp(renderRef.current.uniforms.uBlur.value, (5.6 - aperture) * 9, 0.1)
     simRef.current.uniforms.uTime.value = state.clock.elapsedTime * speed
     simRef.current.uniforms.uCurlFreq.value = THREE.MathUtils.lerp(simRef.current.uniforms.uCurlFreq.value, curl, 0.1)
-  })*/
+  })
 
   return (
     <>
@@ -53,11 +53,11 @@ export function Blob({speed, fov, aperture, focus, curl, size = 512, ...props}) 
         <mesh>
           <simulationMaterial ref={simRef}/>
           <bufferGeometry>
-            <bufferAttribute attachObject={['attributes', 'position']}
+            <bufferAttribute attach="attributes-position"
                              count={positions.length / 3}
                              array={positions}
                              itemSize={3}/>
-            <bufferAttribute attachObject={['attributes', 'uv']}
+            <bufferAttribute attach="attributes-uv"
                              count={uvs.length / 2}
                              array={uvs}
                              itemSize={2}/>
@@ -69,7 +69,7 @@ export function Blob({speed, fov, aperture, focus, curl, size = 512, ...props}) 
       <points {...props}>
         <dofPointsMaterial ref={renderRef}/>
         <bufferGeometry>
-          <bufferAttribute attachObject={['attributes', 'position']}
+          <bufferAttribute attach="attributes-position"
                            count={particles.length / 3}
                            array={particles}
                            itemSize={3}/>
