@@ -12,6 +12,7 @@ const theme = createTheme({
     }
   },
   typography: {
+    fontFamily: 'Helvetica Neue',
     h1: {
       fontFamily: 'Open Sans',
       fontWeight: 700,
@@ -21,7 +22,7 @@ const theme = createTheme({
     h6: {
       fontFamily: 'Archivo',
       fontWeight: 400,
-    }
+    },
   },
   components: {
     MuiAppBar: {
