@@ -8,7 +8,11 @@ import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { DTI } from "../modules/dashboard/DTI";
 import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutocomplete";
-import { AppBarComponent } from "../infrastructure/components/Appbar.component";
+// import { AppBarComponent } from "../infrastructure/components/Appbar.component";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import moleculeimg from '../assets/img/group-11.png';
+
 
 export const Dashboard = () => {
   const [molecules, setMolecules] = useState([]);
@@ -33,12 +37,37 @@ export const Dashboard = () => {
     setMolecules([]);
   }
 
+  const [value, setValue] = useState('druginteraction');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
-    <>
-      <AppBarComponent/>
-      <DndProvider backend={HTML5Backend}>
-        <Box pl={5} pr={5}>
-          <Box mt={2}>
+    <Box component='div' className="dashboardMain">
+      {/* <AppBarComponent/> */}
+      <Box component="div" className="dashboardcircle">
+        <Box component="img" alt="image" className="moleculeimg" src={moleculeimg}></Box>
+      </Box>
+      <Box className="dashboardheader">
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
+            <Box component="img" alt="logo" className="logoresponsive" src="https://res.cloudinary.com/djpepozcx/image/upload/v1650614723/logo_uxsjoc.png"></Box>
+          </Grid>
+          <Grid item xs={10}>
+            <Tabs value={value} onChange={handleChange} TabIndicatorProps={{ sx: { backgroundColor: '#979797', height: 2 },}} aria-label="secondary tabs example">
+                <Tab value="drugbank" label="DRUGBANK" sx={{color: '#000', fontWeight: 'bold'}} />
+                <Tab value="categories" label="CATEGORIES" sx={{color: '#000', fontWeight: 'bold'}}/>
+                <Tab value="druginteraction" label="DRUG INTERACTION" sx={{color: '#000', fontWeight: 'bold'}}/>
+                <Tab value="dti" label="DTI" sx={{color: '#000', fontWeight: 'bold'}}/>
+            </Tabs>
+          </Grid>
+        </Grid>
+      </Box>
+      {/* <AppBarComponent/> */}
+      <DndProvider backend={HTML5Backend} >
+        <Box pl={5} pr={5} className="dashboarddnd">
+          <Box>
             <Typography variant="h1" textAlign="center" color="primary">Drug Interactions</Typography>
           </Box>
           <Grid container spacing={2}>
@@ -104,6 +133,6 @@ export const Dashboard = () => {
           </Grid>
         </Box>
       </DndProvider>
-    </>
+    </Box>
   )
 }

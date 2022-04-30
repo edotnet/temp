@@ -212,3 +212,41 @@
   fill:none;stroke:url(#gradient);
   stroke-width:20;
 }
+
+.dashboardMain {
+  /* background-color: #f5f6fb;
+  background: url(../src/assets/img/group-11.png);
+  background-position: -540px -127px;
+  background-repeat: no-repeat;
+  background-size: contain; */
+
+}
+
+.dashboardcircle {
+  height: 600px;
+  width: 600px;
+  border-radius: 50%;
+  position: absolute;
+  left: -200px;
+  z-index: -1;
+  background-color: #fff;
+  top: -50px;
+}
+
+.logoresponsive {
+  max-width: 100%;
+}
+.dashboardheader {
+  padding-left: 120px;
+  padding-right: 120px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  position: absolute;
+}
+.dashboarddnd {
+  padding-top: 100px;
+}
+.moleculeimg {
+  position: absolute;
+  left: -210px;
+}
