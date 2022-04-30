@@ -36,7 +36,7 @@ export const Molecule = memo((props) => {
 
   useFrame((state) => {
     //console.log(renderRef.current.uniforms)
-    renderRef.current.uniforms["time"].value = (props.speed / 1000) * (Date.now() - start);
+    renderRef.current.uniforms["time"].value = (newOptions.speed / 1000) * (Date.now() - start);
     renderRef.current.uniforms["pointscale"].value = newOptions.perlins;
     renderRef.current.uniforms["decay"].value = newOptions.decay;
     renderRef.current.uniforms["size"].value = newOptions.size;

@@ -4,6 +4,7 @@ import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useMemo } from "react";
 import InfoProtein from '../../assets/info-protein.png';
 import { ModalPaper } from "../../infrastructure/components/ModalPaper";
+import { Hr } from "../../infrastructure/components/Hr.component";
 
 const Graph = ({ width }) => {
   const rest = 100 - width*10;
@@ -16,6 +17,7 @@ const Graph = ({ width }) => {
     }}/>
   )
 }
+
 export const DTI = ({molecules, setTarget, target}) => {
   const url = '/dti'
   const {data, fetch} = useApiCall(url, 'POST', null, false);
@@ -37,8 +39,9 @@ export const DTI = ({molecules, setTarget, target}) => {
               <Typography sx={{fontSize: 18}}>{target.label}</Typography>
             </Box>
           </Box>
-          <Box my={2} style={{border: 'dashed 1px #979797', width: '100%', height: 1}}/>
-          <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction score</Typography>
+          <Hr/>
+          <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction
+            score</Typography>
           <Grid container>
             <Grid item xs={6}>
               {data && data.map(el => (
@@ -49,12 +52,14 @@ export const DTI = ({molecules, setTarget, target}) => {
               ))}
             </Grid>
             <Grid item xs={6}>
-              <Box sx={{background: 'repeating-linear-gradient(\n' +
+              <Box sx={{
+                background: 'repeating-linear-gradient(\n' +
                   '  to right,\n' +
                   '  rgba(0, 0, 0, 0.11),\n' +
                   '  rgba(0, 0, 0, 0.11) 1px,' +
                   ' white 2px, white 20px' +
-                  '\n)'}}>
+                  '\n)'
+              }}>
                 {data && data.map(el => (
                   <Box pt={3.35}>
                     <Graph width={el.value}/>
