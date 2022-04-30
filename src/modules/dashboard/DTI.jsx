@@ -1,18 +1,12 @@
 import { Paper, Typography } from "@mui/material";
 import { TargetAutocomplete } from "../dti/TargetAutocomplete";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { CustomChip } from "../../infrastructure/components/CustomChip";
-import { EventTypes } from "../../infrastructure/event-system/Event.types";
-import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
 
 export const DTI = ({molecules, setTarget, target}) => {
   const url = '/dti'
-  const {loading, data, error, fetch, reset} = useApiCall(url, 'POST', null, false);
-
-  useEvent(EventTypes.DASHBOARD.RESET, () => {
-    reset();
-  })
+  const {data, fetch} = useApiCall(url, 'POST', null, false);
 
   useEffect(() => {
     molecules = molecules.map(molecule => ({

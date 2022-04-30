@@ -92,7 +92,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
       </Paper>
     )
   }
-  const calculateSpeed = useMemo(() => {
+  const calculateSpeed = useCallback(() => {
     if (loading) {
       return 0.5;
     }
@@ -101,6 +101,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
     }
     return 0.04;
   }, [loading, data, progress, isOver]);
+
   return (
     <Box pt={3} ref={drop} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <Box sx={{
@@ -114,7 +115,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
         flexDirection: 'column',
         backgroundColor: 'transparent'
       }}>
-        <MoleculeCanvas speed={calculateSpeed}/>
+        <MoleculeCanvas speed={calculateSpeed()}/>
         {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
         {items.length < 2 && <Typography align="center">Drop {2 - items.length} molecules</Typography>}

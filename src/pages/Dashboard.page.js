@@ -9,6 +9,8 @@ import { HTML5Backend } from "react-dnd-html5-backend"
 import { DTI } from "../modules/dashboard/DTI";
 import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutocomplete";
 import { AppBarComponent } from "../infrastructure/components/Appbar.component";
+import { useEventDispatch } from "../infrastructure/event-system/hooks/useEventDispatch";
+import { EventTypes } from "../infrastructure/event-system/Event.types";
 
 export const Dashboard = () => {
   const [molecules, setMolecules] = useState([]);
@@ -16,7 +18,7 @@ export const Dashboard = () => {
   const [detail, setDetail] = useState(false);
   const [category, setCategory] = useState(null);
   const [target, setTarget] = useState(null);
-
+  const dispatch = useEventDispatch();
   const removeMolecule = (molecule) => () => {
     setMolecules(prev => prev.filter(prevMolecule => prevMolecule.drugbank_id !== molecule.drugbank_id));
   }
@@ -30,7 +32,7 @@ export const Dashboard = () => {
 
   const reset = () => {
     setInteractingMolecules([]);
-    setMolecules([]);
+    dispatch(EventTypes.DASHBOARD.RESET, null);
   }
 
   return (
@@ -81,7 +83,7 @@ export const Dashboard = () => {
             <Grid item xs={6}
                   sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
               <Box sx={{justifyContent: 'center', display: 'flex', mt: 3}}>
-                {(molecules.length > 0 || !!category || !!target) &&
+                {interactingMolecules.length > 0 &&
                 <Button variant="outlined" onClick={reset}>Clear</Button>}
               </Box>
               <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'row'}}>
