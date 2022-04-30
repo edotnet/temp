@@ -129,7 +129,7 @@ export const Dashboard = () => {
               {molecules.length > 0 && <DrugProperties drug={detail}/>}
             </Grid>
             <Grid item xs={6}>
-
+              
             </Grid>
             <Grid item xs={3}/>
           </Grid>
