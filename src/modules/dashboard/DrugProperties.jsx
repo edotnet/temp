@@ -1,8 +1,6 @@
 import { Box, CardContent, CardHeader, Grid, Paper, Typography } from "@mui/material";
 import {Fragment} from 'react';
-
-
-
+import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 
 const keys = [
   { key: 'calculated_properties.Molecular Weight', title: 'Molecular Weight', color: '#AE2AFF'},
@@ -11,10 +9,10 @@ const keys = [
   { key: 'calculated_properties.ALOGPS.logS', title: 'LogS', color: '#0050C9' },
   { key: 'calculated_properties.ADMET.ames_toxicity.probability', title: 'AMES Toxicity', color: '#001959'},
   // { key: 'calculated_properties.Molecular Weight', title: 'Molecular mass', color: '#17D74D' },
-  // { key: 'calculated_properties.ADMET.ames_toxicity.probability', title: 'AMES tox', color: '#001959'}, 
+  // { key: 'calculated_properties.ADMET.ames_toxicity.probability', title: 'AMES tox', color: '#001959'},
   // { key: 'calculated_properties.Bioavailability', title: 'Bio Availability', color: '#FF9898'},
   // { key: 'calculated_properties.Ghose Filter', title: 'Ghose Filter', color: '#17D74D'},
-  // { key: 'calculated_properties.H Bond Acceptor Count', title: 'H Bond Acceptor Count', color: '#AE2AFF'}, 
+  // { key: 'calculated_properties.H Bond Acceptor Count', title: 'H Bond Acceptor Count', color: '#AE2AFF'},
   // { key: 'calculated_properties.H Bond Donor Count', title: 'H Bond Donor Count', color: '#0050C9' },
   // { key: 'calculated_properties.MDDR-Like Rule', title: 'MDDR-Like Rule', color: '#001959'},
   // { key: 'calculated_properties.Monoisotopic Weight', title: 'Monoisotopic Weight', color: '#0050C9'},
@@ -50,18 +48,17 @@ export const DrugProperties = (
     if (!drug) {
       return (
         <Box>
-          <Paper elevation={2} sx={{ justifyContent: 'center', alignItems: 'center', width: 450, height: 251, display: 'flex', flexGrow: 1, marginBottom: '50px'}}>
+          <ModalPaper elevation={2} sx={{ justifyContent: 'center', alignItems: 'center', width: 450, height: 251, display: 'flex', flexGrow: 1, marginBottom: '50px'}}>
             <Typography>Click a drug</Typography>
-          </Paper>
+          </ModalPaper>
         </Box>
       )
     }
-
     return (
       <Box>
 
-        <Paper elevation={2} sx={{  width: 450, height: 271, marginBottom: '50px'}}>
-          <CardContent sx = {{padding: '16px 5px 16px 16px'}}>
+        <ModalPaper elevation={2} sx={{  width: 450, height: 271, marginBottom: '50px'}}>
+          <Box sx = {{padding: '16px 5px 16px 16px'}}>
             <Grid container sx= {{marginBottom: '5px'}}>
               <Grid item xs={5}>
                 <Typography variant="h5" sx={{color:'#383874', 'marginBottom': '20px', position: 'relative'}} gutterBottom component="div"> Drug Properties </Typography>
@@ -76,8 +73,8 @@ export const DrugProperties = (
                   keys.map(key => (
                     <Fragment key={key.title}>
                       <Grid item xs={8} sx={{marginBottom : '10px'}}>
-                        <Box component="div" sx={{height: '10px', width: '10px', borderRadius: '50%' , backgroundColor:key.color, display: 'inline-block'}}></Box>
-                          <Typography sx={{'fontWeight': 'bold', color: '#383874', position:'relative', display: 'inline-block', paddingLeft: '10px'}}>
+                        <Box component="div" sx={{height: 10, width: 10, borderRadius: '50%' , backgroundColor: key.color, display: 'inline-block'}} />
+                          <Typography sx={{'fontWeight': 'bold', color: '#383874', position:'relative', display: 'inline-block', pl: 2}}>
                             {key.title}
                           </Typography>
                         </Grid>
@@ -89,8 +86,8 @@ export const DrugProperties = (
                   }
                 </Grid>
               </Paper>
-            </CardContent>
-          </Paper>
+            </Box>
+          </ModalPaper>
         </Box>
       );
     }

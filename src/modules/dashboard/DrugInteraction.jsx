@@ -8,6 +8,7 @@ import { MoleculeCanvas } from "./molecule/Canvas";
 import BlobCircle from "../../assets/svg/blob-circle.svg";
 import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 import { Hr } from "../../infrastructure/components/Hr.component";
+import { CustomChip } from "../../infrastructure/components/CustomChip";
 
 const url = `drug-interaction`;
 export const DrugInteraction = memo(({onNewItems}) => {
@@ -66,17 +67,17 @@ export const DrugInteraction = memo(({onNewItems}) => {
     }
 
     return (
-      <ModalPaper sx={{px: 8, py: 5, mt: 3, position: 'absolute', maxWidth: 500}} elevation={8}>
+      <ModalPaper sx={{px: 8, py: 5, mt: 3, position: 'absolute', maxWidth: 550}} elevation={8}>
         <Typography sx={{fontSize: 40, fontWeight: 100}}>Drug interactions</Typography>
         <Box sx={{display: 'flex'}}>
           <Avatar sx={{bgcolor: '#d0eed2', width: 100, height: 100}}>
             <Typography sx={{fontSize: 40, fontWeight: 300, color: '#1d1d1d'}}>{getMaxValue().toFixed(0)}%</Typography>
           </Avatar>
-          <Box sx={{pl: 2}}>
+          <Box sx={{pl: 2, pt: 1}}>
             <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
             <Box sx={{display: 'flex', justifyContent: 'space-around'}}>
-              <Chip label={items[0].name}/>
-              {items.length === 2 && <Chip label={items[1].name}/>}
+              <CustomChip label={items[0].name}/>
+              {items.length === 2 && <CustomChip label={items[1].name} sx={{marginLeft: 1}}/>}
             </Box>
           </Box>
         </Box>

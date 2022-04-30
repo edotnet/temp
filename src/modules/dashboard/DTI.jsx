@@ -29,7 +29,7 @@ export const DTI = ({molecules, setTarget, target}) => {
 
     return (
       <ModalPaper elevation={15}>
-        <CardContent>
+        <Box p={3}>
           <Box sx={{display: 'flex', alignItems: 'center'}}>
             <Avatar>
               <img src={InfoProtein} alt="InfoProtein"/>
@@ -40,18 +40,18 @@ export const DTI = ({molecules, setTarget, target}) => {
             </Box>
           </Box>
           <Hr/>
-          <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction
-            score</Typography>
+          <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction score</Typography>
           <Grid container>
-            <Grid item xs={6}>
+            <Grid item xs={3}>
               {data && data.map(el => (
                 <Box>
                   <Typography sx={{fontSize: 14, fontWeight: 'bold', mb: -1}}>{el.label}</Typography>
-                  <Typography sx={{fontSize: 20, fontWeight: 300, color: '#141414'}}>{el.value}</Typography>
+                  <Typography sx={{fontSize: 20, fontWeight: 300, color: '#141414'}}>{el.value.toFixed(4)}</Typography>
                 </Box>
               ))}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={1} />
+            <Grid item xs={8}>
               <Box sx={{
                 background: 'repeating-linear-gradient(\n' +
                   '  to right,\n' +
@@ -61,14 +61,14 @@ export const DTI = ({molecules, setTarget, target}) => {
                   '\n)'
               }}>
                 {data && data.map(el => (
-                  <Box pt={3.35}>
+                  <Box pt={3.3}>
                     <Graph width={el.value}/>
                   </Box>
                 ))}
               </Box>
             </Grid>
           </Grid>
-        </CardContent>
+        </Box>
       </ModalPaper>
     )
   }, [data, target]);
