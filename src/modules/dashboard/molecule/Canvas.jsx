@@ -6,11 +6,6 @@ import { memo } from "react";
 import { CameraShake, OrbitControls } from "@react-three/drei";
 
 export const MoleculeCanvas = memo((props) => {
-  const {width, height} = useWindowSize();
-  /*
-
-
-   */
   return (
     <Box sx={{position: 'absolute', width: 500, height: 500}}>
       <Canvas gl={{antialias: true, alpha: true}}

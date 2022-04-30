@@ -41,22 +41,6 @@
   margin-top: 4px !important;
 }
 
-.defaultborder .MuiOutlinedInput-root{
-  border-radius: 50px;
-  padding-left: 20px;
-  margin-top: 0px;
-  margin-bottom: 16px;
-  padding-right: 20px;
-}
-.alertborder .MuiOutlinedInput-root {
-  border: 1px solid red;
-  border-radius: 50px;
-  padding-left: 20px;
-  margin-top: 0px;
-  margin-bottom: 16px;
-  padding-right: 20px;
-}
-
 .loginlabel {
   padding-left: 30px;
   color: #767373;

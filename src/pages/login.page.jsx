@@ -14,34 +14,37 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { LoginAppBarComponent } from '../infrastructure/components/loginAppbar.component';
+import { useNavigate } from "react-router-dom";
 
-
+const LoginTextField = styled(TextField)({
+  '& .MuiOutlinedInput-root': {
+    borderRadius: 50,
+    paddingLeft: 20,
+    marginTop: 0,
+    marginBottom: 16,
+    paddingRight: 20,
+  },
+})
 export const Login = () => {
-  
-  let [error, setError] = useState('Please enter your details');
-  let [color, setColor] = useState('#767373');
-  let [border, setborder] = useState('defaultborder');
+
+  let [message, setMessage] = useState('Please enter your details');
+  let [error, setError] = useState(false);
   let [logindefault, setLogindefault] = useState(null);
-
-
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     if(data.get('email') === 'admin@prepaire.com' && data.get('password') === 'admin') {
-      setError('Please enter your details');
-      setColor('#767373')
-      setborder('defaultborder');
       setLogindefault(true);
       setTimeout(()=> {
-        window.location.href='/start';
+        navigate('/dashboard', true);
       },500);
     } else {
-      setError('Wrong email or password, please try again.');
-      setColor('#eb1d25')
-      setborder('alertborder');
+      setMessage('Wrong email or password, please try again.');
+      setError(true);
     }
-  };  
+  };
 
   const styles = {
     paperContainer: {
@@ -59,8 +62,8 @@ export const Login = () => {
     backgroundColor: 'transparent',
     boxShadow: 'none'
   }));
-  
-  
+
+
   return(
     <div style={styles.paperContainer}>
       <LoginAppBarComponent/>
@@ -71,24 +74,24 @@ export const Login = () => {
             LOG IN
           </Typography>
           {
-            logindefault === null ? 
+            logindefault === null ?
               <div>
-                <Typography sx={{ color: {color} ,marginTop: '20px', textAlign: 'center'}}> {error} </Typography>
+                <Typography color={error ? 'error' : 'primary'} sx={{marginTop: '20px', textAlign: 'center'}}> {message} </Typography>
                 <Box component="form" className="loginform" onSubmit={handleSubmit} noValidate>
                   <label className='loginlabel'>Email</label>
-                  <TextField className={border} fullWidth margin="normal" id="email" name="email" autoComplete="email" autoFocus placeholder='admin@prepaire.com'/>
+                  <LoginTextField error={error} fullWidth margin="normal" id="email" name="email" autoComplete="email" autoFocus placeholder='admin@prepaire.com'/>
                   <label className="loginlabel">Password</label>
-                  <TextField className={border} margin="normal" required fullWidth name="password" type="password" id="password" autoComplete="current-password" placeholder='****'/>
+                  <LoginTextField error={error} margin="normal" required fullWidth name="password" type="password" id="password" autoComplete="current-password" placeholder='****'/>
                   <Grid container>
                     <Grid item xs>
-                      <FormControlLabel className='logincheckbox' control={<Checkbox value="remember" color="primary" />} label="Remember me" />  
+                      <FormControlLabel className='logincheckbox' control={<Checkbox value="remember" color="primary" />} label="Remember me" />
                     </Grid>
                     <Grid item>
                       <Link href="#" className='loginforgetpass' variant="body2">
                         Forgot password?
                       </Link>
                     </Grid>
-                  </Grid>            
+                  </Grid>
                   <Button className="submitbtn" type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}> LOG IN </Button>
                 </Box>
                 <Typography sx={{color: '#767373', marginTop: '20px', marginBottom: '20px', textAlign: 'center'}}>Log in with</Typography>
@@ -114,13 +117,13 @@ export const Login = () => {
                 </Stack>
               </div>
             : <div className='login-success-content'>
-                <Box component="img" sx={{maxWidth: '80px'}} src="https://res.cloudinary.com/djpepozcx/image/upload/v1651232576/success_oicvxo.png"></Box>
+                <Box component="img" sx={{maxWidth: '80px'}} src="https://res.cloudinary.com/djpepozcx/image/upload/v1651232576/success_oicvxo.png"/>
                 <p>Login Successful</p>
             </div>
           }
         </Box>
         <Typography sx={{margin: '40px 0px 40px 0px'}} align="center">REIMAGINING DRUG DISCOVERY & DEVELOPMENT</Typography>
       </Container>
-    </div>  
+    </div>
   )
 }
