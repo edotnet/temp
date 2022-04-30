@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useDrop } from "react-dnd";
-import { memo, useCallback, useEffect } from "react";
+import { memo, useEffect } from "react";
 import { useApiCall } from "../../../infrastructure/hooks/useApiCall";
 import { MoleculeCanvas } from "../molecule/Canvas";
 import BlobCircle from "../../../assets/svg/blob-circle.svg";
@@ -12,7 +12,6 @@ const url = `drug-interaction`;
 export const DrugInteraction = memo(({onNewItems}) => {
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const {state, dispatch} = useDashboardContext()
-  console.log("drugInteraction",state)
   const dragHandler = (item) => {
     dispatch({type: 'addInteractingMolecule', payload: item})
   }

@@ -77,10 +77,6 @@ export const DashboardPage = () => {
             </Grid>
             <Grid item xs={6}
                   sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-              <Box sx={{justifyContent: 'center', display: 'flex', mt: 3}}>
-                {interactingMolecules.length > 0 &&
-                <Button variant="outlined" onClick={reset}>Clear</Button>}
-              </Box>
               <Box sx={{justifyContent: 'center', display: 'flex', flexDirection: 'row'}}>
                 <DrugInteraction/>
               </Box>
