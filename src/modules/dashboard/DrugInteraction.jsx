@@ -6,6 +6,7 @@ import { CircularProgress } from "./CircularProgress";
 import { EventTypes } from "../../infrastructure/event-system/Event.types";
 import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
 import { MoleculeCanvas } from "./molecule/Canvas";
+import BlobCircle from "../../assets/svg/blob-circle.svg";
 
 const url = `drug-interaction`;
 export const DrugInteraction = memo(({onNewItems}) => {
@@ -113,8 +114,10 @@ export const DrugInteraction = memo(({onNewItems}) => {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        backgroundColor: 'transparent'
-      }}>
+        background: `url(${BlobCircle})`,
+        backgroundWidth: 'contain'
+      }} id="blob-circle">
+
         <MoleculeCanvas speed={calculateSpeed()}/>
         {/*
         <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
