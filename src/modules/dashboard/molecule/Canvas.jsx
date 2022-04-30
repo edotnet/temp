@@ -2,8 +2,9 @@ import { Canvas } from "@react-three/fiber";
 import { Molecule } from "./Molecule";
 import { Box } from "@mui/material";
 import { useWindowSize } from "../../../infrastructure/hooks/useWindowSize";
+import { memo } from "react";
 
-export const MoleculeCanvas = (props) => {
+export const MoleculeCanvas = memo((props) => {
   const {width, height} = useWindowSize();
   /*
   <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} zoomSpeed={0.1} />
@@ -20,4 +21,4 @@ export const MoleculeCanvas = (props) => {
       </Canvas>
     </Box>
   );
-}
+})

@@ -1,18 +1,18 @@
-import { Box, Paper, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Chip, Typography } from "@mui/material";
 import { useDrop } from "react-dnd";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import { CircularProgress } from "./CircularProgress";
 import { EventTypes } from "../../infrastructure/event-system/Event.types";
 import { useEvent } from "../../infrastructure/event-system/hooks/useEvent";
 import { MoleculeCanvas } from "./molecule/Canvas";
 import BlobCircle from "../../assets/svg/blob-circle.svg";
+import { ModalPaper } from "../../infrastructure/components/ModalPaper";
+import { Hr } from "../../infrastructure/components/Hr.component";
 
 const url = `drug-interaction`;
 export const DrugInteraction = memo(({onNewItems}) => {
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const [items, setItems] = useState([])
-  const [progress, setProgress] = useState(0);
 
   useEvent(EventTypes.DASHBOARD.RESET, () => {
     setItems([]);
@@ -53,55 +53,44 @@ export const DrugInteraction = memo(({onNewItems}) => {
   }, [items])
 
   const getMaxValue = useCallback(() => {
+    if (!data) {
+      return 0;
+    }
     return Math.max.apply(Math, data.map(el => el.value));
   }, [data]);
-
-  useEffect(() => {
-    if (loading) {
-      setTimeout(() => setProgress(Math.random() * 100), 500)
-    }
-
-    if (!loading && data) {
-      setTimeout(() => setProgress(Math.random() * 100), 100)
-      setTimeout(() => setProgress(Math.random() * 100), 2000)
-      setTimeout(() => setProgress(getMaxValue()), 3000)
-    }
-  }, [loading])
-
-  const renderResult = () => {
-    if (items.length !== 2 || !data || !data.length) {
-      return null;
-    }
-    return (
-      <Box sx={{p: 4, textAlign: 'center', zIndex: 10}}>
-        <CircularProgress value={progress}/>
-      </Box>
-    )
-  }
+  let timeout = null;
 
   const renderTextResult = () => {
     if (!items.length) {
       return null;
     }
-    return(
-      <Paper sx={{p: 8, bottom: 0, position: 'absolute', maxWidth: 402}} elevation={8}>
-        {items.map(item => <Typography>Drug added: {item.name}</Typography>)}
-        {data && data.length > 0 && items.length === 2 && getMaxValue() === progress &&
-        <Typography>{data.find(el => el.value === getMaxValue()).label
-          .replace('#Drug1', items[0].name)
-          .replace('#Drug2', items[1].name)}</Typography> }
-      </Paper>
+
+    return (
+      <ModalPaper sx={{px: 8, py: 5, mt: 3, position: 'absolute', maxWidth: 500}} elevation={8}>
+        <Typography sx={{fontSize: 40, fontWeight: 100}}>Drug interactions</Typography>
+        <Box sx={{display: 'flex'}}>
+          <Avatar sx={{bgcolor: '#d0eed2', width: 100, height: 100}}>
+            <Typography sx={{fontSize: 40, fontWeight: 300, color: '#1d1d1d'}}>{getMaxValue().toFixed(0)}%</Typography>
+          </Avatar>
+          <Box sx={{pl: 2}}>
+            <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
+            <Box sx={{display: 'flex', justifyContent: 'space-around'}}>
+              <Chip label={items[0].name}/>
+              {items.length === 2 && <Chip label={items[1].name}/>}
+            </Box>
+          </Box>
+        </Box>
+        <Hr/>
+        <Typography sx={{fontSize: 18, fontWeight: 500, color: '#1d1d1d'}}>RESULT DESCRIPTION</Typography>
+        {items.length === 2 && data && data.length > 0 &&
+        <Typography sx={{fontSize: 24, fontWeight: 300}}>
+          {data.find(el => el.value === getMaxValue()).label
+            .replace('#Drug1', items[0].name)
+            .replace('#Drug2', items[1].name)}
+        </Typography>}
+      </ModalPaper>
     )
   }
-  const calculateSpeed = useCallback(() => {
-    if (loading) {
-      return 0.5;
-    }
-    if (data && progress !== getMaxValue()) {
-      return 0.5
-    }
-    return 0.04;
-  }, [loading, data, progress, isOver]);
 
   return (
     <Box pt={3} ref={drop} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -117,18 +106,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
         background: `url(${BlobCircle})`,
         backgroundSize: 'cover'
       }} id="blob-circle">
-
-        <MoleculeCanvas speed={calculateSpeed()}/>
-        {/*
-        <Typography variant="h4" align="center" gutterBottom>Drug Interaction</Typography>
-        {items.length < 2 && <Typography align="center">Drop {2 - items.length} molecules</Typography>}
-        {items.length > 0 && (
-          <Box pb={2}>
-            <Typography>Molecules added:</Typography>
-            {items.map(item => <Typography key={item.name}>{item.name}</Typography>)}
-          </Box>
-        )}*/}
-        {renderResult()}
+        <MoleculeCanvas />
       </Box>
       {renderTextResult()}
     </Box>
