@@ -1,0 +1,26 @@
+<svg width="561" height="561" viewBox="0 0 561 561" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path d="M279.9 553.447c151.076 0 273.547-122.471 273.547-273.547 0-151.076-122.471-273.547-273.547-273.547C128.824 6.353 6.353 128.824 6.353 279.9c0 151.076 122.471 273.547 273.547 273.547z" id="wscenes8xa"/>
+        <path d="M279.9 550.623c149.516 0 270.723-121.207 270.723-270.723 0-149.516-121.207-270.723-270.723-270.723C130.384 9.177 9.177 130.384 9.177 279.9c0 149.516 121.207 270.723 270.723 270.723z" id="4q0qgpkqzb"/>
+        <path d="M279.9 536.504c141.719 0 256.604-114.885 256.604-256.604S421.62 23.296 279.9 23.296 23.296 138.18 23.296 279.9 138.18 536.504 279.9 536.504z" id="s3jx87ywic"/>
+        <path d="M279.9 559.8c154.585 0 279.9-125.315 279.9-279.9C559.8 125.315 434.485 0 279.9 0 125.315 0 0 125.315 0 279.9c0 154.585 125.315 279.9 279.9 279.9z" id="nxehe92ubd"/>
+        <mask id="6ltma8wq6e" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="547.093" height="547.093" fill="#fff">
+            <use xlink:href="#wscenes8xa"/>
+        </mask>
+        <mask id="zw87kzm9mf" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="541.446" height="541.446" fill="#fff">
+            <use xlink:href="#4q0qgpkqzb"/>
+        </mask>
+        <mask id="ymwbggbhgg" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="513.209" height="513.209" fill="#fff">
+            <use xlink:href="#s3jx87ywic"/>
+        </mask>
+        <mask id="a9h1x6kurh" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="559.8" height="559.8" fill="#fff">
+            <use xlink:href="#nxehe92ubd"/>
+        </mask>
+    </defs>
+    <g transform="translate(.8 .8)" stroke="#9E91F8" fill="none" fill-rule="evenodd">
+        <use mask="url(#6ltma8wq6e)" stroke-width="2" opacity=".705" stroke-dasharray="3,4" xlink:href="#wscenes8xa"/>
+        <use mask="url(#zw87kzm9mf)" stroke-width="26" opacity=".421" stroke-dasharray="1,16" xlink:href="#4q0qgpkqzb"/>
+        <use mask="url(#ymwbggbhgg)" stroke-width="76" opacity=".26" stroke-dasharray="1,93" xlink:href="#s3jx87ywic"/>
+        <use mask="url(#a9h1x6kurh)" stroke-width="2" opacity=".881" stroke-dasharray="2,12" xlink:href="#nxehe92ubd"/>
+    </g>
+</svg>
