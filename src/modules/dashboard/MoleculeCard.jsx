@@ -24,7 +24,6 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
   });
 
   const theme = useTheme();
-  console.log(selected)
   return (
     <div ref={drag} style={{opacity: isDragging ? '0' : '1'}}>
       <Paper
