@@ -30,7 +30,6 @@ const keys = [
 
 
 function fetchFromObject(obj, prop) {
-
   if (typeof obj === 'undefined') {
     return false;
   }
@@ -107,7 +106,7 @@ export const DrugProperties = ({drug}) => {
                     </Grid>
                     <Grid item xs={3} sx={{marginBottom: '10px'}}>
                       <Typography
-                        sx={{color: '#9292C1', textAlign: 'right'}}>{fetchFromObject(drug, key.key)}</Typography>
+                        sx={{color: '#9292C1', textAlign: 'right'}}>{fetchFromObject(state.selectedMolecule, key.key)}</Typography>
                     </Grid>
                   </Fragment>
                 ))
