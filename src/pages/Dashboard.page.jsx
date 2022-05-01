@@ -10,6 +10,7 @@ import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutoco
 import { Navbar } from "../modules/dashboard/Navbar";
 import { DashboardContextProvider } from "../modules/dashboard/context/DashboardContext";
 import { useDashboardContext } from "../modules/dashboard/context/useDashboarContext";
+import { ProgressWidget } from "../modules/dashboard/progress-widget/ProgressWidget";
 
 export const DashboardPage = () => {
   const {state, dispatch} = useDashboardContext();
@@ -35,7 +36,7 @@ export const DashboardPage = () => {
       <DndProvider backend={HTML5Backend}>
         <Box pl={5} pr={5} className="dashboarddnd">
           <Box>
-            <Typography variant="h1" textAlign="center" color="primary">Drug Interactions</Typography>
+            <Typography variant="h5" textAlign="center" color="primary" gutterBottom>Drug Interactions</Typography>
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={3}>
@@ -69,6 +70,9 @@ export const DashboardPage = () => {
                   ))}
                 </Grid>
               </Box>
+              <Box pt={5}>
+                {state.molecules.length > 0 && <DrugProperties/>}
+              </Box>
             </Grid>
             <Grid item xs={6}
                   sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -78,17 +82,10 @@ export const DashboardPage = () => {
             </Grid>
             <Grid item xs={3}>
               <DTI/>
+              <Box>
+                <ProgressWidget />
+              </Box>
             </Grid>
-          </Grid>
-
-          <Grid container spacing={2}>
-            <Grid item xs={3}>
-              {state.molecules.length > 0 && <DrugProperties/>}
-            </Grid>
-            <Grid item xs={6}>
-
-            </Grid>
-            <Grid item xs={3}/>
           </Grid>
         </Box>
       </DndProvider>
