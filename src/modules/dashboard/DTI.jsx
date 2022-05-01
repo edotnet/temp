@@ -34,8 +34,8 @@ export const DTI = () => {
           </Box>
           <Hr/>
           <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction score</Typography>
-          <Grid container>
-            <Grid item xs={3}>
+          <Grid container spacing={1}>
+            <Grid item xs={4}>
               {data && data.map(el => (
                 <Box key={el.label}>
                   <Typography sx={{fontSize: 14, fontWeight: 'bold', mb: -1}}>{el.label}</Typography>
@@ -43,8 +43,7 @@ export const DTI = () => {
                 </Box>
               ))}
             </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={8}>
+            <Grid item xs={7}>
               <GraphBackground>
                 {data && data.map(el => (
                   <Box pt={3.3} key={el.value}>
@@ -79,7 +78,7 @@ export const DTI = () => {
     <>
       <Typography variant="h5">Target Interaction</Typography>
       <TargetAutocomplete onChange={handleChange} label="Add target"/>
-      <Box pt={3}>
+      <Box pt={5}>
         {result}
       </Box>
     </>

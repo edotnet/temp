@@ -85,7 +85,7 @@ export const DashboardPage = () => {
           {state.molecules.length > 0 && 
             <Grid container>
               <Grid xs={3}>
-                <Box item sx={{transform: 'translateY(-100px)'}}>
+                <Box item sx={{transform: 'translateY(-160px)'}}>
                   <DrugProperties/>
                 </Box>
               </Grid>
