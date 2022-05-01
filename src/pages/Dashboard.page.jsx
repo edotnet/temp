@@ -82,17 +82,19 @@ export const DashboardPage = () => {
             </Grid>
           </Grid>
           {state.molecules.length > 0 && 
-            <Grid container sx={{transform: 'translateY(-10)'}}>
+            <Grid container>
               <Grid xs={3}>
-                <Box>
+                <Box sx={{transform: 'translateY(-100px)'}}>
                   <DrugProperties/>
                 </Box>
               </Grid>
-              <Grid xs={6}></Grid>
-              <Grid xs={3}>
-                <Box pt={2} bgcolor="transparent">
+              <Grid xs={6}>
+                <Box sx={{display:'flex', justifyContent:'center', bgcolor: "transparent", pt: 2}}>
                   <AdverseEffects />
-                </Box>              
+                </Box>                
+              </Grid>
+              <Grid xs={3}>
+                
               </Grid>
             </Grid>
           }
