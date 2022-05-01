@@ -5,7 +5,7 @@ import { Drugbank } from "./pages/Drugbank";
 import { DrugInteractionPage } from "./pages/DrugInteraction";
 import { DTIPage } from "./pages/DTI";
 import { DrugbankCategories } from "./pages/DrugbankCategories";
-import { Login } from './pages/login.page';
+import { Login } from './pages/login/login.page';
 import { StartView } from './pages/start.page';
 
 export const Router = () => (
