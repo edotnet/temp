@@ -1,11 +1,12 @@
 import { ListDrugsFeature } from "../modules/drugbank/list-drugs/ListDrugs.feature";
-import { Navbar } from "../modules/dashboard/Navbar";
+import { DashboardLayout } from "../infrastructure/layouts/Dashboard.layout";
 
 export const Drugbank = () => {
   return (
     <>
-      <Navbar/>
-      <ListDrugsFeature />
+      <DashboardLayout>
+        <ListDrugsFeature/>
+      </DashboardLayout>
     </>
   );
 }

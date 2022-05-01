@@ -1,12 +1,12 @@
 import { DrugInteraction } from "../modules/drug-interaction/DrugInteraction.feature";
-import { Navbar } from "../modules/dashboard/Navbar";
-
+import { DashboardLayout } from "../infrastructure/layouts/Dashboard.layout";
 
 export const DrugInteractionPage = () => {
   return (
     <>
-      <Navbar/>
-      <DrugInteraction />
+      <DashboardLayout>
+        <DrugInteraction/>
+      </DashboardLayout>
     </>
   );
 }

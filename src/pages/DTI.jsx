@@ -1,11 +1,12 @@
 import { DTI } from "../modules/dti/DTI.feature";
-import { Navbar } from "../modules/dashboard/Navbar";
+import { DashboardLayout } from "../infrastructure/layouts/Dashboard.layout";
 
 export const DTIPage = () => {
   return (
     <>
-      <Navbar/>
-      <DTI />
+      <DashboardLayout>
+        <DTI/>
+      </DashboardLayout>
     </>
   );
 }

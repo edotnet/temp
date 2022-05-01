@@ -1,11 +1,12 @@
 import { ListCategoriesFeature } from "../modules/drugbank/list-categories/ListCategories.feature";
-import { Navbar } from "../modules/dashboard/Navbar";
+import { DashboardLayout } from "../infrastructure/layouts/Dashboard.layout";
 
 export const DrugbankCategories = () => {
   return (
     <>
-      <Navbar/>
-      <ListCategoriesFeature />
+      <DashboardLayout>
+        <ListCategoriesFeature/>
+      </DashboardLayout>
     </>
   );
 }
