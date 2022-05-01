@@ -13,7 +13,6 @@ import { useDashboardContext } from "../modules/dashboard/context/useDashboarCon
 
 export const DashboardPage = () => {
   const {state, dispatch} = useDashboardContext();
-  const {molecules, category, interactingMolecules} = state;
 
   const setDetail = (molecule) => () => {
     dispatch({type: 'selectMolecule', payload: molecule})
@@ -22,16 +21,12 @@ export const DashboardPage = () => {
     dispatch({type: 'removeMolecule', payload: molecule})
   }
 
-  const setCategory = (category) => () => {
+  const setCategory = (category) => {
     dispatch({type: 'setCategory', payload: category});
   }
 
   const _onDrugSelected = (molecule) => {
     dispatch({type: 'addMolecule', payload: molecule});
-  }
-
-  const reset = () => {
-    dispatch({type: 'resetInteractingMolecules'})
   }
 
   return (
@@ -46,7 +41,7 @@ export const DashboardPage = () => {
             <Grid item xs={3}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography variant="h5">Drug Category</Typography>
+                  <Typography variant="h5" gutterBottom>Molecule Selection</Typography>
                   <CategoryAutocomplete
                     key="category-autocomplete"
                     onChange={setCategory}
@@ -59,16 +54,16 @@ export const DashboardPage = () => {
                 <DrugAutocomplete
                   key="drug-autocomplete"
                   onChange={_onDrugSelected}
-                  category={category}
+                  category={state.category}
                   label="Add Molecule"/>
                 <Grid container spacing={4} pt={2}>
-                  {molecules.map(molecule => (
+                  {state.molecules.map(molecule => (
                     <Grid item key={molecule.drugbank_id}>
                       <MoleculeCard
                         molecule={molecule}
                         onClick={setDetail(molecule)}
                         onDelete={removeMolecule(molecule)}
-                        selected={interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)}
+                        selected={state.interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)}
                       />
                     </Grid>
                   ))}
@@ -88,7 +83,7 @@ export const DashboardPage = () => {
 
           <Grid container spacing={2}>
             <Grid item xs={3}>
-              {molecules.length > 0 && <DrugProperties/>}
+              {state.molecules.length > 0 && <DrugProperties/>}
             </Grid>
             <Grid item xs={6}>
 
