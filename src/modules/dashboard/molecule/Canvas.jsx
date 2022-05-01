@@ -13,8 +13,7 @@ export const MoleculeCanvas = memo((props) => {
               camera={{fov: 35, near: 1, far: 1000, position: [0, 0, 10]}}
 
       >
-        <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} zoomSpeed={0.1} />
-        <CameraShake yawFrequency={1} maxYaw={0.05} pitchFrequency={1} maxPitch={0.05} rollFrequency={0.5} maxRoll={0.5} intensity={0.2} />
+        {/*<CameraShake yawFrequency={1} maxYaw={0.05} pitchFrequency={1} maxPitch={0.05} rollFrequency={0.5} maxRoll={0.5} intensity={0.2} />*/}
         <Molecule {...props} />
       </Canvas>
     </Box>
