@@ -20,6 +20,7 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
   ))({
     [`& .${tooltipClasses.tooltip}`]: {
       maxWidth: 300,
+      fontSize: '16px'
     },
   });
 
@@ -31,7 +32,7 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
         sx={{borderRadius: 10, }}>
         <CustomWidthTooltip title={molecule.name}>
           <CustomChip
-            style={{backgroundColor: selected ? theme.palette.primary.main : 'white', color: selected ? '#93999e' : theme.palette.primary.main}}
+            style={{background: selected ? 'linear-gradient(0deg, rgba(245,246,251,1) 0%, rgba(245,246,251,1) 88%)' : 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(225,227,231,1) 88%)', color: selected ? '#000' : '#000', border: selected ? 'solid 1px #000' : 'solid 1px #a4c3dd'}}
             onClick={onClick}
             onDelete={onDelete}
             label={molecule.name}
