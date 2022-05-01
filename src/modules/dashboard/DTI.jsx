@@ -23,7 +23,7 @@ export const DTI = () => {
   const { state, dispatch} = useDashboardContext();
   const {protein} = state;
   const url = '/dti'
-  const {data, fetch} = useApiCall(url, 'POST', null, false);
+  const {data, fetch, reset} = useApiCall(url, 'POST', null, false);
 
   const result = useMemo( () => {
     if (!data || !protein) {
@@ -47,7 +47,7 @@ export const DTI = () => {
           <Grid container>
             <Grid item xs={3}>
               {data && data.map(el => (
-                <Box>
+                <Box key={el.label}>
                   <Typography sx={{fontSize: 14, fontWeight: 'bold', mb: -1}}>{el.label}</Typography>
                   <Typography sx={{fontSize: 20, fontWeight: 300, color: '#141414'}}>{el.value.toFixed(4)}</Typography>
                 </Box>
@@ -64,7 +64,7 @@ export const DTI = () => {
                   '\n)'
               }}>
                 {data && data.map(el => (
-                  <Box pt={3.3}>
+                  <Box pt={3.3} key={el.value}>
                     <Graph width={el.value}/>
                   </Box>
                 ))}
@@ -87,6 +87,9 @@ export const DTI = () => {
     }));
     if (molecules.length && protein) {
       fetch(url, 'POST', {target: protein, drugs: molecules});
+    }
+    if (data && !molecules.length) {
+      reset();
     }
   }, [protein, state.molecules])
   return (
