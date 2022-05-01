@@ -64,7 +64,7 @@ export const DTI = () => {
                   '\n)'
               }}>
                 {data && data.map(el => (
-                  <Box pt={3.3}>
+                  <Box pt={3.3} key={el.value}>
                     <Graph width={el.value}/>
                   </Box>
                 ))}
