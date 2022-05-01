@@ -24,9 +24,9 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
   });
 
   const theme = useTheme();
-
+  console.log(selected)
   return (
-    <div ref={drag} style={{display: isDragging ? 'none' : 'block'}}>
+    <div ref={drag} style={{opacity: isDragging ? '0' : '1'}}>
       <Paper
         elevation={15}
         sx={{borderRadius: 10, }}>

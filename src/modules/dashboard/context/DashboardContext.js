@@ -28,7 +28,9 @@ const reducer = (state, action) => {
     },
     removeMolecule: (molecule) => ({
       ...state,
-      molecules: state.molecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id)
+      molecules: state.molecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
+      interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
+      selectedMolecule: state.selectedMolecule && state.selectedMolecule.drugbank_id === molecule.drugbank_id ? null : state.selectedMolecule,
     }),
     setCategory: (category) => ({
       ...state,
