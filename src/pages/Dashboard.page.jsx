@@ -35,7 +35,7 @@ export const DashboardPage = () => {
   }
 
   return (
-    <Box component='div' className="dashboardMain">
+    <Box>
       <Navbar/>
       <DndProvider backend={HTML5Backend}>
         <Box pl={5} pr={5} className="dashboarddnd">
