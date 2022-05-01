@@ -11,6 +11,7 @@ import { Navbar } from "../modules/dashboard/Navbar";
 import { DashboardContextProvider } from "../modules/dashboard/context/DashboardContext";
 import { useDashboardContext } from "../modules/dashboard/context/useDashboarContext";
 import { AdverseEffects } from "../modules/dashboard/AdverseEffects";
+import {AiModels} from "../modules/dashboard/ai-models/AiModels";
 
 export const DashboardPage = () => {
   const {state, dispatch} = useDashboardContext();
@@ -84,17 +85,21 @@ export const DashboardPage = () => {
           {state.molecules.length > 0 && 
             <Grid container>
               <Grid xs={3}>
-                <Box sx={{transform: 'translateY(-100px)'}}>
+                <Box item sx={{transform: 'translateY(-100px)'}}>
                   <DrugProperties/>
                 </Box>
               </Grid>
-              <Grid xs={6}>
+              <Grid item xs={6}>
                 <Box sx={{display:'flex', justifyContent:'center', bgcolor: "transparent", pt: 2}}>
                   <AdverseEffects />
                 </Box>                
               </Grid>
-              <Grid xs={3}>
-                
+              <Grid item xs={4}>
+                {/*
+                <Box sx={{transform: 'translateY(-70px)'}}>
+                  <AiModels />
+                </Box>
+                */}
               </Grid>
             </Grid>
           }

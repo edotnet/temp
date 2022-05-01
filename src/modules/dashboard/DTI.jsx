@@ -6,18 +6,8 @@ import InfoProtein from '../../assets/info-protein.png';
 import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 import { Hr } from "../../infrastructure/components/Hr.component";
 import { useDashboardContext } from "./context/useDashboarContext";
-
-const Graph = ({ width }) => {
-  const rest = 100 - width*10;
-  return (
-    <div style={{
-      width: `calc(100% - ${rest}%)`,
-      height: 14,
-      objectFit: 'contain',
-      backgroundImage: 'linear-gradient(to left, rgba(0, 103, 255, 0.61) 0%, rgba(127, 0, 255, 0.62) 35%, rgba(255, 83, 0, 0.38) 100%)'
-    }}/>
-  )
-}
+import {GraphBackground} from "../../infrastructure/components/GraphBackground";
+import {Graph} from "../../infrastructure/components/graph/Graph";
 
 export const DTI = () => {
   const { state, dispatch} = useDashboardContext();
@@ -55,20 +45,13 @@ export const DTI = () => {
             </Grid>
             <Grid item xs={1} />
             <Grid item xs={8}>
-              <Box sx={{
-                background: 'repeating-linear-gradient(\n' +
-                  '  to right,\n' +
-                  '  rgba(0, 0, 0, 0.11),\n' +
-                  '  rgba(0, 0, 0, 0.11) 1px,' +
-                  ' white 2px, white 20px' +
-                  '\n)'
-              }}>
+              <GraphBackground>
                 {data && data.map(el => (
                   <Box pt={3.3} key={el.value}>
                     <Graph width={el.value}/>
                   </Box>
                 ))}
-              </Box>
+              </GraphBackground>
             </Grid>
           </Grid>
         </Box>
