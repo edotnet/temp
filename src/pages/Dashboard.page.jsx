@@ -10,6 +10,8 @@ import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutoco
 import { Navbar } from "../modules/dashboard/Navbar";
 import { DashboardContextProvider } from "../modules/dashboard/context/DashboardContext";
 import { useDashboardContext } from "../modules/dashboard/context/useDashboarContext";
+import { AdverseEffects } from "../modules/dashboard/AdverseEffects";
+import {AiModels} from "../modules/dashboard/ai-models/AiModels";
 
 export const DashboardPage = () => {
   const {state, dispatch} = useDashboardContext();
@@ -35,7 +37,7 @@ export const DashboardPage = () => {
       <DndProvider backend={HTML5Backend}>
         <Box pl={5} pr={5} className="dashboarddnd">
           <Box>
-            <Typography variant="h1" textAlign="center" color="primary">Drug Interactions</Typography>
+            <Typography variant="h5" textAlign="center" color="primary" gutterBottom>Drug Interactions</Typography>
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={3}>
@@ -68,7 +70,7 @@ export const DashboardPage = () => {
                     </Grid>
                   ))}
                 </Grid>
-              </Box>
+              </Box>              
             </Grid>
             <Grid item xs={6}
                   sx={{justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -77,19 +79,30 @@ export const DashboardPage = () => {
               </Box>
             </Grid>
             <Grid item xs={3}>
-              <DTI/>
+              <DTI/>              
             </Grid>
           </Grid>
-
-          <Grid container spacing={2}>
-            <Grid item xs={3}>
-              {state.molecules.length > 0 && <DrugProperties/>}
+          {state.molecules.length > 0 && 
+            <Grid container>
+              <Grid xs={3}>
+                <Box item sx={{transform: 'translateY(-160px)'}}>
+                  <DrugProperties/>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box sx={{display:'flex', justifyContent:'center', bgcolor: "transparent", pt: 2}}>
+                  <AdverseEffects />
+                </Box>                
+              </Grid>
+              <Grid item xs={4}>
+                {/*
+                <Box sx={{transform: 'translateY(-70px)'}}>
+                  <AiModels />
+                </Box>
+                */}
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-
-            </Grid>
-            <Grid item xs={3}/>
-          </Grid>
+          }
         </Box>
       </DndProvider>
     </Box>

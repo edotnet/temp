@@ -8,7 +8,10 @@ const theme = createTheme({
       main: '#222A47'
     },
     info: {
-      main: '#46AAFF',
+      main: '#8676ff',
+    },
+    error: {
+      main: '#ff708a'
     }
   },
   typography: {
@@ -22,7 +25,7 @@ const theme = createTheme({
     h6: {
       fontFamily: 'Archivo',
       fontWeight: 400,
-    },
+    },    
   },
   components: {
     MuiAppBar: {

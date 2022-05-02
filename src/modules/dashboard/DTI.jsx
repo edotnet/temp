@@ -6,18 +6,8 @@ import InfoProtein from '../../assets/info-protein.png';
 import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 import { Hr } from "../../infrastructure/components/Hr.component";
 import { useDashboardContext } from "./context/useDashboarContext";
-
-const Graph = ({ width }) => {
-  const rest = 100 - width*10;
-  return (
-    <div style={{
-      width: `calc(100% - ${rest}%)`,
-      height: 14,
-      objectFit: 'contain',
-      backgroundImage: 'linear-gradient(to left, rgba(0, 103, 255, 0.61) 0%, rgba(127, 0, 255, 0.62) 35%, rgba(255, 83, 0, 0.38) 100%)'
-    }}/>
-  )
-}
+import {GraphBackground} from "../../infrastructure/components/GraphBackground";
+import {Graph} from "../../infrastructure/components/graph/Graph";
 
 export const DTI = () => {
   const { state, dispatch} = useDashboardContext();
@@ -44,8 +34,8 @@ export const DTI = () => {
           </Box>
           <Hr/>
           <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction score</Typography>
-          <Grid container>
-            <Grid item xs={3}>
+          <Grid container spacing={1}>
+            <Grid item xs={4}>
               {data && data.map(el => (
                 <Box key={el.label}>
                   <Typography sx={{fontSize: 14, fontWeight: 'bold', mb: -1}}>{el.label}</Typography>
@@ -53,22 +43,14 @@ export const DTI = () => {
                 </Box>
               ))}
             </Grid>
-            <Grid item xs={1} />
-            <Grid item xs={8}>
-              <Box sx={{
-                background: 'repeating-linear-gradient(\n' +
-                  '  to right,\n' +
-                  '  rgba(0, 0, 0, 0.11),\n' +
-                  '  rgba(0, 0, 0, 0.11) 1px,' +
-                  ' white 2px, white 20px' +
-                  '\n)'
-              }}>
+            <Grid item xs={7}>
+              <GraphBackground>
                 {data && data.map(el => (
                   <Box pt={3.3} key={el.value}>
                     <Graph width={el.value}/>
                   </Box>
                 ))}
-              </Box>
+              </GraphBackground>
             </Grid>
           </Grid>
         </Box>
@@ -96,7 +78,7 @@ export const DTI = () => {
     <>
       <Typography variant="h5">Target Interaction</Typography>
       <TargetAutocomplete onChange={handleChange} label="Add target"/>
-      <Box pt={3}>
+      <Box pt={5}>
         {result}
       </Box>
     </>
