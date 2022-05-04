@@ -1,8 +1,6 @@
-import { Chip, Paper, styled, useTheme } from "@mui/material";
 import { useDrag } from "react-dnd";
-import { useState } from "react";
 import { CustomChip } from "../../infrastructure/components/CustomChip";
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { CustomWidthTooltip } from "../../infrastructure/components/CustomWidthTooltip";
 
 export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
 
@@ -15,30 +13,16 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
     })
   })
 
-  const CustomWidthTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-  ))({
-    [`& .${tooltipClasses.tooltip}`]: {
-      maxWidth: 300,
-      fontSize: '16px'
-    },
-  });
-
-  const theme = useTheme();
   return (
     <div ref={drag} style={{opacity: isDragging ? '0' : '1'}}>
-      <Paper
-        elevation={15}
-        sx={{borderRadius: 10, }}>
-        <CustomWidthTooltip title={molecule.name}>
-          <CustomChip
-            style={{background: selected ? 'linear-gradient(0deg, rgba(245,246,251,1) 0%, rgba(245,246,251,1) 88%)' : 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(225,227,231,1) 88%)', color: selected ? '#000' : '#000', border: selected ? 'solid 1px #000' : 'solid 1px #a4c3dd'}}
-            onClick={onClick}
-            onDelete={onDelete}
-            label={molecule.name}
-            size="medium"/>
-          </CustomWidthTooltip>
-      </Paper>
+      <CustomWidthTooltip title={molecule.name}>
+        <CustomChip
+          variant={selected ? 'outlined' : 'filled'}
+          onClick={onClick}
+          onDelete={onDelete}
+          label={molecule.name}
+          size="medium"/>
+      </CustomWidthTooltip>
     </div>
   )
 }
