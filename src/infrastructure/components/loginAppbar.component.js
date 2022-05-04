@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Logo from '../../assets/svg/logo.svg';
 
 const theme = createTheme({
   palette: {
@@ -21,7 +22,7 @@ const theme = createTheme({
 
 
 export const LoginAppBarComponent = () => {
-  
+
   const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
@@ -38,7 +39,7 @@ export const LoginAppBarComponent = () => {
           <Toolbar disableGutters>
               <Grid container spacing={3}>
                   <Grid item xs={2}>
-                      <Box component="img" sx={{maxWidth: '100%'}} src="https://res.cloudinary.com/djpepozcx/image/upload/v1650614723/logo_uxsjoc.png"></Box>
+                      <Box component="img" sx={{maxWidth: '100%', maxHeight: 50}} src={Logo}/>
                   </Grid>
                   <Grid item xs={10}>
                       <Stack direction="row" spacing={12} justifyContent="flex-end">
