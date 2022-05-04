@@ -3,6 +3,7 @@ import moleculeimg from "../../assets/img/group-11.png";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useLocation, useNavigate } from "react-router-dom";
+import Logo from '../../assets/svg/logo.svg';
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export const Navbar = () => {
       <Grid container spacing={2}>
         <Grid item xs={2}>
           <Box component="img" alt="logo" className="logoresponsive"
-               src="https://res.cloudinary.com/djpepozcx/image/upload/v1650614723/logo_uxsjoc.png"/>
+               src={Logo}/>
         </Grid>
         <Grid item xs={10}>
           <Tabs value={location.pathname} onChange={handleChange}

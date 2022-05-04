@@ -63,10 +63,10 @@ export const DrugProperties = ({drug}) => {
   return (
     <Box>
 
-      <ModalPaper elevation={2} sx={{width: 450, height: 271, marginBottom: '50px'}}>
+      <ModalPaper elevation={2} sx={{width: 450, marginBottom: '50px'}}>
         <Box sx={{padding: '16px 5px 16px 16px'}}>
           <Grid container sx={{marginBottom: '5px'}}>
-            <Grid item xs={5}>
+            <Grid item xs={6}>
               <Typography variant="h5" sx={{color: '#383874', 'marginBottom': '20px', position: 'relative'}}
                           gutterBottom component="div"> Drug Properties </Typography>
             </Grid>
@@ -78,8 +78,13 @@ export const DrugProperties = ({drug}) => {
                 marginTop: '5px'
               }}>({state.selectedMolecule.name})</Typography>
             </Grid>
+            {state.selectedMolecule.clinical_description ? <Grid item xs={12}>
+              <Box>
+                <Typography variant="p">{state.selectedMolecule.clinical_description}</Typography>
+              </Box>
+            </Grid> : null}
           </Grid>
-          <Paper sx={{height: 180, overflowY: 'auto', boxShadow: 'none'}}>
+          <Box sx={{height: 180, overflowY: 'auto', boxShadow: 'none'}} pt={1}>
             <Grid container>
               {
                 keys.map(key => (
@@ -110,7 +115,7 @@ export const DrugProperties = ({drug}) => {
                 ))
               }
             </Grid>
-          </Paper>
+          </Box>
         </Box>
       </ModalPaper>
     </Box>

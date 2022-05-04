@@ -15,17 +15,15 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'Helvetica Neue',
+    fontFamily: 'Work Sans',
     h1: {
-      fontFamily: 'Open Sans',
       fontWeight: 700,
       fontSize: 43,
       lineHeight: '56px'
     },
     h6: {
-      fontFamily: 'Archivo',
       fontWeight: 400,
-    },    
+    },
   },
   components: {
     MuiAppBar: {

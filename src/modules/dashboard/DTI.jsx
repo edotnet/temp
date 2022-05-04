@@ -76,7 +76,7 @@ export const DTI = () => {
   }, [protein, state.molecules])
   return (
     <>
-      <Typography variant="h5">Target Interaction</Typography>
+      <Typography variant="h5">TARGET INTERACTION</Typography>
       <TargetAutocomplete onChange={handleChange} label="Add target"/>
       <Box pt={5}>
         {result}

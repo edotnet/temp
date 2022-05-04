@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 export const DrugAutocomplete = ({label, onChange, category}) => {
   const url = `drugbank/query/`;
   const {loading, data, error, fetch} = useApiCall(url, null, null, false);
-  console.log('categories: ', category)
   const executeSearch = (search) => {
     if (search.length > 3) {
       fetch(`${url}${search}?page=0${category ? `&category=${category}`: ''}`, 'GET')
