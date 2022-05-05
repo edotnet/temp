@@ -38,7 +38,7 @@ export const DashboardPage = () => {
         <Box pl={5} pr={5} className="dashboarddnd">
           <Box>
             <Typography variant="h5" textAlign="center" color="primary" gutterBottom>DRUG INTERACTION</Typography>
-            <Typography variant="h6" textAlign="center" color="primary" gutterBottom>Drop molecules here for interactions </Typography>
+            <Typography variant="h6" textAlign="center" color="primary" gutterBottom>Drop molecules here for checking interactions</Typography>
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={3}>

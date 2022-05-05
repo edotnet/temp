@@ -7,6 +7,7 @@ import { DTIPage } from "./pages/DTI";
 import { DrugbankCategories } from "./pages/DrugbankCategories";
 import { Login } from './pages/login/login.page';
 import { StartView } from './pages/start.page';
+import { Drugshot } from "./pages/Drugshot";
 
 export const Router = () => (
   <Routes>
@@ -21,6 +22,7 @@ export const Router = () => (
     <Route path="categories" element={<DrugbankCategories/>}/>
     <Route path="drug-interaction" element={<DrugInteractionPage />}/>
     <Route path="dti" element={<DTIPage />}/>
+    <Route path="drugshot" element={<Drugshot />}/>
     <Route path="start" element={<StartView/>} />
   </Routes>
 );

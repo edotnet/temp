@@ -19,7 +19,9 @@ export const Navbar = () => {
     <Box className="dashboardheader">
       <Grid container spacing={2}>
         <Grid item xs={2}>
-          <Box component="img" alt="logo" className="logoresponsive"
+          <Box component="img"
+               alt="logo"
+               className="logoresponsive"
                src={Logo}/>
         </Grid>
         <Grid item xs={10}>
@@ -28,7 +30,8 @@ export const Navbar = () => {
             <Tab value="/drugbank" label="DRUGBANK" sx={{color: "#000", fontWeight: "bold"}}/>
             <Tab value="/categories" label="CATEGORIES" sx={{color: "#000", fontWeight: "bold"}}/>
             <Tab value="/dashboard" label="DRUG INTERACTION" sx={{color: "#000", fontWeight: "bold"}}/>
-            <Tab value="/dti" label="DTI" sx={{color: "#000", fontWeight: "bold"}}/>
+            {/*<Tab value="/dti" label="DTI" sx={{color: "#000", fontWeight: "bold"}}/>*/}
+            <Tab value="/drugshot" label="DRUGSHOT" sx={{color: "#000", fontWeight: "bold"}}/>
           </Tabs>
         </Grid>
       </Grid>
