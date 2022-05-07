@@ -109,25 +109,23 @@ export const DrugProperties = () => {
     <Box>
       <ModalPaper elevation={2} sx={{width: 450, marginBottom: '50px', px: 2}}>
         <Box p={2} pb={3}>
-          <Box sx={{padding: '16px 5px 16px 16px'}}>
-            <Box>
-              <Typography sx={{
-                fontWeight: 500,
-                fontSize: '18px',
-                marginTop: '10px',
-              }}> Drug Properties </Typography>
-              <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-                <Box>
-                  <Typography variant="h5" sx={{color: '#383874', fontSize: 30}} gutterBottom
-                              component="span">{state.selectedMolecule.name}</Typography>
-                  <Typography variant="h5" sx={{color: '#373767', pl: 2, fontWeight: 300, fontSize: 30}} gutterBottom
-                              component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
-                </Box>
-                <CopyComponent text={`${state.selectedMolecule.name}
-                    ${state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}
-                    ${state.selectedMolecule.clinical_description}`}
-                />
+          <Box>
+            <Typography sx={{
+              fontWeight: 500,
+              fontSize: '18px',
+              marginTop: '10px',
+            }}> Drug Properties </Typography>
+            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+              <Box>
+                <Typography variant="h5" sx={{color: '#383874', fontSize: 30}} gutterBottom
+                            component="span">{state.selectedMolecule.name}</Typography>
+                <Typography variant="h5" sx={{color: '#373767', pl: 2, fontWeight: 300, fontSize: 30}} gutterBottom
+                            component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
               </Box>
+              <CopyComponent text={`${state.selectedMolecule.name}
+                  ${state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}
+                  ${state.selectedMolecule.clinical_description}`}
+              />
             </Box>
           </Box>
           {renderDescription()}
