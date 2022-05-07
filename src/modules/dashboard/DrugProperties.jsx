@@ -1,10 +1,11 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { Fragment } from 'react';
 import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 import { useDashboardContext } from "./context/useDashboarContext";
 import { Hr } from "../../infrastructure/components/Hr.component";
-import { AdverseEffects } from "./AdverseEffects";
 import { AdverseEffectsInfo } from "./adverse-effects/AdverseEffectsInfo";
+import { ContentCopy } from "@mui/icons-material";
+import { CopyComponent } from "../../infrastructure/components/Copy.component";
 
 const keys = [
   {key: 'calculated_properties.Molecular Weight', title: 'Mass.', color: '#AE2AFF'},
@@ -72,7 +73,7 @@ export const DrugProperties = () => {
       <>
         <Hr/>
         <Box>
-          <Typography variant="p">{state.selectedMolecule.clinical_description}</Typography>
+          <Typography variant="p" sx={{fontSize: 16}}>{state.selectedMolecule.clinical_description}</Typography>
         </Box>
       </>
     )
@@ -82,7 +83,7 @@ export const DrugProperties = () => {
   function renderCalculatedProperties() {
     return keys.map(key => (
       <Fragment key={key.title}>
-        <Grid item xs={6} sx={{marginBottom: '10px'}}>
+        <Grid item xs={6}>
           <Grid container>
             <Grid item xs={6}>
               <Typography sx={{color: '#9292C1'}}>
@@ -94,7 +95,7 @@ export const DrugProperties = () => {
                 sx={{
                   color: '#383874',
                   textAlign: 'right',
-                  fontWeight: 'bold'
+                  fontWeight: 500
                 }}>{fetchFromObject(state.selectedMolecule, key.key)}</Typography>
             </Grid>
           </Grid>
@@ -103,21 +104,29 @@ export const DrugProperties = () => {
     ));
   }
 
+
   return (
     <Box>
       <ModalPaper elevation={2} sx={{width: 450, marginBottom: '50px', px: 2}}>
-        <Box p={2}>
+        <Box p={2} pb={3}>
           <Box sx={{padding: '16px 5px 16px 16px'}}>
             <Box>
               <Typography sx={{
-                color: '#383874',
-                fontWeight: 'bold',
-                fontSize: '13px',
+                fontWeight: 500,
+                fontSize: '18px',
                 marginTop: '10px',
               }}> Drug Properties </Typography>
-              <Box sx={{display: 'flex'}}>
-                <Typography variant="h5" sx={{color: '#383874', fontWeight: 500}} gutterBottom component="span">{state.selectedMolecule.name}</Typography>
-                <Typography variant="h5" sx={{color: '#383874', pl: 2}} gutterBottom component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
+              <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Box>
+                  <Typography variant="h5" sx={{color: '#383874', fontSize: 30}} gutterBottom
+                              component="span">{state.selectedMolecule.name}</Typography>
+                  <Typography variant="h5" sx={{color: '#373767', pl: 2, fontWeight: 300, fontSize: 30}} gutterBottom
+                              component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
+                </Box>
+                <CopyComponent text={`${state.selectedMolecule.name}
+                    ${state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}
+                    ${state.selectedMolecule.clinical_description}`}
+                />
               </Box>
             </Box>
           </Box>
@@ -126,7 +135,7 @@ export const DrugProperties = () => {
           <Grid container columnSpacing={3}>
             {renderCalculatedProperties()}
           </Grid>
-          <AdverseEffectsInfo />
+          <AdverseEffectsInfo/>
         </Box>
       </ModalPaper>
     </Box>

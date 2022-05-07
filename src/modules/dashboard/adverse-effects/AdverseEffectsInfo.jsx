@@ -11,10 +11,10 @@ export const AdverseEffectsInfo = () => {
   }
   return <Box>
     <Hr />
-    <Typography sx={{fontSize: 17, fontWeight: "bold"}}>Adverse effects & contraindications</Typography>
+    <Typography sx={{fontSize: 17, fontWeight: 500}}>Adverse effects & contraindications</Typography>
     <Box sx={{display: "flex"}}>
       <Box>
-        <Typography sx={{fontSize: 20, fontWeight: 500}}>{sumEffects.total}</Typography>
+        <Typography sx={{fontSize: 20, fontWeight: 300}}>{sumEffects.total}</Typography>
       </Box>
       <Grid container spacing={1} sx={{alignItems: "center", pl: 2}}>
         <Grid item xs={6}>
