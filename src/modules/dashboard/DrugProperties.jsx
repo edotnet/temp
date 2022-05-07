@@ -1,14 +1,18 @@
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { Fragment } from 'react';
 import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 import { useDashboardContext } from "./context/useDashboarContext";
+import { Hr } from "../../infrastructure/components/Hr.component";
+import { AdverseEffectsInfo } from "./adverse-effects/AdverseEffectsInfo";
+import { ContentCopy } from "@mui/icons-material";
+import { CopyComponent } from "../../infrastructure/components/Copy.component";
 
 const keys = [
-  {key: 'calculated_properties.Molecular Weight', title: 'Molecular Weight', color: '#AE2AFF'},
-  {key: 'calculated_properties.Molecular Formula', title: 'Molecular Formula', color: '#17D74D'},
+  {key: 'calculated_properties.Molecular Weight', title: 'Mass.', color: '#AE2AFF'},
   {key: 'calculated_properties.logP', title: 'LogP', color: '#FF9898'},
+  //{key: 'calculated_properties.Molecular Formula', title: 'Mol. Form.', color: '#17D74D'},
   {key: 'calculated_properties.ALOGPS.logS', title: 'LogS', color: '#0050C9'},
-  {key: 'calculated_properties.ADMET.ames_toxicity.probability', title: 'AMES Toxicity', color: '#001959'},
+  {key: 'calculated_properties.ADMET.ames_toxicity.probability', title: 'AMES Tox', color: '#001959'},
   // { key: 'calculated_properties.Bioavailability', title: 'Bio Availability', color: '#FF9898'},
   // { key: 'calculated_properties.Ghose Filter', title: 'Ghose Filter', color: '#17D74D'},
   // { key: 'calculated_properties.H Bond Acceptor Count', title: 'H Bond Acceptor Count', color: '#AE2AFF'},
@@ -41,7 +45,7 @@ function fetchFromObject(obj, prop) {
 }
 
 
-export const DrugProperties = ({drug}) => {
+export const DrugProperties = () => {
   const {state} = useDashboardContext()
   if (!state.selectedMolecule) {
     return (
@@ -60,62 +64,78 @@ export const DrugProperties = ({drug}) => {
       </Box>
     )
   }
+
+  function renderDescription() {
+    if (!state.selectedMolecule.clinical_description) {
+      return null;
+    }
+    return (
+      <>
+        <Hr/>
+        <Box>
+          <Typography variant="p" sx={{fontSize: 16}}>{state.selectedMolecule.clinical_description}</Typography>
+        </Box>
+      </>
+    )
+
+  }
+
+  function renderCalculatedProperties() {
+    return keys.map(key => (
+      <Fragment key={key.title}>
+        <Grid item xs={6}>
+          <Grid container>
+            <Grid item xs={6}>
+              <Typography sx={{color: '#9292C1'}}>
+                {key.title}
+              </Typography>
+            </Grid>
+            <Grid item xs={5}>
+              <Typography
+                sx={{
+                  color: '#383874',
+                  textAlign: 'right',
+                  fontWeight: 500
+                }}>{fetchFromObject(state.selectedMolecule, key.key)}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Fragment>
+    ));
+  }
+
+
   return (
     <Box>
-
-      <ModalPaper elevation={2} sx={{width: 450, marginBottom: '50px'}}>
-        <Box sx={{padding: '16px 5px 16px 16px'}}>
-          <Grid container sx={{marginBottom: '5px'}}>
-            <Grid item xs={6}>
-              <Typography variant="h5" sx={{color: '#383874', 'marginBottom': '20px', position: 'relative'}}
-                          gutterBottom component="div"> Drug Properties </Typography>
-            </Grid>
-            <Grid item xs={6}>
+      <ModalPaper elevation={2} sx={{width: 450, marginBottom: '50px', px: 2}}>
+        <Box p={2} pb={3}>
+          <Box sx={{padding: '16px 5px 16px 16px'}}>
+            <Box>
               <Typography sx={{
-                color: '#383874',
-                fontSize: '13px',
-                textAlign: 'right',
-                marginTop: '5px'
-              }}>({state.selectedMolecule.name})</Typography>
-            </Grid>
-            {state.selectedMolecule.clinical_description ? <Grid item xs={12}>
-              <Box>
-                <Typography variant="p">{state.selectedMolecule.clinical_description}</Typography>
+                fontWeight: 500,
+                fontSize: '18px',
+                marginTop: '10px',
+              }}> Drug Properties </Typography>
+              <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Box>
+                  <Typography variant="h5" sx={{color: '#383874', fontSize: 30}} gutterBottom
+                              component="span">{state.selectedMolecule.name}</Typography>
+                  <Typography variant="h5" sx={{color: '#373767', pl: 2, fontWeight: 300, fontSize: 30}} gutterBottom
+                              component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
+                </Box>
+                <CopyComponent text={`${state.selectedMolecule.name}
+                    ${state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}
+                    ${state.selectedMolecule.clinical_description}`}
+                />
               </Box>
-            </Grid> : null}
-          </Grid>
-          <Box sx={{height: 180, overflowY: 'auto', boxShadow: 'none'}} pt={1}>
-            <Grid container>
-              {
-                keys.map(key => (
-                  <Fragment key={key.title}>
-                    <Grid item xs={8} sx={{marginBottom: '10px'}}>
-                      <Box component="div" sx={{
-                        height: 10,
-                        width: 10,
-                        borderRadius: '50%',
-                        backgroundColor: key.color,
-                        display: 'inline-block'
-                      }}/>
-                      <Typography sx={{
-                        'fontWeight': 'bold',
-                        color: '#383874',
-                        position: 'relative',
-                        display: 'inline-block',
-                        pl: 2
-                      }}>
-                        {key.title}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3} sx={{marginBottom: '10px'}}>
-                      <Typography
-                        sx={{color: '#9292C1', textAlign: 'right'}}>{fetchFromObject(state.selectedMolecule, key.key)}</Typography>
-                    </Grid>
-                  </Fragment>
-                ))
-              }
-            </Grid>
+            </Box>
           </Box>
+          {renderDescription()}
+          <Hr/>
+          <Grid container columnSpacing={3}>
+            {renderCalculatedProperties()}
+          </Grid>
+          <AdverseEffectsInfo/>
         </Box>
       </ModalPaper>
     </Box>

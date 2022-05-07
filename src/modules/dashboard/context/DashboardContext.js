@@ -11,6 +11,20 @@ const initialState = {
 
 const DashboardContext = createContext({state: initialState});
 
+const adaptMolecule = (molecule) => {
+  switch (molecule.name) {
+    case 'Favipiravir':
+      return {
+        ...molecule,
+        clinical_description: "Favipiravir is a selective inhibitor of viral RNA-dependent RNA polymerase (RdRP)" +
+          "with potent antiviral activity against single-stranded RNA viruses including coronaviruses. Favipiravir" +
+          "is able to target the protein necessary for the coronavirus to replicate, creating mutations that make" +
+          "it impossible for the virus to copy itself"
+      }
+    default:
+      return molecule;
+  }
+}
 const reducer = (state, action) => {
   const actions = {
     addMolecule: (molecule) => {
@@ -38,7 +52,7 @@ const reducer = (state, action) => {
     }),
     selectMolecule: (molecule) => ({
         ...state,
-        selectedMolecule: molecule,
+        selectedMolecule: adaptMolecule(molecule),
     }),
     addInteractingMolecule: (molecule) => (
       state.interactingMolecules.length === 2 ||
