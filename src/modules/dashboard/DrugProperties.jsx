@@ -10,9 +10,9 @@ import { CopyComponent } from "../../infrastructure/components/Copy.component";
 const keys = [
   {key: 'calculated_properties.Molecular Weight', title: 'Mass.', color: '#AE2AFF'},
   {key: 'calculated_properties.logP', title: 'LogP', color: '#FF9898'},
+  {key: 'calculated_properties.ADMET.ames_toxicity.probability', title: 'AMES Tox', color: '#001959'},
   //{key: 'calculated_properties.Molecular Formula', title: 'Mol. Form.', color: '#17D74D'},
   {key: 'calculated_properties.ALOGPS.logS', title: 'LogS', color: '#0050C9'},
-  {key: 'calculated_properties.ADMET.ames_toxicity.probability', title: 'AMES Tox', color: '#001959'},
   // { key: 'calculated_properties.Bioavailability', title: 'Bio Availability', color: '#FF9898'},
   // { key: 'calculated_properties.Ghose Filter', title: 'Ghose Filter', color: '#17D74D'},
   // { key: 'calculated_properties.H Bond Acceptor Count', title: 'H Bond Acceptor Count', color: '#AE2AFF'},
