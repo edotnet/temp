@@ -21,12 +21,20 @@ export const PredictiveWorld = () => {
 
   const drawDot = (lineDeg, value) => {
     ctx.save();
-    var x = radius * Math.cos(degrees_to_radians(lineDeg * graus));
-    var y = radius * Math.sin(degrees_to_radians(lineDeg * graus));
+
+    const totalDeg = lineDeg * graus;
+    var x = radius * Math.cos(degrees_to_radians(totalDeg));
+    var y = radius * Math.sin(degrees_to_radians(totalDeg));
     ctx.translate(x+250, y+250);
-    ctx.rotate(-degrees_to_radians(lineDeg*graus));
+    ctx.rotate(-degrees_to_radians(totalDeg));
     ctx.fillStyle = "#209ff4";
-    ctx.fillRect(-5, value, 10, 10);
+
+    if (totalDeg % 90) {
+      ctx.fillRect(-5, value, 10, 10);
+    }else {
+      ctx.fillRect(value, -5, 10, 10);
+    }
+
     ctx.restore();
   }
 
@@ -55,14 +63,14 @@ export const PredictiveWorld = () => {
       drawLine(x + 250, y + 250, 1, 120, i * graus);
     }
 
-    drawDot(1, -50)
-    drawDot(2, -50)
-    drawDot(3, 20)
-    drawDot(4, 20)
-    drawDot(5, 20)
-    drawDot(6, 20)
-    drawDot(7, 20)
-    drawDot(8, 10)
+    drawDot(1, 0)//out 45
+    drawDot(2, 0)//in 90
+    drawDot(3, 0)//in 135
+    drawDot(4, 0)//out 180
+    drawDot(5, 0)//out 225
+    drawDot(6, 0)//in 270
+    drawDot(7, 0)//in 315
+    drawDot(8, 10)//out 160
   }, []);
 
   return (
