@@ -53,7 +53,11 @@ export const PredictiveWorld = () => {
       draw_rectangle(x + 250, y + 250, 1, 120, i * 45);
     }
 
-    ctx.fillRect(10,10,10,10);
+    ctx.fillRect(150,150,10,10);
+    ctx.fillRect(180,180,10,10);
+
+    ctx.fillRect(360,360,10,10);
+    ctx.fillRect(320,320,10,10);
   }, []);
 
   return (
