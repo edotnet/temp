@@ -19,6 +19,17 @@ export const PredictiveWorld = () => {
     ctx.restore();
   }
 
+  const drawCircleDot = (x, y) => {
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, 2 * Math.PI, true);
+    ctx.closePath()
+    ctx.fill()
+    ctx.beginPath();
+    ctx.arc(x, y, 10, 0, 2 * Math.PI, true);
+    ctx.closePath()
+    ctx.stroke()
+  }
+
   const drawDot = (lineDeg, value) => {
     ctx.save();
 
@@ -28,11 +39,14 @@ export const PredictiveWorld = () => {
     ctx.translate(x+250, y+250);
     ctx.rotate(-degrees_to_radians(totalDeg));
     ctx.fillStyle = "#209ff4";
+    ctx.strokeStyle = "#209ff4";
 
     if (totalDeg % 90) {
-      ctx.fillRect(-5, value, 10, 10);
+      //ctx.fillRect(-5, value, 10, 10);
+      drawCircleDot(0, value)
     }else {
-      ctx.fillRect(value, -5, 10, 10);
+      //ctx.fillRect(value, -5, 10, 10);
+      drawCircleDot(value, 0)
     }
 
     ctx.restore();
