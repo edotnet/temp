@@ -6,6 +6,8 @@ import { MoleculeCanvas } from "../molecule/Canvas";
 import BlobCircle from "../../../assets/svg/blob-circle.svg";
 import { DrugInteractionContent } from "./DrugInteractionContent";
 import { useDashboardContext } from "../context/useDashboarContext";
+import { Canvas } from "@react-three/fiber";
+import { PredictiveWorld } from "../predictive-world/PredictiveWorld";
 
 const url = `drug-interaction`;
 
@@ -63,7 +65,6 @@ export const DrugInteraction = memo(({onNewItems}) => {
   return (
     <Box pt={3} ref={drop} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <Box sx={{
-        //border: `${isOver ? '5px solid' : '3px dotted'} ${theme.palette.primary.main}`,
         width: 500,
         height: 500,
         flexGrow: 1,
@@ -71,10 +72,9 @@ export const DrugInteraction = memo(({onNewItems}) => {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        background: `url(${BlobCircle})`,
-        backgroundSize: 'cover'
+        position: 'relative'
       }} id="blob-circle">
-        <MoleculeCanvas speed={calculateSpeed()}/>
+        <PredictiveWorld />
       </Box>
       <DrugInteractionContent/>
     </Box>
