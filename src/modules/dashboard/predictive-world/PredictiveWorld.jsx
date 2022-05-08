@@ -7,7 +7,7 @@ export const PredictiveWorld = () => {
   const canvas = useRef()
   const bars = 8;
   const radius = 130;
-  const graus = 45;
+  const degrees = 45;
 
 
   const drawLine = (x,y,w,h,deg) => {
@@ -33,9 +33,9 @@ export const PredictiveWorld = () => {
   const drawDot = (lineDeg, value) => {
     ctx.save();
 
-    const totalDeg = lineDeg * graus;
-    var x = radius * Math.cos(degrees_to_radians(totalDeg));
-    var y = radius * Math.sin(degrees_to_radians(totalDeg));
+    const totalDeg = lineDeg * degrees;
+    let x = radius * Math.cos(degrees_to_radians(totalDeg));
+    let y = radius * Math.sin(degrees_to_radians(totalDeg));
     ctx.translate(x+250, y+250);
     ctx.rotate(-degrees_to_radians(totalDeg));
     ctx.fillStyle = "#209ff4";
@@ -69,12 +69,10 @@ export const PredictiveWorld = () => {
   }, []);
   useEffect(() => {
 
-    var bars = 8;
-    var radius = 130;
-    for(var i = 0; i < bars; i++) {
-      var x = radius * Math.cos(degrees_to_radians(i * graus));
-      var y = radius * Math.sin(degrees_to_radians(i * graus));
-      drawLine(x + 250, y + 250, 1, 120, i * graus);
+    for(let i = 0; i < bars; i++) {
+      let x = radius * Math.cos(degrees_to_radians(i * degrees));
+      let y = radius * Math.sin(degrees_to_radians(i * degrees));
+      drawLine(x + 250, y + 250, 1, 120, i * degrees);
     }
 
     drawDot(1, 0)//out 45
