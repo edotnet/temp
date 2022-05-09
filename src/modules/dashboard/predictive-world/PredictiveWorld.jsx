@@ -74,14 +74,18 @@ export const PredictiveWorld = () => {
     return radians * 180 / Math.PI;
   };
   const scale = (num, property) => {
+    const min = scales[property][0]
+    const max = scales[property][1]
+      //num*100/max-min
     if (num < scales[property][0]) {
-      return scales[property][0];
+      num = scales[property][0];
     }
     if (num > scales[property][1]) {
-      return scales[property][1];
+      num = scales[property][1];
     }
-    return num;
+    return num*100/(max-min);
   }
+
   useEffect(() => {
     // dynamically assign the width and height to canvas
     const canvasEle = canvas.current;
