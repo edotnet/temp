@@ -8,11 +8,11 @@ import { ContentCopy } from "@mui/icons-material";
 import { CopyComponent } from "../../infrastructure/components/Copy.component";
 
 const keys = [
-  {key: 'calculated_properties.Molecular Weight', title: 'Mass.', color: '#AE2AFF'}, //8272.338 / 2.016
-  {key: 'calculated_properties.logP', title: 'LogP', color: '#FF9898'},  // 27 / -62
+  {key: 'calculated_properties.Molecular Weight', title: 'Mass.', color: '#AE2AFF'}, //900 / 1
+  {key: 'calculated_properties.logP', title: 'LogP', color: '#FF9898'},  // -9 / 9
   {key: 'calculated_properties.ADMET.ames_toxicity.probability', title: 'AMES Tox', color: '#001959'},
   //{key: 'calculated_properties.Molecular Formula', title: 'Mol. Form.', color: '#17D74D'},
-  {key: 'calculated_properties.ALOGPS.logS', title: 'LogS', color: '#0050C9'}, //1.2 / -9.44
+  {key: 'calculated_properties.ALOGPS.logS', title: 'LogS', color: '#0050C9'}, //-11 / 3
   // { key: 'calculated_properties.Bioavailability', title: 'Bio Availability', color: '#FF9898'},
   // { key: 'calculated_properties.Ghose Filter', title: 'Ghose Filter', color: '#17D74D'},
   // { key: 'calculated_properties.H Bond Acceptor Count', title: 'H Bond Acceptor Count', color: '#AE2AFF'},
@@ -24,7 +24,7 @@ const keys = [
   // { key: 'calculated_properties.Polar Surface Area (PSA)', title: 'Polar Surface Area (PSA)', color: '#17D74D'},
   // { key: 'calculated_properties.Polarizability', title: 'Polarizability', color: '#AE2AFF'},
   // { key: 'calculated_properties.Refractivity', title: 'Refractivity', color: '#0050C9'},
-  // { key: 'calculated_properties.Rotatable Bond Count', title: 'Rotatable Bond Count', color: '#001959'},
+  // { key: 'calculated_properties.Rotatable Bond Count', title: 'Rotatable Bond Count', color: '#001959'}, // 0 / 20
   // { key: 'calculated_properties.Rule of Five', title: 'Rule of Five' , color: '#17D74D'},
   // { key: 'calculated_properties.pKa (strongest acidic)', title: 'pKa (strongest acidic)', color: '#AE2AFF' },
   // { key: 'calculated_properties.pKa (strongest basic)', title: 'pKa (strongest basic)' ,color: '#0050C9' }

@@ -8,9 +8,9 @@ export const Fullorb = () => <svg id="e0ocbBv8dt71" xmlns="http://www.w3.org/200
         </radialGradient>
     </defs>
     <g>
-        <circle r="334" transform="translate(439 439)" opacity="0.05" fill="#302361" fill-rule="evenodd"/>
-        <circle r="250.238" transform="translate(439.238 439.238)" opacity="0.05" fill="#302361" fill-rule="evenodd"/>
-        <circle r="174.853" transform="translate(438.853 438.853)" opacity="0.05" fill="#302361" fill-rule="evenodd"/>
+        <circle r="334" transform="translate(439 439)" opacity="0.05" fill="#302361" fillRule="evenodd"/>
+        <circle r="250.238" transform="translate(439.238 439.238)" opacity="0.05" fill="#302361" fillRule="evenodd"/>
+        <circle r="174.853" transform="translate(438.853 438.853)" opacity="0.05" fill="#302361" fillRule="evenodd"/>
         <circle r="130" transform="translate(439 439)" opacity="0.05" fill="url(#e0ocbBv8dt76-fill)"
                 fillRule="evenodd"/>
         <g id="e0ocbBv8dt77_tr" transform="translate(438.998633,438.999329) rotate(0)">
