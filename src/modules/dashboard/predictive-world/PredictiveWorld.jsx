@@ -1,13 +1,14 @@
-import { Orb } from "./Orb";
+import { Orb } from "./custom-orb/Orb";
 import { useEffect, useRef } from "react";
-import { Slider } from "@mui/material";
+import './Orb.css'
+import { Fullorb } from "./FullOrb";
 
 export const PredictiveWorld = () => {
   let ctx = null;
   const canvas = useRef()
-  const bars = 8;
+  const bars = 4;
   const radius = 130;
-  const degrees = 45;
+  const degrees = 90;
 
 
   const drawLine = (x,y,w,h,deg) => {
@@ -30,7 +31,7 @@ export const PredictiveWorld = () => {
     ctx.stroke()
   }
 
-  const drawDot = (lineDeg, value) => {
+  const drawDot = (lineDeg, value, color) => {
     ctx.save();
 
     const totalDeg = lineDeg * degrees;
@@ -38,8 +39,8 @@ export const PredictiveWorld = () => {
     let y = radius * Math.sin(degrees_to_radians(totalDeg));
     ctx.translate(x+250, y+250);
     ctx.rotate(-degrees_to_radians(totalDeg));
-    ctx.fillStyle = "#209ff4";
-    ctx.strokeStyle = "#209ff4";
+    ctx.fillStyle = color;
+    ctx.strokeStyle = color;
 
     if (totalDeg % 90) {
       //ctx.fillRect(-5, value, 10, 10);
@@ -75,20 +76,23 @@ export const PredictiveWorld = () => {
       drawLine(x + 250, y + 250, 1, 120, i * degrees);
     }
 
-    drawDot(1, 0)//out 45
-    drawDot(2, 0)//in 90
-    drawDot(3, 0)//in 135
-    drawDot(4, 0)//out 180
-    drawDot(5, 0)//out 225
+    drawDot(1, 0, "#209ff4")//out 45
+    drawDot(1, 30, "red")//out 45
+    drawDot(2, 0, 'red')//in 90
+    drawDot(3, 0, "red")//in 135
+    drawDot(3, 30, "#209ff4")//in 135
+    drawDot(4, 0, 'red')//out 180
+    drawDot(4, -20, '#209ff4')//out 180
+    /*drawDot(5, 0)//out 225
     drawDot(6, 0)//in 270
     drawDot(7, 0)//in 315
-    drawDot(8, 10)//out 160
+    drawDot(8, 10)//out 160*/
   }, []);
 
   return (
     <>
       <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}}/>
-      <Orb/>
+      <Fullorb />
     </>
   );
 }
