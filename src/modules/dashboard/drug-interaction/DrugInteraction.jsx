@@ -76,7 +76,6 @@ export const DrugInteraction = memo(({onNewItems}) => {
       }} id="blob-circle">
         <MoleculeCanvas speed={calculateSpeed()}/>
       </Box>
-      <DrugInteractionContent/>
     </Box>
   );
 })

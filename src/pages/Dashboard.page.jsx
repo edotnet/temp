@@ -13,6 +13,7 @@ import { useDashboardContext } from "../modules/dashboard/context/useDashboarCon
 import { AdverseEffects } from "../modules/dashboard/AdverseEffects";
 import { AiModels } from "../modules/dashboard/ai-models/AiModels";
 import { TargetAutocomplete } from "../modules/dti/TargetAutocomplete";
+import { PresentationModal } from "../modules/dashboard/presentation-modal/PresentationModal";
 
 export const DashboardPage = () => {
   const {state, dispatch} = useDashboardContext();
@@ -86,7 +87,7 @@ export const DashboardPage = () => {
               <DrugInteraction/>
             </Grid>
             <Grid item xs={3}>
-              <DTI/>
+              <PresentationModal />
             </Grid>
           </Grid>
         </Grid>
