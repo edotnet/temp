@@ -21,12 +21,17 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
     boxShadow: `0 6px 5px 0 ${color}`,
     border: `solid 1px ${color}`,
   }
+
+  const selectedStyle = {
+    boxShadow: `none`,
+    border: `solid 1px black`,
+  }
   return (
     <div ref={drag} style={{opacity: isDragging ? '0' : '1'}}>
       <CustomWidthTooltip title={molecule.name}>
         <CustomChip
           variant={selected ? 'outlined' : 'filled'}
-          style={style}
+          style={selected ? selectedStyle : style}
           onClick={onClick}
           onDelete={onDelete}
           label={molecule.name}
