@@ -8,9 +8,9 @@ export const PredictiveWorld = () => {
   const {state} = useDashboardContext()
   const ctx = useRef();
   const canvas = useRef()
-  const bars = 4;
+  const bars = 8;
   const radius = 130;
-  const degrees = 90;
+  const degrees = 45;
   const lines = {
     logP: 1,
     logS: 2,
@@ -25,12 +25,28 @@ export const PredictiveWorld = () => {
     ames_tox: [0, 100],
   }
 
-  const drawLine = (x,y,w,h,deg) => {
+  const obj = {
+    "name": "Carbidopa",
+    "calculated_properties": [
+      { "name": "logP", "value": -1.2 },
+      { "name": "Molecular Weight", "value": 226.2292 },
+      { "name": "Rule of Five", "value": 1 },
+      { "name": "Refractivity", "value": 68.77 },
+      { "name": "Polarizability", "value": 21.81 },
+      { "name": "pKa (strongest acidic)", "value": 2.35 },
+      { "name": "pKa (strongest basic)", "value": 5.66 },
+      { "name": "Physiological Charge", "value": -1 },
+    ]
+  }
+
+  const drawLine = (x,y,w,h,deg, label, value) => {
     ctx.current.save();
     ctx.current.translate(x, y);
     ctx.current.rotate(degrees_to_radians(deg+90));
     ctx.current.fillStyle = "#209ff4";
     ctx.current.fillRect(-1*(w/2), -1*(h/2), w, h);
+    ctx.current.fillStyle = "#222A47";
+    ctx.current.fillText(label, -10 , -100);
     ctx.current.restore();
   }
 
@@ -67,6 +83,31 @@ export const PredictiveWorld = () => {
     ctx.current.restore();
   }
 
+  // const drawNumbers = (ctx, radius) => {
+  //   var ang;
+  //   var num;
+  //   var drug_properties = [
+  //     'Molecular weight',
+  //     'Melting Point',
+  //     'LogP',
+  //     'LogS',
+  //     'AMES Toxicity',
+  //     'pKa (strongest acidic)', 
+  //     'pKa (strongest) basic', 
+  //     'Phsysiological charge', 
+  //   ]
+  //   for(num= 0; num < drug_properties.length; num++){
+  //     ang = num * Math.PI / 4;
+  //     ctx.current.rotate(ang);
+  //     ctx.current.translate(0, -radius*1.82);
+  //     ctx.current.rotate(-ang);
+  //     ctx.current.fillText(drug_properties[num], 250, 250);
+  //     ctx.current.rotate(ang);
+  //     ctx.current.translate(0, radius*1.82);
+  //     ctx.current.rotate(-ang);
+  //   }
+  // }
+
   const degrees_to_radians = (degrees) => {
     return degrees * Math.PI / 180;
   }
@@ -97,12 +138,13 @@ export const PredictiveWorld = () => {
   }, []);
 
   useEffect(() => {
-    for(let i = 0; i < bars; i++) {
+    for(let i = 0; i < obj.calculated_properties.length; i++) {
       let x = radius * Math.cos(degrees_to_radians(i * degrees));
       let y = radius * Math.sin(degrees_to_radians(i * degrees));
-      drawLine(x + 250, y + 250, 1, 120, i * degrees);
+      drawLine(x + 250, y + 250, 1, 120, i * degrees, obj.calculated_properties[i].name , obj.calculated_properties[i].value);
     }
-
+    // drawNumbers(ctx, radius);
+    // drawNumbers(radius);
     /*drawDot(1, 0, "#209ff4")//out 45
     drawDot(1, 30, "red")//out 45
     drawDot(2, 0, 'red')//in 90
