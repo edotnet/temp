@@ -15,7 +15,6 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
   })
 
   const color = colorful_language(molecule.name, 0.5);
-  console.log(molecule.name, color)
 
   const style = {
     boxShadow: `0 6px 5px 0 ${color}`,
