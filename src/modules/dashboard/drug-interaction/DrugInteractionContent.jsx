@@ -22,6 +22,7 @@ export const DrugInteractionContent = () => {
 
   return (
     <>
+      <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
       <Box sx={{display: "flex"}}>
         <Avatar sx={{bgcolor: "#d0eed2", width: 100, height: 100}}>
           <Typography sx={{
@@ -31,14 +32,17 @@ export const DrugInteractionContent = () => {
           }}>{state.interactingMoleculesResult.value}%</Typography>
         </Avatar>
         <Box sx={{pl: 2, pt: 1}}>
-          <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
-          <Box sx={{display: "flex", justifyContent: "space-around"}}>
-            <CustomWidthTooltip title={drug1.name}>
-              <CustomChip label={drug1.name} style={getStyles(drug1.color)}/>
-            </CustomWidthTooltip>
-            <CustomWidthTooltip title={drug2.name}>
-              <CustomChip label={drug2.name} sx={{marginLeft: 1}} style={getStyles(drug2.color)}/>
-            </CustomWidthTooltip>
+          <Box sx={{display: "flex", flexDirection: 'column'}}>
+            <Box pb={1}>
+              <CustomWidthTooltip title={drug1.name}>
+                <CustomChip label={drug1.name} style={getStyles(drug1.color)}/>
+              </CustomWidthTooltip>
+            </Box>
+            <Box>
+              <CustomWidthTooltip title={drug2.name}>
+                <CustomChip label={drug2.name} style={getStyles(drug2.color)}/>
+              </CustomWidthTooltip>
+            </Box>
           </Box>
         </Box>
       </Box>
