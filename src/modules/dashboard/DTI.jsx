@@ -13,7 +13,8 @@ export const DTI = () => {
   const { state, dispatch} = useDashboardContext();
   const {protein} = state;
   const url = '/dti'
-  const {data, fetch, reset} = useApiCall(url, 'POST', null, false);
+  //const {data, fetch, reset} = useApiCall(url, 'POST', null, false);
+  const data = [{"label": "Favipiravir", "value": 4.706718444824219}, {"label": "Ibuproxam", "value": 5.687283992767334}, {"label": "Dexibuprofen", "value": 5.887485027313232}, {"label": "D-4-hydroxyphenylglycine", "value": 5.576238632202148}];
 
   useEffect(() => {
     const molecules = state.molecules.map(molecule => ({
@@ -21,10 +22,10 @@ export const DTI = () => {
       label: molecule.name,
     }));
     if (molecules.length && protein) {
-      fetch(url, 'POST', {target: protein, drugs: molecules});
+      //fetch(url, 'POST', {target: protein, drugs: molecules});
     }
     if (data && !molecules.length) {
-      reset();
+      //reset();
     }
   }, [protein, state.molecules])
 

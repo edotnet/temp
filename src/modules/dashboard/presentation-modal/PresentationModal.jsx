@@ -1,4 +1,3 @@
-import { ModalPaper } from "../../../infrastructure/components/ModalPaper";
 import { Box, Paper } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
@@ -9,7 +8,7 @@ import { Hr } from "../../../infrastructure/components/Hr.component";
 
 export const PresentationModal = () => {
   const {state, dispatch} = useDashboardContext();
-  if (!state.interactingMoleculesResult) {
+  if (!state.interactingMoleculesResult && !state.protein) {
     return null;
   }
 
@@ -24,10 +23,8 @@ export const PresentationModal = () => {
       </IconButton>
       <Box p={4} pt={6}>
         <DrugInteractionContent/>
-        <Hr/>
-        <Box pt={4}>
-          <DTI/>
-        </Box>
+        <Hr block/>
+        <DTI/>
       </Box>
     </Paper>
   )

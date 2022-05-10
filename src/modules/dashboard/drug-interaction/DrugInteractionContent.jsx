@@ -1,12 +1,10 @@
-import { ModalPaper } from "../../../infrastructure/components/ModalPaper";
 import { Avatar, Box, Typography } from "@mui/material";
 import { CustomChip } from "../../../infrastructure/components/CustomChip";
 import { Hr } from "../../../infrastructure/components/Hr.component";
 import * as PropTypes from "prop-types";
 import { useDashboardContext } from "../context/useDashboarContext";
-import IconButton from "@mui/material/IconButton";
-import { CancelOutlined } from "@mui/icons-material";
 import { CustomWidthTooltip } from "../../../infrastructure/components/CustomWidthTooltip";
+import { colorful_language } from "../../../infrastructure/utils";
 
 export const DrugInteractionContent = () => {
   const {state, dispatch} = useDashboardContext();
@@ -14,6 +12,15 @@ export const DrugInteractionContent = () => {
     return null;
   }
   const [drug1, drug2] = state.interactingMolecules;
+
+  const getStyles = (word) => {
+    const color = colorful_language(word, 0.25);
+
+    return {
+      boxShadow: `0 6px 5px 0 ${color}`,
+      border: `solid 1px ${color}`,
+    }
+  }
 
   return (
     <>
@@ -29,10 +36,10 @@ export const DrugInteractionContent = () => {
           <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
           <Box sx={{display: "flex", justifyContent: "space-around"}}>
             <CustomWidthTooltip title={drug1.name}>
-              <CustomChip label={drug1.name}/>
+              <CustomChip label={drug1.name} style={getStyles(drug1.name)}/>
             </CustomWidthTooltip>
             <CustomWidthTooltip title={drug2.name}>
-              <CustomChip label={drug2.name} sx={{marginLeft: 1}}/>
+              <CustomChip label={drug2.name} sx={{marginLeft: 1}} style={getStyles(drug2.name)}/>
             </CustomWidthTooltip>
           </Box>
         </Box>
