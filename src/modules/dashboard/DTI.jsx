@@ -15,53 +15,6 @@ export const DTI = () => {
   const url = '/dti'
   const {data, fetch, reset} = useApiCall(url, 'POST', null, false);
 
-  const result = useMemo( () => {
-    if (!data || !protein) {
-      return null;
-    }
-
-    return (
-      <ModalPaper elevation={15}>
-        <Box p={3}>
-          <Box sx={{display: 'flex', alignItems: 'center'}}>
-            <Avatar>
-              <img src={InfoProtein} alt="InfoProtein"/>
-            </Avatar>
-            <Box pl={2}>
-              <Typography sx={{fontSize: 15, fontWeight: 500}}>Target Interaction, protein:</Typography>
-              <Typography sx={{fontSize: 18}}>{protein.label}</Typography>
-            </Box>
-          </Box>
-          <Hr/>
-          <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction score</Typography>
-          <Grid container spacing={1}>
-            <Grid item xs={4}>
-              {data && data.map(el => (
-                <Box key={el.label}>
-                  <Typography sx={{fontSize: 14, fontWeight: 'bold', mb: -1}}>{el.label}</Typography>
-                  <Typography sx={{fontSize: 20, fontWeight: 300, color: '#141414'}}>{el.value.toFixed(4)}</Typography>
-                </Box>
-              ))}
-            </Grid>
-            <Grid item xs={7}>
-              <GraphBackground>
-                {data && data.map(el => (
-                  <Box pt={3.3} key={el.value}>
-                    <Graph width={el.value}/>
-                  </Box>
-                ))}
-              </GraphBackground>
-            </Grid>
-          </Grid>
-        </Box>
-      </ModalPaper>
-    )
-  }, [data, protein]);
-
-  const handleChange = (protein) => {
-    dispatch({type:'addProtein', payload: protein})
-  }
-
   useEffect(() => {
     const molecules = state.molecules.map(molecule => ({
       id: molecule.calculated_properties.SMILES,
@@ -74,13 +27,45 @@ export const DTI = () => {
       reset();
     }
   }, [protein, state.molecules])
+
+  if (!protein || !state.molecules.length) {
+    return null;
+  }
+
   return (
-    <>
-      <Typography variant="h5">TARGET INTERACTION</Typography>
-      <TargetAutocomplete onChange={handleChange} label="Add target"/>
-      <Box pt={5}>
-        {result}
+    <ModalPaper elevation={15}>
+      <Box p={3}>
+        <Box sx={{display: 'flex', alignItems: 'center'}}>
+          <Avatar>
+            <img src={InfoProtein} alt="InfoProtein"/>
+          </Avatar>
+          <Box pl={2}>
+            <Typography sx={{fontSize: 15, fontWeight: 500}}>Target Interaction, protein:</Typography>
+            <Typography sx={{fontSize: 18}}>{protein.label}</Typography>
+          </Box>
+        </Box>
+        <Hr/>
+        <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction score</Typography>
+        <Grid container spacing={1}>
+          <Grid item xs={4}>
+            {data && data.map(el => (
+              <Box key={el.label}>
+                <Typography sx={{fontSize: 14, fontWeight: 'bold', mb: -1}}>{el.label}</Typography>
+                <Typography sx={{fontSize: 20, fontWeight: 300, color: '#141414'}}>{el.value.toFixed(4)}</Typography>
+              </Box>
+            ))}
+          </Grid>
+          <Grid item xs={7}>
+            <GraphBackground>
+              {data && data.map(el => (
+                <Box pt={3.3} key={el.value}>
+                  <Graph width={el.value}/>
+                </Box>
+              ))}
+            </GraphBackground>
+          </Grid>
+        </Grid>
       </Box>
-    </>
+    </ModalPaper>
   )
 }

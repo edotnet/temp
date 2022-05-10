@@ -1,6 +1,7 @@
 import { useDrag } from "react-dnd";
 import { CustomChip } from "../../infrastructure/components/CustomChip";
 import { CustomWidthTooltip } from "../../infrastructure/components/CustomWidthTooltip";
+import { colorful_language } from "../../infrastructure/utils";
 
 export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
 
@@ -13,11 +14,19 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
     })
   })
 
+  const color = colorful_language(molecule.name, 0.5);
+  console.log(molecule.name, color)
+
+  const style = {
+    boxShadow: `0 6px 5px 0 ${color}`,
+    border: `solid 1px ${color}`,
+  }
   return (
     <div ref={drag} style={{opacity: isDragging ? '0' : '1'}}>
       <CustomWidthTooltip title={molecule.name}>
         <CustomChip
           variant={selected ? 'outlined' : 'filled'}
+          style={style}
           onClick={onClick}
           onDelete={onDelete}
           label={molecule.name}

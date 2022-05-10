@@ -48,21 +48,7 @@ function fetchFromObject(obj, prop) {
 export const DrugProperties = () => {
   const {state} = useDashboardContext()
   if (!state.selectedMolecule) {
-    return (
-      <Box>
-        <ModalPaper elevation={2} sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: 450,
-          height: 251,
-          display: 'flex',
-          flexGrow: 1,
-          marginBottom: '50px'
-        }}>
-          <Typography>Click a drug</Typography>
-        </ModalPaper>
-      </Box>
-    )
+    return null;
   }
 
   function renderDescription() {
