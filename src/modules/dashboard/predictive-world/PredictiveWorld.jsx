@@ -8,7 +8,7 @@ export const PredictiveWorld = () => {
   const {state} = useDashboardContext()
   const ctx = useRef();
   const canvas = useRef()
-  const bars = 8;
+  // const bars = 8;
   const radius = 130;
   const degrees = 45;
   const lines = {
@@ -28,14 +28,14 @@ export const PredictiveWorld = () => {
   const obj = {
     "name": "Carbidopa",
     "calculated_properties": [
-      { "name": "logP", "value": -1.2 },
-      { "name": "Molecular Weight", "value": 226.2292 },
-      { "name": "Rule of Five", "value": 1 },
-      { "name": "Refractivity", "value": 68.77 },
-      { "name": "Polarizability", "value": 21.81 },
-      { "name": "pKa (strongest acidic)", "value": 2.35 },
-      { "name": "pKa (strongest basic)", "value": 5.66 },
-      { "name": "Physiological Charge", "value": -1 },
+      { "name": "logP", "value": -1.2 , "color": "red"},
+      { "name": "Molecular Weight", "value": 26.2292, "color": "orange" },
+      { "name": "Rule of Five", "value": 1 , "color": "blue"},
+      { "name": "Refractivity", "value": 68.77, "color": "yellow" },
+      { "name": "Polarizability", "value": 21.81, "color": "purple" },
+      { "name": "pKa (strongest acidic)", "value": 2.35, "color": "green" },
+      { "name": "pKa (strongest basic)", "value": 5.66, "color": "brown" },
+      { "name": "Physiological Charge", "value": -1, "color": "black" },
     ]
   }
 
@@ -47,6 +47,7 @@ export const PredictiveWorld = () => {
     ctx.current.fillRect(-1*(w/2), -1*(h/2), w, h);
     ctx.current.fillStyle = "#222A47";
     ctx.current.fillText(label, -10 , -100);
+    // drawDot(0, value, "#209ff4")
     ctx.current.restore();
   }
 
@@ -68,7 +69,8 @@ export const PredictiveWorld = () => {
     let x = radius * Math.cos(degrees_to_radians(totalDeg));
     let y = radius * Math.sin(degrees_to_radians(totalDeg));
     ctx.current.translate(x+250, y+250);
-    ctx.current.rotate(-degrees_to_radians(totalDeg));
+    console.log(degrees_to_radians(totalDeg));
+    //ctx.current.rotate(degrees_to_radians(totalDeg));
     ctx.current.fillStyle = color;
     ctx.current.strokeStyle = color;
 
@@ -83,30 +85,6 @@ export const PredictiveWorld = () => {
     ctx.current.restore();
   }
 
-  // const drawNumbers = (ctx, radius) => {
-  //   var ang;
-  //   var num;
-  //   var drug_properties = [
-  //     'Molecular weight',
-  //     'Melting Point',
-  //     'LogP',
-  //     'LogS',
-  //     'AMES Toxicity',
-  //     'pKa (strongest acidic)', 
-  //     'pKa (strongest) basic', 
-  //     'Phsysiological charge', 
-  //   ]
-  //   for(num= 0; num < drug_properties.length; num++){
-  //     ang = num * Math.PI / 4;
-  //     ctx.current.rotate(ang);
-  //     ctx.current.translate(0, -radius*1.82);
-  //     ctx.current.rotate(-ang);
-  //     ctx.current.fillText(drug_properties[num], 250, 250);
-  //     ctx.current.rotate(ang);
-  //     ctx.current.translate(0, radius*1.82);
-  //     ctx.current.rotate(-ang);
-  //   }
-  // }
 
   const degrees_to_radians = (degrees) => {
     return degrees * Math.PI / 180;
@@ -142,17 +120,17 @@ export const PredictiveWorld = () => {
       let x = radius * Math.cos(degrees_to_radians(i * degrees));
       let y = radius * Math.sin(degrees_to_radians(i * degrees));
       drawLine(x + 250, y + 250, 1, 120, i * degrees, obj.calculated_properties[i].name , obj.calculated_properties[i].value);
+      drawDot(i+1, obj.calculated_properties[i].value , obj.calculated_properties[i].color)
     }
     // drawNumbers(ctx, radius);
     // drawNumbers(radius);
-    /*drawDot(1, 0, "#209ff4")//out 45
-    drawDot(1, 30, "red")//out 45
-    drawDot(2, 0, 'red')//in 90
-    drawDot(3, 0, "red")//in 135
-    drawDot(3, 30, "#209ff4")//in 135
-    drawDot(4, 0, 'red')//out 180
-    drawDot(4, -20, '#209ff4')//out 180
-    */
+    // drawDot(1, 0, "#209ff4")//out 45
+    // drawDot(1, 30, "red")//out 45
+    // drawDot(2, 0, 'red')//in 90
+    // drawDot(3, 0, "red")//in 135
+    // drawDot(3, 30, "#209ff4")//in 135
+    // drawDot(4, 0, 'red')//out 180
+    // drawDot(4, -20, 'orange')//out 180
   }, []);
 
   useEffect(() => {
