@@ -36,7 +36,7 @@ export const DTI = () => {
   return (
     <>
       <Box sx={{display: 'flex', alignItems: 'center'}}>
-        <Avatar>
+        <Avatar sx={{border: '1px dashed red', width: 60, height: 60}}>
           <img src={InfoProtein} alt="InfoProtein"/>
         </Avatar>
         <Box pl={2}>
@@ -46,25 +46,19 @@ export const DTI = () => {
       </Box>
       <Hr/>
       <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction score</Typography>
+      <GraphBackground>
       <Grid container spacing={1}>
-        <Grid item xs={4}>
+        <Grid item xs={12}>
           {data && data.map(el => (
-            <Box key={el.label}>
-              <Typography sx={{fontSize: 14, fontWeight: 'bold', mb: -1}}>{el.label}</Typography>
-              <Typography sx={{fontSize: 20, fontWeight: 300, color: '#141414'}}>{el.value.toFixed(4)}</Typography>
+            <Box key={el.label} sx={{position: 'relative'}}>
+              <Typography component="span" sx={{fontSize: 14, fontWeight: 'bold', mb: -1, backgroundColor: '#7f70da', color: 'white', display: 'flex', width: `calc(100% - ${el.value*5}%)`}}>{el.label}</Typography><br/>
+              <Typography component="span" sx={{fontSize: 20, fontWeight: 300, color: '#141414', backgroundColor: 'white', position: 'absolute', top: 23}}>{el.value.toFixed(4)}</Typography>
+              <div style={{height: 23}}/>
             </Box>
           ))}
         </Grid>
-        <Grid item xs={7}>
-          <GraphBackground>
-            {data && data.map(el => (
-              <Box pt={3.3} key={el.value}>
-                <Graph width={el.value}/>
-              </Box>
-            ))}
-          </GraphBackground>
-        </Grid>
       </Grid>
+      </GraphBackground>
     </>
   )
 }
