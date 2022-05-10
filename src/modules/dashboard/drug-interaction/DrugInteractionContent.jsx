@@ -13,9 +13,7 @@ export const DrugInteractionContent = () => {
   }
   const [drug1, drug2] = state.interactingMolecules;
 
-  const getStyles = (word) => {
-    const color = colorful_language(word, 0.25);
-
+  const getStyles = (color) => {
     return {
       boxShadow: `0 6px 5px 0 ${color}`,
       border: `solid 1px ${color}`,
@@ -36,10 +34,10 @@ export const DrugInteractionContent = () => {
           <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
           <Box sx={{display: "flex", justifyContent: "space-around"}}>
             <CustomWidthTooltip title={drug1.name}>
-              <CustomChip label={drug1.name} style={getStyles(drug1.name)}/>
+              <CustomChip label={drug1.name} style={getStyles(drug1.color)}/>
             </CustomWidthTooltip>
             <CustomWidthTooltip title={drug2.name}>
-              <CustomChip label={drug2.name} sx={{marginLeft: 1}} style={getStyles(drug2.name)}/>
+              <CustomChip label={drug2.name} sx={{marginLeft: 1}} style={getStyles(drug2.color)}/>
             </CustomWidthTooltip>
           </Box>
         </Box>

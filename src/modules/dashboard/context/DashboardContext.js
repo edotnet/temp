@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react";
+import { colorful_language } from "../../../infrastructure/utils";
 
 const initialState = {
   molecules: [],
@@ -35,6 +36,7 @@ const reducer = (state, action) => {
       if (state.molecules.length === 4) {
         return state;
       }
+      molecule.color = colorful_language(molecule.name, 0.25);
       return {
         ...state,
         molecules: [...state.molecules, molecule]
