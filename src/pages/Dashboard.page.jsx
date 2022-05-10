@@ -18,7 +18,11 @@ import { PresentationModal } from "../modules/dashboard/presentation-modal/Prese
 export const DashboardPage = () => {
   const {state, dispatch} = useDashboardContext();
 
-  const setDetail = (molecule) => () => {
+  const setDetail = (molecule) => (e) => {
+    molecule.coordinates = {
+      x: e.clientX,
+      y: e.clientY,
+    }
     dispatch({type: 'selectMolecule', payload: molecule})
   }
   const removeMolecule = (molecule) => () => {
@@ -91,6 +95,7 @@ export const DashboardPage = () => {
             </Grid>
           </Grid>
         </Grid>
+        <DrugProperties />
       </DndProvider>
     </Box>
   )

@@ -4,7 +4,7 @@ import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 import { useDashboardContext } from "./context/useDashboarContext";
 import { Hr } from "../../infrastructure/components/Hr.component";
 import { AdverseEffectsInfo } from "./adverse-effects/AdverseEffectsInfo";
-import { ContentCopy } from "@mui/icons-material";
+import { Close, ContentCopy } from "@mui/icons-material";
 import { CopyComponent } from "../../infrastructure/components/Copy.component";
 
 const keys = [
@@ -46,9 +46,13 @@ function fetchFromObject(obj, prop) {
 
 
 export const DrugProperties = () => {
-  const {state} = useDashboardContext()
+  const {state, dispatch} = useDashboardContext()
   if (!state.selectedMolecule) {
     return null;
+  }
+
+  const close = () => {
+    dispatch({type: 'unselectMolecule'})
   }
 
   function renderDescription() {
@@ -92,8 +96,11 @@ export const DrugProperties = () => {
 
 
   return (
-    <Box>
+    <Box sx={{position: 'absolute', top: state.selectedMolecule.coordinates.y, left: state.selectedMolecule.coordinates.x}}>
       <ModalPaper elevation={2} sx={{width: 450, marginBottom: '50px', px: 2}}>
+        <IconButton sx={{position: "absolute", top: 0, right: 0}} size="large" onClick={close}>
+          <Close/>
+        </IconButton>
         <Box p={2} pb={3}>
           <Box>
             <Typography sx={{
