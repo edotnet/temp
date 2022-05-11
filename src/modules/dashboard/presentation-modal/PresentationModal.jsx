@@ -5,10 +5,14 @@ import { useDashboardContext } from "../context/useDashboarContext";
 import { DrugInteractionContent } from "../drug-interaction/DrugInteractionContent";
 import { DTI } from "../DTI";
 import { Hr } from "../../../infrastructure/components/Hr.component";
+import { DrugInteractionContentFirst } from "../drug-interaction/DrugInteractionContentFirst";
 
 export const PresentationModal = () => {
   const {state, dispatch} = useDashboardContext();
-  if (!state.interactingMoleculesResult && !state.protein) {
+  const isDTI = state.protein && state.molecules.length;
+  const isDIFirstMolecule = state.interactingMolecules.length === 1;
+  const isDI = state.interactingMolecules.length === 2 && state.interactingMoleculesResult;
+  if (!isDI && ! isDIFirstMolecule && ! isDTI) {
     return null;
   }
 
@@ -22,8 +26,9 @@ export const PresentationModal = () => {
         <Close/>
       </IconButton>
       <Box p={4} pt={6}>
+        <DrugInteractionContentFirst/>
         <DrugInteractionContent/>
-        <Hr block/>
+        {(isDIFirstMolecule || isDI) && isDTI && <Hr block/>}
         <DTI/>
       </Box>
     </Paper>

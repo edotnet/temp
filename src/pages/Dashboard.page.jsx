@@ -1,17 +1,14 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
-import { DrugAutocomplete } from "../modules/drug-interaction/DrugAutocomplete";
+import { Box, Grid, Typography } from "@mui/material";
+import { MoleculeAutocomplete } from "../modules/dashboard/MoleculeAutocomplete";
 import { MoleculeCard } from "../modules/dashboard/MoleculeCard";
 import { DrugProperties } from "../modules/dashboard/DrugProperties";
 import { DrugInteraction } from "../modules/dashboard/drug-interaction/DrugInteraction";
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
-import { DTI } from "../modules/dashboard/DTI";
 import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutocomplete";
 import { Navbar } from "../modules/dashboard/Navbar";
 import { DashboardContextProvider } from "../modules/dashboard/context/DashboardContext";
 import { useDashboardContext } from "../modules/dashboard/context/useDashboarContext";
-import { AdverseEffects } from "../modules/dashboard/AdverseEffects";
-import { AiModels } from "../modules/dashboard/ai-models/AiModels";
 import { TargetAutocomplete } from "../modules/dti/TargetAutocomplete";
 import { PresentationModal } from "../modules/dashboard/presentation-modal/PresentationModal";
 
@@ -67,11 +64,11 @@ export const DashboardPage = () => {
                   <TargetAutocomplete onChange={_onProteinSelected} label="Protein"/>
                 </Grid>
                 <Grid item xs={12}>
-                  <DrugAutocomplete
+                  <MoleculeAutocomplete
                     key="drug-autocomplete"
                     onChange={_onDrugSelected}
                     category={state.category}
-                    label="Add Molecule"/>
+                    label="+ Add Drug Molecule"/>
                   <Grid container spacing={4} pt={2}>
                     {state.molecules.map(molecule => (
                       <Grid item key={molecule.drugbank_id}>
@@ -91,11 +88,11 @@ export const DashboardPage = () => {
               <DrugInteraction/>
             </Grid>
             <Grid item xs={3}>
-              <PresentationModal />
+              <PresentationModal/>
             </Grid>
           </Grid>
         </Grid>
-        <DrugProperties />
+        <DrugProperties/>
       </DndProvider>
     </Box>
   )
