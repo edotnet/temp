@@ -10,32 +10,32 @@ export const PredictiveWorld = () => {
   const canvas = useRef()
   // const bars = 8;
   const radius = 130;
-  const degrees = 45;
-  const lines = {
-    logP: 1,
-    logS: 2,
-    mass: 3,
-    ames_tox: 4,
-  }
+  const degrees = 90;
+  // const lines = {
+  //   logP: 1,
+  //   logS: 2,
+  //   mass: 100,
+  //   ames_tox: 4,
+  // }
 
   const scales = {
     logP: [-9, 9],
     logS: [-11, 3],
     mass: [1, 900],
-    ames_tox: [0, 100],
+    ames: [0, 100],
   }
 
   const obj = {
     "name": "Carbidopa",
     "calculated_properties": [
-      { "name": "logP", "value": -1.2 , "color": "red"},
-      { "name": "Molecular Weight", "value": 26.2292, "color": "orange" },
-      { "name": "Rule of Five", "value": 1 , "color": "blue"},
-      { "name": "Refractivity", "value": 68.77, "color": "yellow" },
-      { "name": "Polarizability", "value": 21.81, "color": "purple" },
-      { "name": "pKa (strongest acidic)", "value": 2.35, "color": "green" },
-      { "name": "pKa (strongest basic)", "value": 5.66, "color": "brown" },
-      { "name": "Physiological Charge", "value": -1, "color": "black" },
+      { "name": "mass", "value": 26.2292 },
+      { "name": "logP", "value": -1.2 },
+      { "name": "logS", "value": 1 },
+      { "name": "ames", "value": 68.77 },
+      // { "name": "Polarizability", "value": 21.81},
+      // { "name": "pKa (strongest acidic)", "value": 2.35 },
+      // { "name": "pKa (strongest basic)", "value": 5.66  },
+      // { "name": "Physiological Charge", "value": -1 },
     ]
   }
 
@@ -65,12 +65,11 @@ export const PredictiveWorld = () => {
   const drawDot = (lineDeg, value, color) => {
     ctx.current.save();
 
-    const totalDeg = lineDeg * degrees;
+    const totalDeg = parseInt(lineDeg) * degrees;
     let x = radius * Math.cos(degrees_to_radians(totalDeg));
     let y = radius * Math.sin(degrees_to_radians(totalDeg));
     ctx.current.translate(x+250, y+250);
-    console.log(degrees_to_radians(totalDeg));
-    //ctx.current.rotate(degrees_to_radians(totalDeg));
+    ctx.current.rotate(-degrees_to_radians(totalDeg));
     ctx.current.fillStyle = color;
     ctx.current.strokeStyle = color;
 
@@ -84,7 +83,6 @@ export const PredictiveWorld = () => {
 
     ctx.current.restore();
   }
-
 
   const degrees_to_radians = (degrees) => {
     return degrees * Math.PI / 180;
@@ -120,7 +118,6 @@ export const PredictiveWorld = () => {
       let x = radius * Math.cos(degrees_to_radians(i * degrees));
       let y = radius * Math.sin(degrees_to_radians(i * degrees));
       drawLine(x + 250, y + 250, 1, 120, i * degrees, obj.calculated_properties[i].name , obj.calculated_properties[i].value);
-      drawDot(i+1, obj.calculated_properties[i].value , obj.calculated_properties[i].color)
     }
     // drawNumbers(ctx, radius);
     // drawNumbers(radius);
@@ -139,13 +136,16 @@ export const PredictiveWorld = () => {
     }
     const colors = ['red', 'blue']
     state.interactingMolecules.forEach((molecule, i) => {
+      console.log('molecule', molecule);
       const mass = molecule.calculated_properties['Molecular Weight'];
       const logP = molecule.calculated_properties['logP'];
       const logS = molecule.calculated_properties['ALOGPS']['logS'];
+      const ames =  molecule.calculated_properties['ADMET']['ames_toxicity']['probability'];
       //const ames_tox = molecule.calculated_properties['ADMET']['ames_toxicity']['probability'];
-      drawDot(lines['mass'], scale(mass, 'mass'), colors[i])
-      drawDot(lines['logP'], scale(logP, 'logP'), colors[i])
-      drawDot(lines['logS'], scale(logS, 'logS'), colors[i])
+      drawDot(mass, scale(mass, 'mass'), colors[i])
+      drawDot(logP, scale(logP, 'logP'), colors[i])
+      drawDot(logS, scale(logS, 'logS'), colors[i])
+      drawDot(ames, scale(ames, 'ames'), colors[i])
       //drawDot(lines['ames_tox'], scale(ames_tox, 'ames_tox'), colors[i])
     })
   }, [state.interactingMolecules])
