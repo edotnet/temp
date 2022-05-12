@@ -6,8 +6,13 @@ import { Paper, TextField, styled } from "@mui/material";
 const PillAutocomplete = styled(Autocomplete)({
   '&.MuiAutocomplete-root': {
     borderRadius: 50,
+    width: '50%',
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
     'fieldset': {
       border: '1px dashed #ccc',
+    },
+    '.MuiAutocomplete-input::placeholder': {
+      color: 'red'
     }
   },
   '.MuiOutlinedInput-root': {

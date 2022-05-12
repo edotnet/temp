@@ -64,11 +64,16 @@ export const DashboardPage = () => {
                   <TargetAutocomplete onChange={_onProteinSelected} label="Protein"/>
                 </Grid>
                 <Grid item xs={12}>
-                  <MoleculeAutocomplete
-                    key="drug-autocomplete"
-                    onChange={_onDrugSelected}
-                    category={state.category}
-                    label="+ Add Drug Molecule"/>
+                  <Box pt={2}>
+                    <MoleculeAutocomplete
+                      key="drug-autocomplete"
+                      onChange={_onDrugSelected}
+                      category={state.category}
+                      label="+ Add Drug Molecule"/>
+                  </Box>
+                  <Box pl={1} pt={2}>
+                    {state.molecules.length > 0 && <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>}
+                  </Box>
                   <Grid container spacing={4} pt={2}>
                     {state.molecules.map(molecule => (
                       <Grid item key={molecule.drugbank_id}>
