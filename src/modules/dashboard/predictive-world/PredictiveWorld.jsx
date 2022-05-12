@@ -83,6 +83,8 @@ export const PredictiveWorld = () => {
     ctx.current.fillStyle = color;
     ctx.current.strokeStyle = color;
 
+    console.log("value", value)
+
     if (totalDeg % 90) {
       //ctx.current.fillRect(-5, value, 10, 10);
       drawCircleDot(0, value)
@@ -164,11 +166,15 @@ export const PredictiveWorld = () => {
       drawDot(lines['logP'], scale(logP, 'logP'), moleculeColor)
       drawDot(lines['logS'], scale(logS, 'logS'), moleculeColor)
       drawDot(lines['ames_tox'], scale(ames_tox, 'ames_tox'), moleculeColor)
+      drawToolTip(lines['mass'], "Mass", scale(mass, 'mass'));
+      drawToolTip(lines['logP'], "logP",  scale(logP, 'logP'));
+      drawToolTip(lines['logS'], "logS",  scale(logS, 'logS'));
+      drawToolTip(lines['ames_tox'],  "Ames Tox", scale(ames_tox, 'ames_tox'));
     })
 
-    Object.entries(lines).forEach(([key, value], index) => {
-      drawToolTip(index + 1, key, value);
-    });
+    // Object.entries(lines).forEach(([key, value], index) => {
+    //   drawToolTip(index + 1, key, value);
+    // });
   }, [state.interactingMolecules])
 
   return (
