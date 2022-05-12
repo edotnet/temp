@@ -76,7 +76,6 @@ export const DrugInteraction = memo(({onNewItems}) => {
       }} id="blob-circle">
         <PredictiveWorld />
       </Box>
-      <DrugInteractionContent/>
     </Box>
   );
 })
