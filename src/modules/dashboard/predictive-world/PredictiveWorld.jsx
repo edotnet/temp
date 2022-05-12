@@ -8,9 +8,9 @@ export const PredictiveWorld = () => {
   const {state} = useDashboardContext()
   const ctx = useRef();
   const canvas = useRef()
-  const bars = 4;
+  const bars = 8;
   const radius = 130;
-  const degrees = 90;
+  const degrees = 360/bars;
   const lines = {
     logP: 1,
     logS: 2,
@@ -70,9 +70,7 @@ export const PredictiveWorld = () => {
   const degrees_to_radians = (degrees) => {
     return degrees * Math.PI / 180;
   }
-  const radians_to_degrees = (radians) => {
-    return radians * 180 / Math.PI;
-  };
+
   const scale = (num, property) => {
     const min = scales[property][0]
     const max = scales[property][1]
@@ -104,12 +102,13 @@ export const PredictiveWorld = () => {
     }
 
     /*drawDot(1, 0, "#209ff4")//out 45
-    drawDot(1, 30, "red")//out 45
-    drawDot(2, 0, 'red')//in 90
-    drawDot(3, 0, "red")//in 135
-    drawDot(3, 30, "#209ff4")//in 135
-    drawDot(4, 0, 'red')//out 180
-    drawDot(4, -20, '#209ff4')//out 180
+     drawDot(2, 0, 'red')//in 90
+     drawDot(3, 0, "red")//in 135
+     drawDot(4, 0, 'red')//out 180
+     /*drawDot(5, 0)//out 225
+     drawDot(6, 0)//in 270
+     drawDot(7, 0)//in 315
+     drawDot(8, 10)//out 360
     */
   }, []);
 
@@ -117,16 +116,19 @@ export const PredictiveWorld = () => {
     if (!state.interactingMolecules || !state.interactingMolecules.length){
       return;
     }
-    const colors = ['red', 'blue']
     state.interactingMolecules.forEach((molecule, i) => {
+      const {hue, saturation, luminosity} = molecule.color;
+      const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 1)`;
+
       const mass = molecule.calculated_properties['Molecular Weight'];
       const logP = molecule.calculated_properties['logP'];
       const logS = molecule.calculated_properties['ALOGPS']['logS'];
+      const ames_tox = 50;
       //const ames_tox = molecule.calculated_properties['ADMET']['ames_toxicity']['probability'];
-      drawDot(lines['mass'], scale(mass, 'mass'), colors[i])
-      drawDot(lines['logP'], scale(logP, 'logP'), colors[i])
-      drawDot(lines['logS'], scale(logS, 'logS'), colors[i])
-      //drawDot(lines['ames_tox'], scale(ames_tox, 'ames_tox'), colors[i])
+      drawDot(lines['mass'], scale(mass, 'mass'), moleculeColor)
+      drawDot(lines['logP'], scale(logP, 'logP'), moleculeColor)
+      drawDot(lines['logS'], scale(logS, 'logS'), moleculeColor)
+      drawDot(lines['ames_tox'], scale(ames_tox, 'ames_tox'), moleculeColor)
     })
   }, [state.interactingMolecules])
 

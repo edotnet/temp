@@ -14,9 +14,11 @@ export const DrugInteractionContent = () => {
   const [drug1, drug2] = state.interactingMolecules;
 
   const getStyles = (color) => {
+    const {hue, saturation, luminosity} = color;
+    const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.25)`;
     return {
-      boxShadow: `0 6px 5px 0 ${color}`,
-      border: `solid 1px ${color}`,
+      boxShadow: `0 6px 5px 0 ${moleculeColor}`,
+      border: `solid 1px ${moleculeColor}`,
     }
   }
 
