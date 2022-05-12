@@ -27,6 +27,29 @@ export const PredictiveWorld = () => {
     ames_tox: [0, 100],
   }
 
+  // To create each tooltip, we need to show
+  const drawToolTip = (lineDeg, drugName, value) => {
+
+    const totalDeg = lineDeg * degrees;
+    let x = radius * Math.cos(degrees_to_radians(totalDeg));
+    let y = radius * Math.sin(degrees_to_radians(totalDeg));
+
+    ctx.current.beginPath();
+    ctx.current.fillStyle = '#7d6dd8';
+    ctx.current.fillRect(x + 265, y + 230, 100, 15);
+    ctx.current.textAlign = "center";
+    ctx.current.textBaseline = "middle";
+    ctx.current.fillStyle = '#fff';
+    ctx.current.fillText(drugName, x + 315, y + 238);
+    ctx.current.beginPath();
+    ctx.current.fillStyle = '#fff';
+    ctx.current.fillRect(x + 265, y + 245, 75, 13);
+    ctx.current.fillStyle = '#000';
+    ctx.current.fillText(value, x + 300, y + 252);
+
+    // drawTestDot();
+  }
+
   const drawLine = (x,y,w,h,deg, text) => {
     ctx.current.save();
     ctx.current.translate(x, y);
@@ -142,6 +165,10 @@ export const PredictiveWorld = () => {
       drawDot(lines['logS'], scale(logS, 'logS'), moleculeColor)
       drawDot(lines['ames_tox'], scale(ames_tox, 'ames_tox'), moleculeColor)
     })
+
+    Object.entries(lines).forEach(([key, value], index) => {
+      drawToolTip(index + 1, key, value);
+    });
   }, [state.interactingMolecules])
 
   return (
