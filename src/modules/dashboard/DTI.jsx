@@ -22,7 +22,7 @@ export const DTI = () => {
       label: molecule.name,
     }));
     if (molecules.length && protein) {
-      //fetch(url, 'POST', {target: protein, drugs: molecules});
+      fetch(url, 'POST', {target: protein, drugs: molecules});
     }
     if (data && !molecules.length) {
       reset();
