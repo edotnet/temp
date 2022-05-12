@@ -25,6 +25,8 @@ export const PredictiveWorld = () => {
     ames_tox: [0, 100],
   }
 
+  const inValues = [90, 135, 270, 315];
+
   const drawLine = (x,y,w,h,deg) => {
     ctx.current.save();
     ctx.current.translate(x, y);
@@ -72,16 +74,25 @@ export const PredictiveWorld = () => {
   }
 
   const scale = (num, property) => {
+    num = parseFloat(num);
     const min = scales[property][0]
     const max = scales[property][1]
-      //num*100/max-min
     if (num < scales[property][0]) {
       num = scales[property][0];
     }
     if (num > scales[property][1]) {
       num = scales[property][1];
     }
-    return num*100/(max-min);
+    if (min < 0) {
+      num = num + min*-1;
+    }
+    const percent = (num*100/(max-min));
+    const canvasAdapted = percent - 50;
+    const isIn = inValues.includes(lines[property]*degrees)
+    if (isIn) {
+      return canvasAdapted;
+    }
+    return -canvasAdapted;
   }
 
   useEffect(() => {
