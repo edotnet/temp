@@ -7,7 +7,9 @@ import { useDashboardContext } from "../context/useDashboarContext";
 export const PredictiveWorld = () => {
   const {state} = useDashboardContext()
   const ctx = useRef();
+  const tipCtx = useRef();
   const canvas = useRef()
+  const tooltip_can = useRef()
   const bars = 4;
   const radius = 130;
   const degrees = 360/bars;
@@ -152,6 +154,7 @@ export const PredictiveWorld = () => {
       var y = ev.clientY - this.offsetTop;
       // console.log(x + ' ,'+ y);
     }
+
     // for(let i in lines) {
     //   console.log('lines', i);
     //   let x = radius * Math.cos(degrees_to_radians(i * degrees));
@@ -168,6 +171,21 @@ export const PredictiveWorld = () => {
      drawDot(7, 0)//in 315
      drawDot(8, 10)//out 360
     */
+
+     for (var i = 0; i < data.values.length; i++) {
+      dots.push({
+          x: data.values[i].X,
+          y: data.values[i].Y,
+          r: 8,
+          rXr: 64,
+          tip: "Tooltip " + (i + 1)
+      });
+  }
+      for (var i = 0; i < data.values.length; i++) {
+        ctx.current.beginPath();
+        ctx.current.arc(data.values[i].X, data.values[i].Y, 8, 0, Math.PI * 2, true);
+        ctx.current.fill();
+      }
   }, []);
 
   useEffect(() => {
@@ -199,9 +217,70 @@ export const PredictiveWorld = () => {
     // });
   }, [state.interactingMolecules])
 
+  const data = {
+    values: [{
+        X: 120,
+        Y: 112
+    }, {
+        X: 22,
+        Y: 128
+    }, {
+        X: 143,
+        Y: 118
+    }, {
+        X: 54,
+        Y: 34
+    }, {
+        X: 55,
+        Y: 140
+    }, {
+        X: 164,
+        Y: 180
+    }, {
+        X: 75,
+        Y: 180
+    }]
+};
+
+  const dots = [];
+
+  const handleMouseMove = (e) => {
+    e.preventDefault();
+    const BB = canvas.current.getBoundingClientRect();
+    const offsetX = BB.left;
+    const offsetY = BB.top;
+
+    const mouseX = parseInt(e.clientX - offsetX);
+    const mouseY = parseInt(e.clientY - offsetY);
+
+    var tipCanvas = document.getElementById("tooltip_can");
+    var tipCtx = tipCanvas.getContext("2d");
+
+    var hit = false;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dx = mouseX - dot.x;
+      var dy = mouseY - dot.y;
+      if (dx * dx + dy * dy < dot.rXr) {
+            
+            tipCanvas.style.left = (dot.x + 5) + "px";
+            tipCanvas.style.top = (dot.y - 20) + "px";
+            tipCtx.clearRect(0, 0, tipCanvas.width, tipCanvas.height);
+            tipCtx.font = "35px Georgia";
+            tipCtx.fillStyle = '#7d6dd8';
+            tipCtx.fillText(dot.tip, 10, 30);
+            hit = true;
+      }
+      }
+      if (!hit) {
+        tipCanvas.style.left = -500 +'px';
+      }
+  }
+
   return (
     <>
-      <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}}/>
+      <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}} onMouseMove={handleMouseMove} />
+      <canvas id="tooltip_can" ref={tooltip_can}  style={{position: 'absolute', height: 50, width: 100, zIndex: 100}}></canvas>
       { state.interactingMoleculesResult !== null ? <div style={{position: 'absolute', fontSize: '30px'}}>{ state.interactingMoleculesResult.value}%</div> : '' }
       <Fullorb />
     </>
