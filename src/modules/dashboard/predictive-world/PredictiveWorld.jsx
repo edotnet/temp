@@ -18,6 +18,8 @@ export const PredictiveWorld = () => {
     ames_tox: 4,
   }
 
+  // Test commit state
+  
   const scales = {
     logP: [-9, 9],
     logS: [-11, 3],
@@ -26,6 +28,28 @@ export const PredictiveWorld = () => {
   }
 
   const inValues = [90, 135, 270, 315];
+  // To create each tooltip, we need to show
+  const drawToolTip = (lineDeg, drugName, value) => {
+
+    const totalDeg = lineDeg * degrees;
+    let x = radius * Math.cos(degrees_to_radians(totalDeg));
+    let y = radius * Math.sin(degrees_to_radians(totalDeg));
+
+    ctx.current.beginPath();
+    ctx.current.fillStyle = '#7d6dd8';
+    ctx.current.fillRect(x + 265, y + 230, 100, 15);
+    ctx.current.textAlign = "center";
+    ctx.current.textBaseline = "middle";
+    ctx.current.fillStyle = '#fff';
+    ctx.current.fillText(drugName, x + 315, y + 238);
+    ctx.current.beginPath();
+    ctx.current.fillStyle = '#fff';
+    ctx.current.fillRect(x + 265, y + 245, 75, 13);
+    ctx.current.fillStyle = '#000';
+    ctx.current.fillText(value, x + 300, y + 252);
+
+    // drawTestDot();
+  }
 
   const drawLine = (x,y,w,h,deg, text) => {
     ctx.current.save();
@@ -60,6 +84,8 @@ export const PredictiveWorld = () => {
     ctx.current.rotate(-degrees_to_radians(totalDeg));
     ctx.current.fillStyle = color;
     ctx.current.strokeStyle = color;
+
+    console.log("value", value)
 
     if (totalDeg % 90) {
       //ctx.current.fillRect(-5, value, 10, 10);
@@ -161,7 +187,16 @@ export const PredictiveWorld = () => {
       drawDot(lines['logP'], scale(logP, 'logP'), moleculeColor)
       drawDot(lines['logS'], scale(logS, 'logS'), moleculeColor)
       drawDot(lines['ames_tox'], scale(ames_tox, 'ames_tox'), moleculeColor)
+      
+      drawToolTip(lines['mass'], "Mass", mass);
+      drawToolTip(lines['logP'], "logP",  logP);
+      drawToolTip(lines['logS'], "logS",  logS);
+      drawToolTip(lines['ames_tox'],  "Ames Tox", ames_tox);
     })
+
+    // Object.entries(lines).forEach(([key, value], index) => {
+    //   drawToolTip(index + 1, key, value);
+    // });
   }, [state.interactingMolecules])
 
   return (
