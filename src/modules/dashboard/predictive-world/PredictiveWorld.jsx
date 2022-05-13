@@ -57,6 +57,7 @@ export const PredictiveWorld = () => {
     ctx.current.fillStyle = "#209ff4";
     ctx.current.fillRect(-1*(w/2), -1*(h/2), w, h);
     ctx.current.fillStyle = "#222A47";
+    ctx.current.font = "13px Arial";
     ctx.current.fillText(text, -10 , -100);
     ctx.current.restore();
   }
@@ -131,6 +132,16 @@ export const PredictiveWorld = () => {
       drawLine(x + 250, y + 250, 1, 120, index * degrees , key);
       //console.log(`${index}: ${key} = ${value}`);
     });
+
+
+    let canvass = document.getElementsByTagName('canvas');
+    canvass[0].addEventListener('mousemove', on_canvas_move, false);
+
+    function on_canvas_move(ev) {
+      var x = ev.clientX - this.offsetLeft;
+      var y = ev.clientY - this.offsetTop;
+      // console.log(x + ' ,'+ y);
+    }
     // for(let i in lines) {
     //   console.log('lines', i);
     //   let x = radius * Math.cos(degrees_to_radians(i * degrees));
@@ -160,8 +171,8 @@ export const PredictiveWorld = () => {
       const mass = molecule.calculated_properties['Molecular Weight'];
       const logP = molecule.calculated_properties['logP'];
       const logS = molecule.calculated_properties['ALOGPS']['logS'];
-      const ames_tox = 50;
-      //const ames_tox = molecule.calculated_properties['ADMET']['ames_toxicity']['probability'];
+      const ames_tox = 10;
+      // const ames_tox = molecule.calculated_properties['ADMET']['ames_toxicity']['probability'];
       drawDot(lines['mass'], scale(mass, 'mass'), moleculeColor)
       drawDot(lines['logP'], scale(logP, 'logP'), moleculeColor)
       drawDot(lines['logS'], scale(logS, 'logS'), moleculeColor)
@@ -180,6 +191,7 @@ export const PredictiveWorld = () => {
   return (
     <>
       <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}}/>
+      { state.interactingMoleculesResult !== null ? <div style={{position: 'absolute', fontSize: '30px'}}>{ state.interactingMoleculesResult.value}%</div> : '' }
       <Fullorb />
     </>
   );
