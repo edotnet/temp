@@ -13,8 +13,8 @@ export const DTI = () => {
   const { state, dispatch} = useDashboardContext();
   const {protein} = state;
   const url = '/dti'
-  const {data, fetch, reset} = useApiCall(url, 'POST', null, false);
-  //const data = [{"label": "Favipiravir", "value": 4.706718444824219}, {"label": "Ibuproxam", "value": 5.687283992767334}, {"label": "Dexibuprofen", "value": 5.887485027313232}, {"label": "D-4-hydroxyphenylglycine", "value": 5.576238632202148}];
+  //const {data, fetch, reset} = useApiCall(url, 'POST', null, false);
+  const data = [{"label": "Favipiravir", "value": 4.706718444824219}, {"label": "Ibuproxam", "value": 5.687283992767334}, {"label": "Dexibuprofen", "value": 5.887485027313232}, {"label": "D-4-hydroxyphenylglycine", "value": 5.576238632202148}];
 
   useEffect(() => {
     const molecules = state.molecules.map(molecule => ({
@@ -22,10 +22,10 @@ export const DTI = () => {
       label: molecule.name,
     }));
     if (molecules.length && protein) {
-      fetch(url, 'POST', {target: protein, drugs: molecules});
+      //fetch(url, 'POST', {target: protein, drugs: molecules});
     }
     if (data && !molecules.length) {
-      reset();
+      //reset();
     }
   }, [protein, state.molecules])
 
@@ -51,9 +51,10 @@ export const DTI = () => {
         <Grid item xs={12}>
           {data && data.map(el => (
             <Box key={el.label} sx={{position: 'relative'}}>
-              <Typography component="span" sx={{fontSize: 14, fontWeight: 'bold', mb: -1, backgroundColor: '#7f70da', color: 'white', display: 'flex', width: `calc(100% - ${el.value*5}%)`}}>{el.label}</Typography><br/>
-              <Typography component="span" sx={{fontSize: 20, fontWeight: 300, color: '#141414', backgroundColor: 'white', position: 'absolute', top: 23}}>{el.value.toFixed(4)}</Typography>
-              <div style={{height: 23}}/>
+              <Typography component="span" sx={{fontSize: 16, fontWeight: 'bold'}}>{el.label}</Typography><br/>
+              <Typography component="span" sx={{pl: 1, fontSize: 20, fontWeight: 500, backgroundColor: 'rgba(127, 112, 218)', position: 'absolute', top: 23, color: 'white', display: 'flex', width: `calc(100% - ${el.value*5}%)`}}>{el.value.toFixed(4)}</Typography>
+              {/*<Typography component="span" sx={{fontSize: 20, fontWeight: 300, color: '#141414', backgroundColor: '#7f70da', position: 'absolute', top: 23}}>{el.value.toFixed(4)}</Typography>*/}
+              <div style={{height: 35}}/>
             </Box>
           ))}
         </Grid>
