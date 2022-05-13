@@ -27,6 +27,7 @@ export const PredictiveWorld = () => {
     ames_tox: [0, 100],
   }
 
+  const inValues = [90, 135, 270, 315];
   // To create each tooltip, we need to show
   const drawToolTip = (lineDeg, drugName, value) => {
 
@@ -102,16 +103,25 @@ export const PredictiveWorld = () => {
   }
 
   const scale = (num, property) => {
+    num = parseFloat(num);
     const min = scales[property][0]
     const max = scales[property][1]
-      //num*100/max-min
     if (num < scales[property][0]) {
       num = scales[property][0];
     }
     if (num > scales[property][1]) {
       num = scales[property][1];
     }
-    return num*100/(max-min);
+    if (min < 0) {
+      num = num + min*-1;
+    }
+    const percent = (num*100/(max-min));
+    const canvasAdapted = percent - 50;
+    const isIn = inValues.includes(lines[property]*degrees)
+    if (isIn) {
+      return canvasAdapted;
+    }
+    return -canvasAdapted;
   }
 
   useEffect(() => {
@@ -177,10 +187,11 @@ export const PredictiveWorld = () => {
       drawDot(lines['logP'], scale(logP, 'logP'), moleculeColor)
       drawDot(lines['logS'], scale(logS, 'logS'), moleculeColor)
       drawDot(lines['ames_tox'], scale(ames_tox, 'ames_tox'), moleculeColor)
-      drawToolTip(lines['mass'], "Mass", scale(mass, 'mass'));
-      drawToolTip(lines['logP'], "logP",  scale(logP, 'logP'));
-      drawToolTip(lines['logS'], "logS",  scale(logS, 'logS'));
-      drawToolTip(lines['ames_tox'],  "Ames Tox", scale(ames_tox, 'ames_tox'));
+      
+      drawToolTip(lines['mass'], "Mass", mass);
+      drawToolTip(lines['logP'], "logP",  logP);
+      drawToolTip(lines['logS'], "logS",  logS);
+      drawToolTip(lines['ames_tox'],  "Ames Tox", ames_tox);
     })
 
     // Object.entries(lines).forEach(([key, value], index) => {
