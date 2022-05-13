@@ -9,8 +9,7 @@ import { DrugInteractionContentFirst } from "../drug-interaction/DrugInteraction
 
 export const PresentationModal = () => {
   const {state, dispatch} = useDashboardContext();
-  //const isDTI = state.protein && state.molecules.length;
-  const isDTI = true
+  const isDTI = state.protein && state.molecules.length;
   const isDIFirstMolecule = state.interactingMolecules.length === 1;
   const isDI = state.interactingMolecules.length === 2 && state.interactingMoleculesResult;
   if (!isDI && ! isDIFirstMolecule && ! isDTI) {

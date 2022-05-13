@@ -1,20 +1,17 @@
-import { Box, CardContent, Grid, ListItem, Paper, Typography, Avatar, ListItemText } from "@mui/material";
-import { TargetAutocomplete } from "../dti/TargetAutocomplete";
+import { Avatar, Box, Grid, Typography } from "@mui/material";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import InfoProtein from '../../assets/info-protein.png';
-import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 import { Hr } from "../../infrastructure/components/Hr.component";
 import { useDashboardContext } from "./context/useDashboarContext";
-import {GraphBackground} from "../../infrastructure/components/GraphBackground";
-import {Graph} from "../../infrastructure/components/graph/Graph";
+import { GraphBackground } from "../../infrastructure/components/GraphBackground";
 
 export const DTI = () => {
-  const { state, dispatch} = useDashboardContext();
+  const {state, dispatch} = useDashboardContext();
   const {protein} = state;
   const url = '/dti'
-  //const {data, fetch, reset} = useApiCall(url, 'POST', null, false);
-  const data = [{"label": "Favipiravir", "value": 4.706718444824219}, {"label": "Ibuproxam", "value": 5.687283992767334}, {"label": "Dexibuprofen", "value": 5.887485027313232}, {"label": "D-4-hydroxyphenylglycine", "value": 5.576238632202148}];
+  const {data, fetch, reset} = useApiCall(url, 'POST', null, false);
+  //const data = [{"label": "Favipiravir", "value": 4.706718444824219}, {"label": "Ibuproxam", "value": 5.687283992767334}, {"label": "Dexibuprofen", "value": 5.887485027313232}, {"label": "D-4-hydroxyphenylglycine", "value": 5.576238632202148}];
 
   useEffect(() => {
     const molecules = state.molecules.map(molecule => ({
@@ -22,16 +19,27 @@ export const DTI = () => {
       label: molecule.name,
     }));
     if (molecules.length && protein) {
-      //fetch(url, 'POST', {target: protein, drugs: molecules});
+      fetch(url, 'POST', {target: protein, drugs: molecules});
     }
     if (data && !molecules.length) {
-      //reset();
+      reset();
     }
   }, [protein, state.molecules])
 
   if (!protein || !state.molecules.length) {
     return null;
   }
+  const progressStyle = value => ({
+    pl: 1,
+    fontSize: 20,
+    fontWeight: 500,
+    backgroundColor: 'rgba(127, 112, 218)',
+    position: 'absolute',
+    top: 23,
+    color: 'white',
+    display: 'flex',
+    width: `calc(100% - ${value * 5}%)`
+  });
 
   return (
     <>
@@ -45,20 +53,20 @@ export const DTI = () => {
         </Box>
       </Box>
       <Hr/>
-      <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction score</Typography>
+      <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction
+        score</Typography>
       <GraphBackground>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          {data && data.map(el => (
-            <Box key={el.label} sx={{position: 'relative'}}>
-              <Typography component="span" sx={{fontSize: 16, fontWeight: 'bold'}}>{el.label}</Typography><br/>
-              <Typography component="span" sx={{pl: 1, fontSize: 20, fontWeight: 500, backgroundColor: 'rgba(127, 112, 218)', position: 'absolute', top: 23, color: 'white', display: 'flex', width: `calc(100% - ${el.value*5}%)`}}>{el.value.toFixed(4)}</Typography>
-              {/*<Typography component="span" sx={{fontSize: 20, fontWeight: 300, color: '#141414', backgroundColor: '#7f70da', position: 'absolute', top: 23}}>{el.value.toFixed(4)}</Typography>*/}
-              <div style={{height: 35}}/>
-            </Box>
-          ))}
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            {data && data.map(el => (
+              <Box key={el.label} sx={{position: 'relative'}}>
+                <Typography component="span" sx={{fontSize: 16, fontWeight: 'bold'}}>{el.label}</Typography><br/>
+                <Typography component="span" sx={progressStyle(el.value)}>{el.value.toFixed(4)}</Typography>
+                <div style={{height: 35}}/>
+              </Box>
+            ))}
+          </Grid>
         </Grid>
-      </Grid>
       </GraphBackground>
     </>
   )
