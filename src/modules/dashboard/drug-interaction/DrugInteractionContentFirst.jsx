@@ -1,10 +1,19 @@
 import { useDashboardContext } from "../context/useDashboarContext";
-import { Avatar, Box, Chip, Typography } from "@mui/material";
+import { Avatar, Box, Chip, Select, Typography } from "@mui/material";
 import { CustomWidthTooltip } from "../../../infrastructure/components/CustomWidthTooltip";
 import { CustomChip } from "../../../infrastructure/components/CustomChip";
+import { useState } from "react";
+import MenuItem from "@mui/material/MenuItem";
+import { styled } from "@mui/material/styles";
+const PillSelect = styled(Select)({
+  '&.MuiInputBase-root': {
+    borderRadius: 50,
+  }
+})
 
 export const DrugInteractionContentFirst = () => {
   const {state, dispatch} = useDashboardContext();
+  const [open, setOpen] = useState(false);
   if (state.interactingMolecules.length !== 1) {
     return null;
   }
@@ -16,6 +25,10 @@ export const DrugInteractionContentFirst = () => {
       border: `solid 1px ${color}`,
     }
   }
+  const handleChange = () => {
+    setOpen(false);
+  };
+
   return (
     <>
       <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
@@ -35,9 +48,15 @@ export const DrugInteractionContentFirst = () => {
               </CustomWidthTooltip>
             </Box>
             <Box>
-              <CustomWidthTooltip title={"+ 2nd molecule"}>
+              {/*<CustomWidthTooltip title={"+ 2nd molecule"} onClick={() => setOpen(true)}>
                 <CustomChip variant="outlined" label={"+ 2nd molecule"} style={{background: 'transparent', border: '1px dashed #806ca2'}}/>
-              </CustomWidthTooltip>
+              </CustomWidthTooltip>*/}
+              <PillSelect open={open} onChange={handleChange} value={0}>
+                <MenuItem value={0}>+ 2nd molecule</MenuItem>
+                {state.molecules.filter(molecule => molecule.id !== drug1.id).map(molecule => (
+                  <MenuItem key={molecule.id} value={molecule.id}>{molecule.name}</MenuItem>
+                ))}
+              </PillSelect>
             </Box>
           </Box>
         </Box>
