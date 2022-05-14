@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import './Orb.css'
 import { Fullorb } from "./FullOrb";
 import { useDashboardContext } from "../context/useDashboarContext";
 
 export const PredictiveWorld = () => {
-  // const [dragMol, setDragMol] = useState(false)
+  const [cxValue, setCxValue] = useState(0)
+  const [cyValue, setCyValue] = useState(0)
   const {state} = useDashboardContext()
   const ctx = useRef();
   const tipCtx = useRef();
@@ -33,22 +34,24 @@ export const PredictiveWorld = () => {
 
   // To create each tooltip, we need to show
   const drawToolTip = (x, y, drugName, value) => {
-    tipCtx.current.font = "35px Georgia";
-    tipCtx.current.fillStyle = '#000';
-    tipCtx.current.fillText(drugName, 10, 30);
+    // tipCtx.current.fillStyle = '#000';
+    // tipCtx.current.fillText(drugName, 10, 30);
 
-    // tipCtx.beginPath();
-    // tipCtx.fillStyle = '#7d6dd8';
-    // tipCtx.fillRect(x, y, tipCanvas.width, tipCanvas.height);
-    // tipCtx.textAlign = "center";
-    // tipCtx.textBaseline = "middle";
-    // tipCtx.fillStyle = '#fff';
-    // tipCtx.fillText(drugName, 10, 30);
-    // tipCtx.beginPath();
-    // tipCtx.fillStyle = '#fff';
-    // tipCtx.fillRect(x , y + 15, 75, 13);
-    // tipCtx.fillStyle = '#000';
-    // tipCtx.fillText(value, x, y + 40);
+    tipCtx.current.beginPath();
+    tipCtx.current.rect(x-20 , y + 20, 250, 50);
+    tipCtx.current.fillStyle = '#7d6dd8';
+    tipCtx.current.fill();
+    // tipCtx.current.stroke();
+    tipCtx.current.font = "35px Georgia";
+    // tipCtx.current.textAlign = "center";
+    // tipCtx.current.textBaseline = "middle";
+    tipCtx.current.fillStyle = '#fff';
+    tipCtx.current.fillText(drugName, 30, 35);
+    // tipCtx.current.beginPath();
+    // tipCtx.current.fillStyle = '#fff';
+    // tipCtx.current.fillRect(x , y + 15, 75, 13);
+    // tipCtx.current.fillStyle = '#000';
+    // tipCtx.current.fillText(value, x, y + 40);
 
   }
 
@@ -65,6 +68,8 @@ export const PredictiveWorld = () => {
   }
 
   const drawCircleDot = (x, y) => {
+    console.log("Dot x, y", x, y);
+
     ctx.current.beginPath();
     ctx.current.arc(x, y, 7, 0, 2 * Math.PI, true);
     ctx.current.closePath()
@@ -85,6 +90,8 @@ export const PredictiveWorld = () => {
     ctx.current.rotate(-degrees_to_radians(totalDeg));
     ctx.current.fillStyle = color;
     ctx.current.strokeStyle = color;
+
+    // console.log("Value", value);
 
     if (totalDeg % 90) {
       //ctx.current.fillRect(-5, value, 10, 10);
@@ -191,30 +198,80 @@ export const PredictiveWorld = () => {
       drawDot(lines['logS'], scale(logS, 'logS'), moleculeColor)
       drawDot(lines['ames_tox'], scale(ames_tox, 'ames_tox'), moleculeColor)
 
+      // console.log("Value mass", scale(mass, 'mass'));
       // drawToolTip(lines['mass'], "Mass", mass);
       // drawToolTip(lines['logP'], "logP",  logP);
       // drawToolTip(lines['logS'], "logS",  logS);
       // drawToolTip(lines['ames_tox'],  "Ames Tox", ames_tox);
 
+      createTooltipForEachMolecule(lines['mass'], scale(mass, 'mass'));
+      createTooltipForEachMolecule(lines['logP'], scale(logP, 'logP'));
+      createTooltipForEachMolecule(lines['logS'], scale(logS, 'logS'));
+      createTooltipForEachMolecule(lines['ames_tox'], scale(ames_tox, 'ames_tox'));
     })
   }
 
-  function createTooltipForEachMolecule() {
-    Object.entries(lines).forEach(([key, value], index) => {
-      let tx = radius * Math.cos(degrees_to_radians(index * degrees));
-      let ty = radius * Math.sin(degrees_to_radians(index * degrees));
+  function createTooltipForEachMolecule(lineDeg, scaleValue) {
+    
+    const totalDeg = lineDeg * degrees;
+    // console.log("lineDeg.", lineDeg)
+    // console.log("totalDeg.", totalDeg)
 
-      // toolTips.current.push({
-      toolTips.current.push({
-        x: tx + 250,
-        y: ty + 250,
-        r: 10,
-        rXr: 100,
-        tip: "Tooltip: " + key
-      });
+    // let x = radius * Math.cos(degrees_to_radians(lineDeg * degrees));
+    // let y = radius * Math.sin(degrees_to_radians(lineDeg * degrees));
+    
+    // ctx.current.translate(x + 250, y + 250);
 
-    });
+    if (totalDeg % 90) {
+      // setCxValue(0)
+      // setCyValue(scaleValue)
+      toolTips.current.push(
+        { x: 250, y: scaleValue +250, r: 10, rXr: 100, tip: "Tip: " + scaleValue }
+      );
+    } else {
+      // setCxValue(scaleValue)
+      // setCyValue(0)
+      toolTips.current.push(
+        { x: scaleValue+250, y: 250, r: 10, rXr: 100, tip: "Tip: " + scaleValue }
+      );
+    }
+
+    // console.log("cxValue.", cxValue)
+
+      // toolTips.current.push(
+      //   { x: cxValue + 250, y: cyValue + 250, r: 10, rXr: 100, tip: "Tooltip: " + scaleValue }
+      // );
+
+    // Object.entries(lines).forEach(([key, value], index) => {
+    //   let tx = radius * Math.cos(degrees_to_radians(index * degrees));
+    //   let ty = radius * Math.sin(degrees_to_radians(index * degrees));
+
+    //   toolTips.current.push({
+    //     x: tx + 250,
+    //     y: ty + 250,
+    //     r: 10,
+    //     rXr: 100,
+    //     tip: "Tooltip: " + key
+    //   });
+
+    // });
   }
+
+  // function createTooltipForEachMolecule() {
+  //   Object.entries(lines).forEach(([key, value], index) => {
+  //     let tx = radius * Math.cos(degrees_to_radians(index * degrees));
+  //     let ty = radius * Math.sin(degrees_to_radians(index * degrees));
+
+  //     toolTips.current.push({
+  //       x: tx + 250,
+  //       y: ty + 250,
+  //       r: 10,
+  //       rXr: 100,
+  //       tip: "Tooltip: " + key
+  //     });
+
+  //   });
+  // }
 
   useEffect(() => {
     if (!state.interactingMolecules || !state.interactingMolecules.length) {
@@ -223,7 +280,7 @@ export const PredictiveWorld = () => {
     drawMolecules();
 
     // create toolTips for each molecule
-    createTooltipForEachMolecule();
+    // createTooltipForEachMolecule();
 
     console.log("toolTips", toolTips);
 
