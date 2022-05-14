@@ -11,9 +11,6 @@ const PillAutocomplete = styled(Autocomplete)({
     'fieldset': {
       border: '1px dashed #ccc',
     },
-    '.MuiAutocomplete-input::placeholder': {
-      color: 'red'
-    }
   },
   '.MuiOutlinedInput-root': {
     borderRadius: 50,

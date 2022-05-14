@@ -6,14 +6,14 @@ import { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 const PillSelect = styled(Select)({
-  '&.MuiInputBase-root': {
+  'fieldset': {
+    border: '1px dashed #ccc',
     borderRadius: 50,
-  }
+  },
 })
 
 export const DrugInteractionContentFirst = () => {
   const {state, dispatch} = useDashboardContext();
-  const [open, setOpen] = useState(false);
   if (state.interactingMolecules.length !== 1) {
     return null;
   }
@@ -25,8 +25,9 @@ export const DrugInteractionContentFirst = () => {
       border: `solid 1px ${color}`,
     }
   }
-  const handleChange = () => {
-    setOpen(false);
+  const handleChange = (e) => {
+    const molecule =  state.molecules.find(molecule => molecule.drugbank_id === e.target.value);
+    dispatch({type: 'addInteractingMolecule', payload: molecule});
   };
 
   return (
@@ -51,10 +52,10 @@ export const DrugInteractionContentFirst = () => {
               {/*<CustomWidthTooltip title={"+ 2nd molecule"} onClick={() => setOpen(true)}>
                 <CustomChip variant="outlined" label={"+ 2nd molecule"} style={{background: 'transparent', border: '1px dashed #806ca2'}}/>
               </CustomWidthTooltip>*/}
-              <PillSelect open={open} onChange={handleChange} value={0}>
+              <PillSelect onChange={handleChange} value={0}>
                 <MenuItem value={0}>+ 2nd molecule</MenuItem>
-                {state.molecules.filter(molecule => molecule.id !== drug1.id).map(molecule => (
-                  <MenuItem key={molecule.id} value={molecule.id}>{molecule.name}</MenuItem>
+                {state.molecules.filter(molecule => molecule.drugbank_id !== drug1.drugbank_id).map(molecule => (
+                  <MenuItem key={molecule.drugbank_id} value={molecule.drugbank_id}>{molecule.name}</MenuItem>
                 ))}
               </PillSelect>
             </Box>
