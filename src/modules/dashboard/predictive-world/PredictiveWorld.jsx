@@ -3,6 +3,9 @@ import { useEffect, useRef } from "react";
 import './Orb.css'
 import { Fullorb } from "./FullOrb";
 import { useDashboardContext } from "../context/useDashboarContext";
+import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
+import { ModalPaper } from "../../../infrastructure/components/ModalPaper";
+import { Close, ContentCopy } from "@mui/icons-material";
 
 export const PredictiveWorld = () => {
   const {state} = useDashboardContext()
@@ -51,6 +54,15 @@ export const PredictiveWorld = () => {
     // drawTestDot();
   }
 
+  const drawarc = () => {
+    ctx.current.lineWidth = 2;
+    ctx.current.strokeStyle = "#a108d3";
+    ctx.current.beginPath();
+    ctx.current.moveTo(1, 239);
+    ctx.current.bezierCurveTo(286, 253, 218, 225, 44, 196);
+    ctx.current.stroke();
+  }
+
   const drawLine = (x,y,w,h,deg, text) => {
     ctx.current.save();
     ctx.current.translate(x, y);
@@ -61,6 +73,7 @@ export const PredictiveWorld = () => {
     ctx.current.font = "13px Arial";
     ctx.current.fillText(text, -10 , -100);
     ctx.current.restore();
+    drawarc();
   }
 
   const drawCircleDot = (x, y) => {
@@ -84,8 +97,6 @@ export const PredictiveWorld = () => {
     ctx.current.rotate(-degrees_to_radians(totalDeg));
     ctx.current.fillStyle = color;
     ctx.current.strokeStyle = color;
-
-    console.log("value", value)
 
     if (totalDeg % 90) {
       //ctx.current.fillRect(-5, value, 10, 10);
@@ -142,16 +153,6 @@ export const PredictiveWorld = () => {
       drawLine(x + 250, y + 250, 1, 120, index * degrees , key);
       //console.log(`${index}: ${key} = ${value}`);
     });
-
-
-    let canvass = document.getElementsByTagName('canvas');
-    canvass[0].addEventListener('mousemove', on_canvas_move, false);
-
-    function on_canvas_move(ev) {
-      var x = ev.clientX - this.offsetLeft;
-      var y = ev.clientY - this.offsetTop;
-      // console.log(x + ' ,'+ y);
-    }
     // for(let i in lines) {
     //   console.log('lines', i);
     //   let x = radius * Math.cos(degrees_to_radians(i * degrees));
@@ -176,7 +177,7 @@ export const PredictiveWorld = () => {
     }
     state.interactingMolecules.forEach((molecule, i) => {
       const {hue, saturation, luminosity} = molecule.color;
-      const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 1)`;
+      const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.7)`;
 
       const mass = molecule.calculated_properties['Molecular Weight'];
       const logP = molecule.calculated_properties['logP'];
@@ -202,8 +203,37 @@ export const PredictiveWorld = () => {
   return (
     <>
       <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}}/>
-      { state.interactingMoleculesResult !== null ? <div style={{position: 'absolute', fontSize: '30px'}}>{ state.interactingMoleculesResult.value}%</div> : '' }
+      {
+        state.interactingMoleculesResult !== null 
+        ? 
+        <div style={{position: 'absolute', fontSize: '30px'}}>{ state.interactingMoleculesResult.value}%</div> 
+        :
+        state.interactingMolecules.length === 0 
+        ? 
+        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"></div></div>Drop 1st <br/> Molecule</div> 
+        : 
+        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"></div></div>Drop 2nd <br/> Molecule</div> 
+      }
       <Fullorb />
+      <Box sx={{position: 'absolute', top: '200px', left: '-250px', 'z-index': 999}}>
+      <ModalPaper elevation={2} sx={{width: 250, marginBottom: '50px', px: 2}}>
+        <IconButton sx={{position: "absolute", top: 0, right: 0}} size="large">
+          <Close/>
+        </IconButton>
+        <Box p={2} pb={3}>
+          <Grid container columnSpacing={3}>
+            <Grid item xs={8}>Favipiravir</Grid>
+            <Grid item xs={4}>6.3</Grid>
+            <Grid item xs={8}>Osetalmivir</Grid>
+            <Grid item xs={4}>6</Grid>
+            <Grid item xs={8}>Balicatib</Grid>
+            <Grid item xs={4}>4</Grid>
+            <Grid item xs={8}>Remdesivir</Grid>
+            <Grid item xs={4}>3.8</Grid>
+          </Grid>
+        </Box>
+      </ModalPaper>
+    </Box>
     </>
   );
 }
