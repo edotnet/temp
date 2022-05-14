@@ -8,7 +8,7 @@ import { colorful_language } from "../../../infrastructure/utils";
 
 export const DrugInteractionContent = () => {
   const {state, dispatch} = useDashboardContext();
-  if (!state.interactingMoleculesResult) {
+  if (!state.interactingMoleculesResult || state.interactingMolecules.length !== 2) {
     return null;
   }
   const [drug1, drug2] = state.interactingMolecules;

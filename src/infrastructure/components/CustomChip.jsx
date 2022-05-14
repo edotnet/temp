@@ -26,8 +26,11 @@ export const CustomChip = styled(Chip)({
     },
     '&.MuiChip-deletable': {
       '.MuiChip-deleteIcon': {
+        position: 'absolute',
+        right: -10,
+        top: -10,
         display: 'none',
-        marginLeft: 10,
+        //marginLeft: 10,
       },
     },
     '&.MuiChip-filled': {
