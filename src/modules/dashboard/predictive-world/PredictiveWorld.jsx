@@ -33,14 +33,14 @@ export const PredictiveWorld = () => {
   const inValues = [90, 135, 270, 315];
 
   // To create each tooltip, we need to show
-  const drawToolTip = (x, y, drugName, value, deg) => {
+  const drawToolTip = (x, y, drugName, value) => {
 
     // tipCtx.current.fillStyle = '#fff';
     tipCtx.current.font = "35px Georgia";
     tipCtx.current.fillText(drugName, 50, 35);
     tipCtx.current.beginPath();
     tipCtx.current.rect(x , y, 100, 50);
-    tipCtx.current.fillStyle = '#7d6dd8';
+    // tipCtx.current.fillStyle = '#7d6dd8';
     tipCtx.current.fill();
     tipCtx.current.stroke();
     // tipCtx.current.textAlign = "center";
@@ -65,7 +65,7 @@ export const PredictiveWorld = () => {
   }
 
   const drawCircleDot = (x, y) => {
-    console.log("Dot x, y", x, y);
+    // console.log("Dot x, y", x, y);
 
     ctx.current.beginPath();
     ctx.current.arc(x, y, 7, 0, 2 * Math.PI, true);
@@ -202,15 +202,14 @@ export const PredictiveWorld = () => {
       // drawToolTip(lines['ames_tox'],  "Ames Tox", ames_tox);
 
       // create toolTips for each molecule
-      createTooltipForEachMolecule(lines['mass'], scale(mass, 'mass'));
-      createTooltipForEachMolecule(lines['logP'], scale(logP, 'logP'));
-      createTooltipForEachMolecule(lines['logS'], scale(logS, 'logS'));
-      createTooltipForEachMolecule(lines['ames_tox'], scale(ames_tox, 'ames_tox'));
-      // console.log(createTooltipForEachMolecule(lines['']))
+      createTooltipForEachMolecule(lines['mass'], scale(mass, 'mass'), mass);
+      createTooltipForEachMolecule(lines['logP'], scale(logP, 'logP'), logP);
+      createTooltipForEachMolecule(lines['logS'], scale(logS, 'logS'), logS);
+      createTooltipForEachMolecule(lines['ames_tox'], scale(ames_tox, 'ames_tox'), ames_tox);
     })
   }
 
-  function createTooltipForEachMolecule(lineDeg, scaleValue) {
+  function createTooltipForEachMolecule(lineDeg, scaleValue, tipValue) {
     
     const totalDeg = lineDeg * degrees;
     let rx = radius * Math.cos(degrees_to_radians(lineDeg * degrees));
@@ -220,11 +219,11 @@ export const PredictiveWorld = () => {
 
     if (totalDeg % 90) {
       toolTips.current.push(
-        { x: rx + 250, y: ry + scaleValue + 250, r: 10, rXr: 100, tip: "Tip: " + scaleValue, lineDeg: totalDeg }
+        { x: rx + 250, y: ry + scaleValue + 250, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg }
       );
     } else {
       toolTips.current.push(
-        { x: rx + scaleValue + 250, y: ry + 250, r: 10, rXr: 100, tip: "Tip: " + scaleValue, lineDeg: lineDeg }
+        { x: rx + scaleValue + 250, y: ry + 250, r: 10, rXr: 100, tip: tipValue, lineDeg: lineDeg }
       );
     }
   }
@@ -253,7 +252,7 @@ export const PredictiveWorld = () => {
 
     // create toolTips for each molecule
     // createTooltipForEachMolecule();
-    console.log("Tooltips", toolTips)
+    // console.log("Tooltips", toolTips)
 
   }, [state.interactingMolecules])
 
@@ -279,7 +278,7 @@ export const PredictiveWorld = () => {
         tooltipCanvas.current.style.top = (dot.y - 20) + "px";
         tipCtx.current.clearRect(0, 0, tooltipCanvas.current.width, tooltipCanvas.current.height);
 
-        drawToolTip(dot.x + 5, dot.y - 20, dot.tip, 10, dot.lineDeg);
+        drawToolTip(dot.x + 5, dot.y - 20, dot.tip, 10);
         hit = true;
       }
     }
