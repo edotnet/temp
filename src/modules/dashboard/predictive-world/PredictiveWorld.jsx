@@ -56,10 +56,11 @@ export const PredictiveWorld = () => {
 
   const drawarc = () => {
     ctx.current.lineWidth = 2;
-    ctx.current.strokeStyle = "#a108d3";
+    ctx.current.strokeStyle = "#6d69c0";
     ctx.current.beginPath();
-    ctx.current.moveTo(1, 239);
-    ctx.current.bezierCurveTo(286, 253, 218, 225, 44, 196);
+    ctx.current.moveTo(102, 74);
+    // ctx.current.bezierCurveTo(286, 253, 218, 225, 44, 196);
+    ctx.current.bezierCurveTo(246, 253, 318, 225, -10, 220)
     ctx.current.stroke();
   }
 
