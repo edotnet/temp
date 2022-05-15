@@ -33,26 +33,23 @@ export const PredictiveWorld = () => {
   const inValues = [90, 135, 270, 315];
 
   // To create each tooltip, we need to show
-  const drawToolTip = (x, y, drugName, value) => {
-    // tipCtx.current.fillStyle = '#000';
-    // tipCtx.current.fillText(drugName, 10, 30);
+  const drawToolTip = (x, y, drugName, value, deg) => {
 
+    // tipCtx.current.fillStyle = '#fff';
+    tipCtx.current.font = "35px Georgia";
+    tipCtx.current.fillText(drugName, 50, 35);
     tipCtx.current.beginPath();
-    tipCtx.current.rect(x-20 , y + 20, 250, 50);
+    tipCtx.current.rect(x , y, 100, 50);
     tipCtx.current.fillStyle = '#7d6dd8';
     tipCtx.current.fill();
-    // tipCtx.current.stroke();
-    tipCtx.current.font = "35px Georgia";
+    tipCtx.current.stroke();
     // tipCtx.current.textAlign = "center";
     // tipCtx.current.textBaseline = "middle";
-    tipCtx.current.fillStyle = '#fff';
-    tipCtx.current.fillText(drugName, 30, 35);
     // tipCtx.current.beginPath();
     // tipCtx.current.fillStyle = '#fff';
     // tipCtx.current.fillRect(x , y + 15, 75, 13);
     // tipCtx.current.fillStyle = '#000';
     // tipCtx.current.fillText(value, x, y + 40);
-
   }
 
   const drawLine = (x, y, w, h, deg, text) => {
@@ -204,57 +201,32 @@ export const PredictiveWorld = () => {
       // drawToolTip(lines['logS'], "logS",  logS);
       // drawToolTip(lines['ames_tox'],  "Ames Tox", ames_tox);
 
+      // create toolTips for each molecule
       createTooltipForEachMolecule(lines['mass'], scale(mass, 'mass'));
       createTooltipForEachMolecule(lines['logP'], scale(logP, 'logP'));
       createTooltipForEachMolecule(lines['logS'], scale(logS, 'logS'));
       createTooltipForEachMolecule(lines['ames_tox'], scale(ames_tox, 'ames_tox'));
+      // console.log(createTooltipForEachMolecule(lines['']))
     })
   }
 
   function createTooltipForEachMolecule(lineDeg, scaleValue) {
     
     const totalDeg = lineDeg * degrees;
-    // console.log("lineDeg.", lineDeg)
-    // console.log("totalDeg.", totalDeg)
+    let rx = radius * Math.cos(degrees_to_radians(lineDeg * degrees));
+    let ry = radius * Math.sin(degrees_to_radians(lineDeg * degrees));
 
-    // let x = radius * Math.cos(degrees_to_radians(lineDeg * degrees));
-    // let y = radius * Math.sin(degrees_to_radians(lineDeg * degrees));
-    
     // ctx.current.translate(x + 250, y + 250);
 
     if (totalDeg % 90) {
-      // setCxValue(0)
-      // setCyValue(scaleValue)
       toolTips.current.push(
-        { x: 250, y: scaleValue +250, r: 10, rXr: 100, tip: "Tip: " + scaleValue }
+        { x: rx + 250, y: ry + scaleValue + 250, r: 10, rXr: 100, tip: "Tip: " + scaleValue, lineDeg: totalDeg }
       );
     } else {
-      // setCxValue(scaleValue)
-      // setCyValue(0)
       toolTips.current.push(
-        { x: scaleValue+250, y: 250, r: 10, rXr: 100, tip: "Tip: " + scaleValue }
+        { x: rx + scaleValue + 250, y: ry + 250, r: 10, rXr: 100, tip: "Tip: " + scaleValue, lineDeg: lineDeg }
       );
     }
-
-    // console.log("cxValue.", cxValue)
-
-      // toolTips.current.push(
-      //   { x: cxValue + 250, y: cyValue + 250, r: 10, rXr: 100, tip: "Tooltip: " + scaleValue }
-      // );
-
-    // Object.entries(lines).forEach(([key, value], index) => {
-    //   let tx = radius * Math.cos(degrees_to_radians(index * degrees));
-    //   let ty = radius * Math.sin(degrees_to_radians(index * degrees));
-
-    //   toolTips.current.push({
-    //     x: tx + 250,
-    //     y: ty + 250,
-    //     r: 10,
-    //     rXr: 100,
-    //     tip: "Tooltip: " + key
-    //   });
-
-    // });
   }
 
   // function createTooltipForEachMolecule() {
@@ -281,8 +253,7 @@ export const PredictiveWorld = () => {
 
     // create toolTips for each molecule
     // createTooltipForEachMolecule();
-
-    console.log("toolTips", toolTips);
+    console.log("Tooltips", toolTips)
 
   }, [state.interactingMolecules])
 
@@ -294,21 +265,21 @@ export const PredictiveWorld = () => {
     const mouseX = parseInt(e.clientX - offsetX);
     const mouseY = parseInt(e.clientY - offsetY);
 
+    // console.log(mouseX)
+    // console.log(mouseY)
+
     let hit = false;
     for (var i = 0; i < toolTips.current.length; i++) {
       let dot = toolTips.current[i];
       let dx = mouseX - dot.x;
       let dy = mouseY - dot.y;
 
-      // console.log("dx dy", dx, dy);
-      // console.log("dx dy state", dx * dx + dy * dy < dot.rXr);
-
       if (dx * dx + dy * dy < dot.rXr) {
         tooltipCanvas.current.style.left = (dot.x + 5) + "px";
         tooltipCanvas.current.style.top = (dot.y - 20) + "px";
         tipCtx.current.clearRect(0, 0, tooltipCanvas.current.width, tooltipCanvas.current.height);
 
-        drawToolTip(dot.x + 5, dot.y - 20, dot.tip, 10);
+        drawToolTip(dot.x + 5, dot.y - 20, dot.tip, 10, dot.lineDeg);
         hit = true;
       }
     }
