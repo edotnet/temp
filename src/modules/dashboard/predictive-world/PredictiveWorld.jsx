@@ -36,16 +36,16 @@ export const PredictiveWorld = () => {
   const inValues = [90, 135, 270, 315];
 
   // To create each tooltip, we need to show
-  const drawToolTip = (drugName, value) => {
+  const drawToolTip = (drugName, title) => {
     tipCtx.current.fillStyle = "#6D69C0";
     tipCtx.current.fillRect(0, 0, 300, 60);
     tipCtx.current.font = "35px Arial";
     tipCtx.current.fillStyle = "#fff";
-    tipCtx.current.fillText('Property', 30, 40 );
+    tipCtx.current.fillText(title, 20, 40 );
     tipCtx.current.fillStyle = "#fff";
     tipCtx.current.fillRect(0, 60, 200, 50);
     tipCtx.current.fillStyle = "#000";
-    tipCtx.current.fillText(drugName, 30, 97);
+    tipCtx.current.fillText(drugName, 20, 97);
   }
 
   const drawarc = () => {
@@ -209,14 +209,17 @@ export const PredictiveWorld = () => {
       // drawToolTip(lines['ames_tox'],  "Ames Tox", ames_tox);
 
       // create toolTips for each molecule
-      createTooltipForEachMolecule(lines['mass'], scale(mass, 'mass'), mass);
-      createTooltipForEachMolecule(lines['logP'], scale(logP, 'logP'), logP);
-      createTooltipForEachMolecule(lines['logS'], scale(logS, 'logS'), logS);
-      createTooltipForEachMolecule(lines['ames_tox'], scale(ames_tox, 'ames_tox'), ames_tox);
+      createTooltipForEachMolecule(lines['mass'], scale(mass, 'mass'), mass, "Molecular Weight");
+      createTooltipForEachMolecule(lines['logP'], scale(logP, 'logP'), logP, " LogP");
+      createTooltipForEachMolecule(lines['logS'], scale(logS, 'logS'), logS, "LogS");
+      createTooltipForEachMolecule(lines['ames_tox'], scale(ames_tox, 'ames_tox'), ames_tox, "Ames Tox");
+
+      console.log("mass", mass);
+      console.log("logP", logP);
     })
   }
 
-  function createTooltipForEachMolecule(lineDeg, scaleValue, tipValue) {
+  function createTooltipForEachMolecule(lineDeg, scaleValue, tipValue, tipTitle) {
     
     const totalDeg = lineDeg * degrees;
     let rx = radius * Math.cos(degrees_to_radians(lineDeg * degrees));
@@ -226,11 +229,11 @@ export const PredictiveWorld = () => {
 
     if (totalDeg % 90) {
       toolTips.current.push(
-        { x: rx + 250, y: ry + scaleValue + 250, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg }
+        { x: rx + 256, y: ry + scaleValue + 256, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg, title: tipTitle }
       );
     } else {
       toolTips.current.push(
-        { x: rx + scaleValue + 250, y: ry + 250, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg }
+        { x: rx + scaleValue + 256, y: ry + 256, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg, title: tipTitle }
       );
     }
   }
@@ -282,7 +285,7 @@ export const PredictiveWorld = () => {
         tooltipCanvas.current.style.top = (dot.y - 20) + "px";
         tipCtx.current.clearRect(0, 0, tooltipCanvas.current.width, tooltipCanvas.current.height);
 
-        drawToolTip(dot.tip, 10);
+        drawToolTip(dot.tip, dot.title);
         hit = true;
       }
     }
