@@ -43,13 +43,13 @@ export const PredictiveWorld = () => {
       scale: [0.5, 1],
       title: 'Biodegradation',
       property: 'experimental_properties.ADMET.biodegradation.probability'
-    },/*
+    },
     caco2: {
-      line: 5,
+      line: 7,
       scale: [0.5, 0.9481],
       title: 'Caco2 prob.',
       property: 'calculated_properties.ADMET.caco2.probability'
-    },*/
+    },
     bbb: {
       line: 5,
       scale: [0, 1],
@@ -65,7 +65,7 @@ export const PredictiveWorld = () => {
   }
   const degrees = 360 / Object.keys(config).length;
 
-  const inValues = [90, 135, 270, 315];
+  const inValues = [135, 180];
 
   // To create each tooltip, we need to show
   const drawToolTip = (drugName, title) => {
@@ -106,7 +106,7 @@ export const PredictiveWorld = () => {
     ctx.current.fillStyle = "#209ff4";
     ctx.current.fillRect(-1 * (w / 2), -1 * (h / 2), w, h);
     ctx.current.fillStyle = "#222A47";
-    ctx.current.font = "13px Arial";
+    ctx.current.font = "13px Work Sans";
     ctx.current.fillText(text, -2.5 * text.length, -100);
     ctx.current.restore();
   }
@@ -142,19 +142,19 @@ export const PredictiveWorld = () => {
   }
 
   const scale = (num, property) => {
-    num = parseFloat(num);
     const min = config[property].scale[0]
     const max = config[property].scale[1]
-    if (num < config[property].scale[0]) {
-      num = config[property].scale[0];
+    if (num < min) {
+      num = min;
     }
-    if (num > config[property].scale[1]) {
-      num = config[property].scale[1];
+    if (num > max) {
+      num = max;
     }
     if (min < 0) {
       num = num + min * -1;
     }
-    const percent = (num * 100 / (max - min));
+    const div = (max - min) < 1 ? 1 : max-min;
+    const percent = (num * 100 / div);
     const canvasAdapted = percent - 50;
     const isIn = inValues.includes(config[property].line * degrees)
     if (isIn) {
@@ -189,7 +189,7 @@ export const PredictiveWorld = () => {
 
       Object.keys(config).forEach((key) => {
         const prop = config[key];
-        const value = fetchFromObject(molecule, prop.property);
+        const value = parseFloat(fetchFromObject(molecule, prop.property));
         const scaled = scale(value, key);
         drawDot(prop.line, scaled, moleculeColor);
         addPropertyTooltip(prop.line, scaled, value, prop.title);
@@ -200,18 +200,18 @@ export const PredictiveWorld = () => {
   const addPropertyTooltip = (lineDeg, scaleValue, tipValue, tipTitle) => {
     scaleValue = Math.abs(scaleValue)
     const totalDeg = lineDeg * degrees;
-    let rx = radius * Math.cos(degrees_to_radians(lineDeg * degrees));
-    let ry = radius * Math.sin(degrees_to_radians(lineDeg * degrees));
+    let rx = radius * Math.cos(degrees_to_radians(totalDeg));
+    let ry = radius * Math.sin(degrees_to_radians(totalDeg));
 
     // ctx.current.translate(x + 250, y + 250);
 
     if (totalDeg % 90) {
       toolTips.current.push(
-        {x: rx + 256, y: ry + scaleValue + 256, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg, title: tipTitle}
+        {x: rx + 256, y: ry + scaleValue + 256, rXr: 100, tip: tipValue, title: tipTitle}
       );
     } else {
       toolTips.current.push(
-        {x: rx + scaleValue + 256, y: ry + 256, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg, title: tipTitle}
+        {x: rx + scaleValue + 256, y: ry + 256, rXr: 100, tip: tipValue, title: tipTitle}
       );
     }
   }
@@ -267,7 +267,8 @@ export const PredictiveWorld = () => {
     const mouseY = parseInt(e.clientY - offsetY);
 
     let hit = false;
-    for (var i = 0; i < toolTips.current.length; i++) {
+    let i = 0, leni = toolTips.current.length;
+    for (; i < leni; i++) {
       let dot = toolTips.current[i];
       let dx = mouseX - dot.x;
       let dy = mouseY - dot.y;
@@ -279,6 +280,7 @@ export const PredictiveWorld = () => {
 
         drawToolTip(dot.tip, dot.title);
         hit = true;
+        break;
       }
     }
     if (!hit) {
