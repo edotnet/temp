@@ -51,7 +51,7 @@ export const PredictiveWorld = () => {
     tipCtx.current.fillRect(0, 0, 300, 60);
     tipCtx.current.font = "35px Arial";
     tipCtx.current.fillStyle = "#fff";
-    tipCtx.current.fillText(title, 20, 40 );
+    tipCtx.current.fillText(title, 20, 40);
     tipCtx.current.fillStyle = "#fff";
     tipCtx.current.fillRect(0, 60, 200, 50);
     tipCtx.current.fillStyle = "#000";
@@ -209,7 +209,8 @@ export const PredictiveWorld = () => {
       let ames_tox = 0;
       try {
         ames_tox = molecule.calculated_properties['ADMET']['ames_toxicity']['probability'];
-      } catch(e){}
+      } catch (e) {
+      }
 
       drawDot(config['mass'].line, scale(mass, 'mass'), moleculeColor)
       drawDot(config['logP'].line, scale(logP, 'logP'), moleculeColor)
@@ -234,11 +235,11 @@ export const PredictiveWorld = () => {
 
     if (totalDeg % 90) {
       toolTips.current.push(
-        { x: rx + 256, y: ry + scaleValue + 256, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg, title: tipTitle }
+        {x: rx + 256, y: ry + scaleValue + 256, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg, title: tipTitle}
       );
     } else {
       toolTips.current.push(
-        { x: rx + scaleValue + 256, y: ry + 256, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg, title: tipTitle }
+        {x: rx + scaleValue + 256, y: ry + 256, r: 10, rXr: 100, tip: tipValue, lineDeg: totalDeg, title: tipTitle}
       );
     }
   }
@@ -272,10 +273,30 @@ export const PredictiveWorld = () => {
   }, [state.interactingMolecules])
 
   useEffect(() => {
-    if(state.protein && state.molecules.length > 0) {
+    if (state.protein && state.molecules.length > 0) {
       drawarc();
     }
   }, [state]);
+
+  const renderDropMolecule = (num) => {
+    return (
+      <div className="dropmolecule-blob-center">
+        <div className="dropmolecule-icon">
+          <div className="rectangle"/>
+        </div>
+        Drop {num} <br/> Molecule</div>
+    )
+  }
+
+  const renderCenter = () => {
+    if (!state.interactingMolecules.length) {
+      return renderDropMolecule("1st")
+    }
+    if (state.interactingMoleculesResult) {
+      return <div style={{position: 'absolute', fontSize: '30px'}}>{state.interactingMoleculesResult.value}%</div>;
+    }
+    return renderDropMolecule("2nd");
+  }
 
   const handleMouseMove = (e) => {
     const BB = canvas.current.getBoundingClientRect();
@@ -308,21 +329,10 @@ export const PredictiveWorld = () => {
 
   return (
     <>
-      <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}}/>
       <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}} onMouseMove={handleMouseMove}/>
-      <canvas ref={tooltipCanvas} style={{position: 'absolute', height: 50, width: 100, zIndex: 10}} />
-      {
-        state.interactingMoleculesResult !== null
-        ?
-        <div style={{position: 'absolute', fontSize: '30px'}}>{ state.interactingMoleculesResult.value}%</div>
-        :
-        state.interactingMolecules.length === 0
-        ?
-        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"/></div>Drop 1st <br/> Molecule</div>
-        :
-        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"/></div>Drop 2nd <br/> Molecule</div>
-      }
-      <Fullorb />
+      <canvas ref={tooltipCanvas} style={{position: 'absolute', height: 50, width: 100, zIndex: 10}}/>
+      {renderCenter()}
+      <Fullorb/>
     </>
   );
 }
