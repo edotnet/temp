@@ -53,6 +53,13 @@ export const PredictiveWorld = () => {
     // ctx.current.bezierCurveTo(286, 253, 218, 225, 44, 196);
     ctx.current.bezierCurveTo(246, 253, 318, 225, -10, 220)
     ctx.current.stroke();
+
+    ctx.current.lineWidth = 2;
+    ctx.current.strokeStyle = "#d7834c";
+    ctx.current.beginPath();
+    ctx.current.moveTo(498, 213);
+    ctx.current.bezierCurveTo(206, 222, 249, 238, 420, 104)
+    ctx.current.stroke();
   }
 
   const drawLine = (x, y, w, h, deg, text) => {
@@ -65,7 +72,6 @@ export const PredictiveWorld = () => {
     ctx.current.font = "13px Arial";
     ctx.current.fillText(text, -10, -100);
     ctx.current.restore();
-    // drawarc();
   }
 
   const drawCircleDot = (x, y) => {
@@ -199,6 +205,7 @@ export const PredictiveWorld = () => {
       drawDot(lines['logS'], scale(logS, 'logS'), moleculeColor)
       drawDot(lines['ames_tox'], scale(ames_tox, 'ames_tox'), moleculeColor)
 
+
       // console.log("Value mass", scale(mass, 'mass'));
       // drawToolTip(lines['mass'], "Mass", mass);
       // drawToolTip(lines['logP'], "logP",  logP);
@@ -210,7 +217,12 @@ export const PredictiveWorld = () => {
       createTooltipForEachMolecule(lines['logP'], scale(logP, 'logP'), logP);
       createTooltipForEachMolecule(lines['logS'], scale(logS, 'logS'), logS);
       createTooltipForEachMolecule(lines['ames_tox'], scale(ames_tox, 'ames_tox'), ames_tox);
+      console.log(state.protein , state.molecules.length );
+      if(state.protein && state.molecules.length > 0) {
+        drawarc();
+      }
     })
+
   }
 
   function createTooltipForEachMolecule(lineDeg, scaleValue, tipValue) {
@@ -306,25 +318,29 @@ export const PredictiveWorld = () => {
         <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"></div></div>Drop 2nd <br/> Molecule</div> 
       }
       <Fullorb />
-      {/* <Box sx={{position: 'absolute', top: '200px', left: '-250px', 'z-index': 999}}>
-      <ModalPaper elevation={2} sx={{width: 250, marginBottom: '50px', px: 2}}>
-        <IconButton sx={{position: "absolute", top: 0, right: 0}} size="large">
-          <Close/>
-        </IconButton>
-        <Box p={2} pb={3}>
-          <Grid container columnSpacing={3}>
-            <Grid item xs={8}>Favipiravir</Grid>
-            <Grid item xs={4}>6.3</Grid>
-            <Grid item xs={8}>Osetalmivir</Grid>
-            <Grid item xs={4}>6</Grid>
-            <Grid item xs={8}>Balicatib</Grid>
-            <Grid item xs={4}>4</Grid>
-            <Grid item xs={8}>Remdesivir</Grid>
-            <Grid item xs={4}>3.8</Grid>
-          </Grid>
+      {
+        state.protein && state.molecules.length > 0 ?
+        <Box sx={{position: 'absolute', top: '200px', left: '-250px', 'z-index': 999}}>
+          <ModalPaper elevation={2} sx={{width: 250, marginBottom: '50px', px: 2}}>
+            <IconButton sx={{position: "absolute", top: 0, right: 0}} size="large">
+              <Close/>
+            </IconButton>
+            <Box p={2} pb={3}>
+              <Grid container columnSpacing={3}>
+                <Grid item xs={8}>Favipiravir</Grid>
+                <Grid item xs={4}>6.3</Grid>
+                <Grid item xs={8}>Osetalmivir</Grid>
+                <Grid item xs={4}>6</Grid>
+                <Grid item xs={8}>Balicatib</Grid>
+                <Grid item xs={4}>4</Grid>
+                <Grid item xs={8}>Remdesivir</Grid>
+                <Grid item xs={4}>3.8</Grid>
+              </Grid>
+            </Box>
+          </ModalPaper>
         </Box>
-      </ModalPaper>
-    </Box> */}
+      : ''
+    }
     </>
   );
 }
