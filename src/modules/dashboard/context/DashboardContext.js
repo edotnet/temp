@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react";
+import { colorful_language } from "../../../infrastructure/utils";
 
 const initialState = {
   molecules: [],
@@ -35,6 +36,7 @@ const reducer = (state, action) => {
       if (state.molecules.length === 4) {
         return state;
       }
+      molecule.color = colorful_language(molecule.name, 0.25);
       return {
         ...state,
         molecules: [...state.molecules, molecule]
@@ -51,12 +53,16 @@ const reducer = (state, action) => {
       category,
     }),
     selectMolecule: (molecule) => ({
-        ...state,
-        selectedMolecule: adaptMolecule(molecule),
+      ...state,
+      selectedMolecule: adaptMolecule(molecule),
+    }),
+    unselectMolecule: () => ({
+      ...state,
+      selectedMolecule: null,
     }),
     addInteractingMolecule: (molecule) => (
       state.interactingMolecules.length === 2 ||
-        state.interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id) ?
+      state.interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id) ?
         {...state} :
         {
           ...state,
@@ -89,8 +95,8 @@ const reducer = (state, action) => {
 
 const DashboardContextProvider = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const value = { state, dispatch };
+  const value = {state, dispatch};
   return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>
 }
 
-export {DashboardContext, DashboardContextProvider};
+export { DashboardContext, DashboardContextProvider };

@@ -4,15 +4,15 @@ import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 import { useDashboardContext } from "./context/useDashboarContext";
 import { Hr } from "../../infrastructure/components/Hr.component";
 import { AdverseEffectsInfo } from "./adverse-effects/AdverseEffectsInfo";
-import { ContentCopy } from "@mui/icons-material";
+import { Close, ContentCopy } from "@mui/icons-material";
 import { CopyComponent } from "../../infrastructure/components/Copy.component";
 
 const keys = [
-  {key: 'calculated_properties.Molecular Weight', title: 'Mass.', color: '#AE2AFF'},
-  {key: 'calculated_properties.logP', title: 'LogP', color: '#FF9898'},
+  {key: 'calculated_properties.Molecular Weight', title: 'Mass.', color: '#AE2AFF'}, //900 / 1
+  {key: 'calculated_properties.logP', title: 'LogP', color: '#FF9898'},  // -9 / 9
   {key: 'calculated_properties.ADMET.ames_toxicity.probability', title: 'AMES Tox', color: '#001959'},
   //{key: 'calculated_properties.Molecular Formula', title: 'Mol. Form.', color: '#17D74D'},
-  {key: 'calculated_properties.ALOGPS.logS', title: 'LogS', color: '#0050C9'},
+  {key: 'calculated_properties.ALOGPS.logS', title: 'LogS', color: '#0050C9'}, //-11 / 3
   // { key: 'calculated_properties.Bioavailability', title: 'Bio Availability', color: '#FF9898'},
   // { key: 'calculated_properties.Ghose Filter', title: 'Ghose Filter', color: '#17D74D'},
   // { key: 'calculated_properties.H Bond Acceptor Count', title: 'H Bond Acceptor Count', color: '#AE2AFF'},
@@ -24,7 +24,7 @@ const keys = [
   // { key: 'calculated_properties.Polar Surface Area (PSA)', title: 'Polar Surface Area (PSA)', color: '#17D74D'},
   // { key: 'calculated_properties.Polarizability', title: 'Polarizability', color: '#AE2AFF'},
   // { key: 'calculated_properties.Refractivity', title: 'Refractivity', color: '#0050C9'},
-  // { key: 'calculated_properties.Rotatable Bond Count', title: 'Rotatable Bond Count', color: '#001959'},
+  // { key: 'calculated_properties.Rotatable Bond Count', title: 'Rotatable Bond Count', color: '#001959'}, // 0 / 20
   // { key: 'calculated_properties.Rule of Five', title: 'Rule of Five' , color: '#17D74D'},
   // { key: 'calculated_properties.pKa (strongest acidic)', title: 'pKa (strongest acidic)', color: '#AE2AFF' },
   // { key: 'calculated_properties.pKa (strongest basic)', title: 'pKa (strongest basic)' ,color: '#0050C9' }
@@ -46,23 +46,13 @@ function fetchFromObject(obj, prop) {
 
 
 export const DrugProperties = () => {
-  const {state} = useDashboardContext()
+  const {state, dispatch} = useDashboardContext()
   if (!state.selectedMolecule) {
-    return (
-      <Box>
-        <ModalPaper elevation={2} sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: 450,
-          height: 251,
-          display: 'flex',
-          flexGrow: 1,
-          marginBottom: '50px'
-        }}>
-          <Typography>Click a drug</Typography>
-        </ModalPaper>
-      </Box>
-    )
+    return null;
+  }
+
+  const close = () => {
+    dispatch({type: 'unselectMolecule'})
   }
 
   function renderDescription() {
@@ -106,8 +96,11 @@ export const DrugProperties = () => {
 
 
   return (
-    <Box>
+    <Box sx={{position: 'absolute', top: state.selectedMolecule.coordinates.y, left: state.selectedMolecule.coordinates.x}}>
       <ModalPaper elevation={2} sx={{width: 450, marginBottom: '50px', px: 2}}>
+        <IconButton sx={{position: "absolute", top: 0, right: 0}} size="large" onClick={close}>
+          <Close/>
+        </IconButton>
         <Box p={2} pb={3}>
           <Box>
             <Typography sx={{
@@ -118,9 +111,8 @@ export const DrugProperties = () => {
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
               <Box>
                 <Typography variant="h5" sx={{color: '#383874', fontSize: 30}} gutterBottom
-                            component="span">{state.selectedMolecule.name}</Typography>
-                <Typography variant="h5" sx={{color: '#373767', pl: 2, fontWeight: 300, fontSize: 30}} gutterBottom
-                            component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
+                            component="span">{state.selectedMolecule.name} <Typography variant="h5" sx={{color: '#373767', fontWeight: 300, fontSize: 30}} gutterBottom
+                                                                                       component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography></Typography>
               </Box>
               <CopyComponent text={`${state.selectedMolecule.name}
                   ${state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}
