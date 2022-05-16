@@ -6,6 +6,7 @@ import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { ModalPaper } from "../../../infrastructure/components/ModalPaper";
 import { Close, ContentCopy } from "@mui/icons-material";
 import { Orb } from "./custom-orb/Orb";
+import { fetchFromObject } from "../../../infrastructure/utils";
 
 export const PredictiveWorld = () => {
   const [cxValue, setCxValue] = useState(0)
@@ -158,59 +159,24 @@ export const PredictiveWorld = () => {
     tipCtx.current = tipCanvas.getContext("2d");
   }, []);
 
-  useEffect(() => {
 
+  const drawLines = () => {
     Object.entries(config).forEach(([key, value], index) => {
       let x = radius * Math.cos(degrees_to_radians(value.line * degrees));
       let y = radius * Math.sin(degrees_to_radians(value.line * degrees));
       drawLine(x + 250, y + 250, 1, 120, value.line * degrees, value.title);
-      //console.log(`${index}: ${key} = ${value}`);
-      // console.log(value);
     });
+  }
 
-
-    let canvass = document.getElementsByTagName('canvas');
-    canvass[0].addEventListener('mousemove', on_canvas_move, false);
-
-    function on_canvas_move(ev) {
-      var x = ev.clientX - this.offsetLeft;
-      var y = ev.clientY - this.offsetTop;
-      // console.log(x + ' ,'+ y);
-    }
-
-    // for(let i in lines) {
-    //   console.log('lines', i);
-    //   let x = radius * Math.cos(degrees_to_radians(i * degrees));
-    //   let y = radius * Math.sin(degrees_to_radians(i * degrees));
-    //   drawLine(x + 250, y + 250, 1, 120, i * degrees);
-    // }
-
-    /*drawDot(1, 0, "#209ff4")//out 45
-     drawDot(2, 0, 'red')//in 90
-     drawDot(3, 0, "red")//in 135
-     drawDot(4, 0, 'red')//out 180
-     /*drawDot(5, 0)//out 225
-     drawDot(6, 0)//in 270
-     drawDot(7, 0)//in 315
-     drawDot(8, 10)//out 360
-    */
-
-  }, []);
-
-
-  function drawMolecules() {
+  const drawMolecules = () => {
     state.interactingMolecules.forEach((molecule, i) => {
       const {hue, saturation, luminosity} = molecule.color;
       const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.7)`;
 
-      const mass = molecule.calculated_properties['Molecular Weight'];
-      const logP = molecule.calculated_properties['logP'];
-      const logS = molecule.calculated_properties['ALOGPS']['logS'];
-      let ames_tox = 0;
-      try {
-        ames_tox = molecule.calculated_properties['ADMET']['ames_toxicity']['probability'];
-      } catch (e) {
-      }
+      const mass = fetchFromObject(molecule, 'calculated_properties.Molecular Weight');
+      const logP = fetchFromObject(molecule, 'calculated_properties.logP');
+      const logS = fetchFromObject(molecule, 'calculated_properties.ALOGPS.logS');
+      const ames_tox = fetchFromObject(molecule, 'calculated_properties.ADMET.ames_toxicity.probability');
 
       drawDot(config['mass'].line, scale(mass, 'mass'), moleculeColor)
       drawDot(config['logP'].line, scale(logP, 'logP'), moleculeColor)
@@ -262,9 +228,13 @@ export const PredictiveWorld = () => {
 
   useEffect(() => {
     if (!state.interactingMolecules || !state.interactingMolecules.length) {
+      ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
+      tipCtx.current.clearRect(0, 0, tooltipCanvas.current.width, tooltipCanvas.current.height);
+      toolTips.current = [];
       return;
     }
     drawMolecules();
+    drawLines();
 
     // create toolTips for each molecule
     // createTooltipForEachMolecule();
@@ -273,7 +243,7 @@ export const PredictiveWorld = () => {
   }, [state.interactingMolecules])
 
   useEffect(() => {
-    if (state.protein && state.molecules.length > 0) {
+    if (state.protein && state.interactingMoleculesResult) {
       drawarc();
     }
   }, [state]);

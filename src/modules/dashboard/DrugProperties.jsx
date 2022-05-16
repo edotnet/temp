@@ -6,6 +6,7 @@ import { Hr } from "../../infrastructure/components/Hr.component";
 import { AdverseEffectsInfo } from "./adverse-effects/AdverseEffectsInfo";
 import { Close, ContentCopy } from "@mui/icons-material";
 import { CopyComponent } from "../../infrastructure/components/Copy.component";
+import { fetchFromObject } from "../../infrastructure/utils";
 
 const keys = [
   {key: 'calculated_properties.Molecular Weight', title: 'Mass.', color: '#AE2AFF'}, //900 / 1
@@ -29,20 +30,6 @@ const keys = [
   // { key: 'calculated_properties.pKa (strongest acidic)', title: 'pKa (strongest acidic)', color: '#AE2AFF' },
   // { key: 'calculated_properties.pKa (strongest basic)', title: 'pKa (strongest basic)' ,color: '#0050C9' }
 ];
-
-
-function fetchFromObject(obj, prop) {
-  if (typeof obj === 'undefined') {
-    return false;
-  }
-
-  var _index = prop.indexOf('.')
-  if (_index > -1) {
-    return fetchFromObject(obj[prop.substring(0, _index)], prop.substr(_index + 1));
-  }
-
-  return obj[prop];
-}
 
 
 export const DrugProperties = () => {
