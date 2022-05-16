@@ -111,9 +111,8 @@ export const DrugProperties = () => {
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
               <Box>
                 <Typography variant="h5" sx={{color: '#383874', fontSize: 30}} gutterBottom
-                            component="span">{state.selectedMolecule.name}</Typography>
-                <Typography variant="h5" sx={{color: '#373767', pl: 2, fontWeight: 300, fontSize: 30}} gutterBottom
-                            component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
+                            component="span">{state.selectedMolecule.name} <Typography variant="h5" sx={{color: '#373767', fontWeight: 300, fontSize: 30}} gutterBottom
+                                                                                       component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography></Typography>
               </Box>
               <CopyComponent text={`${state.selectedMolecule.name}
                   ${state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}

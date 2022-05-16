@@ -61,7 +61,7 @@ export const DashboardPage = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TargetAutocomplete onChange={_onProteinSelected} label="Protein"/>
+                  <TargetAutocomplete onChange={_onProteinSelected} label="ADD TARGET PROTEIN"/>
                 </Grid>
                 <Grid item xs={12}>
                   <Box pt={2}>

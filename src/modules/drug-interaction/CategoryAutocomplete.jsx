@@ -17,7 +17,7 @@ export const CategoryAutocomplete = ({onChange, onEmpty}) => {
 
   return (
     <Autocomplete
-      label="Drug family"
+      label="SELECT DRUG FAMILY"
       onChange={newValue => onChange(newValue.id)}
       onInputChange={newValue => executeSearch(newValue)}
       onEmpty={onEmpty}

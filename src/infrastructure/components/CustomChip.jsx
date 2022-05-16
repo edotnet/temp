@@ -26,8 +26,11 @@ export const CustomChip = styled(Chip)({
     },
     '&.MuiChip-deletable': {
       '.MuiChip-deleteIcon': {
+        position: 'absolute',
+        right: -10,
+        top: -10,
         display: 'none',
-        marginLeft: 10,
+        //marginLeft: 10,
       },
     },
     '&.MuiChip-filled': {
@@ -35,7 +38,7 @@ export const CustomChip = styled(Chip)({
       backgroundImage: 'linear-gradient(to bottom, #fff 16%, #e1e3e7 84%)',
     },
     '&.MuiChip-outlined': {
-      background: 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(225,227,231,1) 88%)',
+      //background: 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(225,227,231,1) 88%)',
       border: 'solid 1px #93999e',
       color: '#000',
       opacity: 0.54
