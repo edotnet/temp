@@ -5,6 +5,7 @@ import { useDashboardContext } from "../context/useDashboarContext";
 import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 import { ModalPaper } from "../../../infrastructure/components/ModalPaper";
 import { Close, ContentCopy } from "@mui/icons-material";
+import { Orb } from "./custom-orb/Orb";
 
 export const PredictiveWorld = () => {
   const [cxValue, setCxValue] = useState(0)
@@ -226,7 +227,7 @@ export const PredictiveWorld = () => {
   }
 
   function createTooltipForEachMolecule(lineDeg, scaleValue, tipValue, tipTitle) {
-    
+
     const totalDeg = lineDeg * degrees;
     let rx = radius * Math.cos(degrees_to_radians(lineDeg * degrees));
     let ry = radius * Math.sin(degrees_to_radians(lineDeg * degrees));
@@ -313,40 +314,17 @@ export const PredictiveWorld = () => {
       <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}} onMouseMove={handleMouseMove}/>
       <canvas ref={tooltipCanvas} style={{position: 'absolute', height: 50, width: 100, zIndex: 10}} />
       {
-        state.interactingMoleculesResult !== null 
-        ? 
-        <div style={{position: 'absolute', fontSize: '30px'}}>{ state.interactingMoleculesResult.value}%</div> 
+        state.interactingMoleculesResult !== null
+        ?
+        <div style={{position: 'absolute', fontSize: '30px'}}>{ state.interactingMoleculesResult.value}%</div>
         :
-        state.interactingMolecules.length === 0 
-        ? 
-        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"></div></div>Drop 1st <br/> Molecule</div> 
-        : 
-        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"></div></div>Drop 2nd <br/> Molecule</div> 
+        state.interactingMolecules.length === 0
+        ?
+        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"></div></div>Drop 1st <br/> Molecule</div>
+        :
+        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"></div></div>Drop 2nd <br/> Molecule</div>
       }
       <Fullorb />
-      {
-        state.protein && state.molecules.length > 0 ?
-        <Box sx={{position: 'absolute', top: '200px', left: '-250px', 'z-index': 999}}>
-          <ModalPaper elevation={2} sx={{width: 250, marginBottom: '50px', px: 2}}>
-            {/* <IconButton sx={{position: "absolute", top: 0, right: 0}} size="large">
-              <Close/>
-            </IconButton> */}
-            <Box p={2} pb={3}>
-              <Grid container columnSpacing={3}>
-                <Grid item xs={8}>Favipiravir</Grid>
-                <Grid item xs={4}>6.3</Grid>
-                <Grid item xs={8}>Osetalmivir</Grid>
-                <Grid item xs={4}>6</Grid>
-                <Grid item xs={8}>Balicatib</Grid>
-                <Grid item xs={4}>4</Grid>
-                <Grid item xs={8}>Remdesivir</Grid>
-                <Grid item xs={4}>3.8</Grid>
-              </Grid>
-            </Box>
-          </ModalPaper>
-        </Box>
-      : ''
-    }
     </>
   );
 }
