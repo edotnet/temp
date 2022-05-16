@@ -38,30 +38,30 @@ export const PredictiveWorld = () => {
       title: 'AMES tox.',
       property: 'calculated_properties.ADMET.ames_toxicity.probability',
     },
-    /*biodegradation: {
+    biodegradation: {
       line: 4,
       scale: [0.5, 1],
       title: 'Biodegradation',
       property: 'experimental_properties.ADMET.biodegradation.probability'
-    },
+    },/*
     caco2: {
       line: 5,
       scale: [0.5, 0.9481],
       title: 'Caco2 prob.',
       property: 'calculated_properties.ADMET.caco2.probability'
-    },
+    },*/
     bbb: {
-      line: 6,
+      line: 5,
       scale: [0, 1],
       title: 'BBB',
       property: 'calculated_properties.ADMET.bbb.probability'
     },
     hia: {
-      line: 7,
+      line: 6,
       scale: [0, 1],
       title: 'HIA',
       property: 'calculated_properties.ADMET.hia.probability'
-    }*/
+    }
   }
   const degrees = 360 / Object.keys(config).length;
 
@@ -198,7 +198,7 @@ export const PredictiveWorld = () => {
   }
 
   const addPropertyTooltip = (lineDeg, scaleValue, tipValue, tipTitle) => {
-
+    scaleValue = Math.abs(scaleValue)
     const totalDeg = lineDeg * degrees;
     let rx = radius * Math.cos(degrees_to_radians(lineDeg * degrees));
     let ry = radius * Math.sin(degrees_to_radians(lineDeg * degrees));
