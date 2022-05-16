@@ -170,6 +170,11 @@ export const PredictiveWorld = () => {
       // console.log(x + ' ,'+ y);
     }
 
+    if(state.protein && state.molecules.length > 0) {
+      //console.log('called');
+      drawarc();
+    }
+
     // for(let i in lines) {
     //   console.log('lines', i);
     //   let x = radius * Math.cos(degrees_to_radians(i * degrees));
@@ -217,10 +222,6 @@ export const PredictiveWorld = () => {
       createTooltipForEachMolecule(lines['logP'], scale(logP, 'logP'), logP);
       createTooltipForEachMolecule(lines['logS'], scale(logS, 'logS'), logS);
       createTooltipForEachMolecule(lines['ames_tox'], scale(ames_tox, 'ames_tox'), ames_tox);
-      console.log(state.protein , state.molecules.length );
-      if(state.protein && state.molecules.length > 0) {
-        drawarc();
-      }
     })
 
   }
@@ -322,9 +323,9 @@ export const PredictiveWorld = () => {
         state.protein && state.molecules.length > 0 ?
         <Box sx={{position: 'absolute', top: '200px', left: '-250px', 'z-index': 999}}>
           <ModalPaper elevation={2} sx={{width: 250, marginBottom: '50px', px: 2}}>
-            <IconButton sx={{position: "absolute", top: 0, right: 0}} size="large">
+            {/* <IconButton sx={{position: "absolute", top: 0, right: 0}} size="large">
               <Close/>
-            </IconButton>
+            </IconButton> */}
             <Box p={2} pb={3}>
               <Grid container columnSpacing={3}>
                 <Grid item xs={8}>Favipiravir</Grid>
