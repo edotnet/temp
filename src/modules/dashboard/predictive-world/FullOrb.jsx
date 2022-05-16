@@ -1,5 +1,6 @@
 import { Circle1 } from "./custom-orb/Circle1";
 import { Circle2 } from "./custom-orb/Circle2";
+import './Orb.css'
 
 export const Fullorb = () => <svg
 id='eA9OWal5eLu1'
