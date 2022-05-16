@@ -83,7 +83,7 @@ export const PredictiveWorld = () => {
     ctx.current.fillRect(-1 * (w / 2), -1 * (h / 2), w, h);
     ctx.current.fillStyle = "#222A47";
     ctx.current.font = "13px Arial";
-    ctx.current.fillText(text, -10, -100);
+    ctx.current.fillText(text, -2.5 * text.length, -100);
     ctx.current.restore();
   }
 
