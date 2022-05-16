@@ -173,11 +173,6 @@ export const PredictiveWorld = () => {
       // console.log(x + ' ,'+ y);
     }
 
-    if(state.protein && state.molecules.length > 0) {
-      //console.log('called');
-      drawarc();
-    }
-
     // for(let i in lines) {
     //   console.log('lines', i);
     //   let x = radius * Math.cos(degrees_to_radians(i * degrees));
@@ -226,8 +221,6 @@ export const PredictiveWorld = () => {
       createTooltipForEachMolecule(lines['logS'], scale(logS, 'logS'), logS, "LogS");
       createTooltipForEachMolecule(lines['ames_tox'], scale(ames_tox, 'ames_tox'), ames_tox, "Ames Tox");
 
-      console.log("mass", mass);
-      console.log("logP", logP);
     })
 
   }
@@ -278,6 +271,12 @@ export const PredictiveWorld = () => {
     // console.log("Tooltips", toolTips)
 
   }, [state.interactingMolecules])
+
+  useEffect(() => {
+    if(state.protein && state.molecules.length > 0) {
+      drawarc();
+    }
+  }, [state]);
 
   const handleMouseMove = (e) => {
     const BB = canvas.current.getBoundingClientRect();
