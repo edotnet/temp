@@ -1,48 +1,69 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import './Orb.css'
 import { Fullorb } from "./FullOrb";
 import { useDashboardContext } from "../context/useDashboarContext";
-import { Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
-import { ModalPaper } from "../../../infrastructure/components/ModalPaper";
-import { Close, ContentCopy } from "@mui/icons-material";
-import { Orb } from "./custom-orb/Orb";
 import { fetchFromObject } from "../../../infrastructure/utils";
 
 export const PredictiveWorld = () => {
-  const [cxValue, setCxValue] = useState(0)
-  const [cyValue, setCyValue] = useState(0)
   const {state} = useDashboardContext()
   const ctx = useRef();
   const tipCtx = useRef();
   const canvas = useRef()
   const tooltipCanvas = useRef()
   const toolTips = useRef([]);
-  const bars = 4;
   const radius = 130;
-  const degrees = 360 / bars;
 
   const config = {
     logP: {
       line: 0,
       scale: [-9, 9],
-      title: 'LogP'
+      title: 'LogP',
+      property: 'calculated_properties.logP'
     },
     logS: {
       line: 1,
       scale: [-11, 3],
-      title: 'LogS'
+      title: 'LogS',
+      property: 'calculated_properties.ALOGPS.logS'
     },
     mass: {
       line: 2,
       scale: [1, 900],
       title: 'Molecular Mass',
+      property: 'calculated_properties.Molecular Weight'
     },
     ames_tox: {
       line: 3,
       scale: [0, 100],
-      title: 'AMES tox.'
-    }
+      title: 'AMES tox.',
+      property: 'calculated_properties.ADMET.ames_toxicity.probability',
+    },
+    /*biodegradation: {
+      line: 4,
+      scale: [0.5, 1],
+      title: 'Biodegradation',
+      property: 'experimental_properties.ADMET.biodegradation.probability'
+    },
+    caco2: {
+      line: 5,
+      scale: [0.5, 0.9481],
+      title: 'Caco2 prob.',
+      property: 'calculated_properties.ADMET.caco2.probability'
+    },
+    bbb: {
+      line: 6,
+      scale: [0, 1],
+      title: 'BBB',
+      property: 'calculated_properties.ADMET.bbb.probability'
+    },
+    hia: {
+      line: 7,
+      scale: [0, 1],
+      title: 'HIA',
+      property: 'calculated_properties.ADMET.hia.probability'
+    }*/
   }
+  const degrees = 360 / Object.keys(config).length;
 
   const inValues = [90, 135, 270, 315];
 
@@ -60,19 +81,21 @@ export const PredictiveWorld = () => {
   }
 
   const drawarc = () => {
-    ctx.current.lineWidth = 2;
+    ctx.current.lineWidth = 4;
     ctx.current.strokeStyle = "#6d69c0";
     ctx.current.beginPath();
     ctx.current.moveTo(102, 74);
     // ctx.current.bezierCurveTo(286, 253, 218, 225, 44, 196);
-    ctx.current.bezierCurveTo(246, 253, 318, 225, -10, 220)
+    //ctx.current.bezierCurveTo(246, 253, 318, 225, -10, 220)
+    ctx.current.bezierCurveTo(206, 222, 249, 238, 420, 104)
     ctx.current.stroke();
 
-    ctx.current.lineWidth = 2;
+    ctx.current.lineWidth = 4;
     ctx.current.strokeStyle = "#d7834c";
     ctx.current.beginPath();
     ctx.current.moveTo(498, 213);
     ctx.current.bezierCurveTo(206, 222, 249, 238, 420, 104)
+    //ctx.current.bezierCurveTo(206, 222, 249, 238, 520, 104)
     ctx.current.stroke();
   }
 
@@ -89,8 +112,6 @@ export const PredictiveWorld = () => {
   }
 
   const drawCircleDot = (x, y) => {
-    // console.log("Dot x, y", x, y);
-
     ctx.current.beginPath();
     ctx.current.arc(x, y, 7, 0, 2 * Math.PI, true);
     ctx.current.closePath()
@@ -108,17 +129,10 @@ export const PredictiveWorld = () => {
     let x = radius * Math.cos(degrees_to_radians(totalDeg));
     let y = radius * Math.sin(degrees_to_radians(totalDeg));
     ctx.current.translate(x + 250, y + 250);
-    ctx.current.rotate(-degrees_to_radians(totalDeg));
+    ctx.current.rotate(degrees_to_radians(totalDeg));
     ctx.current.fillStyle = color;
     ctx.current.strokeStyle = color;
-
-    if (totalDeg % 90) {
-      //ctx.current.fillRect(-5, value, 10, 10);
-      drawCircleDot(0, value)
-    } else {
-      //ctx.current.fillRect(value, -5, 10, 10);
-      drawCircleDot(value, 0)
-    }
+    drawCircleDot(value, 0);
 
     ctx.current.restore();
   }
@@ -173,25 +187,17 @@ export const PredictiveWorld = () => {
       const {hue, saturation, luminosity} = molecule.color;
       const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.7)`;
 
-      const mass = fetchFromObject(molecule, 'calculated_properties.Molecular Weight');
-      const logP = fetchFromObject(molecule, 'calculated_properties.logP');
-      const logS = fetchFromObject(molecule, 'calculated_properties.ALOGPS.logS');
-      const ames_tox = fetchFromObject(molecule, 'calculated_properties.ADMET.ames_toxicity.probability');
-
-      drawDot(config['mass'].line, scale(mass, 'mass'), moleculeColor)
-      drawDot(config['logP'].line, scale(logP, 'logP'), moleculeColor)
-      drawDot(config['logS'].line, scale(logS, 'logS'), moleculeColor)
-      drawDot(config['ames_tox'].line, scale(ames_tox, 'ames_tox'), moleculeColor)
-
-      createTooltipForEachMolecule(config['mass'].line, scale(mass, 'mass'), mass, config['mass'].title);
-      createTooltipForEachMolecule(config['logP'].line, scale(logP, 'logP'), logP, config['logP'].title);
-      createTooltipForEachMolecule(config['logS'].line, scale(logS, 'logS'), logS, config['logS'].title);
-      createTooltipForEachMolecule(config['ames_tox'].line, scale(ames_tox, 'ames_tox'), ames_tox, config['ames_tox'].title);
+      Object.keys(config).forEach((key) => {
+        const prop = config[key];
+        const value = fetchFromObject(molecule, prop.property);
+        const scaled = scale(value, key);
+        drawDot(prop.line, scaled, moleculeColor);
+        addPropertyTooltip(prop.line, scaled, value, prop.title);
+      })
     })
-
   }
 
-  function createTooltipForEachMolecule(lineDeg, scaleValue, tipValue, tipTitle) {
+  const addPropertyTooltip = (lineDeg, scaleValue, tipValue, tipTitle) => {
 
     const totalDeg = lineDeg * degrees;
     let rx = radius * Math.cos(degrees_to_radians(lineDeg * degrees));
@@ -210,22 +216,6 @@ export const PredictiveWorld = () => {
     }
   }
 
-  // function createTooltipForEachMolecule() {
-  //   Object.entries(lines).forEach(([key, value], index) => {
-  //     let tx = radius * Math.cos(degrees_to_radians(index * degrees));
-  //     let ty = radius * Math.sin(degrees_to_radians(index * degrees));
-
-  //     toolTips.current.push({
-  //       x: tx + 250,
-  //       y: ty + 250,
-  //       r: 10,
-  //       rXr: 100,
-  //       tip: "Tooltip: " + key
-  //     });
-
-  //   });
-  // }
-
   useEffect(() => {
     if (!state.interactingMolecules || !state.interactingMolecules.length) {
       ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
@@ -237,7 +227,7 @@ export const PredictiveWorld = () => {
     drawLines();
 
     // create toolTips for each molecule
-    // createTooltipForEachMolecule();
+    // addPropertyTooltip();
     // console.log("Tooltips", toolTips)
 
   }, [state.interactingMolecules])

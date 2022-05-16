@@ -28,7 +28,11 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
   }
 
   const _onChange = (newValue) => {
-    onChange(data.items.find(item => item.drugbank_id === newValue.id));
+    if (!data || typeof newValue === 'string') {
+      return;
+    }
+    const molecule = data.items.find(item => item.drugbank_id === newValue.id);
+    onChange(molecule);
   }
 
 
