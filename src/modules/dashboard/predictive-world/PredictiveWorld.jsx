@@ -20,18 +20,27 @@ export const PredictiveWorld = () => {
   const radius = 130;
   const degrees = 360 / bars;
 
-  const lines = {
-    logP: 1,
-    logS: 2,
-    mass: 3,
-    ames_tox: 4,
-  }
-
-  const scales = {
-    logP: [-9, 9],
-    logS: [-11, 3],
-    mass: [1, 900],
-    ames_tox: [0, 100],
+  const config = {
+    logP: {
+      line: 0,
+      scale: [-9, 9],
+      title: 'LogP'
+    },
+    logS: {
+      line: 1,
+      scale: [-11, 3],
+      title: 'LogS'
+    },
+    mass: {
+      line: 2,
+      scale: [1, 900],
+      title: 'Molecular Mass',
+    },
+    ames_tox: {
+      line: 3,
+      scale: [0, 100],
+      title: 'AMES tox.'
+    }
   }
 
   const inValues = [90, 135, 270, 315];
@@ -102,8 +111,6 @@ export const PredictiveWorld = () => {
     ctx.current.fillStyle = color;
     ctx.current.strokeStyle = color;
 
-    // console.log("Value", value);
-
     if (totalDeg % 90) {
       //ctx.current.fillRect(-5, value, 10, 10);
       drawCircleDot(0, value)
@@ -121,20 +128,20 @@ export const PredictiveWorld = () => {
 
   const scale = (num, property) => {
     num = parseFloat(num);
-    const min = scales[property][0]
-    const max = scales[property][1]
-    if (num < scales[property][0]) {
-      num = scales[property][0];
+    const min = config[property].scale[0]
+    const max = config[property].scale[1]
+    if (num < config[property].scale[0]) {
+      num = config[property].scale[0];
     }
-    if (num > scales[property][1]) {
-      num = scales[property][1];
+    if (num > config[property].scale[1]) {
+      num = config[property].scale[1];
     }
     if (min < 0) {
       num = num + min * -1;
     }
     const percent = (num * 100 / (max - min));
     const canvasAdapted = percent - 50;
-    const isIn = inValues.includes(lines[property] * degrees)
+    const isIn = inValues.includes(config[property].line * degrees)
     if (isIn) {
       return canvasAdapted;
     }
@@ -142,12 +149,9 @@ export const PredictiveWorld = () => {
   }
 
   useEffect(() => {
-    // dynamically assign the width and height to canvas
     const canvasEle = canvas.current;
     canvasEle.width = canvasEle.clientWidth;
     canvasEle.height = canvasEle.clientHeight;
-
-    // get context of the canvas
     ctx.current = canvasEle.getContext("2d");
 
     const tipCanvas = tooltipCanvas.current;
@@ -156,10 +160,10 @@ export const PredictiveWorld = () => {
 
   useEffect(() => {
 
-    Object.entries(lines).forEach(([key, value], index) => {
-      let x = radius * Math.cos(degrees_to_radians(index * degrees));
-      let y = radius * Math.sin(degrees_to_radians(index * degrees));
-      drawLine(x + 250, y + 250, 1, 120, index * degrees, key);
+    Object.entries(config).forEach(([key, value], index) => {
+      let x = radius * Math.cos(degrees_to_radians(value.line * degrees));
+      let y = radius * Math.sin(degrees_to_radians(value.line * degrees));
+      drawLine(x + 250, y + 250, 1, 120, value.line * degrees, value.title);
       //console.log(`${index}: ${key} = ${value}`);
       // console.log(value);
     });
@@ -202,26 +206,20 @@ export const PredictiveWorld = () => {
       const mass = molecule.calculated_properties['Molecular Weight'];
       const logP = molecule.calculated_properties['logP'];
       const logS = molecule.calculated_properties['ALOGPS']['logS'];
-      const ames_tox = 10;
-      // const ames_tox = molecule.calculated_properties['ADMET']['ames_toxicity']['probability'];
-      drawDot(lines['mass'], scale(mass, 'mass'), moleculeColor)
-      drawDot(lines['logP'], scale(logP, 'logP'), moleculeColor)
-      drawDot(lines['logS'], scale(logS, 'logS'), moleculeColor)
-      drawDot(lines['ames_tox'], scale(ames_tox, 'ames_tox'), moleculeColor)
+      let ames_tox = 0;
+      try {
+        ames_tox = molecule.calculated_properties['ADMET']['ames_toxicity']['probability'];
+      } catch(e){}
 
+      drawDot(config['mass'].line, scale(mass, 'mass'), moleculeColor)
+      drawDot(config['logP'].line, scale(logP, 'logP'), moleculeColor)
+      drawDot(config['logS'].line, scale(logS, 'logS'), moleculeColor)
+      drawDot(config['ames_tox'].line, scale(ames_tox, 'ames_tox'), moleculeColor)
 
-      // console.log("Value mass", scale(mass, 'mass'));
-      // drawToolTip(lines['mass'], "Mass", mass);
-      // drawToolTip(lines['logP'], "logP",  logP);
-      // drawToolTip(lines['logS'], "logS",  logS);
-      // drawToolTip(lines['ames_tox'],  "Ames Tox", ames_tox);
-
-      // create toolTips for each molecule
-      createTooltipForEachMolecule(lines['mass'], scale(mass, 'mass'), mass, "Molecular Weight");
-      createTooltipForEachMolecule(lines['logP'], scale(logP, 'logP'), logP, " LogP");
-      createTooltipForEachMolecule(lines['logS'], scale(logS, 'logS'), logS, "LogS");
-      createTooltipForEachMolecule(lines['ames_tox'], scale(ames_tox, 'ames_tox'), ames_tox, "Ames Tox");
-
+      createTooltipForEachMolecule(config['mass'].line, scale(mass, 'mass'), mass, config['mass'].title);
+      createTooltipForEachMolecule(config['logP'].line, scale(logP, 'logP'), logP, config['logP'].title);
+      createTooltipForEachMolecule(config['logS'].line, scale(logS, 'logS'), logS, config['logS'].title);
+      createTooltipForEachMolecule(config['ames_tox'].line, scale(ames_tox, 'ames_tox'), ames_tox, config['ames_tox'].title);
     })
 
   }
@@ -320,9 +318,9 @@ export const PredictiveWorld = () => {
         :
         state.interactingMolecules.length === 0
         ?
-        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"></div></div>Drop 1st <br/> Molecule</div>
+        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"/></div>Drop 1st <br/> Molecule</div>
         :
-        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"></div></div>Drop 2nd <br/> Molecule</div>
+        <div className="dropmolecule-blob-center"><div className="dropmolecule-icon"><div className="rectangle"/></div>Drop 2nd <br/> Molecule</div>
       }
       <Fullorb />
     </>
