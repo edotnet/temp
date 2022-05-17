@@ -1,8 +1,6 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDashboardContext } from "../dashboard/context/useDashboarContext";
-import $ from 'jquery';
 import $3Dmol from '3dmol';
-import { useProtein } from "./useProtein";
 import { ModalPaper } from "../../infrastructure/components/ModalPaper";
 import { Box, IconButton } from "@mui/material";
 import { Close } from "@mui/icons-material";
@@ -10,26 +8,33 @@ import { Close } from "@mui/icons-material";
 export const ThreeDMol = () => {
   const ref = useRef();
   const {state} = useDashboardContext()
-  const [isOpen, open] = useState(true);
+  const [isOpen, open] = useState(false);
   useEffect(() => {
-    if (state.protein) {
-      const pdb = state.protein.pdb_ids[0]
+    if (state.pdbid) {
       const viewer = $3Dmol.viewers[0];
       viewer.clear();
-      $3Dmol.download(`pdb:${pdb}`, viewer,{format: 'pdb', colorschema: 'spectral'}, () => {
+      $3Dmol.download(`pdb:${state.pdbid}`, viewer, {format: 'pdb', colorschema: 'spectral'}, () => {
         viewer.zoomTo();
         viewer.render();
         open(true)
       })
+    }else {
+      open(false)
     }
-  }, [state.protein])
+  }, [state.pdbid])
 
   const close = () => {
     open(false);
   }
 
   return (
-    <Box sx={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', display: isOpen ? 'block' : 'none'}}>
+    <Box sx={{
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      display: isOpen ? 'block' : 'none'
+    }}>
       <ModalPaper>
         <IconButton sx={{position: "absolute", top: 0, right: 0, zIndex: 10}} size="large" onClick={close}>
           <Close/>
