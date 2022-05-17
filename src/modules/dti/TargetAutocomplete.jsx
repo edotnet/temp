@@ -12,6 +12,14 @@ export const TargetAutocomplete = ({label, onChange, onEmpty}) => {
     fetch(`${url}${search}`, 'GET')
   }
 
+  const _onChange = (newValue) => {
+    if (!data || typeof newValue === 'string') {
+      return;
+    }
+    const target = data.find(item => item.amino_acid_sequence === newValue.id);
+    onChange(target);
+  }
+
   const options = data ? data
     .map(item => ({
       id: item.amino_acid_sequence,
@@ -21,7 +29,7 @@ export const TargetAutocomplete = ({label, onChange, onEmpty}) => {
   return (
     <Autocomplete
       key={'target-autocomplete'}
-      onChange={onChange}
+      onChange={_onChange}
       onInputChange={newValue => executeSearch(newValue)}
       onEmpty={onEmpty}
       options={options}

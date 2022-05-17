@@ -19,7 +19,11 @@ export const DTI = () => {
       label: molecule.name,
     }));
     if (molecules.length && protein) {
-      fetch(url, 'POST', {target: protein, drugs: molecules});
+      const target = {
+        id: protein.amino_acid_sequence,
+        label: protein.name,
+      }
+      fetch(url, 'POST', {target, drugs: molecules});
     }
     if (data && !molecules.length) {
       reset();

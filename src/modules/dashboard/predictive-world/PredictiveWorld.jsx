@@ -153,7 +153,7 @@ export const PredictiveWorld = () => {
     if (min < 0) {
       num = num + min * -1;
     }
-    const div = (max - min) < 1 ? 1 : max-min;
+    const div = (max - min) < 1 ? 1 : max - min;
     const percent = (num * 100 / div);
     const canvasAdapted = percent - 50;
     const isIn = inValues.includes(config[property].line * degrees)
