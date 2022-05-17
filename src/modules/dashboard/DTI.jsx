@@ -55,7 +55,7 @@ export const DTI = () => {
         </Avatar>
         <Box pl={2}>
           <Typography sx={{fontSize: 15, fontWeight: 500}}>Target Interaction, protein:</Typography>
-          <Typography sx={{fontSize: 18}}>{protein.label}</Typography>
+          <Typography sx={{fontSize: 18}}>{protein.name}</Typography>
         </Box>
       </Box>
       <ThreeDMol />
