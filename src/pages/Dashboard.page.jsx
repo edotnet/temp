@@ -111,6 +111,5 @@ export const DashboardPage = () => {
 export const Dashboard = () => (
   <DashboardContextProvider>
     <DashboardPage/>
-    <ThreeDMol />
   </DashboardContextProvider>
 )

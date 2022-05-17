@@ -5,6 +5,7 @@ import InfoProtein from '../../assets/info-protein.png';
 import { Hr } from "../../infrastructure/components/Hr.component";
 import { useDashboardContext } from "./context/useDashboarContext";
 import { GraphBackground } from "../../infrastructure/components/GraphBackground";
+import { ThreeDMol } from "../3dmol/ThreeDMol";
 
 export const DTI = () => {
   const {state, dispatch} = useDashboardContext();
@@ -12,6 +13,7 @@ export const DTI = () => {
   const url = '/dti'
   const {data, fetch, loading, reset} = useApiCall(url, 'POST', null, false);
   //const data = [{"label": "Favipiravir", "value": 4.706718444824219}, {"label": "Ibuproxam", "value": 5.687283992767334}, {"label": "Dexibuprofen", "value": 5.887485027313232}, {"label": "D-4-hydroxyphenylglycine", "value": 5.576238632202148}];
+  //const loading = false;
 
   useEffect(() => {
     const molecules = state.molecules.map(molecule => ({
@@ -56,6 +58,7 @@ export const DTI = () => {
           <Typography sx={{fontSize: 18}}>{protein.label}</Typography>
         </Box>
       </Box>
+      <ThreeDMol />
       <Hr/>
       <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction
         score</Typography>
