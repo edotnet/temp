@@ -203,17 +203,10 @@ export const PredictiveWorld = () => {
     let rx = radius * Math.cos(degrees_to_radians(totalDeg));
     let ry = radius * Math.sin(degrees_to_radians(totalDeg));
 
-    // ctx.current.translate(x + 250, y + 250);
+    toolTips.current.push(
+      {x: rx + scaleValue + 256, y: ry + 256, rXr: 100, tip: tipValue, title: tipTitle}
+    );
 
-    if (totalDeg % 90) {
-      toolTips.current.push(
-        {x: rx + 256, y: ry + scaleValue + 256, rXr: 100, tip: tipValue, title: tipTitle}
-      );
-    } else {
-      toolTips.current.push(
-        {x: rx + scaleValue + 256, y: ry + 256, rXr: 100, tip: tipValue, title: tipTitle}
-      );
-    }
   }
 
   useEffect(() => {
@@ -225,10 +218,6 @@ export const PredictiveWorld = () => {
     }
     drawMolecules();
     drawLines();
-
-    // create toolTips for each molecule
-    // addPropertyTooltip();
-    // console.log("Tooltips", toolTips)
 
   }, [state.interactingMolecules])
 
