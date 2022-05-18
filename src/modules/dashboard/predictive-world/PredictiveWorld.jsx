@@ -5,13 +5,15 @@ import { useDashboardContext } from "../context/useDashboarContext";
 import { fetchFromObject } from "../../../infrastructure/utils";
 
 export const PredictiveWorld = () => {
-  const {state} = useDashboardContext()
+  const { state } = useDashboardContext()
   const ctx = useRef();
   const tipCtx = useRef();
   const canvas = useRef()
   const tooltipCanvas = useRef()
-  const toolTips = useRef([]);
+  // const toolTips = useRef([]);
   const radius = 130;
+
+  const toolTips = [];
 
   const config = {
     logP: {
@@ -153,7 +155,7 @@ export const PredictiveWorld = () => {
     if (min < 0) {
       num = num + min * -1;
     }
-    const div = (max - min) < 1 ? 1 : max-min;
+    const div = (max - min) < 1 ? 1 : max - min;
     const percent = (num * 100 / div);
     const canvasAdapted = percent - 50;
     const isIn = inValues.includes(config[property].line * degrees)
@@ -184,7 +186,7 @@ export const PredictiveWorld = () => {
 
   const drawMolecules = () => {
     state.interactingMolecules.forEach((molecule, i) => {
-      const {hue, saturation, luminosity} = molecule.color;
+      const { hue, saturation, luminosity } = molecule.color;
       const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.7)`;
 
       Object.keys(config).forEach((key) => {
@@ -192,28 +194,72 @@ export const PredictiveWorld = () => {
         const value = parseFloat(fetchFromObject(molecule, prop.property));
         const scaled = scale(value, key);
         drawDot(prop.line, scaled, moleculeColor);
-        addPropertyTooltip(prop.line, scaled, value, prop.title);
+        // addPropertyTooltip(prop.line, scaled, value, prop.title);
       })
     })
   }
 
-  const addPropertyTooltip = (lineDeg, scaleValue, tipValue, tipTitle) => {
-    scaleValue = Math.abs(scaleValue)
-    const totalDeg = lineDeg * degrees;
-    let rx = radius * Math.cos(degrees_to_radians(totalDeg));
-    let ry = radius * Math.sin(degrees_to_radians(totalDeg));
+  const tooltipData = {
+    values: [
+      { X: 155, Y: 185 },
+      { X: 222, Y: 328 },
+      { X: 400, Y: 318 },
+      { X: 254, Y: 54 },
+      { X: 275, Y: 140 },
+      { X: 164, Y: 380 },
+      { X: 75, Y: 180 }
+    ]
+  };
 
-    toolTips.current.push(
-      {x: rx + scaleValue + 256, y: ry + 256, rXr: 100, tip: tipValue, title: tipTitle}
-    );
+  useEffect(() => {
 
+    for (var i = 0; i < tooltipData.values.length; i++) {
+      toolTips.push({
+        x: tooltipData.values[i].X,
+        y: tooltipData.values[i].Y,
+        r: 10,
+        rXr: 100,
+        tip: "value " + (i + 1),
+        title: 'Tooltip'
+      });
+    }
+
+    // console.log("toolTips", toolTips)
+    drawDummyDots();
+  }, []);
+
+  const drawDummyDots = () => {
+    for (var i = 0; i < tooltipData.values.length; i++) {
+      ctx.current.beginPath();
+      ctx.current.fillStyle = 'green';
+      ctx.current.arc(tooltipData.values[i].X, tooltipData.values[i].Y, 7, 0, 2 * Math.PI, true);
+      ctx.current.closePath()
+      ctx.current.fill()
+      ctx.current.beginPath();
+      ctx.current.strokeStyle = 'purple';
+      ctx.current.arc(tooltipData.values[i].X, tooltipData.values[i].Y, 10, 0, 2 * Math.PI, true);
+      ctx.current.closePath()
+      ctx.current.stroke()
+    }
   }
+
+  // const addPropertyTooltip = (lineDeg, scaleValue, tipValue, tipTitle) => {
+  //   scaleValue = Math.abs(scaleValue)
+  //   const totalDeg = lineDeg * degrees;
+  //   let rx = radius * Math.cos(degrees_to_radians(totalDeg));
+  //   let ry = radius * Math.sin(degrees_to_radians(totalDeg));
+
+  //   toolTips.current.push(
+  //     {x: rx + scaleValue + 256, y: ry + 256, rXr: 100, tip: tipValue, title: tipTitle}
+  //   );
+
+  // }
 
   useEffect(() => {
     if (!state.interactingMolecules || !state.interactingMolecules.length) {
-      ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
-      tipCtx.current.clearRect(0, 0, tooltipCanvas.current.width, tooltipCanvas.current.height);
-      toolTips.current = [];
+      // ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
+      // tipCtx.current.clearRect(0, 0, tooltipCanvas.current.width, tooltipCanvas.current.height);
+      // toolTips.current = [];
       return;
     }
     drawMolecules();
@@ -231,9 +277,9 @@ export const PredictiveWorld = () => {
     return (
       <div className="dropmolecule-blob-center">
         <div className="dropmolecule-icon">
-          <div className="rectangle"/>
+          <div className="rectangle" />
         </div>
-        Drop {num} <br/> Molecule</div>
+        Drop {num} <br /> Molecule</div>
     )
   }
 
@@ -242,7 +288,7 @@ export const PredictiveWorld = () => {
       return renderDropMolecule("1st")
     }
     if (state.interactingMoleculesResult) {
-      return <div style={{position: 'absolute', fontSize: '30px'}}>{state.interactingMoleculesResult.value}%</div>;
+      return <div style={{ position: 'absolute', fontSize: '30px' }}>{state.interactingMoleculesResult.value}%</div>;
     }
     return renderDropMolecule("2nd");
   }
@@ -256,15 +302,17 @@ export const PredictiveWorld = () => {
     const mouseY = parseInt(e.clientY - offsetY);
 
     let hit = false;
-    let i = 0, leni = toolTips.current.length;
+    // let i = 0, leni = toolTips.current.length;
+    let i = 0, leni = toolTips.length;
     for (; i < leni; i++) {
-      let dot = toolTips.current[i];
+      // let dot = toolTips.current[i];
+      let dot = toolTips[i];
       let dx = mouseX - dot.x;
       let dy = mouseY - dot.y;
 
       if (dx * dx + dy * dy < dot.rXr) {
-        tooltipCanvas.current.style.left = (dot.x + 5) + "px";
-        tooltipCanvas.current.style.top = (dot.y - 20) + "px";
+        tooltipCanvas.current.style.left = (dot.x + 10) + "px";
+        tooltipCanvas.current.style.top = (dot.y - 30) + "px";
         tipCtx.current.clearRect(0, 0, tooltipCanvas.current.width, tooltipCanvas.current.height);
 
         drawToolTip(dot.tip, dot.title);
@@ -280,10 +328,10 @@ export const PredictiveWorld = () => {
 
   return (
     <>
-      <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}} onMouseMove={handleMouseMove}/>
-      <canvas ref={tooltipCanvas} style={{position: 'absolute', height: 50, width: 100, zIndex: 10}}/>
+      <canvas ref={canvas} style={{ position: 'absolute', height: 500, width: 500 }} onMouseMove={handleMouseMove} />
+      <canvas ref={tooltipCanvas} style={{ position: 'absolute', height: 50, width: 100, zIndex: 10 }} />
       {renderCenter()}
-      <Fullorb/>
+      <Fullorb />
     </>
   );
 }
