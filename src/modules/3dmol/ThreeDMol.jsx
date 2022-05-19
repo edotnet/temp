@@ -20,7 +20,6 @@ export const ThreeDMol = () => {
       );
       viewer.clear();
       $3Dmol.download(`pdb:${state.pdbid}`, viewer, {format: 'pdb', colorschema: 'spectral'}, () => {
-        console.log('rendering...')
         viewer.zoomTo();
         viewer.render();
       })
@@ -43,7 +42,7 @@ export const ThreeDMol = () => {
       </AccordionSummary>
       <AccordionDetails>
         <Box>
-          <div ref={ref} id="gldiv" style={{height: 400, width: 400, position: 'relative'}}
+          <div ref={ref} id="gldiv" style={{height: 300, width: 400, position: 'relative'}}
                className="viewer_3Dmoljs"
                data-backgroundcolor="#f5f6fc"
                data-pdb="2nbd"
