@@ -8,6 +8,7 @@ const initialState = {
   interactingMoleculesResult: null,
   protein: null,
   category: null,
+  pdbid: "",
 };
 
 const DashboardContext = createContext({state: initialState});
@@ -88,6 +89,10 @@ const reducer = (state, action) => {
     removeProtein: () => ({
       ...state,
       protein: null
+    }),
+    selectPdb: (pdbid) => ({
+      ...state,
+      pdbid
     })
   }
   return actions[action.type](action.payload);

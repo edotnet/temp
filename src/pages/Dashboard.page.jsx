@@ -11,6 +11,8 @@ import { DashboardContextProvider } from "../modules/dashboard/context/Dashboard
 import { useDashboardContext } from "../modules/dashboard/context/useDashboarContext";
 import { TargetAutocomplete } from "../modules/dti/TargetAutocomplete";
 import { PresentationModal } from "../modules/dashboard/presentation-modal/PresentationModal";
+import { ThreeDMol } from "../modules/3dmol/ThreeDMol";
+import { PDBSelector } from "../modules/3dmol/PDBSelector";
 
 export const DashboardPage = () => {
   const {state, dispatch} = useDashboardContext();
@@ -62,6 +64,9 @@ export const DashboardPage = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <TargetAutocomplete onChange={_onProteinSelected} label="ADD TARGET PROTEIN"/>
+                  {state.protein && <Box pt={3}>
+                    <PDBSelector options={state.protein.pdb_ids}/>
+                  </Box>}
                 </Grid>
                 <Grid item xs={12}>
                   <Box pt={2}>
