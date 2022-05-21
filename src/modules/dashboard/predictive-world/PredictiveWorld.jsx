@@ -124,15 +124,20 @@ export const PredictiveWorld = () => {
 
   const drawDot = (lineDeg, value, color) => {
     ctx.current.save();
-
+    let canvasAdapted = value - 50;
+    const isIn = inValues.includes(lineDeg * degrees)
+    if (!isIn) {
+     canvasAdapted = -canvasAdapted;
+    }
     const totalDeg = lineDeg * degrees;
     let x = radius * Math.cos(degrees_to_radians(totalDeg));
     let y = radius * Math.sin(degrees_to_radians(totalDeg));
+
     ctx.current.translate(x + 250, y + 250);
     ctx.current.rotate(degrees_to_radians(totalDeg));
     ctx.current.fillStyle = color;
     ctx.current.strokeStyle = color;
-    drawCircleDot(value, 0);
+    drawCircleDot(canvasAdapted, 0);
 
     ctx.current.restore();
   }
@@ -154,13 +159,13 @@ export const PredictiveWorld = () => {
       num = num + min * -1;
     }
     const div = (max - min) < 1 ? 1 : max - min;
-    const percent = (num * 100 / div);
-    const canvasAdapted = percent - 50;
+    return (num * 100 / div);
+    /*const canvasAdapted = percent - 50;
     const isIn = inValues.includes(config[property].line * degrees)
     if (isIn) {
       return canvasAdapted;
     }
-    return -canvasAdapted;
+    return -canvasAdapted;*/
   }
 
   useEffect(() => {
@@ -198,13 +203,23 @@ export const PredictiveWorld = () => {
   }
 
   const addPropertyTooltip = (lineDeg, scaleValue, tipValue, tipTitle) => {
-    scaleValue = Math.abs(scaleValue)
+    //scaleValue = Math.abs(scaleValue)
     const totalDeg = lineDeg * degrees;
-    let rx = radius * Math.cos(degrees_to_radians(totalDeg));
-    let ry = radius * Math.sin(degrees_to_radians(totalDeg));
+    /*if (inValues.includes(totalDeg)) {
+      scaleValue -= 50;
+    }*/
+    if (totalDeg === 90 || totalDeg === 45) {
+      scaleValue += 100;
+    }
+    if (totalDeg === 135) {
+      scaleValue += 50;
+    }
+    console.log(totalDeg, scaleValue, tipTitle)
+    const x = (scaleValue) * Math.cos(degrees_to_radians(totalDeg));
+    const y = (scaleValue) * Math.sin(degrees_to_radians(totalDeg));
 
     toolTips.current.push(
-      {x: rx + scaleValue + 256, y: ry + 256, rXr: 100, tip: tipValue, title: tipTitle}
+      {x: x + 250, y: 250 + y, rXr: 1000, tip: tipValue, title: tipTitle}
     );
 
   }
