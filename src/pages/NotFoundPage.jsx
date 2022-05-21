@@ -1,18 +1,22 @@
+import { useNavigate } from "react-router-dom";
+import './notFoundPage.css';
+import snow from '../assets/img/snow_404_big.png';
+
 export const NotFoundPage = () => {
+    let navigate = useNavigate();
+
     function handleClick() {
-        window.location.href = "/login";
+        navigate("/login", { replace: true });
     }
 
     return(
-        <div>
+        <div style={{height: '100%'}}>
             <div className="notfoundPage">
                 <div className="notfound">
-                    <div className="notfound-404">
-                        <h1>404</h1>
-                    </div>
-                    <h2>Oops! This Page Could Not Be Found</h2>
-                    <p>Sorry but the page you are looking for does not exist, have been removed. name changed or is temporarily unavailable</p>
-                    <button onClick={handleClick}>Go To Homepage</button>
+                    <h1 className='title'>404: Page Not Found</h1>
+                    <p className='desc'>We can't find the page you're looking for.</p>
+                    <button onClick={handleClick} type='button'>CLICK HERE TO GO BACK HOME</button>
+                    <img src={snow} alt="snow"/>
                 </div>
             </div>
         </div>
