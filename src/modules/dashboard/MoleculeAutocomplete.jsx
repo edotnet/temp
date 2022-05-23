@@ -1,8 +1,24 @@
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Autocomplete } from "../../infrastructure/components/Autocomplete";
 import { useEffect, useState } from "react";
+import { Paper, TextField, styled } from "@mui/material";
 
-export const DrugAutocomplete = ({label, onChange, category}) => {
+const PillAutocomplete = styled(Autocomplete)({
+  '&.MuiAutocomplete-root': {
+    borderRadius: 50,
+    width: '70%',
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    'fieldset': {
+      border: '1px dashed #ccc',
+    },
+  },
+  '.MuiOutlinedInput-root': {
+    borderRadius: 50,
+  },
+})
+
+
+export const MoleculeAutocomplete = ({label, onChange, category}) => {
   const url = `drugbank/query/`;
   const {loading, data, error, fetch} = useApiCall(url, null, null, false);
   const executeSearch = (search) => {
@@ -12,7 +28,11 @@ export const DrugAutocomplete = ({label, onChange, category}) => {
   }
 
   const _onChange = (newValue) => {
-    onChange(data.items.find(item => item.drugbank_id === newValue.id));
+    if (!data || typeof newValue === 'string') {
+      return;
+    }
+    const molecule = data.items.find(item => item.drugbank_id === newValue.id);
+    onChange(molecule);
   }
 
 
@@ -25,13 +45,16 @@ export const DrugAutocomplete = ({label, onChange, category}) => {
 
 
   return (
-    <Autocomplete
+    <PillAutocomplete
       onChange={_onChange}
       onInputChange={executeSearch}
       options={options}
       loading={loading}
       label={label}
-      variant="standard"
+      variant="outlined"
+      value=""
+      clearOnBlur
+      blurOnSelect
     />
   );
 }
