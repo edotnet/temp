@@ -63,14 +63,14 @@ export const DrugInteractionContent = () => {
 
   return (
     <>
-      <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
+      <Typography className="TypoBody-subTitle" gutterBottom>Drug Interaction molecules</Typography>
       <Box sx={{display: "flex"}}>
         {renderPercentage()}
         {renderPills()}
       </Box>
       <Hr/>
-      <Typography sx={{fontSize: 18, fontWeight: 500, color: "#1d1d1d"}}>RESULT DESCRIPTION</Typography>
-      <Typography sx={{fontSize: 20, fontWeight: 300}}>
+      <Typography className="TypoBody-subTitle">Result Description</Typography>
+      <Typography className="TypoBody-paragraph">
         {state.interactingMoleculesResult.label
           .replace("#Drug1", drug1.name)
           .replace("#Drug2", drug2.name)}

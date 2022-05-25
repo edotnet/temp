@@ -46,13 +46,13 @@ export const DashboardPage = () => {
       <DndProvider backend={HTML5Backend}>
         <Grid pl={5} pr={5} className="dashboarddnd">
           <Box>
-            <Typography variant="h5" textAlign="center" color="primary" gutterBottom>DRUG INTERACTOR</Typography>
+            <Typography variant="h5" textAlign="center" color="secondary" gutterBottom>DRUG INTERACTOR</Typography>
             <Typography variant="h6" textAlign="center" color="primary" gutterBottom>Drop molecules here for checking
               interactions </Typography>
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={3}>
-              <Typography variant="h5" gutterBottom>DRUG INTERACTION</Typography>
+              <Typography variant="h4" gutterBottom>DRUG INTERACTION</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <CategoryAutocomplete
