@@ -37,7 +37,7 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
 
 
   const validItems = item => item.calculated_properties && item.calculated_properties.SMILES;
-  const options = data ? data.items.filter(validItems)
+  const options = data && 'items' in data ? data.items.filter(validItems)
     .map(item => ({
       id: item.drugbank_id,
       label: item.name
