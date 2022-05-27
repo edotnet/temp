@@ -25,7 +25,7 @@ export const DrugInteractionContent = () => {
   if (!state.interactingMoleculesResult) {
     return (
       <>
-        <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
+        <Typography variant="subtitle1" gutterBottom>Drug Interaction molecules</Typography>
         <Box sx={{display: "flex"}}>
           <CircularProgress style={{width: 100, height: 100}} color="primary"/>
           {renderPills()}
@@ -63,14 +63,14 @@ export const DrugInteractionContent = () => {
 
   return (
     <>
-      <Typography className="TypoBody-subTitle" gutterBottom>Drug Interaction molecules</Typography>
+      <Typography variant="subtitle1" gutterBottom>Drug Interaction molecules</Typography>
       <Box sx={{display: "flex"}}>
         {renderPercentage()}
         {renderPills()}
       </Box>
       <Hr/>
-      <Typography className="TypoBody-subTitle">Result Description</Typography>
-      <Typography className="TypoBody-paragraph">
+      <Typography variant="subtitle1" >Result Description</Typography>
+      <Typography variant="body1">
         {state.interactingMoleculesResult.label
           .replace("#Drug1", drug1.name)
           .replace("#Drug2", drug2.name)}

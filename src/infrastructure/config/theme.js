@@ -29,11 +29,20 @@ export const prepaireTheme = createTheme({
     },
     h5: {
       fontSize: 40,
-      fontWeight: 300,
     },
     h6: {
       fontWeight: 400,
     },
+    subtitle1: {
+      fontSize: 18,
+      fontWeight: 500,
+      color: '#1d1d1d',
+    },
+    body1: {
+      fontSize: 18,
+      fontWeight: 300,
+      color: '#1d1d1d',
+    }
   },
   components: {
     MuiAppBar: {

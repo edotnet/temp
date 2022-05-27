@@ -49,18 +49,18 @@ export const DTI = () => {
 
   return (
     <>
-      <Typography className="TypoBody-subTitle" >Target Interaction, protein:</Typography>
+      <Typography variant="subtitle1">Target Interaction, protein:</Typography>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar sx={{ border: '1px dashed red', width: 60, height: 60 }}>
           <img src={InfoProtein} alt="InfoProtein" />
         </Avatar>
         <Box pl={2}>
-          <Typography className="TypoBody-paragraph" >{protein.name}</Typography>
+          <Typography variant="body1">{protein.name}</Typography>
         </Box>
       </Box>
       <ThreeDMol />
       <Hr />
-      <Typography className="TypoBody-subTitle" gutterBottom>Binding Interaction score</Typography>
+      <Typography variant="subtitle1" gutterBottom>Binding Interaction score</Typography>
       {loading && <LinearProgress />}
       <GraphBackground>
         <Grid container spacing={1}>

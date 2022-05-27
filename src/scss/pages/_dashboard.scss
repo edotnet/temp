@@ -1,0 +1,23 @@
+.dashboarddnd {
+    padding-top: 100px;
+
+    h5.title {
+        text-align: center;     
+        font-weight: $light;
+        line-height: 1;
+    }
+
+    h6.subTitle{
+        text-align: center;
+        color: $clr-black;
+        font-size: 16px;
+        margin-bottom: 0.35em;
+        font-weight: $light;
+    }
+}
+
+.modalTitle{
+    font-weight: $medium;
+    font-size: 18px;
+    margin-top: 10px;
+}
