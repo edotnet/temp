@@ -23,12 +23,12 @@ export const Navbar = () => {
                src={Logo}/>
         </Grid>
         <Grid item xs={10}>
-          <Tabs value={location.pathname} onChange={handleChange}
-                TabIndicatorProps={{sx: {backgroundColor: "#979797", height: 2},}}>
+          <Tabs value={location.pathname} onChange={handleChange} TabIndicatorProps={{sx: {backgroundColor: "#979797", height: 2}}}>
             <Tab value="/drugbank" label="DRUGBANK" sx={{color: "#000", fontWeight: "bold"}}/>
             <Tab value="/categories" label="CATEGORIES" sx={{color: "#000", fontWeight: "bold"}}/>
             <Tab value="/dashboard" label="DRUG INTERACTION" sx={{color: "#000", fontWeight: "bold"}}/>
             <Tab value="/dti" label="DTI" sx={{color: "#000", fontWeight: "bold"}}/>
+            <Tab value="/text2xdl" label="Text2XDL" sx={{color: "#000", fontWeight: "bold"}}/>
           </Tabs>
         </Grid>
       </Grid>
