@@ -9,7 +9,7 @@ export const Text2xdlFeature = () => {
   const url = `https://api.prepaire.com/text-to-xdl`;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const onRun = () => {
-    fetch(url, 'POST', {text});
+    fetch(url, 'POST', {input: text});
   }
   return (
     <Box>
