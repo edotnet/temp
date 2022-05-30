@@ -30,6 +30,6 @@ export const Router = () => (
     {/* <Route component={NotFoundPage} />  */}
     <Route path="/404" element={<NotFoundPage />} />
     <Route path="*" element={<Navigate replace to="/404" />} />
-    <Route path="/" element={<Navigate replace to="/home" />} />
+    <Route path="/" element={<Navigate replace to="/login" />} />
   </Routes>
 );
