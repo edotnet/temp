@@ -8,11 +8,13 @@ import { DrugbankCategories } from "./pages/DrugbankCategories";
 import { Login } from './pages/login/login.page';
 import { StartView } from './pages/start.page';
 import { NotFoundPage }  from './pages/NotFoundPage';
+import { HomePage } from './pages/Home';
 
 export const Router = () => (
   <Routes>
     {/* <Route index element={<Dashboard/>}/> */}
     <Route exact path='/login' element ={<Login/>} />
+    <Route exact path="/home" element = {<HomePage/>} />
     <Route path="dashboard" element={<Dashboard/>}/>
     <Route path="drugbank">
       {/*<Route path="value_calculator" element={<ValueCalculator/>}/> */}
@@ -26,6 +28,6 @@ export const Router = () => (
     {/* <Route component={NotFoundPage} />  */}
     <Route path="/404" element={<NotFoundPage />} />
     <Route path="*" element={<Navigate replace to="/404" />} />
-    <Route path="/" element={<Navigate replace to="/login" />} />
+    <Route path="/" element={<Navigate replace to="/home" />} />
   </Routes>
 );
