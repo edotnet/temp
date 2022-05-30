@@ -1,7 +1,7 @@
 const np = {
   power: (v1, v2) => v1 ** v2,
   float_power: (v1, v2) => v1 ** v2,
-
+  logspace: () => 1,
 }
 
 function makeSomeMagic(d1h1, r1, r2, C1h1, gamma21, C2h2, gamma12, alpha12, d2, h2, alpha21, d1, h1, d2h2) {
@@ -21,32 +21,40 @@ const _MuSyC_E = (d1, d2, E0, E1, E2, E3, h1, h2, C1, C2, alpha12, alpha21, gamm
   return U * E0 + A1 * E1 + A2 * E2 + (1 - (U + A1 + A2)) * E3
 }
 
-const _get_beta = (E0, E1, E2, E3) => {
-  const minE = Math.min(E1, E2)
-  return (minE-E3)/(E0-minE)
-}
-
 const _get_E3 = (E0, E1, E2, beta) => {
   const minE = Math.min(E1, E2)
   return minE - beta*(E0-minE)
 }
 
-const _hill_inv = (E, E0, Emax, h, C) => {
-  const E_ratio = (E-E0)/(Emax-E)
-  const d = np.float_power(E_ratio, 1./h)*C
-  d[E_ratio<0] = np.nan
-  return d
-}
+const get_parameters = (params) => {
+  let alpha12 = np.power(10., params.alpha12)
+  let alpha21 = np.power(10., params.alpha21)
+  const gamma12 = np.power(10., params.gamma12)
+  const gamma21 = np.power(10., params.gamma21)
+  if (alpha12===np.power(10., -3)) alpha12=0
+  if (alpha21===np.power(10., -3)) alpha21=0
+  const beta = params.beta
 
-const _hill_E = (d, E0, Emax, h, C) => {
-  const dh = np.power(d,h)
-  return E0 + (Emax-E0)*dh/(np.power(C,h)+dh);
-}
+  const E1 = params.E1
+  const E2 = params.E2
+  const E0 = params.E0
+  const C1 = np.power(10., params.C1)
+  const C2 = np.power(10., params.C2)
+  const h1 = np.power(10., params.h1)
+  const h2 = np.power(10., params.h2)
+  const E3 = _get_E3(E0, E1, E2, beta)
 
-const _bliss = (d1, d2, E, E0, E1, E2, h1, h2, C1, C2) => {
-  const E1_alone = _hill_E(d1, E0, E1, h1, C1)
-  const E2_alone = _hill_E(d2, E0, E2, h2, C2)
-  const synergy = E1_alone*E2_alone - E
-  synergy[(d1===0) | (d2===0)] = 0
-  return synergy
+  let d1 = np.logspace(-3,3,30)
+  let d2 = np.logspace(-3,3,30)
+  /*d1 = np.hstack([[0],d1])
+  d2 = np.hstack([[0],d2])
+  d1,d2 = np.meshgrid(d1, d2)
+  d1 = d1.flatten()
+  d2 = d2.flatten()*/
+
+  return { E0, E1, E2, E3, h1, h2, C1, C2, alpha12, alpha21, gamma12, gamma21, d1, d2 };
+}
+export const Utils = {
+  get_parameters,
+  _MuSyC_E
 }
