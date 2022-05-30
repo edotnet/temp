@@ -9,6 +9,7 @@ import { Login } from './pages/login/login.page';
 import { StartView } from './pages/start.page';
 import { NotFoundPage }  from './pages/NotFoundPage';
 import { HomePage } from './pages/Home';
+import { Engine } from "./pages/Engine";
 
 export const Router = () => (
   <Routes>
@@ -24,6 +25,7 @@ export const Router = () => (
     <Route path="categories" element={<DrugbankCategories/>}/>
     <Route path="drug-interaction" element={<DrugInteractionPage />}/>
     <Route path="dti" element={<DTIPage />}/>
+    <Route path="engine" element={<Engine />}/>
     <Route path="start" element={<StartView/>} />
     {/* <Route component={NotFoundPage} />  */}
     <Route path="/404" element={<NotFoundPage />} />
