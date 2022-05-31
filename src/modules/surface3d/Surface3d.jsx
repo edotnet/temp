@@ -52,64 +52,90 @@ export const Surface3d = memo(() => {
   const onChange = prop => (ev, v) => {
     let z_data = [...data[0].z];
     if (prop === 'E1') {
-      z_data = z_data.map(val => {
+      z_data = z_data.map((val, i) => {
         const newVal = [...val];
-        newVal[9] = newVal[9] * v;
+        newVal[9] = initialValues[i][9] * v;
         return newVal;
       });
-      z_data = z_data.map(val => {
+      z_data = z_data.map((val, i) => {
         const newVal = [...val];
-        newVal[8] = newVal[8] * (v/2);
+        newVal[8] = initialValues[i][8] * (v/2);
         return newVal;
       });
     }
     if (prop === 'E2') {
-      z_data = z_data.map(val => {
+      z_data = z_data.map((val, i) => {
         const newVal = [...val];
-        newVal[7] = newVal[7] * v;
+        newVal[7] = initialValues[i][7] * v;
         return newVal;
       });
-      z_data = z_data.map(val => {
+      z_data = z_data.map((val, i) => {
         const newVal = [...val];
-        newVal[6] = newVal[6] * (v/2);
+        newVal[6] = initialValues[i][6] * (v/2);
         return newVal;
       });
     }
     if (prop === 'C1') {
-      z_data = z_data.map(val => {
+      z_data = z_data.map((val, i) => {
         const newVal = [...val];
-        newVal[5] = newVal[5] * v;
+        newVal[5] = initialValues[i][5] * v;
         return newVal;
       });
-      z_data = z_data.map(val => {
+      z_data = z_data.map((val, i) => {
         const newVal = [...val];
-        newVal[4] = newVal[4] * (v/2);
+        newVal[4] = initialValues[i][4] * (v/2);
         return newVal;
       });
     }
     if (prop === 'C2') {
-      z_data = z_data.map(val => {
+      z_data = z_data.map((val, i) => {
         const newVal = [...val];
-        newVal[3] = newVal[3] * v;
+        newVal[3] = initialValues[i][3] * v;
         return newVal;
       });
-      z_data = z_data.map(val => {
+      z_data = z_data.map((val, i) => {
         const newVal = [...val];
-        newVal[2] = newVal[2] * (v/2);
+        newVal[2] = initialValues[i][2] * (v/2);
         return newVal;
       });
     }
     if (prop === 'h1') {
       z_data = z_data.map((val, i) => {
-        const newVal = [...val];
+        let newVal = [...val];
         if (i===4) {
-          //newVal =
+          newVal = newVal.map((nv, col) => {
+            return initialValues[i][col] * v
+          })
         }
         return newVal;
       });
-      z_data = z_data.map(val => {
-        const newVal = [...val];
-        newVal[6] = newVal[6] * (v/2);
+      z_data = z_data.map((val, i) => {
+        let newVal = [...val];
+        if (i===5) {
+          newVal = newVal.map((nv, col) => {
+            return initialValues[i][col] * v/2
+          })
+        }
+        return newVal;
+      });
+    }
+    if (prop === 'h2') {
+      z_data = z_data.map((val, i) => {
+        let newVal = [...val];
+        if (i===6) {
+          newVal = newVal.map((nv, col) => {
+            return initialValues[i][col] * v
+          })
+        }
+        return newVal;
+      });
+      z_data = z_data.map((val, i) => {
+        let newVal = [...val];
+        if (i===7) {
+          newVal = newVal.map((nv, col) => {
+            return initialValues[i][col] * v/2
+          })
+        }
         return newVal;
       });
     }
