@@ -15,7 +15,7 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { LoginAppBarComponent } from '../../infrastructure/components/loginAppbar.component';
 import { useNavigate } from "react-router-dom";
-// import './style.css';
+import './login.scss'
 
 const LoginTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {

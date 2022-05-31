@@ -13,6 +13,7 @@ import { TargetAutocomplete } from "../modules/dti/TargetAutocomplete";
 import { PresentationModal } from "../modules/dashboard/presentation-modal/PresentationModal";
 import { ThreeDMol } from "../modules/3dmol/ThreeDMol";
 import { PDBSelector } from "../modules/3dmol/PDBSelector";
+import './Dashboard.scss'
 
 export const DashboardPage = () => {
   const {state, dispatch} = useDashboardContext();

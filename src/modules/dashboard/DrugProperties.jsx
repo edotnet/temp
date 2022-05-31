@@ -93,9 +93,9 @@ export const DrugProperties = () => {
             <Typography variant="subtitle1"> Drug Properties </Typography>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
               <Box>
-                <Typography variant="h5" sx={{color: '#383874', fontSize: 30}} gutterBottom
+                <Typography sx={{color: '#383874', fontWeight: 400, fontSize: 30}} gutterBottom
                             component="span">{state.selectedMolecule.name} 
-                  <Typography variant="h5" sx={{color: '#373767', fontWeight: 300, fontSize: 30}} gutterBottom
+                  <Typography sx={{color: '#373767', fontSize: 30}} gutterBottom
                             component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
                 </Typography>
               </Box>

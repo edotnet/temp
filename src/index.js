@@ -4,10 +4,10 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ThemeProvider } from "@mui/material";
-import { prepaireTheme } from "./infrastructure/config/theme";
+import theme from "./infrastructure/config/theme";
 import { BrowserRouter } from "react-router-dom";
 import "@fontsource/work-sans";
+import { ThemeProvider } from '@mui/material/styles';
 
 /*const root = createRoot(document.getElementById('root'))
 root.render(
@@ -20,8 +20,9 @@ root.render(
   </StrictMode>,
 );
  */
+
 ReactDOM.render( <StrictMode>
-  <ThemeProvider theme={prepaireTheme}>
+  <ThemeProvider theme={theme}>
     <BrowserRouter>
       <App/>
     </BrowserRouter>

@@ -1,7 +1,7 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 
 // A custom theme for this app
-export const prepaireTheme = createTheme({
+const prepaireTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
@@ -21,14 +21,13 @@ export const prepaireTheme = createTheme({
     fontFamily: 'Work Sans',
     h1: {
       fontWeight: 700,
-      fontSize: 43,
-      lineHeight: '56px'
+      fontSize: '2rem',
     },
     h4: {
-      fontSize: 46,
+      fontSize: '2rem',
     },
     h5: {
-      fontSize: 40,
+      fontSize: 42,
     },
     h6: {
       fontWeight: 400,
@@ -54,3 +53,7 @@ export const prepaireTheme = createTheme({
     }
   }
 });
+
+const theme = responsiveFontSizes(prepaireTheme)
+
+export default theme;
