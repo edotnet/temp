@@ -1,0 +1,302 @@
+.backbg {
+    /* position: fixed; */
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    /* background-attachment: fixed; */
+    background-repeat: no-repeat;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,0.85)), url('https://thumb.tildacdn.com/tild3666-3862-4232-a331-386664313732/-/format/webp/Back_1.jpg');
+    padding-top: 240px;
+}
+
+.backbg .heading {
+    color: #302361;
+    font-size: 70px;
+    font-family: 'Work Sans',Arial,sans-serif;
+    line-height: 1.25;
+    font-weight: 400;
+    background-position: center center;
+    width: 100%;
+    margin-top: 0px;
+    text-align: right;
+}
+
+.backbg p {
+    color: #000000;
+    font-size: 18px;
+    font-family: 'Work Sans',Arial,sans-serif;
+    line-height: 1.55;
+    font-weight: 400;
+    background-position: center center;
+    padding-left: 30px;
+}
+
+.video-sec {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    background-color: #f5f6fc;
+    position: relative;
+}
+.video-sec-bg {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 652px;
+    background-image: url('https://thumb.tildacdn.com/tild3566-3737-4566-b266-343362383434/-/format/webp/youtube_cover.jpg');
+}
+.video-sec .play-link {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.video-sec .play-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+    -webkit-transition: all ease-in-out .2s;
+    -moz-transition: all ease-in-out .2s;
+    -o-transition: all ease-in-out .2s;
+    transition: all ease-in-out .2s;
+    display: block;
+    transform: scale(1.8);
+}
+
+.video-sec .play-icon:hover {
+    transform: scale(1.95);
+}
+
+.founding-vision {
+    background-color: #fff;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+.founding-vision .arrows {
+    position: absolute;
+    left: 10px;
+    height: 65px;
+    top: 5px;
+}
+.founding-vision h1 {
+    color: #302361;
+    font-size: 52px;
+    font-family: 'Work Sans',Arial,sans-serif;
+    line-height: 1.2;
+    font-weight: 400;
+    background-position: center center;
+}
+.founding-vision .text1 {
+    color: #1f1f1f;
+    font-size: 18px;
+    font-family: 'Work Sans',Arial,sans-serif;
+    line-height: 1.55;
+    font-weight: 400;
+    margin-top: 0px;
+    padding-left: 50px;
+}
+.founding-vision .text2 {
+    color: #1f1f1f;
+    font-size: 18px;
+    font-family: 'Work Sans',Arial,sans-serif;
+    line-height: 1.55;
+    font-weight: 400;
+    margin-top: 0px;
+}
+
+.founding-vision .text3 {
+    color: #302361;
+    font-size: 20px;
+    font-family: 'Work Sans',Arial,sans-serif;
+    line-height: 1.55;
+    font-weight: 400;
+    margin-top: 0px;
+}
+.founding-vision .atom-line {
+    background-color: #7968fd;
+    background-position: center center;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 1px;
+    margin-bottom: 50px;
+}
+.founding-container {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+.smallicon {
+    position: absolute;
+    max-width: 95px;
+    left: 60px;
+}
+
+.slickslider div img{
+    height: 240px;
+}
+
+.fundamental {
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    height: 887px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.2), rgb(255,255,255)), url('https://thumb.tildacdn.com/tild3335-3536-4265-a531-323632663062/-/format/webp/Back_2.jpg');
+    padding-top: 120px;
+}
+.fundamental .block {
+    background-color: rgba(245,246,251,1);
+    padding: 20px;
+}
+
+.fundamental .fundamental-text1 {
+    font-size: 16px;
+    color: rgb(31,31,31);
+    margin-bottom: 20px;
+}
+.fundamental h2 {
+    font-size: 60px;
+    color: rgb(48, 35, 97);
+}
+.fundamental .fundamental-text1:after {
+    content: "";
+    width: 30%;
+    display: block;
+    border-bottom: 1px solid #7968fd;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.fundamental .fundamental-text2:after {
+    content: "";
+    width: 30%;
+    display: block;
+    border-bottom: 1px solid #7968fd;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.fundamental .fundamental-text2 {
+    font-size: 22px;
+    color: rgb(31,31,31);
+
+}
+.fundamental .fundamental-text3 {
+    font-size: 16px;
+    color: rgb(31,31,31);
+
+}
+.design {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+.design h2 {
+    font-size: 52px;
+    color: #302361;
+}
+.design img {
+    max-width: 100%;
+}
+.design-text1, .design-text2 {
+    font-size: 19px;
+}
+.design-btn {
+    display: inline-block;
+    font-family: 'Work Sans',Arial,sans-serif;
+    height: 60px;
+    border: 0 none;
+    font-size: 19px;
+    padding-left: 60px;
+    padding-right: 60px;
+    text-align: center;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #ffffff;
+    background-color: #7968fd;
+    margin-top: 60px;
+    border-radius: 30px;
+    line-height: 3;
+    text-decoration: none;
+}
+
+.features {
+    padding: 50px;
+    background-color: #f5f6fb;
+}
+.features h2 {
+    font-size: 52px;
+    font-family: 'Work Sans',Arial,sans-serif;
+    line-height: 1.2;
+    font-weight: 400;
+}
+.features-text1 {
+    color: #1f1f1f;
+    font-size: 20px;
+    font-family: 'Work Sans',Arial,sans-serif;
+    line-height: 1.55;
+    font-weight: 400;
+    margin-top: 60px;
+}
+.features-text2 {
+    color: #1f1f1f;
+    font-size: 20px;
+    font-family: 'Work Sans',Arial,sans-serif;
+    line-height: 1.55;
+    font-weight: 400;
+    margin-top: 0px;
+}
+.feature-arrows {
+    height: 65px;
+    padding-left: 20px;
+}
+
+.feature-smallicon {
+    max-width: 90px;
+}
+.features-container {
+    margin-bottom: 100px;
+}
+
+.scientific {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+.scientific h2 {
+    font-size: 52px;
+    line-height: 1.23;
+    font-family: 'Work Sans',Arial,sans-serif;
+    font-weight: 400;
+    color: #302361;
+}
+.scientific-text1 {
+    margin-top: 24px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.35;
+    font-family: 'Work Sans',Arial,sans-serif;
+    font-weight: 500;
+}
+.scientific-text2 {
+    font-size: 20px;
+}

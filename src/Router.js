@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { Dashboard } from "./pages/Dashboard.page";
 import { Drugbank } from "./pages/Drugbank";
 import { DrugInteractionPage } from "./pages/DrugInteraction";
@@ -7,12 +7,15 @@ import { DTIPage } from "./pages/DTI";
 import { DrugbankCategories } from "./pages/DrugbankCategories";
 import { Login } from './pages/login/login.page';
 import { StartView } from './pages/start.page';
+import { NotFoundPage }  from './pages/NotFoundPage';
+import { HomePage } from './pages/Home';
 import { Engine } from "./pages/Engine";
 
 export const Router = () => (
   <Routes>
     {/* <Route index element={<Dashboard/>}/> */}
-    <Route index element ={<Login/>} />
+    <Route exact path='/login' element ={<Login/>} />
+    <Route exact path="/home" element = {<HomePage/>} />
     <Route path="dashboard" element={<Dashboard/>}/>
     <Route path="drugbank">
       {/*<Route path="value_calculator" element={<ValueCalculator/>}/> */}
@@ -24,5 +27,9 @@ export const Router = () => (
     <Route path="dti" element={<DTIPage />}/>
     <Route path="engine" element={<Engine />}/>
     <Route path="start" element={<StartView/>} />
+    {/* <Route component={NotFoundPage} />  */}
+    <Route path="/404" element={<NotFoundPage />} />
+    <Route path="*" element={<Navigate replace to="/404" />} />
+    <Route path="/" element={<Navigate replace to="/login" />} />
   </Routes>
 );
