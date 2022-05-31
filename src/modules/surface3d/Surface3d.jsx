@@ -18,10 +18,17 @@ function LabeledSlider({label, scaledValue, value, min, max, step, onChange}) {
     </Grid>
   );
 }
-
+const initialValues = [[8, 8, 8, 8, 8, 4, 3, 3, 3],
+  [8, 8, 8, 8, 8, 4, 3, 3, 3],
+  [7.5, 7.5, 7.5, 7.5, 7.5, 4, 3, 3, 3],
+  [7, 7, 7, 7, 7, 4, 3, 3, 3],
+  [6, 6, 6, 6, 6, 4, 3, 3, 3],
+  [5, 5, 5, 5, 5, 4, 3, 3, 3],
+  [4.5, 4.5, 4.5, 4.5, 4.5, 4, 3, 3, 3],
+  [3, 3, 3, 3, 3, 4, 3, 3, 3]]
 export const Surface3d = memo(() => {
   const [data, setData] = useState([{
-    z: [],
+    z: initialValues,
     type: 'surface',
   }])
   const [state, setState] = useState({
@@ -39,38 +46,79 @@ export const Surface3d = memo(() => {
     gamma21: 0,
     gamma12: 0,
   });
+
   const {E0, E1, E2, E3, h1, h2, C1, C2, alpha12, alpha21, gamma12, gamma21, d1, d2} = Utils.get_parameters(state);
   const E = Utils._MuSyC_E(d1, d2, E0, E1, E2, E3, h1, h2, C1, C2, alpha12, alpha21, gamma12, gamma21)
-  console.log("E", E)
-  const load = async () => {
-    fetch('https://raw.githubusercontent.com/plotly/datasets/master/api_docs/mt_bruno_elevation.csv')
-      .then(res => res.text())
-      .then(res => {
-        const temp = res.split("\n").map(el => el.split(","));
-        let z_data = []
-        for (let i = 0; i < 24; i++) {
-          z_data.push(unpack(temp, i));
-        }
-
-        setData([{
-          z: [[8, 8, 8, 8, 8, 4, 3, 3, 3],
-            [8, 8, 8, 8, 8, 4, 3, 3, 3],
-            [7.5, 7.5, 7.5, 7.5, 7.5, 4, 3, 3, 3],
-            [7, 7, 7, 7, 7, 4, 3, 3, 3],
-            [6, 6, 6, 6, 6, 4, 3, 3, 3],
-            [5, 5, 5, 5, 5, 4, 3, 3, 3],
-            [4.5, 4.5, 4.5, 4.5, 4.5, 4, 3, 3, 3],
-            [3, 3, 3, 3, 3, 4, 3, 3, 3]],
-          type: 'surface'
-        }])
+  const onChange = prop => (ev, v) => {
+    let z_data = [...data[0].z];
+    if (prop === 'E1') {
+      z_data = z_data.map(val => {
+        const newVal = [...val];
+        newVal[9] = newVal[9] * v;
+        return newVal;
       });
+      z_data = z_data.map(val => {
+        const newVal = [...val];
+        newVal[8] = newVal[8] * (v/2);
+        return newVal;
+      });
+    }
+    if (prop === 'E2') {
+      z_data = z_data.map(val => {
+        const newVal = [...val];
+        newVal[7] = newVal[7] * v;
+        return newVal;
+      });
+      z_data = z_data.map(val => {
+        const newVal = [...val];
+        newVal[6] = newVal[6] * (v/2);
+        return newVal;
+      });
+    }
+    if (prop === 'C1') {
+      z_data = z_data.map(val => {
+        const newVal = [...val];
+        newVal[5] = newVal[5] * v;
+        return newVal;
+      });
+      z_data = z_data.map(val => {
+        const newVal = [...val];
+        newVal[4] = newVal[4] * (v/2);
+        return newVal;
+      });
+    }
+    if (prop === 'C2') {
+      z_data = z_data.map(val => {
+        const newVal = [...val];
+        newVal[3] = newVal[3] * v;
+        return newVal;
+      });
+      z_data = z_data.map(val => {
+        const newVal = [...val];
+        newVal[2] = newVal[2] * (v/2);
+        return newVal;
+      });
+    }
+    if (prop === 'h1') {
+      z_data = z_data.map((val, i) => {
+        const newVal = [...val];
+        if (i===4) {
+          //newVal =
+        }
+        return newVal;
+      });
+      z_data = z_data.map(val => {
+        const newVal = [...val];
+        newVal[6] = newVal[6] * (v/2);
+        return newVal;
+      });
+    }
+    setData([{
+      z: z_data,
+      type: 'surface',
+    }]);
+    setState(prev => ({...prev, [prop]: v}));
   }
-
-  const unpack = (rows, key) => rows.map((row) => row[key]);
-
-  useEffect(() => {
-    load()
-  }, [])
 
   return (
     <Container>
@@ -91,41 +139,42 @@ export const Surface3d = memo(() => {
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <LabeledSlider label="E1" value={state.E1} min={0} max={1} step={0.05}
-                         onChange={(e, v) => setState(prev => ({...prev, E1: v}))}/>
+                         onChange={onChange('E1')}/>
           <LabeledSlider label="log(C1)" value={state.C1} min={-2} max={2} step={0.2}
-                         onChange={(e, v) => setState(prev => ({...prev, C1: v}))}/>
+                         onChange={onChange('C1')}/>
           <LabeledSlider label="log(h1)" value={state.h1} min={-1} max={1} step={0.2}
-                         onChange={(e, v) => setState(prev => ({...prev, h1: v}))}/>
+                         onChange={onChange('h1')} />
         </Grid>
         <Grid item xs={6}>
           <LabeledSlider label="E2" value={state.E2} min={0} max={1} step={0.05}
-                         onChange={(e, v) => setState(prev => ({...prev, E2: v}))}/>
+                         onChange={onChange('E2')} />
           <LabeledSlider label="log(C2)" value={state.C2} min={-2} max={2} step={0.2}
-                         onChange={(e, v) => setState(prev => ({...prev, C2: v}))}/>
+                         onChange={onChange('C2')}/>
           <LabeledSlider label="log(h2)" value={state.h2} min={-1} max={1} step={0.2}
-                         onChange={(e, v) => setState(prev => ({...prev, h2: v}))}/>
+                         onChange={onChange('h2')}/>
         </Grid>
       </Grid>
 
-
+      {/*
       <Typography gutterBottom>Synergy parameters</Typography>
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <LabeledSlider label="beta" value={state.beta} min={-3} max={3} step={0.2}
-                         onChange={(e, v) => setState(prev => ({...prev, beta: v}))}/>
+                         onChange={onChange('beta')}/>
           <LabeledSlider label="log(alp21)" value={state.alpha21} min={-3} max={3} step={0.2}
-                         onChange={(e, v) => setState(prev => ({...prev, alpha21: v}))}/>
+                         onChange={onChange('alpha21')}/>
           <LabeledSlider label="log(gam21)" value={state.gamma21} min={-1.4} max={1.6} step={0.2}
-                         onChange={(e, v) => setState(prev => ({...prev, gamma21: v}))}/>
+                         onChange={onChange('gamma21')}/>
         </Grid>
         <Grid item xs={6}>
           <Box p={2}></Box>
           <LabeledSlider label="log(alp12)" value={state.alpha12} min={-3} max={3} step={0.2}
-                         onChange={(e, v) => setState(prev => ({...prev, alpha12: v}))}/>
+                         onChange={onChange('alpha12')}/>
           <LabeledSlider label="log(gam12)" value={state.gamma12} min={-1.4} max={1.6} step={0.2}
-                         onChange={(e, v) => setState(prev => ({...prev, gamma12: v}))}/>
+                         onChange={onChange('gamma12')}/>
         </Grid>
       </Grid>
+      */}
     </Container>
   )
 })
