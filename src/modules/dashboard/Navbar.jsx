@@ -29,6 +29,8 @@ export const Navbar = () => {
             <Tab value="/categories" label="CATEGORIES" sx={{color: "#000", fontWeight: "bold"}}/>
             <Tab value="/dashboard" label="DRUG INTERACTION" sx={{color: "#000", fontWeight: "bold"}}/>
             <Tab value="/dti" label="DTI" sx={{color: "#000", fontWeight: "bold"}}/>
+            <Tab value="/engine" label="Search engine" sx={{color: "#000", fontWeight: "bold"}}/>
+            <Tab value="/surface" label="Surface" sx={{color: "#000", fontWeight: "bold"}}/>
           </Tabs>
         </Grid>
       </Grid>
