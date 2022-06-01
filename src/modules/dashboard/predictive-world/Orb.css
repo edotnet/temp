@@ -1,3 +1,4 @@
+/* outer gradient circle 2 */
 #e5PEj8xYHVl23 {
     animation: e5PEj8xYHVl23__m 40000ms linear infinite normal forwards
 }
@@ -93,6 +94,7 @@
     }
 }
 
+/* outer gradient circle 3 */
 #e5PEj8xYHVl24 {
     animation: e5PEj8xYHVl24__m 40000ms linear infinite normal forwards
 }
@@ -154,8 +156,9 @@
     }
 }
 
+/* outer gradient circle 1 */
 #e5PEj8xYHVl24_tr {
-    animation: e5PEj8xYHVl24_tr__tr 40000ms linear infinite normal forwards
+    animation: e5PEj8xYHVl24_tr__tr 50000ms linear infinite normal forwards
 }
 
 @keyframes e5PEj8xYHVl24_tr__tr {
@@ -167,8 +170,9 @@
     }
 }
 
+/* line circle 1: clockwise (largest) */
 #e5PEj8xYHVl31_tr {
-    animation: e5PEj8xYHVl31_tr__tr 40000ms linear infinite normal forwards
+    animation: e5PEj8xYHVl31_tr__tr 100000ms linear infinite normal forwards
 }
 
 @keyframes e5PEj8xYHVl31_tr__tr {
@@ -180,8 +184,9 @@
     }
 }
 
+/* dot circle 1: anti clockwise */
 #e5PEj8xYHVl32_tr {
-    animation: e5PEj8xYHVl32_tr__tr 40000ms linear infinite normal forwards
+    animation: e5PEj8xYHVl32_tr__tr 70000ms linear infinite normal forwards
 }
 
 @keyframes e5PEj8xYHVl32_tr__tr {
@@ -193,8 +198,9 @@
     }
 }
 
+/* line circle 2: anti clockwise */
 #e5PEj8xYHVl33_tr {
-    animation: e5PEj8xYHVl33_tr__tr 40000ms linear infinite normal forwards
+    animation: e5PEj8xYHVl33_tr__tr 60000ms linear infinite normal forwards
 }
 
 @keyframes e5PEj8xYHVl33_tr__tr {
@@ -206,8 +212,9 @@
     }
 }
 
+/* line circle: clockwise */
 #e5PEj8xYHVl34_tr {
-    animation: e5PEj8xYHVl34_tr__tr 40000ms linear infinite normal forwards
+    animation: e5PEj8xYHVl34_tr__tr 70000ms linear infinite normal forwards
 }
 
 @keyframes e5PEj8xYHVl34_tr__tr {
@@ -232,8 +239,9 @@
     }
 }
 
+/* line circle 1: anti clockwise */
 #e5PEj8xYHVl36_tr {
-    animation: e5PEj8xYHVl36_tr__tr 40000ms linear infinite normal forwards
+    animation: e5PEj8xYHVl36_tr__tr 100000ms linear infinite normal forwards
 }
 
 @keyframes e5PEj8xYHVl36_tr__tr {
@@ -271,6 +279,7 @@
     }
 }
 
+/* colored circle : 1 (largest) */
 #e5PEj8xYHVl40_tr {
     animation: e5PEj8xYHVl40_tr__tr 40000ms linear infinite normal forwards
 }
@@ -314,6 +323,7 @@
     }
 }
 
+/* colored circle : 1 (largest) */
 #e5PEj8xYHVl40 {
     animation: e5PEj8xYHVl40_c_o 40000ms linear infinite normal forwards
 }
@@ -376,6 +386,7 @@
     }
 }
 
+/* colored circle : 2 */
 #e5PEj8xYHVl43_tr {
     animation: e5PEj8xYHVl43_tr__tr 40000ms linear infinite normal forwards
 }
@@ -419,6 +430,7 @@
     }
 }
 
+/* colored circle : 2 */
 #e5PEj8xYHVl43 {
     animation: e5PEj8xYHVl43_c_o 40000ms linear infinite normal forwards
 }
@@ -481,6 +493,7 @@
     }
 }
 
+/* colored circle : 1 (smallest) */
 #e5PEj8xYHVl46_tr {
     animation: e5PEj8xYHVl46_tr__tr 40000ms linear infinite normal forwards
 }
@@ -524,6 +537,7 @@
     }
 }
 
+/* colored circle : 1 (smallest) */
 #e5PEj8xYHVl46 {
     animation: e5PEj8xYHVl46_c_o 40000ms linear infinite normal forwards
 }
