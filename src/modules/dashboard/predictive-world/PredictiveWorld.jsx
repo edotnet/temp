@@ -106,18 +106,18 @@ export const PredictiveWorld = () => {
     ctx.current.fillStyle = "#209ff4";
     ctx.current.fillRect(-1 * (w / 2), -1 * (h / 2), w, h);
     ctx.current.fillStyle = "#222A47";
-    ctx.current.font = "13px Work Sans";
-    ctx.current.fillText(text, -2.5 * text.length, -100);
+    ctx.current.font = "12px Work Sans";
+    ctx.current.fillText(text, -2.5 * text.length, -80);
     ctx.current.restore();
   }
 
   const drawCircleDot = (x, y) => {
     ctx.current.beginPath();
-    ctx.current.arc(x, y, 7, 0, 2 * Math.PI, true);
+    ctx.current.arc(x, y, 4, 0, 2 * Math.PI, true);
     ctx.current.closePath()
     ctx.current.fill()
     ctx.current.beginPath();
-    ctx.current.arc(x, y, 10, 0, 2 * Math.PI, true);
+    ctx.current.arc(x, y, 6, 0, 2 * Math.PI, true);
     ctx.current.closePath()
     ctx.current.stroke()
   }
@@ -219,7 +219,7 @@ export const PredictiveWorld = () => {
     const y = (scaleValue) * Math.sin(degrees_to_radians(totalDeg));
 
     toolTips.current.push(
-      {x: x + 250, y: 250 + y, rXr: 1000, tip: tipValue, title: tipTitle}
+      {x: x + 250, y: 250 + y, rXr: 36, tip: tipValue, title: tipTitle}
     );
 
   }
