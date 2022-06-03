@@ -14,9 +14,9 @@ export const Navbar = () => {
     navigate(newValue, true);
   };
   return <Box>
-    <Box component="div" className="dashboardcircle">
-      {/* <Box component="img" alt="image" className="moleculeimg" src={moleculeimg}/> */}
-    </Box>
+    {/* <Box component="div" className="dashboardcircle">
+      <Box component="img" alt="image" className="moleculeimg" src={moleculeimg}/>
+    </Box> */}
     <Box className="dashboardheader">
       <Grid container>
         <Grid item xs={2} className='logoWrapper'>
