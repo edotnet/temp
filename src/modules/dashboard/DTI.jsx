@@ -58,7 +58,7 @@ export const DTI = () => {
           <img src={InfoProtein} alt="InfoProtein" />
         </Avatar>
         <Box pl={2}>
-          <Typography variant="body1">{state.protein.name}</Typography>
+          <Typography variant="body1" className='body1-lg-light'>{state.protein.name}</Typography>
         </Box>
       </Box>
       <ThreeDMol />

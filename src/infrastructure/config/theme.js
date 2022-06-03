@@ -18,6 +18,7 @@ const prepaireTheme = createTheme({
     }
   },
   typography: {
+    // htmlFontSize: 16,
     fontFamily: 'Work Sans',
     h1: {
       fontWeight: 700,
@@ -38,8 +39,6 @@ const prepaireTheme = createTheme({
       color: '#1d1d1d',
     },
     body1: {
-      fontSize: 18,
-      fontWeight: 300,
       color: '#1d1d1d',
     }
   },
