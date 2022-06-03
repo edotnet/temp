@@ -105,9 +105,9 @@ export const PredictiveWorld = () => {
     ctx.current.rotate(degrees_to_radians(deg + 90));
     ctx.current.fillStyle = "#209ff4";
     ctx.current.fillRect(-1 * (w / 2), -1 * (h / 2), w, h);
-    ctx.current.fillStyle = "#222A47";
-    ctx.current.font = "12px Work Sans";
-    ctx.current.fillText(text, -2.5 * text.length, -80);
+    ctx.current.fillStyle = "#1d1d1d";
+    ctx.current.font = "9px Work Sans ";
+    ctx.current.fillText(text, -2.5 * text.length, -68);
     ctx.current.restore();
   }
 
@@ -178,7 +178,6 @@ export const PredictiveWorld = () => {
     tipCtx.current = tipCanvas.getContext("2d");
   }, []);
 
-
   const drawLines = () => {
     Object.entries(config).forEach(([key, value], index) => {
       let x = radius * Math.cos(degrees_to_radians(value.line * degrees));
@@ -232,8 +231,9 @@ export const PredictiveWorld = () => {
       return;
     }
     drawMolecules();
-    drawLines();
-
+    if(state.interactingMolecules.length === 1){
+      drawLines();
+    }
   }, [state.interactingMolecules])
 
   useEffect(() => {
