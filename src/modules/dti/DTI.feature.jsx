@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { Chip, Grid, Stack } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Container from "@mui/material/Container";
-import { useState } from "react";
+import {useMemo, useState} from "react";
 import { TargetAutocomplete } from "./TargetAutocomplete";
 import { DrugAutocomplete } from "../drug-interaction/DrugAutocomplete";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
@@ -17,15 +17,24 @@ const getHoverBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
 
 export const DTI = () => {
-  const url = `dti`;
+  const url = `https://api.prepaire.com/drug-protein`;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
-
   const [errorMessage, setErrorMessage] = useState("")
   const [target, setTarget] = useState(null);
   const [drugs, setDrugs] = useState([]);
 
+  const result = useMemo(() => {
+    if (!data || data.code !== 200)
+      return null;
+    return drugs.map((drug, i) => ({label: drug.name, value: data.result[i]}))
+  }, [data, drugs])
+
   const onRun = () => {
-    fetch(url, 'POST', {target, drugs: drugs.map(drug => ({id: drug.calculated_properties.SMILES, label: drug.name}))});
+    const request = {
+      protein: target.amino_acid_sequence,
+      smiles: drugs.map(drug => drug.calculated_properties.SMILES),
+    };
+    fetch(url, 'POST', request);
   }
   const onChangeDrug = (drug) => {
     setDrugs(prevDrugs => [...prevDrugs, drug]);
@@ -80,10 +89,10 @@ export const DTI = () => {
             </Grid>
           </Grid>
           {errorMessage.length > 0 && <div>{errorMessage}</div>}
-          {data && <Box pt={2} sx={customClasses}>
+          {result && <Box pt={2} sx={customClasses}>
             <DataGrid
               autoHeight
-              rows={[...data.sort((a, b) => b.value - a.value)]}
+              rows={[...result.sort((a, b) => b.value - a.value)]}
               columns={columns}
               disableSelectionClick
               getRowId={row => row.label}
