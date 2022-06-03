@@ -11,6 +11,7 @@ import { Drugshot } from "./pages/Drugshot";
 import { NotFoundPage }  from './pages/NotFoundPage';
 import { HomePage } from './pages/Home';
 import { Engine } from "./pages/Engine";
+import { DrugSynthesis } from './pages/DrugSynthesis';
 import { SurfacePage } from "./pages/Surface.page";
 
 export const Router = () => (
@@ -29,6 +30,7 @@ export const Router = () => (
     <Route path="dti" element={<DTIPage />}/>
     <Route path="drugshot" element={<Drugshot />}/>
     <Route path="engine" element={<Engine />}/>
+    <Route path="drug-synthesis" element={<DrugSynthesis />}/>
     <Route path="surface" element={<SurfacePage />}/>
     <Route path="start" element={<StartView/>} />
     {/* <Route component={NotFoundPage} />  */}
