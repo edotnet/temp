@@ -50,7 +50,7 @@ export const DrugProperties = () => {
       <>
         <Hr/>
         <Box>
-          <Typography variant="p" sx={{fontSize: 16}}>{state.selectedMolecule.clinical_description}</Typography>
+          <Typography variant="body2" sx={{ fontSize: 16 }} color="secondary" >{state.selectedMolecule.clinical_description}</Typography>
         </Box>
       </>
     )
@@ -90,16 +90,14 @@ export const DrugProperties = () => {
         </IconButton>
         <Box p={2} pb={3}>
           <Box>
-            <Typography sx={{
-              fontWeight: 500,
-              fontSize: '18px',
-              marginTop: '10px',
-            }}> Drug Properties </Typography>
+            <Typography variant="subtitle1"> Drug Properties </Typography>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
               <Box>
-                <Typography variant="h5" sx={{color: '#383874', fontSize: 30}} gutterBottom
-                            component="span">{state.selectedMolecule.name} <Typography variant="h5" sx={{color: '#373767', fontWeight: 300, fontSize: 30}} gutterBottom
-                                                                                       component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography></Typography>
+                <Typography sx={{color: '#383874', fontWeight: 400, fontSize: 30}} gutterBottom
+                            component="span">{state.selectedMolecule.name} 
+                  <Typography sx={{color: '#373767', fontSize: 30}} gutterBottom
+                            component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
+                </Typography>
               </Box>
               <CopyComponent text={`${state.selectedMolecule.name}
                   ${state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}

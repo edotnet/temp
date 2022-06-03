@@ -15,8 +15,8 @@ export const DTI = () => {
   //const loading = false;
   const progressStyle = value => ({
     pl: 1,
-    fontSize: 20,
-    fontWeight: 500,
+    fontSize: 16,
+    fontWeight: 400,
     backgroundColor: 'rgba(127, 112, 218)',
     position: 'absolute',
     top: 23,
@@ -52,19 +52,18 @@ export const DTI = () => {
 
   return (
     <>
-      <Box sx={{display: 'flex', alignItems: 'center'}}>
-        <Avatar sx={{border: '1px dashed red', width: 60, height: 60}}>
-          <img src={InfoProtein} alt="InfoProtein"/>
+      <Typography variant="subtitle1">Target Interaction, protein:</Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Avatar sx={{ border: '1px dashed red', width: 60, height: 60 }}>
+          <img src={InfoProtein} alt="InfoProtein" />
         </Avatar>
         <Box pl={2}>
-          <Typography sx={{fontSize: 15, fontWeight: 500}}>Target Interaction, protein:</Typography>
-          <Typography sx={{fontSize: 18}}>{state.protein.name}</Typography>
+          <Typography variant="body1" className='body1-lg-light'>{state.protein.name}</Typography>
         </Box>
       </Box>
       <ThreeDMol />
-      <Hr/>
-      <Typography sx={{color: '#1d1d1d', fontSize: 18, fontWeight: 500}} gutterBottom>Binding Interaction
-        score</Typography>
+      <Hr />
+      <Typography variant="subtitle1" gutterBottom>Binding Interaction score</Typography>
       {loading && <LinearProgress />}
       <GraphBackground>
         <Grid container spacing={1}>

@@ -5,6 +5,8 @@ import { CustomChip } from "../../../infrastructure/components/CustomChip";
 import { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
+import './DrugInteraction.scss';
+
 const PillSelect = styled(Select)({
   'fieldset': {
     border: '1px dashed #ccc',
@@ -32,27 +34,27 @@ export const DrugInteractionContentFirst = () => {
 
   return (
     <>
-      <Typography sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
+      <Typography variant="subtitle1" sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
       <Box sx={{display: "flex"}}>
-        <Avatar sx={{bgcolor: "transparent", width: 100, height: 100, border: '1px dashed #806ca2'}}>
+        {/* <Avatar sx={{bgcolor: "transparent", width: 100, height: 100, border: '1px dashed #806ca2'}}>
           <Typography sx={{
             fontSize: 40,
             fontWeight: 300,
             color: "#806ca2"
           }}>+</Typography>
-        </Avatar>
-        <Box sx={{pl: 2, pt: 1}}>
-          <Box sx={{display: "flex", flexDirection: 'column'}}>
+        </Avatar> */}
+        <Box pt={1}>
+          <Box sx={{display: "flex"}}>
             <Box pb={1}>
               <CustomWidthTooltip title={drug1.name}>
                 <CustomChip label={drug1.name} style={getStyles(drug1.color)}/>
               </CustomWidthTooltip>
             </Box>
-            <Box>
+            <Box ml={2}>
               {/*<CustomWidthTooltip title={"+ 2nd molecule"} onClick={() => setOpen(true)}>
                 <CustomChip variant="outlined" label={"+ 2nd molecule"} style={{background: 'transparent', border: '1px dashed #806ca2'}}/>
               </CustomWidthTooltip>*/}
-              <PillSelect onChange={handleChange} value={0}>
+              <PillSelect className='moleculeDropdown' onChange={handleChange} value={0}>
                 <MenuItem value={0}>+ 2nd molecule</MenuItem>
                 {state.molecules.filter(molecule => molecule.drugbank_id !== drug1.drugbank_id).map(molecule => (
                   <MenuItem key={molecule.drugbank_id} value={molecule.drugbank_id}>{molecule.name}</MenuItem>
