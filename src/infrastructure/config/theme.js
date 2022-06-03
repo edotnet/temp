@@ -39,8 +39,6 @@ const prepaireTheme = createTheme({
       color: '#1d1d1d',
     },
     body1: {
-      fontSize: 18,
-      fontWeight: 300,
       color: '#1d1d1d',
     }
   },
