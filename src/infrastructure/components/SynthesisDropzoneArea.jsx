@@ -36,11 +36,13 @@ const rejectStyle = {
 };
 
 export const SynthesisDropzoneArea = (props) => {
+
   const onDrop = useCallback(acceptedFiles => {
-    console.log(acceptedFiles);
+    props.handleChange(acceptedFiles);
   }, []);
-  
+
   const {
+    acceptedFiles,
     getRootProps,
     getInputProps,
     isFocused,
@@ -48,7 +50,6 @@ export const SynthesisDropzoneArea = (props) => {
     isDragReject
   } = useDropzone({
     accept: {'application/pdf': []},
-    getFilesFromEvent: event => fileGetter(event),
     onDrop
   });
 
@@ -62,23 +63,6 @@ export const SynthesisDropzoneArea = (props) => {
     isDragAccept,
     isDragReject
   ]);
-
-  const fileGetter = async (event) => {
-    const files = [];
-    const fileList = event.dataTransfer ? event.dataTransfer.files : event.target.files;
-
-  for (var i = 0; i < fileList.length; i++) {
-    const file = fileList.item(i);
-    
-    Object.defineProperty(file, 'myProp', {
-      value: true
-    });
-
-    files.push(file);
-  }
-
-  return files;
-  }
 
   return (
     <div className="container">
