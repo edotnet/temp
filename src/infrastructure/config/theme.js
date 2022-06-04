@@ -28,7 +28,7 @@ const prepaireTheme = createTheme({
       fontSize: '2rem',
     },
     h5: {
-      fontSize: 42,
+      fontSize: '2.5rem',
     },
     h6: {
       fontWeight: 400,
