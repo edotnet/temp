@@ -22,7 +22,7 @@ export const ListDrugsFeature = () => {
       placeholder: 'Drug exact name'
     },
     query: {
-      url: `${Endpoints.drugbank.drugs}/${encodeURIComponent(search)}`,
+      url: `${Endpoints.drugbank.drugs}${encodeURIComponent(search)}`,
       placeholder: 'Find by clinical description, target, name, etc...'
     }
   }

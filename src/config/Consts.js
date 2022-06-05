@@ -3,12 +3,13 @@ export const Consts = {
   API_URL: process.env.REACT_APP_API_URL,
 }
 
-const useApi = window.location.search.includes("isApi=true") ?
+const isApi =  window.location.search.includes("isApi=true");
+const useApi = isApi ?
     Consts.API_URL : Consts.BACKEND_API_URL;
 
 export const Endpoints = {
   drugbank: {
-    drugbank: `${useApi}/drugbank`,
+    drugbank: `${useApi}/drugbank/`,
     drugs: `${useApi}/drugbank/query/`,
     targets: `${useApi}/drugbank/target/query/`,
     categories: `${useApi}/drugbank/category/query/`,
@@ -19,7 +20,7 @@ export const Endpoints = {
     query: `${useApi}/natural_products/query`,
   },
   ml: {
-    drugProtein: `${useApi}/drug-protein`,
+    drugProtein: `${Consts.API_URL}/drug-protein`,
     drugInteraction: `${useApi}/drug-interaction`,
   }
 };

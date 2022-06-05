@@ -9,7 +9,7 @@ export const DrugsDataGrid = (props) => {
   const {loading, data, error, fetch} = useApiCall("drugbank/query", 'GET', null, false);
 
   const executeSearch = () => {
-    const url = `drugbank${props.url}?page=${page}`;
+    const url = `${props.url}?page=${page}`;
     fetch(url, 'GET');
   }
 
