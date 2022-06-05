@@ -4,8 +4,9 @@ import {memo, useEffect} from "react";
 import {useApiCall} from "../../../infrastructure/hooks/useApiCall";
 import {useDashboardContext} from "../context/useDashboarContext";
 import {PredictiveWorld} from "../predictive-world/PredictiveWorld";
+import {Endpoints} from "../../../config/Consts";
 
-const url = `https://api.prepaire.com/drug-interaction`;
+const url = Endpoints.ml.drugInteraction;
 
 export const DrugInteraction = memo(({onNewItems}) => {
     const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);

@@ -6,10 +6,11 @@ import { Hr } from "../../infrastructure/components/Hr.component";
 import { useDashboardContext } from "./context/useDashboarContext";
 import { GraphBackground } from "../../infrastructure/components/GraphBackground";
 import { ThreeDMol } from "../3dmol/ThreeDMol";
+import {Endpoints} from "../../config/Consts";
 
 export const DTI = () => {
   const {state, dispatch} = useDashboardContext();
-  const url = `https://api.prepaire.com/drug-protein`;
+  const url = Endpoints.ml.drugProtein;
   const {data, fetch, loading, reset} = useApiCall(url, 'POST', null, false);
   //const data = [{"label": "Favipiravir", "value": 4.706718444824219}, {"label": "Ibuproxam", "value": 5.687283992767334}, {"label": "Dexibuprofen", "value": 5.887485027313232}, {"label": "D-4-hydroxyphenylglycine", "value": 5.576238632202148}];
   //const loading = false;

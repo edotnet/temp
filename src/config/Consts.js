@@ -8,8 +8,18 @@ const useApi = window.location.search.includes("isApi=true") ?
 
 export const Endpoints = {
   drugbank: {
-    query: `${useApi}/drugbank/query/`,
+    drugbank: `${useApi}/drugbank`,
+    drugs: `${useApi}/drugbank/query/`,
     targets: `${useApi}/drugbank/target/query/`,
     categories: `${useApi}/drugbank/category/query/`,
+    drugsByCategory: `${useApi}/drugbank/drugs/category/`,
+    targetDisease: '', // TODO
   },
+  naturalProducts: {
+    query: `${useApi}/natural_products/query`,
+  },
+  ml: {
+    drugProtein: `${useApi}/drug-protein`,
+    drugInteraction: `${useApi}/drug-interaction`,
+  }
 };
