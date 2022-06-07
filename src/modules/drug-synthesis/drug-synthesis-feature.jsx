@@ -114,14 +114,14 @@ export const DrugSynthesisFeature = () => {
 /* </div> : <div style={{ position: 'relative'}}>
                     <Box>
                     <Typography variant="h5" textAlign="center" color="primary" gutterBottom>
-                        Uploaded File -<Typography variant="span" className="fileName">{fileName}</Typography> 
+                        Uploaded File -<Typography variant="span" className="fileName">{fileName}</Typography>
                     </Typography>
                     {loading ? <div className="result"><div style={{ position: 'absolute', left: '50%', top: '75%'}}>
                       <Box> <CircularProgress /><h4>Loading...</h4>
                       </Box></div>
                       </div>
                      : <Typography variant="h6">
-                        Successfully Uploaded file   
+                        Successfully Uploaded file
                     </Typography>}
             </Box>
           </div>} */
