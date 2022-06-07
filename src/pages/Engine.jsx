@@ -12,6 +12,7 @@ import './Engine.scss';
 import {Text2xdlFeature} from "../modules/text2xdl/Text2xdl";
 import {SearchFeature} from "../modules/search/search";
 
+
 export const Engine = () => {
   let [loading, setLoading] = useState(true);
   let [defaultView, setdefaultView] = useState(null)
@@ -24,9 +25,13 @@ export const Engine = () => {
 
   const linkToroute = (parameter) => (event) => {
     event.preventDefault();
-    navigate(parameter, true);
     if(parameter === 'search') {
-      console.log('text', text);
+      if(text.length !== 0) {
+        navigate(parameter, true);
+        // navigate(0);
+      }
+    } else {
+      navigate(parameter, true);
     }
   }
 
