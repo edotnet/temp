@@ -10,7 +10,7 @@ export const DrugsDataGrid = (props) => {
   const {loading, data, error, fetch} = useApiCall('', 'GET', null, false);
 
   const executeSearch = () => {
-    const url = `${Endpoints.drugbank.drugsByCategory}/${props.categoryId}?page=${page}`;
+    const url = `${Endpoints.drugbank.drugsByCategory}${props.categoryId}?page=${page}`;
     fetch(url, 'GET');
   }
 
