@@ -13,6 +13,7 @@ import { TargetAutocomplete } from "../modules/dti/TargetAutocomplete";
 import { PresentationModal } from "../modules/dashboard/presentation-modal/PresentationModal";
 import { ThreeDMol } from "../modules/3dmol/ThreeDMol";
 import { PDBSelector } from "../modules/3dmol/PDBSelector";
+import './Dashboard.scss'
 
 export const DashboardPage = () => {
   const {state, dispatch} = useDashboardContext();
@@ -46,13 +47,13 @@ export const DashboardPage = () => {
       <DndProvider backend={HTML5Backend}>
         <Grid pl={5} pr={5} className="dashboarddnd">
           <Box>
-            <Typography variant="h5" textAlign="center" color="primary" gutterBottom>DRUG INTERACTOR</Typography>
-            <Typography variant="h6" textAlign="center" color="primary" gutterBottom>Drop molecules here for checking
+            <Typography variant="h5" className="title" color="secondary" >DRUG INTERACTOR</Typography>
+            <Typography variant="h6" className="subTitle">Drop molecules here for checking
               interactions </Typography>
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={3}>
-              <Typography variant="h5" gutterBottom>DRUG INTERACTION</Typography>
+              <Typography variant="h4" color="secondary" gutterBottom>DRUG INTERACTION</Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <CategoryAutocomplete

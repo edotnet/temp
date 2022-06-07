@@ -105,19 +105,19 @@ export const PredictiveWorld = () => {
     ctx.current.rotate(degrees_to_radians(deg + 90));
     ctx.current.fillStyle = "#209ff4";
     ctx.current.fillRect(-1 * (w / 2), -1 * (h / 2), w, h);
-    ctx.current.fillStyle = "#222A47";
-    ctx.current.font = "13px Work Sans";
-    ctx.current.fillText(text, -2.5 * text.length, -100);
+    ctx.current.fillStyle = "#1d1d1d";
+    ctx.current.font = "9px Work Sans ";
+    ctx.current.fillText(text, -2.5 * text.length, -68);
     ctx.current.restore();
   }
 
   const drawCircleDot = (x, y) => {
     ctx.current.beginPath();
-    ctx.current.arc(x, y, 7, 0, 2 * Math.PI, true);
+    ctx.current.arc(x, y, 4, 0, 2 * Math.PI, true);
     ctx.current.closePath()
     ctx.current.fill()
     ctx.current.beginPath();
-    ctx.current.arc(x, y, 10, 0, 2 * Math.PI, true);
+    ctx.current.arc(x, y, 6, 0, 2 * Math.PI, true);
     ctx.current.closePath()
     ctx.current.stroke()
   }
@@ -178,7 +178,6 @@ export const PredictiveWorld = () => {
     tipCtx.current = tipCanvas.getContext("2d");
   }, []);
 
-
   const drawLines = () => {
     Object.entries(config).forEach(([key, value], index) => {
       let x = radius * Math.cos(degrees_to_radians(value.line * degrees));
@@ -219,7 +218,7 @@ export const PredictiveWorld = () => {
     const y = (scaleValue) * Math.sin(degrees_to_radians(totalDeg));
 
     toolTips.current.push(
-      {x: x + 250, y: 250 + y, rXr: 1000, tip: tipValue, title: tipTitle}
+      {x: x + 250, y: 250 + y, rXr: 36, tip: tipValue, title: tipTitle}
     );
 
   }
@@ -232,8 +231,9 @@ export const PredictiveWorld = () => {
       return;
     }
     drawMolecules();
-    drawLines();
-
+    if(state.interactingMolecules.length === 1){
+      drawLines();
+    }
   }, [state.interactingMolecules])
 
   useEffect(() => {

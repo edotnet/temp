@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { Consts } from "../../config/Consts";
-axios.defaults.baseURL = Consts.API_URL;
+axios.defaults.baseURL = Consts.BACKEND_API_URL;
 
 const initialState = {
   data: null,

@@ -6,6 +6,7 @@ import { DrugInteractionContent } from "../drug-interaction/DrugInteractionConte
 import { DTI } from "../DTI";
 import { Hr } from "../../../infrastructure/components/Hr.component";
 import { DrugInteractionContentFirst } from "../drug-interaction/DrugInteractionContentFirst";
+import './PresentationModal.scss'
 
 export const PresentationModal = () => {
   const {state, dispatch} = useDashboardContext();
@@ -21,8 +22,8 @@ export const PresentationModal = () => {
   }
 
   return (
-    <Paper sx={{position: 'absolute', width: 500, top: 0, right: 0, height: '100vh'}} elevation={0}>
-      <IconButton sx={{position: "absolute", top: 0, right: 0}} size="large" onClick={close}>
+    <Paper className='presentationModal' elevation={0}>
+      <IconButton className='iconButton' size="large" onClick={close}>
         <Close/>
       </IconButton>
       <Box p={4} pt={6}>

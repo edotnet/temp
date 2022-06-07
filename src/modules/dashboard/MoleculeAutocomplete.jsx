@@ -2,6 +2,7 @@ import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Autocomplete } from "../../infrastructure/components/Autocomplete";
 import { useEffect, useState } from "react";
 import { Paper, TextField, styled } from "@mui/material";
+import {Endpoints} from "../../config/Consts";
 
 const PillAutocomplete = styled(Autocomplete)({
   '&.MuiAutocomplete-root': {
@@ -19,7 +20,7 @@ const PillAutocomplete = styled(Autocomplete)({
 
 
 export const MoleculeAutocomplete = ({label, onChange, category}) => {
-  const url = `drugbank/query/`;
+  const url = Endpoints.drugbank.drugs;
   const {loading, data, error, fetch} = useApiCall(url, null, null, false);
   const executeSearch = (search) => {
     if (search.length > 3) {
