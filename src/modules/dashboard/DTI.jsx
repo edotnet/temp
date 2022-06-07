@@ -28,10 +28,11 @@ export const DTI = () => {
   const result = useMemo(() => {
     if (!data || data.code !== 200)
       return null;
-    return state.molecules.map((drug, i) => (
+
+    return data.result.map((drug, i) => (
         <Box key={drug.name} sx={{position: 'relative'}}>
-          <Typography component="span" sx={{fontSize: 16, fontWeight: 'bold'}}>{drug.name}</Typography><br/>
-          <Typography component="span" sx={progressStyle(data.result[i])}>{data.result[i].toFixed(4)}</Typography>
+          <Typography component="span" sx={{fontSize: 16, fontWeight: 'bold'}}>{state.molecules[i].name}</Typography><br/>
+          <Typography component="span" sx={progressStyle(drug)}>{drug.toFixed(4)}</Typography>
           <div style={{height: 35}}/>
         </Box>
     ))
