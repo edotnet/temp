@@ -1,8 +1,9 @@
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Autocomplete } from "../../infrastructure/components/Autocomplete";
+import {Endpoints} from "../../config/Consts";
 
 export const NaturalProductAutocomplete = ({label, onChange}) => {
-  const url = `natural_products/query/`;
+  const url = Endpoints.naturalProducts.query;
   const {loading, data, error, fetch} = useApiCall(url, null, null, false);
   const executeSearch = (search) => {
     fetch(`${url}${search}?page=0`, 'GET')

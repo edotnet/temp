@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { darken, lighten } from '@mui/material/styles';
 import { SmileSearcher } from "./SmileSearcher.component";
+import {Endpoints} from "../../config/Consts";
 
 const getBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
@@ -19,7 +20,7 @@ export const DrugInteraction = () => {
   const [smile2, setSmile2] = useState(null)
 
   const [errorMessage, setErrorMessage] = useState("")
-  const url = `drug-interaction`;
+  const url = Endpoints.ml.drugInteraction;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const customClasses = {
     '& .probability--Positive': {

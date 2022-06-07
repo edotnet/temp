@@ -9,7 +9,7 @@ export const ProductsDataGrid = (props) => {
   const {loading, data, error, fetch} = useApiCall("natural_products/query", 'GET', null, false);
 
   const executeSearch = () => {
-    const url = `natural_products${props.url}?page=${page}`;
+    const url = `${props.url.replace('drugbank/molecule', 'natural_products/query')}?page=${page}`;
     fetch(url, 'GET');
   }
 

@@ -1,8 +1,9 @@
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Autocomplete } from "../../infrastructure/components/Autocomplete";
+import {Endpoints} from "../../config/Consts";
 
 export const CategoryAutocomplete = ({onChange, onEmpty}) => {
-  const url = `drugbank/category/query/`;
+  const url = Endpoints.drugbank.categories;
   const {loading, data, fetch} = useApiCall(url, null, null, false);
   const executeSearch = (search) => {
     if (search.length > 3) {

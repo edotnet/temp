@@ -13,7 +13,7 @@ export const Detail = (props) => {
     "SMILES" in props.detail.calculated_properties ?
       props.detail.calculated_properties.SMILES :
       props.detail.SMILES;
-    fetch(`eval?smiles=${smiles}`, 'GET');
+    //fetch(`eval?smiles=${smiles}`, 'GET');
   }, [props.detail]);
 
   return (
