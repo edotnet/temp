@@ -7,9 +7,9 @@ import './NavBar.scss'
 export const Navbar = () => {
 
   return <Box>
-    <Box component="div" className="dashboardcircle">
-      {/* <Box component="img" alt="image" className="moleculeimg" src={moleculeimg}/> */}
-    </Box>
+    {/* <Box component="div" className="dashboardcircle">
+      <Box component="img" alt="image" className="moleculeimg" src={moleculeimg}/>
+    </Box> */}
     <Box className="dashboardheader">
       <Grid container spacing={2}>
         <Grid item xs={1} className='logoWrapper'>

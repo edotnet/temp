@@ -4,8 +4,9 @@ import {memo, useEffect} from "react";
 import {useApiCall} from "../../../infrastructure/hooks/useApiCall";
 import {useDashboardContext} from "../context/useDashboarContext";
 import {PredictiveWorld} from "../predictive-world/PredictiveWorld";
+import {Endpoints} from "../../../config/Consts";
 
-const url = `https://api.prepaire.com/drug-interaction`;
+const url = Endpoints.ml.drugInteraction;
 
 export const DrugInteraction = memo(({onNewItems}) => {
     const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
@@ -28,19 +29,21 @@ export const DrugInteraction = memo(({onNewItems}) => {
                 const smile2 = state.interactingMolecules[1].calculated_properties.SMILES;
                 fetch(url, 'POST', {smile1, smile2})
             } catch (e) {
-                console.log('Wrong smiles')
+                console.log('[DRUG-INTERACTION] Wrong smiles')
             }
         }
     }, [state.interactingMolecules])
 
     useEffect(() => {
-        if (!data || data.code !== 200) {
+        if (!data || (data && 'code' in data && data.code !== 200)) {
+            console.log('[DRUG-INTERACTION] Response code is wrong')
             return;
         }
         try {
-            const maxValue = Math.max.apply(Math, data.result.map(el => el.value));
+            const result = 'result' in data ? data.result : data;
+            const maxValue = Math.max.apply(Math, result.map(el => el.value));
             setTimeout(() => {
-                dispatch({type: 'setInteractingMoleculesResult', payload: data.result.find(res => res.value === maxValue)});
+                dispatch({type: 'setInteractingMoleculesResult', payload: result.find(res => res.value === maxValue)});
             }, 2000)
         } catch (e) {
             console.warn(e)

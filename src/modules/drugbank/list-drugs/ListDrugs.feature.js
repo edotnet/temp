@@ -5,6 +5,7 @@ import { DrugsDataGrid } from "./DrugsDataGrid.component";
 import { ProductsDataGrid } from "./ProductsDataGrid.component";
 import { Detail } from "./Detail.component";
 import { Card } from "../../../infrastructure/components/Card";
+import {Endpoints} from "../../../config/Consts";
 
 export const ListDrugsFeature = () => {
   const [search, setSearch] = useState('');
@@ -13,15 +14,15 @@ export const ListDrugsFeature = () => {
   const [url, setUrl] = useState("");
   const options = {
     id: {
-      url: `?id=${search}`,
+      url: `${Endpoints.drugbank.drugbank}?id=${search}`,
       placeholder: 'Drugbank ID'
     },
     name: {
-      url: `?name=${search}`,
+      url: `${Endpoints.drugbank.drugbank}?name=${search}`,
       placeholder: 'Drug exact name'
     },
     query: {
-      url: `/query/${encodeURIComponent(search)}`,
+      url: `${Endpoints.drugbank.drugs}${encodeURIComponent(search)}`,
       placeholder: 'Find by clinical description, target, name, etc...'
     }
   }

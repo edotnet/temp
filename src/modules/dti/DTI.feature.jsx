@@ -9,6 +9,7 @@ import { DrugAutocomplete } from "../drug-interaction/DrugAutocomplete";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { darken, lighten } from "@mui/material/styles";
 import Button from "@mui/material/Button";
+import {Endpoints} from "../../config/Consts";
 
 const getBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
@@ -17,7 +18,7 @@ const getHoverBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
 
 export const DTI = () => {
-  const url = `https://api.prepaire.com/drug-protein`;
+  const url = Endpoints.ml.drugProtein;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const [errorMessage, setErrorMessage] = useState("")
   const [target, setTarget] = useState(null);

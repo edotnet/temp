@@ -2,14 +2,15 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useApiCall } from "../../../infrastructure/hooks/useApiCall";
+import {Endpoints} from "../../../config/Consts";
 
 export const DrugsDataGrid = (props) => {
   const [rowCountState, setRowCountState] = useState(0);
   const [page, setPage] = useState(0);
-  const {loading, data, error, fetch} = useApiCall("drugbank/drugs/category/categoryId", 'GET', null, false);
+  const {loading, data, error, fetch} = useApiCall('', 'GET', null, false);
 
   const executeSearch = () => {
-    const url = `drugbank/drugs/category/${props.categoryId}?page=${page}`;
+    const url = `${Endpoints.drugbank.drugsByCategory}${props.categoryId}?page=${page}`;
     fetch(url, 'GET');
   }
 
