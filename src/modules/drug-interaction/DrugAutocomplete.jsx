@@ -1,9 +1,10 @@
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Autocomplete } from "../../infrastructure/components/Autocomplete";
 import { useEffect, useState } from "react";
+import {Endpoints} from "../../config/Consts";
 
 export const DrugAutocomplete = ({label, onChange, category}) => {
-  const url = `drugbank/query/`;
+  const url = Endpoints.drugbank.drugs;
   const {loading, data, error, fetch} = useApiCall(url, null, null, false);
   const executeSearch = (search) => {
     if (search.length > 3) {

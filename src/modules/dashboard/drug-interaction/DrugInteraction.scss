@@ -1,0 +1,12 @@
+.moleculeDropdown{
+    > div{
+        padding: 8.5px 14px;
+        background-color: rgba(150, 210, 233, .1);
+        border-radius: 50px;
+        padding-right: 14px !important;
+    }
+
+    .MuiSelect-icon{
+        display: none;
+    }
+}

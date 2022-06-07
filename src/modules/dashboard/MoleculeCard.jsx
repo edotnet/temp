@@ -15,11 +15,12 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
   })
 
   const {hue, saturation, luminosity} = molecule.color;
-  const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.25)`;
+  const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.4)`;
 
   const style = {
-    boxShadow: `0 6px 5px 0 ${moleculeColor}`,
+    boxShadow: `0 4px 13px 0 ${moleculeColor}`,
     border: `solid 1px ${moleculeColor}`,
+    borderBottomWidth: `1.5px`,
   }
 
   const selectedStyle = {
