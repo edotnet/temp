@@ -20,7 +20,7 @@ export const DrugSynthesisFeature = () => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const [xdlData, setXdlData] = useState(null);
   const isFirstRender = useRef(true);
-
+  
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false // toggle flag after first render/mounting
@@ -33,7 +33,8 @@ export const DrugSynthesisFeature = () => {
     setFileName(files[0].name);
     fileToBase64(files[0], (err, result) => {
       if (result) {
-        setFile(result);
+        const binaryData = result.split(",")[1];
+        setFile(binaryData);
       }
     });
   }
@@ -110,18 +111,3 @@ export const DrugSynthesisFeature = () => {
     </div>
   );
 }
-
-/* </div> : <div style={{ position: 'relative'}}>
-                    <Box>
-                    <Typography variant="h5" textAlign="center" color="primary" gutterBottom>
-                        Uploaded File -<Typography variant="span" className="fileName">{fileName}</Typography>
-                    </Typography>
-                    {loading ? <div className="result"><div style={{ position: 'absolute', left: '50%', top: '75%'}}>
-                      <Box> <CircularProgress /><h4>Loading...</h4>
-                      </Box></div>
-                      </div>
-                     : <Typography variant="h6">
-                        Successfully Uploaded file
-                    </Typography>}
-            </Box>
-          </div>} */

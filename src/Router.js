@@ -11,7 +11,6 @@ import { Drugshot } from "./pages/Drugshot";
 import { NotFoundPage }  from './pages/NotFoundPage';
 import { HomePage } from './pages/Home';
 import { Engine } from "./pages/Engine";
-import { DrugSynthesis } from './pages/DrugSynthesis';
 import { SurfacePage } from "./pages/Surface.page";
 import {Text2xdlFeature} from "./modules/text2xdl/Text2xdl";
 
@@ -31,7 +30,6 @@ export const Router = () => (
     <Route path="dti" element={<DTIPage />}/>
     <Route path="engine/*" element={<Engine />}>
       <Route path="text2xdl" element={<Text2xdlFeature/>}></Route>
-      <Route path="drug-synthesis" element={<DrugSynthesis />}/>
     </Route>
     <Route path="surface" element={<SurfacePage />}/>
     <Route path="start" element={<StartView/>} />
