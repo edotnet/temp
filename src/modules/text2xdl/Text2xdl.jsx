@@ -1,7 +1,6 @@
 import { Box, TextField } from "@mui/material";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import copy from 'copy-to-clipboard';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import beautify from "xml-beautifier";
@@ -10,13 +9,15 @@ import IconButton from '@mui/material/IconButton';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 
 export const Text2xdlFeature = () => {
-  // const [newlineText, setNewlineText] = useState('');
-  // const [xdlText, setXdlText] = useState('');
+  const xdlText = useRef(null);
+  // const [copySuccess, setCopySuccess] = useState('')
   const [text, setText] = useState('');
+  const [Loadingresult, setLoadingresult] = useState(false);
   const url = `https://api.prepaire.com/text-to-xdl`;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const onRun = () => {
     fetch(url, 'POST', {input: text});
+    setLoadingresult(true);
   }
   function NewlineText(value , ind) {
     const text = value;
@@ -29,10 +30,13 @@ export const Text2xdlFeature = () => {
     return xml;
   }
 
-  const copy2Xdl = () => {
-    copy(text);
-  }
-  
+  // const copyToClipboard = (e) => {
+  //   xdlText.current.select();
+  //   xdlText.current.document.execCmd('copy');
+  //   e.target.focus();
+  //   setCopySuccess('Copied!');
+  // }
+
   return (
     // <Box>
     //   <TextField
@@ -49,17 +53,18 @@ export const Text2xdlFeature = () => {
     // </Box>
     <div className="searchEngine-xdl">
       <h2>Upload Text2XDL</h2>
+      {/* {copySuccess} */}
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <div className="text">
             <div className="translate-block">
               <h4>2XDL text</h4>
               <Box sx={{position: 'absolute', right: 40, top: 13}}>
-                <IconButton onClick={copy2Xdl} color="primary" aria-label="copy to clipboard" component="span">
+                <IconButton color="primary" aria-label="copy to clipboard" component="span">
                   <ContentCopy />
                 </IconButton>
               </Box>
-              <TextField id="style-2" variant="standard" InputProps={{ disableUnderline: true}} className="area" fullWidth multiline rows={15} value={text} onChange={e => setText(e.target.value)} />
+              <TextField id="style-2" ref={xdlText} variant="standard" InputProps={{ disableUnderline: true}} className="area" fullWidth multiline rows={15} value={text} onChange={e => setText(e.target.value)} />
               <Button onClick={onRun} disabled={!text.length} sx={{my:2}} variant="outlined">Translate To Synthesis XDL Code</Button>
             </div>
           </div>
@@ -77,8 +82,8 @@ export const Text2xdlFeature = () => {
                         <ContentCopy />
                       </IconButton>
                     </Box>
-                    <div className="process" id="style-2" >
-                        {data && data.result ? NewlineText(data.result.text) : ''}
+                    <div className="process" id="style-2">
+                      {data && data.result ? NewlineText(data.result.text) : ''}
                     </div>
                   </Grid>
                   <Grid item xs={6} sx={{position: 'relative'}} >
