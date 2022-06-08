@@ -13,12 +13,10 @@ export const Text2xdlFeature = () => {
   // const [newlineText, setNewlineText] = useState('');
   // const [xdlText, setXdlText] = useState('');
   const [text, setText] = useState('');
-  const [Loadingresult, setLoadingresult] = useState(false);
   const url = `https://api.prepaire.com/text-to-xdl`;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const onRun = () => {
     fetch(url, 'POST', {input: text});
-    setLoadingresult(true);
   }
   function NewlineText(value , ind) {
     const text = value;
