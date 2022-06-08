@@ -16,7 +16,8 @@ import { DrugSynthesisFeature } from "../modules/drug-synthesis/drug-synthesis-f
 
 export const Engine = () => {
   let [loading, setLoading] = useState(true);
-  let [defaultView, setdefaultView] = useState(null)
+  let [defaultView, setdefaultView] = useState(null);
+  let [active, setActive] = useState('');
   const [text, setText] = useState('');
 
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export const Engine = () => {
         // navigate(0);
       }
     } else {
+      setActive(parameter);
       navigate(parameter, true);
     }
   }
@@ -61,10 +63,10 @@ export const Engine = () => {
             <Button className='searchEngin-headerbtn' variant="outlined" onClick={linkToroute('search')}>Search</Button>
           </Grid>
           <Grid item>
-            <Button className='searchEngin-headerbtn' variant="outlined" onClick={linkToroute('text2xdl')}>Upload Text2XDL</Button>
+            <Button className={`searchEngin-headerbtn ${active === "text2xdl" && 'active'}`} variant="outlined" onClick={linkToroute('text2xdl')}>Upload Text2XDL</Button>
           </Grid>
           <Grid item>
-            <Button className='searchEngin-headerbtn' variant="outlined" onClick={linkToroute('drug-synthesis')}>Upload Drug Synthesis</Button>
+            <Button className={`searchEngin-headerbtn ${active === "drug-synthesis" && 'active'}`} variant="outlined" onClick={linkToroute('drug-synthesis')}>Upload Drug Synthesis</Button>
           </Grid>
         </Grid>
 
