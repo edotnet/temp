@@ -11,6 +11,8 @@ import {useLocation, useNavigate,  Route, Routes,} from "react-router-dom";
 import './Engine.scss';
 import {Text2xdlFeature} from "../modules/text2xdl/Text2xdl";
 import {SearchFeature} from "../modules/search/search";
+import { DrugSynthesisFeature } from "../modules/drug-synthesis/drug-synthesis-feature";
+
 
 export const Engine = () => {
   let [loading, setLoading] = useState(true);
@@ -24,9 +26,13 @@ export const Engine = () => {
 
   const linkToroute = (parameter) => (event) => {
     event.preventDefault();
-    navigate(parameter, true);
     if(parameter === 'search') {
-      console.log('text', text);
+      if(text.length !== 0) {
+        navigate(parameter, true);
+        // navigate(0);
+      }
+    } else {
+      navigate(parameter, true);
     }
   }
 
@@ -58,13 +64,14 @@ export const Engine = () => {
             <Button className='searchEngin-headerbtn' variant="outlined" onClick={linkToroute('text2xdl')}>Upload Text2XDL</Button>
           </Grid>
           <Grid item>
-            <Button className='searchEngin-headerbtn' variant="outlined" onClick={linkToroute('drug')}>Upload Drug Synthesis</Button>
+            <Button className='searchEngin-headerbtn' variant="outlined" onClick={linkToroute('drug-synthesis')}>Upload Drug Synthesis</Button>
           </Grid>
         </Grid>
 
         <Routes>
           <Route path="search" element={<SearchFeature name={text}/>}></Route>
           <Route path="text2xdl" element={<Text2xdlFeature/>}></Route>
+          <Route path="drug-synthesis" element={<DrugSynthesisFeature />}/>
         </Routes>
         </Container>
       {/* {
