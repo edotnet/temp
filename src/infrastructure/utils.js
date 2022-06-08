@@ -1,5 +1,3 @@
-import beautify from "xml-beautifier";
-
 export function colorful_language(word) {
 
   if (word.length === 0) {
@@ -69,26 +67,3 @@ export function fetchFromObject(obj, prop) {
 
   return obj[prop];
 }
-
-export const fileToBase64 = (file, cb) => {
-  const reader = new FileReader()
-  reader.readAsDataURL(file)
-  reader.onload = function () {
-    cb(null, reader.result)
-  }
-  reader.onerror = function (error) {
-    cb(error, null)
-  }
-}
-
-export const NewlineText = (value , ind) => {
-  const text = value;
-  const newText = text.split('\n').map(str => <p key={ind}>{str}</p>);
-  return newText;
-}
-
-export const prettyformat = (value) => {
-  const xml = beautify(value);
-  return xml;
-}
-
