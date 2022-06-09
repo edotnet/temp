@@ -12,7 +12,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import {useApiCall} from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridValueGetterParams  } from '@mui/x-data-grid';
 
 
 export const SearchFeature = (text) => {
@@ -25,7 +25,6 @@ export const SearchFeature = (text) => {
   const drugs = data && data.result && 'drugs' in data.result ?  Object.entries(data.result.drugs).map(([_key, _value]) => ({'title': _key, 'counter':_value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics })) : []
   const targets = data && data.result && 'targets' in data.result ? Object.entries(data.result.targets).map(([_key, _value]) => ({ 'title': _key, 'counter':_value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics  })) : [];
 
-  console.log("Drugss", drugs)
   useEffect(
     ()=>{
        fetch(url, 'POST', {drug: text.name, filter1: true, pmids: true})
@@ -45,15 +44,35 @@ export const SearchFeature = (text) => {
   const drugsColumns = [
     { field: '' , headerName: '', width: 70 },
     { field: `title`, headerName: 'Drug Name', width: 150 },
-    { field: `metrics['(Search + {}) Publications']`, headerName: '(Search + Drug)Publications', width: 250 },
-    { field: `metrics['{} Publications']`, headerName: 'Drug Publications', width: 120, },
+    {
+      field: `metrics['(Search + {}) Publications']`,
+      headerName: '(Search + Drug)Publications',
+      width: 250,
+      valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
+    },
+    {
+      field: `metrics['{} Publications']`,
+      headerName: 'Drug Publications',
+      width: 120,
+      valueGetter: (params) => params.row.metrics['{} Publications'],
+    },
   ];
 
   const protienColumns = [
     { field: '' , headerName: '', width: 70 },
     { field: `title`, headerName: 'Target Name', width: 150 },
-    { field: `metrics['(Search + {}) Publications']`, headerName: '(Search + Target)Publications', width: 250 },
-    { field: `metrics['{} Publications']`, headerName: 'Target Publications', width: 120, },
+    {
+      field: `metrics['(Search + {}) Publications']`,
+      headerName: '(Search + Target)Publications',
+      width: 250,
+      valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
+    },
+    {
+      field: `metrics['{} Publications']`,
+      headerName: 'Target Publications',
+      width: 120,
+      valueGetter: (params) => params.row.metrics['{} Publications'],
+    },
   ];
 
   return(
