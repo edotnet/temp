@@ -12,6 +12,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import {useApiCall} from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from 'react';
+import { DataGrid, GridValueGetterParams  } from '@mui/x-data-grid';
 
 
 export const SearchFeature = (text) => {
@@ -39,6 +40,40 @@ export const SearchFeature = (text) => {
     setselectedtarget((data.title))
     setrowTargets(data.pmids);
   }
+
+  const drugsColumns = [
+    { field: '' , headerName: '', width: 70 },
+    { field: `title`, headerName: 'Drug Name', width: 150 },
+    {
+      field: `metrics['(Search + {}) Publications']`,
+      headerName: '(Search + Drug)Publications',
+      width: 250,
+      valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
+    },
+    {
+      field: `metrics['{} Publications']`,
+      headerName: 'Drug Publications',
+      width: 120,
+      valueGetter: (params) => params.row.metrics['{} Publications'],
+    },
+  ];
+
+  const protienColumns = [
+    { field: '' , headerName: '', width: 70 },
+    { field: `title`, headerName: 'Target Name', width: 150 },
+    {
+      field: `metrics['(Search + {}) Publications']`,
+      headerName: '(Search + Target)Publications',
+      width: 250,
+      valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
+    },
+    {
+      field: `metrics['{} Publications']`,
+      headerName: 'Target Publications',
+      width: 120,
+      valueGetter: (params) => params.row.metrics['{} Publications'],
+    },
+  ];
 
   return(
     <div className="searchDefault">
@@ -83,29 +118,19 @@ export const SearchFeature = (text) => {
                 <Typography>Drug Results</Typography>
               </AccordionSummary>
               <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
-                <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      {/*<TableCell></TableCell>*/}
-                      <TableCell align="right">Drug Name</TableCell>
-                      <TableCell align="right">(Search + Drug)Publications</TableCell>
-                      <TableCell align="right">Drug Publications</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  {
-                    drugs.length > 0 ? <TableBody>
-                      {
-                        drugs.map((row) => (
-                        <TableRow onClick={() => {drughandleClick(row)}} key={row.title} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                          {/*<TableCell component="th" scope="row">{row.id}</TableCell>*/}
-                          <TableCell align="right">{row.title}</TableCell>
-                          <TableCell align="right">{row.metrics['(Search + {}) Publications']}</TableCell>
-                          <TableCell align="right">{row.metrics['{} Publications']}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody> : ''
-                  }
-                </Table>
+
+                {drugs.length > 0 && 
+                  <DataGrid
+                    rows={drugs}
+                    columns={drugsColumns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    checkboxSelection
+                    getRowId={(row) => row.counter}
+                    getRowHeight={() => 'auto'}
+                    onRowClick={(param) => drughandleClick(param.row)}
+                  />
+                }
               </AccordionDetails>
             </Accordion>
           </Grid>
@@ -150,29 +175,19 @@ export const SearchFeature = (text) => {
               <Typography>Target Protien Results</Typography>
             </AccordionSummary>
             <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    {/*<TableCell></TableCell>*/}
-                    <TableCell align="right">Target Name</TableCell>
-                    <TableCell align="right">(Search + Target)Publications</TableCell>
-                    <TableCell align="right">Target Publications</TableCell>
-                  </TableRow>
-                </TableHead>
-                {
-                  targets.length > 0 ? <TableBody>
-                    {
-                      targets.map((row) => (
-                        <TableRow onClick={() => {targetshandleClick(row)}} key={row.title} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                          {/*<TableCell component="th" scope="row">{row.id}</TableCell>*/}
-                          <TableCell align="right">{row.title}</TableCell>
-                          <TableCell align="right">{row.metrics['(Search + {}) Publications']}</TableCell>
-                          <TableCell align="right">{row.metrics['{} Publications']}</TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody> : ''
+              
+              { targets.length > 0 && 
+                  <DataGrid
+                    rows={targets}
+                    columns={protienColumns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    checkboxSelection
+                    getRowId={(row) => row.counter}
+                    getRowHeight={() => 'auto'}
+                    onRowClick={(param) => targetshandleClick(param.row)}
+                  />
                 }
-              </Table>
             </AccordionDetails>
           </Accordion>
         </Grid>

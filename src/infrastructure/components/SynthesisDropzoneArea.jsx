@@ -70,7 +70,7 @@ export const SynthesisDropzoneArea = (props) => {
         <input {...getInputProps()} />
         <Box component="img" alt="image" src={uploadImg}/>
         <b>Drag and drop PDF or Text files or click to select files</b>
-        <span class="Limit-200MB-per-file">Limit 200MB per file</span>
+        <span className="Limit-200MB-per-file">Limit 200MB per file</span>
       </div>
     </div>
   );

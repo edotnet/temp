@@ -8,11 +8,12 @@ import { fileToBase64, NewlineText, prettyformat } from "../../infrastructure/ut
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import ContentCopy from '@mui/icons-material/ContentCopy';
+import {Endpoints} from "../../config/Consts";
 
 import "./DrugSynthesis.css";
 
 export const DrugSynthesisFeature = () => {
-  const url = `/xdl/upload`;
+  const url = Endpoints.pdf.upload;
   const { loading, data, error, fetch } = useApiCall(url, 'POST', null, false);
   //   let [loading, setLoading] = useState(true);
   const [file, setFile] = useState([]);
@@ -20,7 +21,7 @@ export const DrugSynthesisFeature = () => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const [xdlData, setXdlData] = useState(null);
   const isFirstRender = useRef(true);
-
+  
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false // toggle flag after first render/mounting
@@ -33,14 +34,15 @@ export const DrugSynthesisFeature = () => {
     setFileName(files[0].name);
     fileToBase64(files[0], (err, result) => {
       if (result) {
-        setFile(result);
+        const binaryData = result.split(",")[1];
+        setFile(binaryData);
       }
     });
   }
 
   if (data) {
     setFileUploaded(true);
-    const fetchURL = "/pdf-xdl";
+    const fetchURL = Endpoints.pdf.xdl;
     const fileInfo = {
       "file_name": data.file_path,
     }
@@ -48,12 +50,11 @@ export const DrugSynthesisFeature = () => {
   }
 
   if (data && fileUploaded) {
-    console.log(data);
     setXdlData(data);
   }
 
   return (
-    <div>
+    <div className="fileupload-block">
       {(file.length === 0) ?
         <div style={{ height: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
           <Typography variant="h6" textAlign="center" color="primary" gutterBottom>
@@ -97,7 +98,9 @@ export const DrugSynthesisFeature = () => {
                                   <ContentCopy />
                                 </IconButton>
                               </Box>
-                              {xdlData ? prettyformat(xdlData.xml) : ''}
+                              <pre>
+                                {xdlData ? prettyformat(xdlData.xml) : ''}
+                              </pre>
                             </div>
                           </Grid>
                         </Grid>
@@ -110,18 +113,3 @@ export const DrugSynthesisFeature = () => {
     </div>
   );
 }
-
-/* </div> : <div style={{ position: 'relative'}}>
-                    <Box>
-                    <Typography variant="h5" textAlign="center" color="primary" gutterBottom>
-                        Uploaded File -<Typography variant="span" className="fileName">{fileName}</Typography>
-                    </Typography>
-                    {loading ? <div className="result"><div style={{ position: 'absolute', left: '50%', top: '75%'}}>
-                      <Box> <CircularProgress /><h4>Loading...</h4>
-                      </Box></div>
-                      </div>
-                     : <Typography variant="h6">
-                        Successfully Uploaded file
-                    </Typography>}
-            </Box>
-          </div>} */

@@ -33,10 +33,6 @@ const reducer = (state, action) => {
       if (state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)) {
         return state;
       }
-      //TODO limit backend!
-      if (state.molecules.length === 4) {
-        return state;
-      }
       molecule.color = colorful_language(molecule.name, 0.25);
       return {
         ...state,

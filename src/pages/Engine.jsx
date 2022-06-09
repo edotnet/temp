@@ -3,7 +3,7 @@ import { DashboardLayout } from "../infrastructure/layouts/Dashboard.layout";
 import { useState } from "react";
 //import CircularProgress from '@mui/material/CircularProgress';
 // import Box from '@mui/material/Box';
-import { Container } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
@@ -16,7 +16,8 @@ import { DrugSynthesisFeature } from "../modules/drug-synthesis/drug-synthesis-f
 
 export const Engine = () => {
   let [loading, setLoading] = useState(true);
-  let [defaultView, setdefaultView] = useState(null)
+  let [defaultView, setdefaultView] = useState(null);
+  let [active, setActive] = useState('');
   const [text, setText] = useState('');
 
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export const Engine = () => {
         // navigate(0);
       }
     } else {
+      setActive(parameter);
       navigate(parameter, true);
     }
   }
@@ -45,6 +47,7 @@ export const Engine = () => {
   return (
     <DashboardLayout style={{height: '100%'}}>
       <Container maxWidth="xl">
+        {/* <Typography variant="h5" className="title searchEngine-heading" color="secondary">Search Engine</Typography> */}
         <h1 className="searchEngine-heading">Search Engine</h1>
         <Grid container spacing={2}>
           <Grid item xs={4}>
@@ -58,13 +61,13 @@ export const Engine = () => {
             />
           </Grid>
           <Grid item>
-            <Button className='searchEngin-headerbtn' variant="outlined" onClick={linkToroute('search')}>Search</Button>
+            <Button className='searchEngin-headerbtn btn-white' variant="outlined" onClick={linkToroute('search')}>Search</Button>
           </Grid>
           <Grid item>
-            <Button className='searchEngin-headerbtn' variant="outlined" onClick={linkToroute('text2xdl')}>Upload Text2XDL</Button>
+            <Button className={`searchEngin-headerbtn ${active === "text2xdl" && 'active'}`} variant="outlined" onClick={linkToroute('text2xdl')}>Upload Text2XDL</Button>
           </Grid>
           <Grid item>
-            <Button className='searchEngin-headerbtn' variant="outlined" onClick={linkToroute('drug-synthesis')}>Upload Drug Synthesis</Button>
+            <Button className={`searchEngin-headerbtn ${active === "drug-synthesis" && 'active'}`} variant="outlined" onClick={linkToroute('drug-synthesis')}>Upload Drug Synthesis</Button>
           </Grid>
         </Grid>
 

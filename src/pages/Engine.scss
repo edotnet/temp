@@ -5,6 +5,9 @@
     height: 100%;
 }
 
+.searchDefault {
+    padding-bottom: 50px;
+}
 .searchDefault h2{
     margin-top: 35px;
     margin-bottom: 24px;
@@ -32,15 +35,11 @@
 
 
 .searchEngine-heading {
-  font-family: WorkSans;
-  font-size: 46px;
+  font-size: 40px;
   font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
   color: #1d1d1d;
   margin-bottom: 46px;
+  text-transform: uppercase;
 }
 
 .searchEngine-input {
@@ -49,11 +48,22 @@
     padding: 10px;
 }
 .searchEngin-headerbtn {
-    height: 50px;
-    text-transform: none;
-    border: solid 1px #cbcbcb;
-    font-size: 16px;
-    color: #000;
+    height: 50px !important;
+    text-transform: none !important;
+    border: solid 1px #cbcbcb !important;
+    font-size: 16px !important;
+    &.active{
+        background: linear-gradient(to top, #6e54c2 100%, #5245b3);
+        color: #fff;
+    }
+}
+
+.btn-white {
+    background-color: #fff !important;
+}
+
+.searchEngine-xdl {
+    padding-bottom:100px ;
 }
 
 .searchEngine-xdl h2{
@@ -156,6 +166,10 @@
         padding: 0px 20px;
         overflow-y: auto;
         border-radius: 4px;
+
+        pre{
+            white-space: pre-wrap;
+        }
     }
 }
 

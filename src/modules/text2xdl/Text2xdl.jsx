@@ -10,7 +10,6 @@ import ContentCopy from '@mui/icons-material/ContentCopy';
 
 export const Text2xdlFeature = () => {
   const xdlText = useRef(null);
-  // const [copySuccess, setCopySuccess] = useState('')
   const [text, setText] = useState('');
   const [Loadingresult, setLoadingresult] = useState(false);
   const url = `https://api.prepaire.com/text-to-xdl`;
@@ -29,13 +28,6 @@ export const Text2xdlFeature = () => {
     const xml = beautify(value);
     return xml;
   }
-
-  // const copyToClipboard = (e) => {
-  //   xdlText.current.select();
-  //   xdlText.current.document.execCmd('copy');
-  //   e.target.focus();
-  //   setCopySuccess('Copied!');
-  // }
 
   return (
     // <Box>
