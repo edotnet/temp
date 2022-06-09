@@ -18,11 +18,8 @@ export const Navbar = () => {
         </Grid>
         <Grid item xs={10} style={{paddingTop: '25px'}}>
           <nav className="headernavlink">
-            <NavLink to="/drugbank">DRUG BANK</NavLink>
-            <NavLink to="/categories">CATEGORIES</NavLink>
-            <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
-            <NavLink to="/dti">DTI</NavLink>
             <NavLink to="/engine">SEARCH ENGINE</NavLink>
+            <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
             <NavLink to="/surface">SURFACE</NavLink>
           </nav>
         </Grid>
