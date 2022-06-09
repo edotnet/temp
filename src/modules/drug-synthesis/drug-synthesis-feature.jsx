@@ -8,11 +8,12 @@ import { fileToBase64, NewlineText, prettyformat } from "../../infrastructure/ut
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import ContentCopy from '@mui/icons-material/ContentCopy';
+import {Endpoints} from "../../config/Consts";
 
 import "./DrugSynthesis.css";
 
 export const DrugSynthesisFeature = () => {
-  const url = `/xdl/upload`;
+  const url = Endpoints.pdf.upload;
   const { loading, data, error, fetch } = useApiCall(url, 'POST', null, false);
   //   let [loading, setLoading] = useState(true);
   const [file, setFile] = useState([]);
@@ -41,7 +42,7 @@ export const DrugSynthesisFeature = () => {
 
   if (data) {
     setFileUploaded(true);
-    const fetchURL = "/pdf-xdl";
+    const fetchURL = Endpoints.pdf.xdl;
     const fileInfo = {
       "file_name": data.file_path,
     }
@@ -49,7 +50,6 @@ export const DrugSynthesisFeature = () => {
   }
 
   if (data && fileUploaded) {
-    console.log(data);
     setXdlData(data);
   }
 
