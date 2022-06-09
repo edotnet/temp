@@ -49,6 +49,26 @@ const prepaireTheme = createTheme({
           backgroundColor: "white"
         },
       }
+    },
+    MuiDataGrid: {
+      styleOverrides: {
+        row: {
+          "&.Mui-selected": {
+            backgroundColor: "#e3e2ff",
+          },
+          '& .MuiCheckbox-root svg':{
+            backgroundColor: 'transparent',
+            borderRadius: 2,
+          },
+          '& .MuiCheckbox-root.Mui-checked:not(.MuiCheckbox-indeterminate) svg': {
+            backgroundColor: 'rgba(93, 103, 187, .6)',
+            fontSize: '1.4rem',
+          },
+          '& .MuiCheckbox-root svg path': {
+            color: 'white',
+          },
+        }
+      }
     }
   }
 });

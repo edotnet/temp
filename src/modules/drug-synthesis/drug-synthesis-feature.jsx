@@ -54,7 +54,7 @@ export const DrugSynthesisFeature = () => {
   }
 
   return (
-    <div>
+    <div className="fileupload-block">
       {(file.length === 0) ?
         <div style={{ height: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
           <Typography variant="h6" textAlign="center" color="primary" gutterBottom>
@@ -98,7 +98,9 @@ export const DrugSynthesisFeature = () => {
                                   <ContentCopy />
                                 </IconButton>
                               </Box>
-                              {xdlData ? prettyformat(xdlData.xml) : ''}
+                              <pre>
+                                {xdlData ? prettyformat(xdlData.xml) : ''}
+                              </pre>
                             </div>
                           </Grid>
                         </Grid>

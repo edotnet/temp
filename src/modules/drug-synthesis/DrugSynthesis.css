@@ -1,3 +1,11 @@
+.fileupload-block {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.fileupload-block h6 {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
 .Uploaded-file {
     width: 165px;
     height: 28px;
