@@ -2,7 +2,7 @@ import beautify from "xml-beautifier";
 
 export function colorful_language(word) {
 
-  if (word.length === 0) {
+  if (word.length === 0 ) {
     return 'black';
   }
   var sanitized = word.replace(/[^A-Za-z]/, '');

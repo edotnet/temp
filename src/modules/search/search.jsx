@@ -4,18 +4,20 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+// import Table from '@mui/material/Table';
+// import TableBody from '@mui/material/TableBody';
+// import TableCell from '@mui/material/TableCell';
+// import TableContainer from '@mui/material/TableContainer';
+// import TableHead from '@mui/material/TableHead';
+// import TableRow from '@mui/material/TableRow';
 import {useApiCall} from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from 'react';
 import { DataGrid, GridValueGetterParams  } from '@mui/x-data-grid';
 import Link from '@mui/material/Link';
 import { useDashboardContext } from "../../modules/dashboard/context/useDashboarContext";
 import {useNavigate} from "react-router-dom";
+import {Endpoints} from "../../config/Consts";
+import axios from 'axios';
 
 
 export const SearchFeature = (text) => {
@@ -50,7 +52,19 @@ export const SearchFeature = (text) => {
 
 
   const uploadSelectedDrugs = async () => {
-    selectedDrugs.forEach(drug => dispatch({type: 'addMolecule', payload: drug}));
+    selectedDrugs.forEach(drug => {
+      const url = `${Endpoints.drugbank.drugs}${drug.title}?page=${0}`;
+      axios.get(url).then(resp => {
+        if(resp.data) {
+          for(let i = 0; i<resp.data.items.length; i++) {
+            if(resp.data.items[i].name === drug.title) {
+              dispatch({type: 'addMolecule', payload: resp.data.items[i]})
+              return;
+            }
+          }
+        }
+      })
+    });
     navigate("/dashboard");
   }
 

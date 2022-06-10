@@ -213,7 +213,7 @@ export const PredictiveWorld = () => {
     if (totalDeg === 135) {
       scaleValue += 50;
     }
-    console.log(totalDeg, scaleValue, tipTitle)
+    // console.log(totalDeg, scaleValue, tipTitle)
     const x = (scaleValue) * Math.cos(degrees_to_radians(totalDeg));
     const y = (scaleValue) * Math.sin(degrees_to_radians(totalDeg));
 
