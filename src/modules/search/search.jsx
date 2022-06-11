@@ -4,15 +4,20 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+// import Table from '@mui/material/Table';
+// import TableBody from '@mui/material/TableBody';
+// import TableCell from '@mui/material/TableCell';
+// import TableContainer from '@mui/material/TableContainer';
+// import TableHead from '@mui/material/TableHead';
+// import TableRow from '@mui/material/TableRow';
 import {useApiCall} from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from 'react';
 import { DataGrid, GridValueGetterParams  } from '@mui/x-data-grid';
+import Link from '@mui/material/Link';
+import { useDashboardContext } from "../../modules/dashboard/context/useDashboarContext";
+import {useNavigate} from "react-router-dom";
+import {Endpoints} from "../../config/Consts";
+import axios from 'axios';
 
 
 export const SearchFeature = (text) => {
@@ -20,10 +25,14 @@ export const SearchFeature = (text) => {
   const [rowdrugs, setrowDrugs] = useState([]);
   const [selecteddrug, setselecteddrug] = useState('');
   const [selectedtarget, setselectedtarget] = useState('');
+  const [selectedDrugs, setSelectedDrugs] = useState([]);
   const url = `https://api.prepaire.com/drug-search`;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const drugs = data && data.result && 'drugs' in data.result ?  Object.entries(data.result.drugs).map(([_key, _value]) => ({'title': _key, 'counter':_value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics })) : []
   const targets = data && data.result && 'targets' in data.result ? Object.entries(data.result.targets).map(([_key, _value]) => ({ 'title': _key, 'counter':_value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics  })) : [];
+  
+  const {state, dispatch} = useDashboardContext();
+  const navigate = useNavigate();
 
   useEffect(
     ()=>{
@@ -40,6 +49,45 @@ export const SearchFeature = (text) => {
     setselectedtarget((data.title))
     setrowTargets(data.pmids);
   }
+
+
+  const uploadSelectedDrugs = async () => {
+    selectedDrugs.forEach(drug => {
+      const url = `${Endpoints.drugbank.drugs}${drug.title}?page=${0}`;
+      axios.get(url).then(resp => {
+        if(resp.data) {
+          for(let i = 0; i<resp.data.items.length; i++) {
+            if(resp.data.items[i].name === drug.title) {
+              dispatch({type: 'addMolecule', payload: resp.data.items[i]})
+              return;
+            }
+          }
+        }
+      })
+    });
+    navigate("/dashboard");
+  }
+
+  const TableFooter = ({tableName}) => {
+    return (
+      <Link onClick={uploadSelectedDrugs} className="table-footer" variant="body2">
+        Upload selected Data to {tableName}
+      </Link>
+    )
+  }
+
+//   const CustomPagination = () => {
+//     const { state, apiRef, options } = useGridSelector(apiRef, gridPageSizeSelector);
+//     return (
+//         <TablePagination
+//             count={state.pagination.rowCount}
+//             page={state.pagination.page}
+//             onPageChange={(event, value) => apiRef.current.setPage(value)}
+//             rowsPerPage={options.pageSize}
+//             rowsPerPageOptions={[]}
+//         />
+//     );
+// }
 
   const drugsColumns = [
     { field: '' , headerName: '', width: 70 },
@@ -129,6 +177,20 @@ export const SearchFeature = (text) => {
                     getRowId={(row) => row.counter}
                     getRowHeight={() => 'auto'}
                     onRowClick={(param) => drughandleClick(param.row)}
+                    pagination
+                    components={{
+                      Footer: TableFooter,
+                    }}
+                    componentsProps={{
+                      footer: { tableName : "<<Drug interaction>>" },
+                    }}
+                    onSelectionModelChange={(ids) => {
+                      const selectedIDs = new Set(ids);
+                      const selectedRows = drugs.filter((row) =>
+                        selectedIDs.has(row.counter)
+                      );
+                      setSelectedDrugs(selectedRows);
+                    }}
                   />
                 }
               </AccordionDetails>

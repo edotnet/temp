@@ -60,7 +60,7 @@ export const Engine = () => {
               onChange={e => setText(e.target.value)}
             />
           </Grid>
-          <Grid item>
+          <Grid item style={{paddingLeft: '0px'}}>
             <Button className='searchEngin-headerbtn btn-white' variant="outlined" onClick={linkToroute('search')}>Search</Button>
           </Grid>
           <Grid item>
