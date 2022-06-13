@@ -33,8 +33,8 @@ export const SearchFeature = (text) => {
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const drugs = data && data.result && 'drugs' in data.result ?  Object.entries(data.result.drugs).map(([_key, _value]) => ({'title': _key, 'counter':_value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics })) : []
   const targets = data && data.result && 'targets' in data.result ? Object.entries(data.result.targets).map(([_key, _value]) => ({ 'title': _key, 'counter':_value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics  })) : [];
-
-  const [selectionDrugModel, setSelectionDrugModel] = useState([`${text.name.toLowerCase()}`]);
+  const defaultSelectRow = text.name.toLowerCase();
+  const [selectionDrugModel, setSelectionDrugModel] = useState([]);
   const [selectionTargetModel, setSelectionTargetModel] = useState([]);
 
   const {state, dispatch} = useDashboardContext();
@@ -42,7 +42,10 @@ export const SearchFeature = (text) => {
 
   useEffect(
     ()=>{
-      fetch(url, 'POST', {drug: text.name, filter1: true, pmids: true})
+      fetch(url, 'POST', {drug: text.name, filter1: true, pmids: true});
+      if(drugs.length > 0){
+        setSelectionDrugModel(defaultSelectRow);
+      }
     },[]
   );
 
@@ -187,7 +190,6 @@ export const SearchFeature = (text) => {
 
                           const lastRowID = [...selectedIDs].pop()
                           const selectedRowData = drugs.filter((row) => row.title.toLowerCase() === lastRowID );
-                          viewLiterature(selectedRowData)
                         }}
 
                         // getRowClassName={(params) => rowClick ? 'selected-bg' : ''}
