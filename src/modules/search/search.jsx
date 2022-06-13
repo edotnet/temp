@@ -18,7 +18,9 @@ import { useDashboardContext } from "../../modules/dashboard/context/useDashboar
 import {useNavigate} from "react-router-dom";
 import {Endpoints} from "../../config/Consts";
 import axios from 'axios';
-
+import Button from '@mui/material/Button';
+import {CircularProgressComponent} from "../../infrastructure/components/CircularProgress.component";
+import dtiimage from '../../assets/img/table-dti-icon.svg';
 
 export const SearchFeature = (text) => {
   const [rowtargets, setrowTargets] = useState([]);
@@ -30,13 +32,13 @@ export const SearchFeature = (text) => {
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const drugs = data && data.result && 'drugs' in data.result ?  Object.entries(data.result.drugs).map(([_key, _value]) => ({'title': _key, 'counter':_value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics })) : []
   const targets = data && data.result && 'targets' in data.result ? Object.entries(data.result.targets).map(([_key, _value]) => ({ 'title': _key, 'counter':_value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics  })) : [];
-  
+
   const {state, dispatch} = useDashboardContext();
   const navigate = useNavigate();
 
   useEffect(
     ()=>{
-       fetch(url, 'POST', {drug: text.name, filter1: true, pmids: true})
+      fetch(url, 'POST', {drug: text.name, filter1: true, pmids: true})
     },[]
   );
 
@@ -70,9 +72,10 @@ export const SearchFeature = (text) => {
 
   const TableFooter = ({tableName}) => {
     return (
-      <Link onClick={uploadSelectedDrugs} className="table-footer" variant="body2">
+      <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
+        <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
         Upload selected Data to {tableName}
-      </Link>
+      </Button>
     )
   }
 
@@ -125,98 +128,70 @@ export const SearchFeature = (text) => {
 
   return(
     <div className="searchDefault">
-      <h2>Results</h2>
-      {/*<section id='title-wrapper'>*/}
-      {/*  <div className='title'>Drug Synthesis</div>*/}
-      {/*  <div className='line'></div>*/}
-      {/*  <div className='line'></div>*/}
-      {/*</section>*/}
-      {/*  <Grid container spacing={2}>*/}
-      {/*    <Grid item xs={4}>*/}
-      {/*      <Accordion>*/}
-      {/*        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">*/}
-      {/*          <Typography>Text2XDl finded!</Typography>*/}
-      {/*        </AccordionSummary>*/}
-      {/*        <AccordionDetails>*/}
-
-      {/*        </AccordionDetails>*/}
-      {/*      </Accordion>*/}
-      {/*    </Grid>*/}
-      {/*    <Grid item xs={8}>*/}
-      {/*      <Accordion>*/}
-      {/*        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">*/}
-      {/*          <Typography>Drug Synthesis Translated to XDL Code</Typography>*/}
-      {/*        </AccordionSummary>*/}
-      {/*        <AccordionDetails>*/}
-
-      {/*        </AccordionDetails>*/}
-      {/*      </Accordion>*/}
-      {/*    </Grid>*/}
-      {/*  </Grid>*/}
-
-      <section id='title-wrapper'>
-        <div className='title'>Related Drugs</div>
-        <div className='line'></div>
-        <div className='line'></div>
-      </section>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
-                <Typography>Drug Results</Typography>
-              </AccordionSummary>
-              <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
-
-                {drugs.length > 0 && 
-                  <DataGrid
-                    rows={drugs}
-                    columns={drugsColumns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    checkboxSelection
-                    getRowId={(row) => row.counter}
-                    getRowHeight={() => 'auto'}
-                    onRowClick={(param) => drughandleClick(param.row)}
-                    pagination
-                    components={{
-                      Footer: TableFooter,
-                    }}
-                    componentsProps={{
-                      footer: { tableName : "<<Drug interaction>>" },
-                    }}
-                    onSelectionModelChange={(ids) => {
-                      const selectedIDs = new Set(ids);
-                      const selectedRows = drugs.filter((row) =>
-                        selectedIDs.has(row.counter)
-                      );
-                      setSelectedDrugs(selectedRows);
-                    }}
-                  />
-                }
-              </AccordionDetails>
-            </Accordion>
-          </Grid>
-          <Grid item xs={6}>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel4a-content" id="panel4a-header">
-                <Typography>Drug Literature</Typography>
-              </AccordionSummary>
-              <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
-                {
-                  selecteddrug !== '' ?
-                    <p><b>Publications that contain contain the search query and  <span style={{color: '#5645ba'}}>{selecteddrug}</span></b></p> : ''
-                }
-
-                <div className="literature-list">
-                  {
-                    rowdrugs.length > 0 ? <ul>
+      {
+        drugs.length > 0 ? <div>
+          <h2>Results</h2>
+            <section id='title-wrapper'>
+                <div className='title'>Related Drugs</div>
+                <div className='line'></div>
+                <div className='line'></div>
+            </section>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
+                    <Typography>Drug Results</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
+                    {drugs.length > 0 &&
+                      <DataGrid
+                        rows={drugs}
+                        columns={drugsColumns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5]}
+                        checkboxSelection
+                        getRowId={(row) => row.counter}
+                        getRowHeight={() => 'auto'}
+                        onRowClick={(param) => drughandleClick(param.row)}
+                        pagination
+                        // components={{
+                        //   Footer: TableFooter,
+                        // }}
+                        // componentsProps={{
+                        //   footer: { tableName : "<<Drug interaction>>" },
+                        // }}
+                        onSelectionModelChange={(ids) => {
+                          const selectedIDs = new Set(ids);
+                          const selectedRows = drugs.filter((row) =>
+                            selectedIDs.has(row.counter)
+                          );
+                          setSelectedDrugs(selectedRows);
+                        }}
+                      />
+                    }
+                  </AccordionDetails>
+                </Accordion>
+              </Grid>
+              <Grid item xs={6}>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel4a-content" id="panel4a-header">
+                    <Typography>Drug Literature</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
+                    {
+                      selecteddrug !== '' ?
+                        <p><b>Publications that contain contain the search query and  <span style={{color: '#5645ba'}}>{selecteddrug}</span></b></p> : ''
+                    }
+                    <div className="literature-list">
                       {
-                        rowdrugs.map((row) => (
-                          <li key={row.pmid}>
-                            <a href={row.url} target="_blank">{row.title}</a>
-                          </li>
-                        ))
-                      }
+                        rowdrugs.length > 0 ? <ul>
+                        {
+                          rowdrugs.map((row) => (
+                            <li key={row.pmid}>
+                              <a href={row.url} target="_blank">{row.title}</a>
+                            </li>
+                          ))
+                        }
                       </ul>
                     : ''
                   }
@@ -225,62 +200,62 @@ export const SearchFeature = (text) => {
             </Accordion>
           </Grid>
         </Grid>
-      <section id='title-wrapper'>
-        <div className='title'>Related Target Protiens</div>
-        <div className='line'></div>
-        <div className='line'></div>
-      </section>
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5a-content" id="panel5a-header">
-              <Typography>Target Protien Results</Typography>
-            </AccordionSummary>
-            <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
-              
-              { targets.length > 0 && 
-                  <DataGrid
-                    rows={targets}
-                    columns={protienColumns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    checkboxSelection
-                    getRowId={(row) => row.counter}
-                    getRowHeight={() => 'auto'}
-                    onRowClick={(param) => targetshandleClick(param.row)}
-                  />
-                }
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-        <Grid item xs={6}>
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel6a-content" id="panel6a-header">
-              <Typography>Target Literature</Typography>
-            </AccordionSummary>
-            <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
-              {
-                selectedtarget !== '' ?
-                  <p><b>Publications that contain contain the search query and  <span style={{color: '#5645ba'}}>{selectedtarget}</span></b></p> : ''
-              }
-              <div className="literature-list">
+        <section id='title-wrapper'>
+          <div className='title'>Related Target Protiens</div>
+          <div className='line'></div>
+          <div className='line'></div>
+        </section>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5a-content" id="panel5a-header">
+                <Typography>Target Protien Results</Typography>
+              </AccordionSummary>
+              <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
                 {
-                  rowtargets.length > 0 ? <ul>
-                      {
-                        rowtargets.map((row) => (
-                          <li key={row.pmid}>
-                            <a href={row.url} target="_blank">{row.title}</a>
-                          </li>
-                        ))
-                      }
-                    </ul>
-                    : ''
-                }
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        </Grid>
-      </Grid>
+                  targets.length > 0 &&
+                    <DataGrid
+                      rows={targets}
+                      columns={protienColumns}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                      checkboxSelection
+                      getRowId={(row) => row.counter}
+                      getRowHeight={() => 'auto'}
+                      onRowClick={(param) => targetshandleClick(param.row)}
+                    />
+                  }
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+            <Grid item xs={6}>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel6a-content" id="panel6a-header">
+                  <Typography>Target Literature</Typography>
+                </AccordionSummary>
+                <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
+                  {
+                    selectedtarget !== '' ? <p><b>Publications that contain contain the search query and  <span style={{color: '#5645ba'}}>{selectedtarget}</span></b></p> : ''
+                  }
+                  <div className="literature-list">
+                    {
+                      rowtargets.length > 0 ? <ul>
+                        {
+                          rowtargets.map((row) => (
+                            <li key={row.pmid}>
+                              <a href={row.url} target="_blank">{row.title}</a>
+                            </li>
+                          ))
+                        }
+                      </ul> : ''
+                    }
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+          </Grid>
+        </div> : <CircularProgressComponent/>
+      }
     </div>
   )
 }

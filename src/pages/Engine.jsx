@@ -5,14 +5,13 @@ import { useState } from "react";
 // import Box from '@mui/material/Box';
 import { Container, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import {useLocation, useNavigate,  Route, Routes,} from "react-router-dom";
 import './Engine.scss';
 import {Text2xdlFeature} from "../modules/text2xdl/Text2xdl";
 import {SearchFeature} from "../modules/search/search";
 import { DrugSynthesisFeature } from "../modules/drug-synthesis/drug-synthesis-feature";
-
+import TextField from '@mui/material/TextField';
 
 export const Engine = () => {
   let [loading, setLoading] = useState(true);
@@ -39,10 +38,7 @@ export const Engine = () => {
   }
 
   const location = useLocation()
-  const handleChange = (event, newValue) => {
-    console.log(newValue);
-    //navigate(newValue, true);
-  };
+
 
   return (
     <DashboardLayout style={{height: '100%'}}>
@@ -51,13 +47,21 @@ export const Engine = () => {
         <h1 className="searchEngine-heading">Search Engine</h1>
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <Input
+            <TextField
               fullWidth
-              className="searchEngine-input"
-              placeholder="Search for..."
-              inputProps='description'
+              id="standard-basic"
               value={text}
               onChange={e => setText(e.target.value)}
+              variant="standard"
+              placeholder="Search for..."
+              className="searchEngine-input"
+              inputProps={{
+                style: {
+                  height: "41px",
+                  paddingLeft: '10px'
+                },
+              }}
+
             />
           </Grid>
           <Grid item style={{paddingLeft: '0px'}}>
