@@ -190,6 +190,10 @@
 
 .table-footer{
     position: absolute !important;
-    bottom: 50px;
-    margin-left: 20px !important;
+    bottom: 23px;
+    left: 27px;
+}
+
+.MuiDataGrid-selectedRowCount {
+    visibility: hidden !important;
 }

@@ -28,10 +28,14 @@ export const SearchFeature = (text) => {
   const [selecteddrug, setselecteddrug] = useState('');
   const [selectedtarget, setselectedtarget] = useState('');
   const [selectedDrugs, setSelectedDrugs] = useState([]);
+  const [rowClick, setRowClick] = useState(false);
   const url = `https://api.prepaire.com/drug-search`;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const drugs = data && data.result && 'drugs' in data.result ?  Object.entries(data.result.drugs).map(([_key, _value]) => ({'title': _key, 'counter':_value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics })) : []
   const targets = data && data.result && 'targets' in data.result ? Object.entries(data.result.targets).map(([_key, _value]) => ({ 'title': _key, 'counter':_value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics  })) : [];
+
+  const [selectionDrugModel, setSelectionDrugModel] = useState([`${text.name.toLowerCase()}`]);
+  const [selectionTargetModel, setSelectionTargetModel] = useState([]);
 
   const {state, dispatch} = useDashboardContext();
   const navigate = useNavigate();
@@ -47,7 +51,17 @@ export const SearchFeature = (text) => {
     setrowDrugs(data.pmids);
   }
 
+  function viewLiterature(data){
+    if(data) {
+      setTimeout(() => {
+        setselecteddrug(data[0].title);
+        setrowDrugs(data[0].pmids);
+      }, 0);
+    }
+  }
+
   function targetshandleClick(data) {
+    console.log(data);
     setselectedtarget((data.title))
     setrowTargets(data.pmids);
   }
@@ -70,14 +84,14 @@ export const SearchFeature = (text) => {
     navigate("/dashboard");
   }
 
-  const TableFooter = ({tableName}) => {
-    return (
-      <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
-        <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
-        Upload selected Data to {tableName}
-      </Button>
-    )
-  }
+  // const TableFooter = ({tableName}) => {
+  //   return (
+  //     <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
+  //       <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
+  //       Upload selected Data to {tableName}
+  //     </Button>
+  //   )
+  // }
 
 //   const CustomPagination = () => {
 //     const { state, apiRef, options } = useGridSelector(apiRef, gridPageSizeSelector);
@@ -93,35 +107,33 @@ export const SearchFeature = (text) => {
 // }
 
   const drugsColumns = [
-    { field: '' , headerName: '', width: 70 },
-    { field: `title`, headerName: 'Drug Name', width: 150 },
+    { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1 },
     {
       field: `metrics['(Search + {}) Publications']`,
       headerName: '(Search + Drug)Publications',
-      width: 250,
+      minWidth: 250,
       valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
     },
     {
       field: `metrics['{} Publications']`,
       headerName: 'Drug Publications',
-      width: 120,
+      minWidth: 120, flex: 1,
       valueGetter: (params) => params.row.metrics['{} Publications'],
     },
   ];
 
   const protienColumns = [
-    { field: '' , headerName: '', width: 70 },
-    { field: `title`, headerName: 'Target Name', width: 150 },
+    { field: `title`, headerName: 'Target Name', minWidth: 150, flex: 1 },
     {
       field: `metrics['(Search + {}) Publications']`,
       headerName: '(Search + Target)Publications',
-      width: 250,
+      minWidth: 250,
       valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
     },
     {
       field: `metrics['{} Publications']`,
       headerName: 'Target Publications',
-      width: 120,
+      minWidth: 120, flex: 1,
       valueGetter: (params) => params.row.metrics['{} Publications'],
     },
   ];
@@ -150,9 +162,15 @@ export const SearchFeature = (text) => {
                         pageSize={5}
                         rowsPerPageOptions={[5]}
                         checkboxSelection
-                        getRowId={(row) => row.counter}
+                        getRowId={(row) => row.title.toLowerCase()}
                         getRowHeight={() => 'auto'}
-                        onRowClick={(param) => drughandleClick(param.row)}
+                        onRowClick={(param) => {
+                          drughandleClick(param.row)
+                          setRowClick(!rowClick)
+                          // console.log(rowClick)
+                        }
+                        }
+                        disableSelectionOnClick
                         pagination
                         // components={{
                         //   Footer: TableFooter,
@@ -160,15 +178,25 @@ export const SearchFeature = (text) => {
                         // componentsProps={{
                         //   footer: { tableName : "<<Drug interaction>>" },
                         // }}
+                        selectionModel={selectionDrugModel}
                         onSelectionModelChange={(ids) => {
+                          setSelectionDrugModel(ids);
                           const selectedIDs = new Set(ids);
-                          const selectedRows = drugs.filter((row) =>
-                            selectedIDs.has(row.counter)
-                          );
+                          const selectedRows = drugs.filter((row) => selectedIDs.has(row.title.toLowerCase()));
                           setSelectedDrugs(selectedRows);
+
+                          const lastRowID = [...selectedIDs].pop()
+                          const selectedRowData = drugs.filter((row) => row.title.toLowerCase() === lastRowID );
+                          viewLiterature(selectedRowData)
                         }}
+
+                        // getRowClassName={(params) => rowClick ? 'selected-bg' : ''}
                       />
                     }
+                    <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
+                      <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
+                      Upload selected Data to Drug Interactions
+                    </Button>
                   </AccordionDetails>
                 </Accordion>
               </Grid>
@@ -185,16 +213,16 @@ export const SearchFeature = (text) => {
                     <div className="literature-list">
                       {
                         rowdrugs.length > 0 ? <ul>
-                        {
-                          rowdrugs.map((row) => (
-                            <li key={row.pmid}>
-                              <a href={row.url} target="_blank">{row.title}</a>
-                            </li>
-                          ))
-                        }
-                      </ul>
-                    : ''
-                  }
+                          {
+                            rowdrugs.map((row) => (
+                                <li key={row.pmid}>
+                                  <a href={row.url} target="_blank">{row.title}</a>
+                                </li>
+                              ))
+                            }
+                          </ul>
+                          : ''
+                      }
                 </div>
               </AccordionDetails>
             </Accordion>
@@ -222,6 +250,17 @@ export const SearchFeature = (text) => {
                       checkboxSelection
                       getRowId={(row) => row.counter}
                       getRowHeight={() => 'auto'}
+                      hideFooterSelectedRowCount
+                      selectionModel={selectionTargetModel}
+                      onSelectionModelChange={(selection) => {
+                        if (selection.length > 1) {
+                          const selectionSet = new Set(selectionTargetModel);
+                          const result = selection.filter((s) => !selectionSet.has(s));
+                          setSelectionTargetModel(result);
+                        } else {
+                          setSelectionTargetModel(selection);
+                        }
+                      }}
                       onRowClick={(param) => targetshandleClick(param.row)}
                     />
                   }
