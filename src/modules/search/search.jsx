@@ -61,19 +61,18 @@ export const SearchFeature = (text) => {
   }
 
   function targetshandleClick(data) {
-    console.log(data);
     setselectedtarget((data.title))
     setrowTargets(data.pmids);
   }
 
 
   const uploadSelectedDrugs = async () => {
-    selectedDrugs.forEach(drug => {
-      const url = `${Endpoints.drugbank.drugs}${drug.title}?page=${0}`;
+    selectionDrugModel.forEach(drug => {
+      const url = `${Endpoints.drugbank.drugs}${drug}?page=${0}`;
       axios.get(url).then(resp => {
         if(resp.data) {
           for(let i = 0; i<resp.data.items.length; i++) {
-            if(resp.data.items[i].name === drug.title) {
+            if(resp.data.items[i].name.toLowerCase() === drug) {
               dispatch({type: 'addMolecule', payload: resp.data.items[i]})
               return;
             }
@@ -82,6 +81,17 @@ export const SearchFeature = (text) => {
       })
     });
     navigate("/dashboard");
+  }
+
+  const uploadTargetDrugs = async () => {
+    const url = `${Endpoints.drugbank.targets}${selectedtarget}`;
+    axios.get(url).then(resp => {
+      if(resp.data) {
+        dispatch({type: 'addProtein', payload: resp.data[0]});
+        uploadSelectedDrugs();
+        navigate("/dashboard");
+      }
+    });
   }
 
   // const TableFooter = ({tableName}) => {
@@ -264,6 +274,10 @@ export const SearchFeature = (text) => {
                       onRowClick={(param) => targetshandleClick(param.row)}
                     />
                   }
+                <Button variant="outlined" onClick={uploadTargetDrugs} className="table-footer">
+                  <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
+                  Upload selected Data to Drug Interactions
+                </Button>
                 </AccordionDetails>
               </Accordion>
             </Grid>
