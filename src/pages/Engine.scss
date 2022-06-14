@@ -189,6 +189,11 @@
 }
 
 .table-footer{
-    padding-left: 20px;
-    color: #5645ba !important;
+    position: absolute !important;
+    bottom: 23px;
+    left: 27px;
+}
+
+.MuiDataGrid-selectedRowCount {
+    visibility: hidden !important;
 }

@@ -89,7 +89,7 @@ const reducer = (state, action) => {
     selectPdb: (pdbid) => ({
       ...state,
       pdbid
-    })
+    }),
   }
   return actions[action.type](action.payload);
 }

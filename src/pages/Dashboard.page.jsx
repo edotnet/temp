@@ -15,7 +15,6 @@ import './Dashboard.scss'
 
 export const Dashboard = () => {
   const {state, dispatch} = useDashboardContext();
-
   const setDetail = (molecule) => (e) => {
     molecule.coordinates = {
       x: e.clientX,
