@@ -16,7 +16,9 @@ import Button from '@mui/material/Button';
 import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
 import dtiimage from '../../assets/img/table-dti-icon.svg';
 import TextField from '@mui/material/TextField';
-
+import Chip from '@mui/material/Chip';
+import { Box } from "@mui/material";
+import "./search.scss";
 
 export const SearchFeature = () => {
   const [rowtargets, setrowTargets] = useState([]);
@@ -156,7 +158,7 @@ export const SearchFeature = () => {
   return (
     <div className="searchDefault">
       <Grid container spacing={2} style={{marginTop: '20px', marginBottom: '20px'}}>
-        <Grid item xs={4} style={{paddingLeft: '0px'}}>
+        <Grid item xs={4}>
           <TextField
             fullWidth
             id="standard-basic"
@@ -176,10 +178,34 @@ export const SearchFeature = () => {
         <Grid item style={{paddingLeft: '0px'}}>
           <Button className='searchEngin-headerbtn btn-white' variant="outlined" onClick={onRun}>Search</Button>
         </Grid>
+        <Grid item>
+          {
+            data && data.result ? <div>
+              <Box className="selecteddata_dti" boxShadow={3}>
+                <h4 className="heading">Selected data to drug interaction</h4>
+                <h4 className="drugs">Drugs</h4>
+                {
+                  selectionDrugModel.length > 0  ? selectionDrugModel.map(item => {
+                    return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />
+                  }) : ''
+                }
+                <h4 className="proteins">Proteins</h4>
+                {
+                  selectionTargetModel.length > 0  ? selectionTargetModel.map(item => {
+                    return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />
+                  }) : ''
+                }
+                <Button className="uploadbtn" variant="outlined" onClick={uploadTargetDrugs}>
+                  <img src={dtiimage} alt="image"/>
+                  <span className="text">Upload</span>
+                </Button>
+              </Box>
+            </div> : ''
+          }
+        </Grid>
       </Grid>
       {
         data && data.result ? <div>
-          <h2>Results</h2>
           <section id='title-wrapper'>
             <div className='title'>Related Drugs</div>
             <div className='line'></div>
@@ -222,10 +248,10 @@ export const SearchFeature = () => {
                       getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
                   }
-                  <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
-                    <img style={{ paddingRight: '10px' }} src={dtiimage} alt="image" />
-                    Upload selected Data to Drug Interactions
-                  </Button>
+                  {/*<Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">*/}
+                  {/*  <img style={{ paddingRight: '10px' }} src={dtiimage} alt="image" />*/}
+                  {/*  Upload selected Data to Drug Interactions*/}
+                  {/*</Button>*/}
                 </AccordionDetails>
               </Accordion>
             </Grid>
@@ -235,9 +261,7 @@ export const SearchFeature = () => {
                   <Typography>Drug Literature</Typography>
                 </AccordionSummary>
                 <AccordionDetails id="style-3" style={{ height: '400px', overflowY: 'auto' }}>
-                  {
 
-                  }
                   {
                     selecteddrug !== '' ?
                       <p><b>Publications that contain contain the search query and  <span style={{ color: '#5645ba' }}>{selecteddrug}</span></b></p> : ''
@@ -261,7 +285,7 @@ export const SearchFeature = () => {
             </Grid>
           </Grid>
           <section id='title-wrapper'>
-            <div className='title'>Related Target Protiens</div>
+            <div className='title'>Related Target Proteins</div>
             <div className='line'></div>
             <div className='line'></div>
           </section>
@@ -269,7 +293,7 @@ export const SearchFeature = () => {
             <Grid item xs={6}>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5a-content" id="panel5a-header">
-                  <Typography>Target Protien Results</Typography>
+                  <Typography>Target Protein Results</Typography>
                 </AccordionSummary>
                 <AccordionDetails id="style-3" style={{ height: '400px', overflowY: 'auto' }}>
                   {
@@ -280,7 +304,7 @@ export const SearchFeature = () => {
                       pageSize={5}
                       rowsPerPageOptions={[5]}
                       checkboxSelection
-                      getRowId={(row) => row.counter}
+                      getRowId={(row) => row.title.toLowerCase()}
                       getRowHeight={() => 'auto'}
                       hideFooterSelectedRowCount
                       selectionModel={selectionTargetModel}
@@ -296,10 +320,10 @@ export const SearchFeature = () => {
                       onRowClick={(param) => targetshandleClick(param.row)}
                     />
                   }
-                <Button variant="outlined" onClick={uploadTargetDrugs} className="table-footer">
-                  <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
-                  Upload selected Data to Drug Interactions
-                </Button>
+                {/*<Button variant="outlined" onClick={uploadTargetDrugs} className="table-footer">*/}
+                {/*  <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>*/}
+                {/*  Upload selected Data to Drug Interactions*/}
+                {/*</Button>*/}
                 </AccordionDetails>
               </Accordion>
             </Grid>
