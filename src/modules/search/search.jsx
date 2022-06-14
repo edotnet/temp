@@ -4,12 +4,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import Table from '@mui/material/Table';
-// import TableBody from '@mui/material/TableBody';
-// import TableCell from '@mui/material/TableCell';
-// import TableContainer from '@mui/material/TableContainer';
-// import TableHead from '@mui/material/TableHead';
-// import TableRow from '@mui/material/TableRow';
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from 'react';
 import { DataGrid, GridValueGetterParams } from '@mui/x-data-grid';
@@ -21,8 +15,10 @@ import axios from 'axios';
 import Button from '@mui/material/Button';
 import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
 import dtiimage from '../../assets/img/table-dti-icon.svg';
+import TextField from '@mui/material/TextField';
 
-export const SearchFeature = (text) => {
+
+export const SearchFeature = () => {
   const [rowtargets, setrowTargets] = useState([]);
   const [rowdrugs, setrowDrugs] = useState([]);
   const [selecteddrug, setselecteddrug] = useState('');
@@ -33,21 +29,29 @@ export const SearchFeature = (text) => {
   const { loading, data, error, fetch } = useApiCall(url, 'POST', null, false);
   const drugs = data && data.result && 'drugs' in data.result ? Object.entries(data.result.drugs).map(([_key, _value]) => ({ 'title': _key, 'counter': _value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics })) : []
   const targets = data && data.result && 'targets' in data.result ? Object.entries(data.result.targets).map(([_key, _value]) => ({ 'title': _key, 'counter': _value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics })) : [];
-  const defaultSelectRow = text.name.toLowerCase();
-  const [selectionDrugModel, setSelectionDrugModel] = useState([`${defaultSelectRow}`]);
-  const [selectionTargetModel, setSelectionTargetModel] = useState([]);
 
   const { state, dispatch } = useDashboardContext();
   const navigate = useNavigate();
+  const [text, setText] = useState('');
 
-  useEffect(() => {
-    fetch(url, 'POST', { drug: text.name, filter1: true, pmids: true });
+  const [selectionDrugModel, setSelectionDrugModel] = useState([]);
 
-    if (drugs.length > 0) {
-      const defaultRow = drugs.filter((row) => row.title.toLowerCase() === defaultSelectRow);
-      viewLiterature(defaultRow)
+  const [selectionTargetModel, setSelectionTargetModel] = useState([]);
+  const [Loadingresult, setLoadingresult] = useState(false);
+
+  const onRun = () => {
+    const defaultSelectRow = text.toLowerCase();
+    setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultSelectRow}`]);
+    fetch(url, 'POST', { drug: text, filter1: true, pmids: true });
+    setLoadingresult(true);
+    if(data && data.result) {
+      if (drugs.length > 0) {
+        const defaultRow = drugs.filter((row) => row.title.toLowerCase() === defaultSelectRow);
+        viewLiterature(defaultRow)
+      }
     }
-  }, []);
+  }
+
 
   function drughandleClick(data) {
     setselecteddrug(data.title);
@@ -55,7 +59,7 @@ export const SearchFeature = (text) => {
   }
 
   function viewLiterature(data) {
-    if (data) {
+    if (data.length > 0) {
       setTimeout(() => {
         setselecteddrug(data[0].title);
         setrowDrugs(data[0].pmids);
@@ -91,7 +95,6 @@ export const SearchFeature = (text) => {
       if(resp.data) {
         dispatch({type: 'addProtein', payload: resp.data[0]});
         uploadSelectedDrugs();
-        navigate("/dashboard");
       }
     });
   }
@@ -152,8 +155,30 @@ export const SearchFeature = (text) => {
 
   return (
     <div className="searchDefault">
+      <Grid container spacing={2} style={{marginTop: '20px', marginBottom: '20px'}}>
+        <Grid item xs={4} style={{paddingLeft: '0px'}}>
+          <TextField
+            fullWidth
+            id="standard-basic"
+            value={text}
+            onChange={e => setText(e.target.value)}
+            variant="standard"
+            placeholder="Search for..."
+            className="searchEngine-input"
+            inputProps={{
+              style: {
+                height: "41px",
+                paddingLeft: '10px'
+              },
+            }}
+          />
+        </Grid>
+        <Grid item style={{paddingLeft: '0px'}}>
+          <Button className='searchEngin-headerbtn btn-white' variant="outlined" onClick={onRun}>Search</Button>
+        </Grid>
+      </Grid>
       {
-        drugs.length > 0 ? <div>
+        data && data.result ? <div>
           <h2>Results</h2>
           <section id='title-wrapper'>
             <div className='title'>Related Drugs</div>
@@ -302,7 +327,7 @@ export const SearchFeature = (text) => {
               </Accordion>
             </Grid>
           </Grid>
-        </div> : <CircularProgressComponent />
+        </div> : Loadingresult === true ? <div style={{height: '500px', position: 'relative', }}> <CircularProgressComponent /> </div>: ''
       }
     </div>
   )
