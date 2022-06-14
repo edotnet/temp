@@ -42,17 +42,24 @@ export const SearchFeature = () => {
   const [Loadingresult, setLoadingresult] = useState(false);
 
   const onRun = () => {
-    const defaultSelectRow = text.toLowerCase();
-    setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultSelectRow}`]);
     fetch(url, 'POST', { drug: text, filter1: true, pmids: true });
     setLoadingresult(true);
+  }
+
+  useEffect(() => {
     if(data && data.result) {
       if (drugs.length > 0) {
+        const defaultSelectRow = text.toLowerCase();
+        setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultSelectRow}`]);
         const defaultRow = drugs.filter((row) => row.title.toLowerCase() === defaultSelectRow);
-        viewLiterature(defaultRow)
+        viewLiterature(defaultRow);
+        const defaultTarget = targets[0].title.toLowerCase();
+        setSelectionTargetModel(selectionTargetModel => [...selectionTargetModel, `${defaultTarget}`]);
       }
     }
-  }
+  }, [data]);
+
+  
 
 
   function drughandleClick(data) {
@@ -314,7 +321,7 @@ export const SearchFeature = () => {
                           const result = selection.filter((s) => !selectionSet.has(s));
                           setSelectionTargetModel(result);
                         } else {
-                          setSelectionTargetModel(selection);
+                          setSelectionTargetModel(selection => [...selectionTargetModel, selection]);
                         }
                       }}
                       onRowClick={(param) => targetshandleClick(param.row)}
