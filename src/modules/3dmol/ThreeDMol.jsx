@@ -45,10 +45,9 @@ export const ThreeDMol = () => {
           <Box>
             <div ref={ref} id="gldiv" style={{height: 300, width: 400, position: 'relative'}}
                 className="viewer_3Dmoljs"
-                data-backgroundcolor="0xffffff"
+                data-backgroundcolor="#f5f6fc"
                 data-pdb="2nbd"
-                data-style='{"cartoon":{"color": "spectrum"}}'
-                data-ui='true'/>
+                data-style="cartoon"/>
           </Box>
         </AccordionDetails>
       </Accordion>}
