@@ -20,6 +20,7 @@ export const ThreeDMol = () => {
       );
       viewer.clear();
       $3Dmol.download(`pdb:${state.pdbid}`, viewer, {format: 'pdb', colorschema: 'spectral'}, () => {
+        viewer.setStyle({cartoon:{color:'spectrum'}});
         viewer.zoomTo();
         viewer.render();
       })
