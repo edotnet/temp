@@ -24,7 +24,7 @@ export const SearchFeature = () => {
   const [selecteddrug, setselecteddrug] = useState('');
   const [selectedtarget, setselectedtarget] = useState('');
   const [selectedDrugs, setSelectedDrugs] = useState([]);
-  const [rowClick, setRowClick] = useState(false);
+  const [clickedRow, setClickedRow] = useState('');
   const url = `https://api.prepaire.com/drug-search`;
   const { loading, data, error, fetch } = useApiCall(url, 'POST', null, false);
   const drugs = data && data.result && 'drugs' in data.result ? Object.entries(data.result.drugs).map(([_key, _value]) => ({ 'title': _key, 'counter': _value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics })) : []
@@ -202,9 +202,9 @@ export const SearchFeature = () => {
                       getRowId={(row) => row.title.toLowerCase()}
                       getRowHeight={() => 'auto'}
                       onRowClick={(param) => {
-                        drughandleClick(param.row)
-                        // setRowClick(!rowClick)
-                      }
+                          drughandleClick(param.row)
+                          setClickedRow(param.row.title.toLowerCase())
+                        }
                       }
                       disableSelectionOnClick
                       pagination
@@ -219,8 +219,7 @@ export const SearchFeature = () => {
                         const selectedRowData = drugs.filter((row) => row.title.toLowerCase() === lastRowID);
                         viewLiterature(selectedRowData)
                       }}
-
-                    // getRowClassName={(params) => rowClick ? 'selected-bg' : ''}
+                      getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
                   }
                   <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
@@ -236,6 +235,9 @@ export const SearchFeature = () => {
                   <Typography>Drug Literature</Typography>
                 </AccordionSummary>
                 <AccordionDetails id="style-3" style={{ height: '400px', overflowY: 'auto' }}>
+                  {
+
+                  }
                   {
                     selecteddrug !== '' ?
                       <p><b>Publications that contain contain the search query and  <span style={{ color: '#5645ba' }}>{selecteddrug}</span></b></p> : ''
