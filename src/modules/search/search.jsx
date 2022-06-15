@@ -139,6 +139,21 @@ export const SearchFeature = () => {
     }
   };
 
+  const ProteinOnCellClick = (params) => {
+    if(params.field === 'title') {
+      const url = `${Endpoints.drugbank.targets}${params.value}`;
+      axios.get(url).then(resp => {
+        if (resp.data) {
+          for (let i = 0; i < resp.data.length; i++) {
+            if (resp.data[i].name === params.value) {
+              console.log(resp.data[i]);
+            }
+          }
+        }
+      })
+    }
+  }
+
   // const TableFooter = ({tableName}) => {
   //   return (
   //     <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
@@ -351,6 +366,7 @@ export const SearchFeature = () => {
                       getRowHeight={() => 'auto'}
                       hideFooterSelectedRowCount
                       selectionModel={selectionTargetModel}
+                      onCellClick={ProteinOnCellClick}
                       onSelectionModelChange={(selection) => {
                         if (selection.length > 1) {
                           const selectionSet = new Set(selectionTargetModel);
