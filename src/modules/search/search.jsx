@@ -66,15 +66,13 @@ export const SearchFeature = () => {
   useEffect(() => {
     if(data && data.result) {
       if (drugs.length > 0) {
-        const defaultSelectRow = text.toLowerCase();
-        setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultSelectRow}`]);
-        const defaultRow = drugs.filter((row) => row.title.toLowerCase() === defaultSelectRow);
-        viewLiterature(defaultRow);
+        const defaultDrug = text.toLowerCase();
+        setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultDrug}`]);
+        const defaultDrugRow = drugs.filter((row) => row.title.toLowerCase() === defaultDrug);
+        viewDrugLiterature(defaultDrugRow);
         const defaultTarget = targets[0].title.toLowerCase();
-        // setSelectionTargetModel(selectionTargetModel => [...selectionTargetModel, `${defaultTarget}`]);
         setSelectionTargetModel([`${defaultTarget}`]);
         const defaultTargetRow = targets.filter((row) => row.title.toLowerCase() === defaultTarget);
-        console.log(defaultTargetRow);
         viewTargetLiterature(defaultTargetRow)
       }
     }
@@ -86,7 +84,7 @@ export const SearchFeature = () => {
     setrowDrugs(data.pmids);
   }
 
-  function viewLiterature(data) {
+  function viewDrugLiterature(data) {
     if (data.length > 0) {
       setTimeout(() => {
         setselecteddrug(data[0].title);
@@ -94,6 +92,7 @@ export const SearchFeature = () => {
       }, 0);
     }
   }
+
   function viewTargetLiterature(data) {
     if (data.length > 0) {
       setTimeout(() => {
@@ -108,7 +107,6 @@ export const SearchFeature = () => {
     setselectedtarget((data.title))
     setrowTargets(data.pmids);
   }
-
 
   const uploadSelectedDrugs = async () => {
     selectionDrugModel.forEach(drug => {
@@ -300,9 +298,6 @@ export const SearchFeature = () => {
                         const selectedIDs = new Set(ids);
                         const selectedRows = drugs.filter((row) => selectedIDs.has(row.title.toLowerCase()));
                         setSelectedDrugs(selectedRows);
-
-                        console.log("ids", ids)
-                        console.log("selectedRows", selectedRows)
                       }}
                       getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
