@@ -180,7 +180,12 @@ export const SearchFeature = () => {
   ];
 
   const protienColumns = [
-    { field: `title`, headerName: 'Target Name', minWidth: 150, flex: 1 },
+    {
+      field: `title`, headerName: 'Target Name', minWidth: 150, flex: 1,
+      renderCell: (params) => (
+        <span className='link-btn'>{params.value}</span>
+      ),
+    },
     {
       field: `metrics['(Search + {}) Publications']`,
       headerName: '(Search + Target)Publications',
