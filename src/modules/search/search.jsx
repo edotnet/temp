@@ -59,8 +59,6 @@ export const SearchFeature = () => {
     }
   }, [data]);
 
-  
-
 
   function drughandleClick(data) {
     setselecteddrug(data.title);
@@ -252,10 +250,6 @@ export const SearchFeature = () => {
                         const selectedIDs = new Set(ids);
                         const selectedRows = drugs.filter((row) => selectedIDs.has(row.title.toLowerCase()));
                         setSelectedDrugs(selectedRows);
-
-                        const lastRowID = [...selectedIDs].pop()
-                        const selectedRowData = drugs.filter((row) => row.title.toLowerCase() === lastRowID);
-                        viewLiterature(selectedRowData)
                       }}
                       getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
