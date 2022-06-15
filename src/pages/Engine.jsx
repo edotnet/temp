@@ -30,7 +30,7 @@ export const Engine = () => {
         {/* <Typography variant="h5" className="title searchEngine-heading" color="secondary">Search Engine</Typography> */}
         <h1 className="searchEngine-heading">Search Engine</h1>
         <Grid container spacing={2}>
-          <Grid item style={{paddingLeft: '0px'}}>
+          <Grid item>
             <Button className={`searchEngin-headerbtn ${active === "search" && 'active'}`} variant="outlined" onClick={linkToroute('search')}>Search Page</Button>
           </Grid>
           <Grid item>

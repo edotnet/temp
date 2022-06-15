@@ -40,7 +40,7 @@ export const Login = () => {
       loginRef.current.classList.toggle('hidden');
       successRef.current.classList.toggle('open')
       setTimeout(() => {
-        navigate('/engine', true);
+        navigate('/engine/search', true);
       }, 1000);
     } else {
       setMessage('Wrong email or password, please try again.');

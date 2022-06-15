@@ -16,6 +16,10 @@ import Button from '@mui/material/Button';
 import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
 import dtiimage from '../../assets/img/table-dti-icon.svg';
 import TextField from '@mui/material/TextField';
+import Chip from '@mui/material/Chip';
+import { Box } from "@mui/material";
+import "./search.scss";
+import Modal from '@mui/material/Modal';
 
 
 export const SearchFeature = () => {
@@ -24,7 +28,7 @@ export const SearchFeature = () => {
   const [selecteddrug, setselecteddrug] = useState('');
   const [selectedtarget, setselectedtarget] = useState('');
   const [selectedDrugs, setSelectedDrugs] = useState([]);
-  const [rowClick, setRowClick] = useState(false);
+  const [clickedRow, setClickedRow] = useState('');
   const url = `https://api.prepaire.com/drug-search`;
   const { loading, data, error, fetch } = useApiCall(url, 'POST', null, false);
   const drugs = data && data.result && 'drugs' in data.result ? Object.entries(data.result.drugs).map(([_key, _value]) => ({ 'title': _key, 'counter': _value.counter, 'pmids': _value.item_pmids, 'metrics': _value.metrics })) : []
@@ -39,18 +43,40 @@ export const SearchFeature = () => {
   const [selectionTargetModel, setSelectionTargetModel] = useState([]);
   const [Loadingresult, setLoadingresult] = useState(false);
 
+  const [open, setOpen] = useState(false);
+  const [modalData, setModalData] = useState([]);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
   const onRun = () => {
-    const defaultSelectRow = text.toLowerCase();
-    setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultSelectRow}`]);
     fetch(url, 'POST', { drug: text, filter1: true, pmids: true });
     setLoadingresult(true);
+  }
+
+  useEffect(() => {
     if(data && data.result) {
       if (drugs.length > 0) {
+        const defaultSelectRow = text.toLowerCase();
+        setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultSelectRow}`]);
         const defaultRow = drugs.filter((row) => row.title.toLowerCase() === defaultSelectRow);
-        viewLiterature(defaultRow)
+        viewLiterature(defaultRow);
+        const defaultTarget = targets[0].title.toLowerCase();
+        setSelectionTargetModel(selectionTargetModel => [...selectionTargetModel, `${defaultTarget}`]);
       }
     }
-  }
+  }, [data]);
 
 
   function drughandleClick(data) {
@@ -90,7 +116,7 @@ export const SearchFeature = () => {
   }
 
   const uploadTargetDrugs = async () => {
-    const url = `${Endpoints.drugbank.targets}${selectedtarget}`;
+    const url = `${Endpoints.drugbank.targets}${selectionTargetModel[0]}`;
     axios.get(url).then(resp => {
       if(resp.data) {
         dispatch({type: 'addProtein', payload: resp.data[0]});
@@ -98,6 +124,20 @@ export const SearchFeature = () => {
       }
     });
   }
+
+  const handleOnCellClick = (params) => {
+    if(params.field === 'title') { 
+      const url = `${Endpoints.drugbank.drugs}${params.value}?page=${0}`;
+      axios.get(url).then(resp => {
+        if (resp.data) {
+          setModalData(resp.data.items[0]);
+        }
+      });
+      setTimeout(() => { 
+        handleOpen();
+      }, 1000);
+    }
+  };
 
   // const TableFooter = ({tableName}) => {
   //   return (
@@ -135,6 +175,14 @@ export const SearchFeature = () => {
       minWidth: 120, flex: 1,
       valueGetter: (params) => params.row.metrics['{} Publications'],
     },
+    // {
+    //   headerName: 'Options',
+    //   minWidth: 50,
+    //   flex: 1,
+    //   renderCell: () => (
+    //     <Button variant="outline" color="primary" size="small" onClick={detailcard}> Detail </Button>
+    //   ),
+    // }
   ];
 
   const protienColumns = [
@@ -156,7 +204,7 @@ export const SearchFeature = () => {
   return (
     <div className="searchDefault">
       <Grid container spacing={2} style={{marginTop: '20px', marginBottom: '20px'}}>
-        <Grid item xs={4} style={{paddingLeft: '0px'}}>
+        <Grid item xs={4}>
           <TextField
             fullWidth
             id="standard-basic"
@@ -176,10 +224,34 @@ export const SearchFeature = () => {
         <Grid item style={{paddingLeft: '0px'}}>
           <Button className='searchEngin-headerbtn btn-white' variant="outlined" onClick={onRun}>Search</Button>
         </Grid>
+        <Grid item>
+          {
+            data && data.result ? <div>
+              <Box className="selecteddata_dti" boxShadow={3}>
+                <h4 className="heading">Selected data to drug interaction</h4>
+                <h4 className="drugs">Drugs</h4>
+                {
+                  selectionDrugModel.length > 0  ? selectionDrugModel.map(item => {
+                    return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />
+                  }) : ''
+                }
+                <h4 className="proteins">Proteins</h4>
+                {
+                  selectionTargetModel.length > 0  ? selectionTargetModel.map(item => {
+                    return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />
+                  }) : ''
+                }
+                <Button className="uploadbtn" variant="outlined" onClick={uploadTargetDrugs}>
+                  <img src={dtiimage} alt="image"/>
+                  <span className="text">Upload</span>
+                </Button>
+              </Box>
+            </div> : ''
+          }
+        </Grid>
       </Grid>
       {
         data && data.result ? <div>
-          <h2>Results</h2>
           <section id='title-wrapper'>
             <div className='title'>Related Drugs</div>
             <div className='line'></div>
@@ -202,31 +274,27 @@ export const SearchFeature = () => {
                       getRowId={(row) => row.title.toLowerCase()}
                       getRowHeight={() => 'auto'}
                       onRowClick={(param) => {
-                        drughandleClick(param.row)
-                        // setRowClick(!rowClick)
-                      }
+                          drughandleClick(param.row)
+                          setClickedRow(param.row.title.toLowerCase())
+                        }
                       }
                       disableSelectionOnClick
                       pagination
                       selectionModel={selectionDrugModel}
+                      onCellClick={handleOnCellClick}
                       onSelectionModelChange={(ids) => {
                         setSelectionDrugModel(ids);
                         const selectedIDs = new Set(ids);
                         const selectedRows = drugs.filter((row) => selectedIDs.has(row.title.toLowerCase()));
                         setSelectedDrugs(selectedRows);
-
-                        const lastRowID = [...selectedIDs].pop()
-                        const selectedRowData = drugs.filter((row) => row.title.toLowerCase() === lastRowID);
-                        viewLiterature(selectedRowData)
                       }}
-
-                    // getRowClassName={(params) => rowClick ? 'selected-bg' : ''}
+                      getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
                   }
-                  <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
-                    <img style={{ paddingRight: '10px' }} src={dtiimage} alt="image" />
-                    Upload selected Data to Drug Interactions
-                  </Button>
+                  {/*<Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">*/}
+                  {/*  <img style={{ paddingRight: '10px' }} src={dtiimage} alt="image" />*/}
+                  {/*  Upload selected Data to Drug Interactions*/}
+                  {/*</Button>*/}
                 </AccordionDetails>
               </Accordion>
             </Grid>
@@ -236,6 +304,7 @@ export const SearchFeature = () => {
                   <Typography>Drug Literature</Typography>
                 </AccordionSummary>
                 <AccordionDetails id="style-3" style={{ height: '400px', overflowY: 'auto' }}>
+
                   {
                     selecteddrug !== '' ?
                       <p><b>Publications that contain contain the search query and  <span style={{ color: '#5645ba' }}>{selecteddrug}</span></b></p> : ''
@@ -259,7 +328,7 @@ export const SearchFeature = () => {
             </Grid>
           </Grid>
           <section id='title-wrapper'>
-            <div className='title'>Related Target Protiens</div>
+            <div className='title'>Related Target Proteins</div>
             <div className='line'></div>
             <div className='line'></div>
           </section>
@@ -267,7 +336,7 @@ export const SearchFeature = () => {
             <Grid item xs={6}>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5a-content" id="panel5a-header">
-                  <Typography>Target Protien Results</Typography>
+                  <Typography>Target Protein Results</Typography>
                 </AccordionSummary>
                 <AccordionDetails id="style-3" style={{ height: '400px', overflowY: 'auto' }}>
                   {
@@ -278,7 +347,7 @@ export const SearchFeature = () => {
                       pageSize={5}
                       rowsPerPageOptions={[5]}
                       checkboxSelection
-                      getRowId={(row) => row.counter}
+                      getRowId={(row) => row.title.toLowerCase()}
                       getRowHeight={() => 'auto'}
                       hideFooterSelectedRowCount
                       selectionModel={selectionTargetModel}
@@ -288,16 +357,16 @@ export const SearchFeature = () => {
                           const result = selection.filter((s) => !selectionSet.has(s));
                           setSelectionTargetModel(result);
                         } else {
-                          setSelectionTargetModel(selection);
+                          setSelectionTargetModel(selection => [...selectionTargetModel, selection]);
                         }
                       }}
                       onRowClick={(param) => targetshandleClick(param.row)}
                     />
                   }
-                <Button variant="outlined" onClick={uploadTargetDrugs} className="table-footer">
-                  <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
-                  Upload selected Data to Drug Interactions
-                </Button>
+                {/*<Button variant="outlined" onClick={uploadTargetDrugs} className="table-footer">*/}
+                {/*  <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>*/}
+                {/*  Upload selected Data to Drug Interactions*/}
+                {/*</Button>*/}
                 </AccordionDetails>
               </Accordion>
             </Grid>
@@ -329,6 +398,36 @@ export const SearchFeature = () => {
           </Grid>
         </div> : Loadingresult === true ? <div style={{height: '500px', position: 'relative', }}> <CircularProgressComponent /> </div>: ''
       }
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          { modalData ? <div>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+            {/* {modalDetails && modalDetails.name} */}
+            {modalData.name}{modalData.calculated_properties ? <span> {modalData.calculated_properties['Molecular Formula']} </span>: ''}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {modalData.clinical_description}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {
+              modalData.calculated_properties ? <span>LogP: {modalData.calculated_properties.logP} </span>: ''
+            }
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {
+              modalData.calculated_properties ? <span>Molecular Weight: {modalData.calculated_properties['Molecular Weight']} </span>: ''
+            }
+          </Typography>
+
+          </div> : 'Loading'
+          }
+        </Box>
+      </Modal>
     </div>
   )
 }
