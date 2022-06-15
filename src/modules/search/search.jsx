@@ -1,8 +1,4 @@
 import Accordion from '@mui/material/Accordion';
-import Grid from '@mui/material/Grid';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from 'react';
@@ -16,10 +12,10 @@ import Button from '@mui/material/Button';
 import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
 import dtiimage from '../../assets/img/table-dti-icon.svg';
 import TextField from '@mui/material/TextField';
-import Chip from '@mui/material/Chip';
-import { Box } from "@mui/material";
+import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, } from "@mui/material";
 import "./search.scss";
-import Modal from '@mui/material/Modal';
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 
 export const SearchFeature = () => {
@@ -55,7 +51,8 @@ export const SearchFeature = () => {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: 0,
+    borderRadius: '25px',
     boxShadow: 24,
     p: 4,
   };
@@ -133,9 +130,7 @@ export const SearchFeature = () => {
           setModalData(resp.data.items[0]);
         }
       });
-      setTimeout(() => { 
-        handleOpen();
-      }, 1000);
+      handleOpen();
     }
   };
 
@@ -177,7 +172,11 @@ export const SearchFeature = () => {
   // }
 
   const drugsColumns = [
-    { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1 },
+    { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1,
+      renderCell: (params) => (
+        <span className='link-btn'>{params.value}</span>
+      ),
+    },
     {
       field: `metrics['(Search + {}) Publications']`,
       headerName: '(Search + Drug)Publications',
@@ -372,6 +371,7 @@ export const SearchFeature = () => {
                           const selectionSet = new Set(selectionTargetModel);
                           const result = selection.filter((s) => !selectionSet.has(s));
                           setSelectionTargetModel(result);
+                          // console.log("result", result)
                         } else {
                           setSelectionTargetModel(selection => [...selectionTargetModel, selection]);
                         }
@@ -420,8 +420,13 @@ export const SearchFeature = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
+
         <Box sx={style}>
-          { modalData ? <div>
+        <IconButton aria-label="close" onClick={handleClose} sx={{position: "absolute", top: 5, right: 5}} size="large">
+          <CloseIcon />
+        </IconButton>
+          <Box>
+          { modalData  ? <div>
             <Typography id="modal-modal-title" variant="h6" component="h2">
             {/* {modalDetails && modalDetails.name} */}
             {modalData.name}{modalData.calculated_properties ? <span> {modalData.calculated_properties['Molecular Formula']} </span>: ''}
@@ -442,6 +447,7 @@ export const SearchFeature = () => {
 
           </div> : 'Loading'
           }
+          </Box>
         </Box>
       </Modal>
     </div>
