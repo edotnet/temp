@@ -130,11 +130,7 @@ export const SearchFeature = () => {
       const url = `${Endpoints.drugbank.drugs}${params.value}?page=${0}`;
       axios.get(url).then(resp => {
         if (resp.data) {
-          // console.log('resp', resp.data);
           setModalData(resp.data.items[0]);
-          // const modalDetails = resp.data.items[0]
-          // console.log("modalData", modalData)
-          // console.log("modalData", modalDetails.name)
         }
       });
       setTimeout(() => { 
@@ -409,18 +405,26 @@ export const SearchFeature = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          { modalData && <div>
+          { modalData ? <div>
             <Typography id="modal-modal-title" variant="h6" component="h2">
             {/* {modalDetails && modalDetails.name} */}
-            {modalData.name}
+            {modalData.name}{modalData.calculated_properties ? <span> {modalData.calculated_properties['Molecular Formula']} </span>: ''}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {modalData.clinical_description}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {/* LogP: {modalData.calculated_properties.logP} */}
+            {
+              modalData.calculated_properties ? <span>LogP: {modalData.calculated_properties.logP} </span>: ''
+            }
           </Typography>
-          </div>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {
+              modalData.calculated_properties ? <span>Molecular Weight: {modalData.calculated_properties['Molecular Weight']} </span>: ''
+            }
+          </Typography>
+
+          </div> : 'Loading'
           }
         </Box>
       </Modal>
