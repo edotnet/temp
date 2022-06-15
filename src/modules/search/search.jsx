@@ -162,7 +162,11 @@ export const SearchFeature = () => {
   // }
 
   const drugsColumns = [
-    { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1 },
+    { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1,
+      renderCell: (params) => (
+        <span className='link-btn'>{params.value}</span>
+      ),
+    },
     {
       field: `metrics['(Search + {}) Publications']`,
       headerName: '(Search + Drug)Publications',

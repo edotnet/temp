@@ -38,3 +38,12 @@
 .MuiDataGrid-root .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer {
   display: none;
 }
+
+.link-btn{
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover{
+    color: #3352c1;
+  }
+}
