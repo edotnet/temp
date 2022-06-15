@@ -19,6 +19,8 @@ import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
 import { Box } from "@mui/material";
 import "./search.scss";
+import Modal from '@mui/material/Modal';
+
 
 export const SearchFeature = () => {
   const [rowtargets, setrowTargets] = useState([]);
@@ -40,6 +42,22 @@ export const SearchFeature = () => {
 
   const [selectionTargetModel, setSelectionTargetModel] = useState([]);
   const [Loadingresult, setLoadingresult] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
   const onRun = () => {
     fetch(url, 'POST', { drug: text, filter1: true, pmids: true });
@@ -106,6 +124,19 @@ export const SearchFeature = () => {
     });
   }
 
+  const handleOnCellClick = (params) => {
+    if(params.field === 'title') {
+      handleOpen();
+      const url = `${Endpoints.drugbank.drugs}${params.value}?page=${0}`;
+      axios.get(url).then(resp => {
+        if (resp.data) {
+          console.log('resp', resp.data);
+        }
+      });
+
+    }
+  };
+
   // const TableFooter = ({tableName}) => {
   //   return (
   //     <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
@@ -142,6 +173,14 @@ export const SearchFeature = () => {
       minWidth: 120, flex: 1,
       valueGetter: (params) => params.row.metrics['{} Publications'],
     },
+    // {
+    //   headerName: 'Options',
+    //   minWidth: 50,
+    //   flex: 1,
+    //   renderCell: () => (
+    //     <Button variant="outline" color="primary" size="small" onClick={detailcard}> Detail </Button>
+    //   ),
+    // }
   ];
 
   const protienColumns = [
@@ -158,11 +197,6 @@ export const SearchFeature = () => {
       minWidth: 120, flex: 1,
       valueGetter: (params) => params.row.metrics['{} Publications'],
     },
-    {
-      headerName: 'Options',
-      minWidth: 50,
-      flex: 1
-    }
   ];
 
   return (
@@ -245,6 +279,7 @@ export const SearchFeature = () => {
                       disableSelectionOnClick
                       pagination
                       selectionModel={selectionDrugModel}
+                      onCellClick={handleOnCellClick}
                       onSelectionModelChange={(ids) => {
                         setSelectionDrugModel(ids);
                         const selectedIDs = new Set(ids);
@@ -361,6 +396,21 @@ export const SearchFeature = () => {
           </Grid>
         </div> : Loadingresult === true ? <div style={{height: '500px', position: 'relative', }}> <CircularProgressComponent /> </div>: ''
       }
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Text in a modal
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          </Typography>
+        </Box>
+      </Modal>
     </div>
   )
 }
