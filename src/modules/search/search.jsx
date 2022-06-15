@@ -99,7 +99,7 @@ export const SearchFeature = () => {
   }
 
   const uploadTargetDrugs = async () => {
-    const url = `${Endpoints.drugbank.targets}${selectedtarget}`;
+    const url = `${Endpoints.drugbank.targets}${selectionTargetModel[0]}`;
     axios.get(url).then(resp => {
       if(resp.data) {
         dispatch({type: 'addProtein', payload: resp.data[0]});
@@ -160,6 +160,11 @@ export const SearchFeature = () => {
       minWidth: 120, flex: 1,
       valueGetter: (params) => params.row.metrics['{} Publications'],
     },
+    {
+      headerName: 'Options',
+      minWidth: 50,
+      flex: 1
+    }
   ];
 
   return (
