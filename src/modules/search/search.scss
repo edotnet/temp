@@ -47,3 +47,14 @@
     color: #3352c1;
   }
 }
+
+.search-column-popup{
+  position: 'absolute';
+  top: '50%';
+  left: '50%';
+  transform: 'translate(-50%, -50%)';
+  width: 400px;
+  border: 0;
+  border-radius: 25px;
+  padding: 2rem;
+}
