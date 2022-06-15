@@ -37,6 +37,7 @@ export const SearchFeature = () => {
   const [selectionDrugModel, setSelectionDrugModel] = useState([]);
 
   const [selectionTargetModel, setSelectionTargetModel] = useState([]);
+  const [selectedProteins, setSelectedProteins] = useState([]);
   const [Loadingresult, setLoadingresult] = useState(false);
 
   const [open, setOpen] = useState(false);
@@ -70,7 +71,11 @@ export const SearchFeature = () => {
         const defaultRow = drugs.filter((row) => row.title.toLowerCase() === defaultSelectRow);
         viewLiterature(defaultRow);
         const defaultTarget = targets[0].title.toLowerCase();
-        setSelectionTargetModel(selectionTargetModel => [...selectionTargetModel, `${defaultTarget}`]);
+        // setSelectionTargetModel(selectionTargetModel => [...selectionTargetModel, `${defaultTarget}`]);
+        setSelectionTargetModel([`${defaultTarget}`]);
+        const defaultTargetRow = targets.filter((row) => row.title.toLowerCase() === defaultTarget);
+        console.log(defaultTargetRow);
+        viewTargetLiterature(defaultTargetRow)
       }
     }
   }, [data]);
@@ -89,8 +94,17 @@ export const SearchFeature = () => {
       }, 0);
     }
   }
+  function viewTargetLiterature(data) {
+    if (data.length > 0) {
+      setTimeout(() => {
+        setselectedtarget(data[0].title);
+        setrowTargets(data[0].pmids);
+      }, 0);
+    }
+  }
 
   function targetshandleClick(data) {
+    console.log(data)
     setselectedtarget((data.title))
     setrowTargets(data.pmids);
   }
@@ -286,6 +300,9 @@ export const SearchFeature = () => {
                         const selectedIDs = new Set(ids);
                         const selectedRows = drugs.filter((row) => selectedIDs.has(row.title.toLowerCase()));
                         setSelectedDrugs(selectedRows);
+
+                        console.log("ids", ids)
+                        console.log("selectedRows", selectedRows)
                       }}
                       getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
@@ -351,16 +368,30 @@ export const SearchFeature = () => {
                       hideFooterSelectedRowCount
                       selectionModel={selectionTargetModel}
                       onSelectionModelChange={(selection) => {
+                        setSelectedProteins(selection)
                         if (selection.length > 1) {
                           const selectionSet = new Set(selectionTargetModel);
                           const result = selection.filter((s) => !selectionSet.has(s));
                           setSelectionTargetModel(result);
-                          // console.log("result", result)
-                        } else {
-                          setSelectionTargetModel(selection => [...selectionTargetModel, selection]);
-                        }
+                          console.log("result", result)
+                        } 
+                        // else {
+                        //   // setSelectionTargetModel(selection => [...selectionTargetModel, selection]);
+                        //   // console.log(selection => [...selectionTargetModel, selection])
+                        //   console.log("error")
+                        // }
+                        // if (selection.length > 1) {
+                        //   const selectionSet = new Set(selectionTargetModel);
+                        //   const result = selection.filter((s) => !selectionSet.has(s));
+                        //   setSelectionTargetModel(result);
+                        //   console.log("result", result)
+                        // } else {
+                        //   setSelectionTargetModel(selection => [...selectionTargetModel, selection]);
+                        //   console.log(selection => [...selectionTargetModel, selection])
+                        // }
                       }}
-                      onRowClick={(param) => targetshandleClick(param.row)}
+                      onRowClick={(param) => {targetshandleClick(param.row)
+                      console.log("param.row", param.row)}}
                     />
                   }
                 {/*<Button variant="outlined" onClick={uploadTargetDrugs} className="table-footer">*/}
