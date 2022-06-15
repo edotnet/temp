@@ -44,6 +44,7 @@ export const SearchFeature = () => {
   const [Loadingresult, setLoadingresult] = useState(false);
 
   const [open, setOpen] = useState(false);
+  const [modalData, setModalData] = useState([]);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -125,15 +126,20 @@ export const SearchFeature = () => {
   }
 
   const handleOnCellClick = (params) => {
-    if(params.field === 'title') {
-      handleOpen();
+    if(params.field === 'title') { 
       const url = `${Endpoints.drugbank.drugs}${params.value}?page=${0}`;
       axios.get(url).then(resp => {
         if (resp.data) {
-          console.log('resp', resp.data);
+          // console.log('resp', resp.data);
+          setModalData(resp.data.items[0]);
+          // const modalDetails = resp.data.items[0]
+          // console.log("modalData", modalData)
+          // console.log("modalData", modalDetails.name)
         }
       });
-
+      setTimeout(() => { 
+        handleOpen();
+      }, 1000);
     }
   };
 
@@ -403,12 +409,19 @@ export const SearchFeature = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
+          { modalData && <div>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+            {/* {modalDetails && modalDetails.name} */}
+            {modalData.name}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            {modalData.clinical_description}
           </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {/* LogP: {modalData.calculated_properties.logP} */}
+          </Typography>
+          </div>
+          }
         </Box>
       </Modal>
     </div>
