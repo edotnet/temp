@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { SynthesisDropzoneArea } from "../../infrastructure/components/SynthesisDropzoneArea";
-import { Typography } from "@mui/material";
+import { Typography, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { fileToBase64, NewlineText, prettyformat } from "../../infrastructure/utils";
 import Grid from '@mui/material/Grid';
@@ -20,6 +20,9 @@ export const DrugSynthesisFeature = () => {
   const [fileName, setFileName] = useState("");
   const [fileUploaded, setFileUploaded] = useState(false);
   const [xdlData, setXdlData] = useState(null);
+  const [drugXdlData, setDrugXdlData] = useState(null);
+  const [drugs, setDrugs] = useState([]);
+  const [selectedDrug, setSelectedDrug] = useState(null);
   const isFirstRender = useRef(true);
   
   useEffect(() => {
@@ -49,9 +52,52 @@ export const DrugSynthesisFeature = () => {
     fetch(`${fetchURL}`, 'POST', fileInfo);
   }
 
-  if (data && fileUploaded) {
-    setXdlData(data);
+  const parseData = (data) => {
+    const allowedKeys = ["drug", "text", "xml"];
+    const filteredData = Object.fromEntries(
+      Object.entries(data).filter(
+         ([key, val])=>allowedKeys.includes(key)
+      )
+   );
+      Object.keys(filteredData).forEach((key) => {
+      filteredData[key] = filteredData[key].split("@#@")});
+      return filteredData;
   }
+
+  if (data && fileUploaded) {
+    const parsedData = parseData(data);
+    const modifiedData = {};
+    parsedData.drug.forEach((drug, index) => {
+      modifiedData[drug] = {
+        "text": parsedData.text[index],
+        "xml": parsedData.xml[index]
+      }
+    });
+
+    console.log(modifiedData);
+    setDrugXdlData(modifiedData);
+    setDrugs(Object.keys(modifiedData));
+  }
+
+  const handleDrugChange = (e) => {
+    const drug = e.target.value;
+    setSelectedDrug(drug);
+    setXdlData(drugXdlData[drug]);
+  }
+
+  const DrugSelector = () => (<FormControl style={{width: '30%', marginBottom: '10px'}} variant="standard">
+      <InputLabel id="pdb-label">Select a Drug</InputLabel>
+      <Select
+        labelId="pdb-labelId"
+        value={selectedDrug}
+        onChange={handleDrugChange}
+      >
+        <MenuItem value={""}>
+          <em>Select a Drug</em>
+        </MenuItem>
+        {drugs.map(drug => <MenuItem key={drug} value={drug}>{drug}</MenuItem>)}
+      </Select>
+    </FormControl>);
 
   return (
     <div className="fileupload-block">
@@ -71,6 +117,7 @@ export const DrugSynthesisFeature = () => {
             <Typography variant="h6" textAlign="left" color="primary" gutterBottom>
               Uploaded File - <Typography variant="span" className="fileName">{fileName}</Typography>
             </Typography>
+            <DrugSelector />
             <div className="searchEngine-xdl">
               <Grid container spacing={2}>
                 <Grid item xs={12}>
