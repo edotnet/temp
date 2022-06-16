@@ -1,4 +1,3 @@
-import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, IconButton, Accordion,Button,} from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from 'react';
@@ -9,7 +8,7 @@ import { Endpoints } from "../../config/Consts";
 import axios from 'axios';
 import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
 import dtiimage from '../../assets/img/table-dti-icon.svg';
-import TextField from '@mui/material/TextField';
+import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, Accordion, TextField, IconButton, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./search.scss";
 
@@ -18,7 +17,6 @@ export const SearchFeature = () => {
   const [rowdrugs, setrowDrugs] = useState([]);
   const [selecteddrug, setselecteddrug] = useState('');
   const [selectedtarget, setselectedtarget] = useState('');
-  const [selectedDrugs, setSelectedDrugs] = useState([]);
   const [clickedRow, setClickedRow] = useState('');
   const url = `https://api.prepaire.com/drug-search`;
   const { loading, data, error, fetch } = useApiCall(url, 'POST', null, false);
@@ -52,12 +50,14 @@ export const SearchFeature = () => {
   useEffect(() => {
     if(data && data.result) {
       if (drugs.length > 0) {
-        const defaultSelectRow = text.toLowerCase();
-        setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultSelectRow}`]);
-        const defaultRow = drugs.filter((row) => row.title.toLowerCase() === defaultSelectRow);
-        viewLiterature(defaultRow);
+        const defaultDrug = text.toLowerCase();
+        setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultDrug}`]);
+        const defaultDrugRow = drugs.filter((row) => row.title.toLowerCase() === defaultDrug);
+        viewDrugLiterature(defaultDrugRow);
         const defaultTarget = targets[0].title.toLowerCase();
-        setSelectionTargetModel(selectionTargetModel => [...selectionTargetModel, `${defaultTarget}`]);
+        setSelectionTargetModel([`${defaultTarget}`]);
+        const defaultTargetRow = targets.filter((row) => row.title.toLowerCase() === defaultTarget);
+        viewTargetLiterature(defaultTargetRow)
       }
     }
   }, [data]);
@@ -68,7 +68,7 @@ export const SearchFeature = () => {
     setrowDrugs(data.pmids);
   }
 
-  function viewLiterature(data) {
+  function viewDrugLiterature(data) {
     if (data.length > 0) {
       setTimeout(() => {
         setselecteddrug(data[0].title);
@@ -77,11 +77,19 @@ export const SearchFeature = () => {
     }
   }
 
+  function viewTargetLiterature(data) {
+    if (data.length > 0) {
+      setTimeout(() => {
+        setselectedtarget(data[0].title);
+        setrowTargets(data[0].pmids);
+      }, 0);
+    }
+  }
+
   function targetshandleClick(data) {
     setselectedtarget((data.title))
     setrowTargets(data.pmids);
   }
-
 
   const uploadSelectedDrugs = async () => {
     selectionDrugModel.forEach(drug => {
@@ -283,9 +291,6 @@ export const SearchFeature = () => {
                       onCellClick={handleOnCellClick}
                       onSelectionModelChange={(ids) => {
                         setSelectionDrugModel(ids);
-                        const selectedIDs = new Set(ids);
-                        const selectedRows = drugs.filter((row) => selectedIDs.has(row.title.toLowerCase()));
-                        setSelectedDrugs(selectedRows);
                       }}
                       getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
@@ -356,9 +361,6 @@ export const SearchFeature = () => {
                           const selectionSet = new Set(selectionTargetModel);
                           const result = selection.filter((s) => !selectionSet.has(s));
                           setSelectionTargetModel(result);
-                          // console.log("result", result)
-                        } else {
-                          setSelectionTargetModel(selection => [...selectionTargetModel, selection]);
                         }
                       }}
                       onRowClick={(param) => targetshandleClick(param.row)}
@@ -399,10 +401,17 @@ export const SearchFeature = () => {
           </Grid>
         </div> : Loadingresult === true ? <div style={{height: '500px', position: 'relative', }}> <CircularProgressComponent /> </div>: ''
       }
-      {/*Drug Modal*/}
-      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+
         <Box className="search-column-popup">
-          <IconButton aria-label="close" onClick={handleClose} sx={{position: "absolute", top: 5, right: 5}} size="large"> <CloseIcon /></IconButton>
+        <IconButton aria-label="close" onClick={handleClose} sx={{position: "absolute", top: 5, right: 5}} size="large">
+          <CloseIcon />
+        </IconButton>
           <Box>
           {
             modalData  ? <div>
