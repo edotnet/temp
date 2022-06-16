@@ -1,0 +1,26 @@
+.Uploaded-file {
+    width: 165px;
+    height: 28px;
+    margin: 38.9px 16px 32px 24px;
+    font-size: 24px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #333334;
+  }
+
+  .fileName{
+    width: 216px;
+    height: 21px;
+    margin: 39.9px 3px 38px 7px;
+    font-size: 18px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #1f2da9;
+  }
+  

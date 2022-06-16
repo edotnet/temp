@@ -1,0 +1,63 @@
+.selecteddata_dti {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  background: #fff;
+  padding: 10px;
+  width: 300px;
+  position: absolute;
+  top: 10px;
+  right: 100px;
+  .heading {
+    font-weight: 400
+  }
+  .drugs {
+    color:#222A47;
+    font-weight: 400
+  }
+  .proteins {
+    color:#222A47;
+    font-weight: 400
+  }
+  .uploadbtn {
+    margin: 20px 70px auto;
+    position:relative;
+    width: 120px;
+    display: block;
+    height: 32px;
+    img {
+      float: left;
+    }
+    .text {
+      position: absolute;
+      left: 45px;
+      top: 2px;
+    }
+  }
+}
+
+.MuiDataGrid-root .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer {
+  display: none;
+}
+
+.link-btn{
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover{
+    color: #3352c1;
+  }
+}
+
+.search-column-popup{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: #fff;
+  border: 0px solid ;
+  border-radius: 25px;
+  padding: 2rem;
+  background: #FFF;
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, .2), 0px 24px 38px 3px rgba(0, 0, 0, .14), 0px 9px 46px 8px rgba(0, 0, 0, .12);
+}

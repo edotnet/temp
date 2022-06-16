@@ -15,10 +15,11 @@ export const DrugInteractionContent = () => {
 
   const getStyles = (color) => {
     const {hue, saturation, luminosity} = color;
-    const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.25)`;
+    const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.4)`;
     return {
-      boxShadow: `0 6px 5px 0 ${moleculeColor}`,
+      boxShadow: `0 4px 13px 0 ${moleculeColor}`,
       border: `solid 1px ${moleculeColor}`,
+      borderBottomWidth: `1.5px`,
     }
   }
 
