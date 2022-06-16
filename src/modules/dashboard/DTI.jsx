@@ -65,7 +65,7 @@ export const DTI = () => {
       </Box>
       <ThreeDMol />
       <Hr />
-      <Typography variant="subtitle1" gutterBottom>Binding Interaction score</Typography>
+      <Typography variant="subtitle1" gutterBottom>Binding Interaction score (EC50)</Typography>
       {loading && <LinearProgress />}
       <GraphBackground>
         <Grid container spacing={1}>

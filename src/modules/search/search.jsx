@@ -1,26 +1,17 @@
-import Accordion from '@mui/material/Accordion';
-import Grid from '@mui/material/Grid';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
+import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, IconButton, Accordion,Button,} from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from 'react';
-import { DataGrid, GridValueGetterParams } from '@mui/x-data-grid';
-import Link from '@mui/material/Link';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDashboardContext } from "../../modules/dashboard/context/useDashboarContext";
 import { useNavigate } from "react-router-dom";
 import { Endpoints } from "../../config/Consts";
 import axios from 'axios';
-import Button from '@mui/material/Button';
 import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
 import dtiimage from '../../assets/img/table-dti-icon.svg';
 import TextField from '@mui/material/TextField';
-import Chip from '@mui/material/Chip';
-import { Box } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import "./search.scss";
-import Modal from '@mui/material/Modal';
-
 
 export const SearchFeature = () => {
   const [rowtargets, setrowTargets] = useState([]);
@@ -48,17 +39,10 @@ export const SearchFeature = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
+  const [openprotein, setOpenprotein] = useState(false);
+  const [proteinmodalData, setproteinModalData] = useState([]);
+  const handleproteinOpen = () => setOpenprotein(true);
+  const handleproteinClose = () => setOpenprotein(false);
 
   const onRun = () => {
     fetch(url, 'POST', { drug: text, filter1: true, pmids: true });
@@ -133,11 +117,25 @@ export const SearchFeature = () => {
           setModalData(resp.data.items[0]);
         }
       });
-      setTimeout(() => { 
-        handleOpen();
-      }, 1000);
+      handleOpen();
     }
   };
+
+  const ProteinOnCellClick = (params) => {
+    if(params.field === 'title') {
+      const url = `${Endpoints.drugbank.targets}${params.value}`;
+      axios.get(url).then(resp => {
+        if (resp.data) {
+          for (let i = 0; i < resp.data.length; i++) {
+            if (resp.data[i].name === params.value) {
+              setproteinModalData(resp.data[i])
+            }
+          }
+        }
+      })
+      handleproteinOpen();
+    }
+  }
 
   // const TableFooter = ({tableName}) => {
   //   return (
@@ -162,7 +160,11 @@ export const SearchFeature = () => {
   // }
 
   const drugsColumns = [
-    { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1 },
+    { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1,
+      renderCell: (params) => (
+        <span className='link-btn'>{params.value}</span>
+      ),
+    },
     {
       field: `metrics['(Search + {}) Publications']`,
       headerName: '(Search + Drug)Publications',
@@ -174,19 +176,16 @@ export const SearchFeature = () => {
       headerName: 'Drug Publications',
       minWidth: 120, flex: 1,
       valueGetter: (params) => params.row.metrics['{} Publications'],
-    },
-    // {
-    //   headerName: 'Options',
-    //   minWidth: 50,
-    //   flex: 1,
-    //   renderCell: () => (
-    //     <Button variant="outline" color="primary" size="small" onClick={detailcard}> Detail </Button>
-    //   ),
-    // }
+    }
   ];
 
   const protienColumns = [
-    { field: `title`, headerName: 'Target Name', minWidth: 150, flex: 1 },
+    {
+      field: `title`, headerName: 'Target Name', minWidth: 150, flex: 1,
+      renderCell: (params) => (
+        <span className='link-btn'>{params.value}</span>
+      ),
+    },
     {
       field: `metrics['(Search + {}) Publications']`,
       headerName: '(Search + Target)Publications',
@@ -351,11 +350,13 @@ export const SearchFeature = () => {
                       getRowHeight={() => 'auto'}
                       hideFooterSelectedRowCount
                       selectionModel={selectionTargetModel}
+                      onCellClick={ProteinOnCellClick}
                       onSelectionModelChange={(selection) => {
                         if (selection.length > 1) {
                           const selectionSet = new Set(selectionTargetModel);
                           const result = selection.filter((s) => !selectionSet.has(s));
                           setSelectionTargetModel(result);
+                          // console.log("result", result)
                         } else {
                           setSelectionTargetModel(selection => [...selectionTargetModel, selection]);
                         }
@@ -398,34 +399,49 @@ export const SearchFeature = () => {
           </Grid>
         </div> : Loadingresult === true ? <div style={{height: '500px', position: 'relative', }}> <CircularProgressComponent /> </div>: ''
       }
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          { modalData ? <div>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-            {/* {modalDetails && modalDetails.name} */}
-            {modalData.name}{modalData.calculated_properties ? <span> {modalData.calculated_properties['Molecular Formula']} </span>: ''}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {modalData.clinical_description}
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {
-              modalData.calculated_properties ? <span>LogP: {modalData.calculated_properties.logP} </span>: ''
-            }
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {
-              modalData.calculated_properties ? <span>Molecular Weight: {modalData.calculated_properties['Molecular Weight']} </span>: ''
-            }
-          </Typography>
-
-          </div> : 'Loading'
+      {/*Drug Modal*/}
+      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        <Box className="search-column-popup">
+          <IconButton aria-label="close" onClick={handleClose} sx={{position: "absolute", top: 5, right: 5}} size="large"> <CloseIcon /></IconButton>
+          <Box>
+          {
+            modalData  ? <div>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                {modalData.name}{modalData.calculated_properties ? <span> {modalData.calculated_properties['Molecular Formula']} </span>: ''}
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                {modalData.clinical_description}
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                {modalData.calculated_properties ? <span>LogP: {modalData.calculated_properties.logP} </span>: ''}
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                {modalData.calculated_properties ? <span>Molecular Weight: {modalData.calculated_properties['Molecular Weight']} </span>: ''}
+              </Typography>
+            </div> : 'Loading'
           }
+          </Box>
+        </Box>
+      </Modal>
+      {/*Protein Modal*/}
+      <Modal open={openprotein} onClose={handleproteinClose} aria-labelledby="modal-modal-title"aria-describedby="modal-modal-description">
+        <Box className="search-column-popup">
+          <IconButton aria-label="close" onClick={handleproteinClose} sx={{position: "absolute", top: 5, right: 5}} size="large"><CloseIcon /></IconButton>
+          <Box>
+            {
+              proteinmodalData ? <div>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  {proteinmodalData.name}
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  {proteinmodalData.id ? <span>Id: {proteinmodalData.id} </span> : ''}
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  {proteinmodalData.organism ? <span>Organism: {proteinmodalData.organism} </span>: ''}
+                </Typography>
+              </div> : 'Loading'
+            }
+          </Box>
         </Box>
       </Modal>
     </div>
