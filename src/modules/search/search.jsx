@@ -403,7 +403,7 @@ export const SearchFeature = () => {
         aria-describedby="modal-modal-description"
       >
 
-        <Box sx={style}>
+        <Box className="search-column-popup">
         <IconButton aria-label="close" onClick={handleClose} sx={{position: "absolute", top: 5, right: 5}} size="large">
           <CloseIcon />
         </IconButton>
