@@ -1,20 +1,15 @@
-import Accordion from '@mui/material/Accordion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from 'react';
 import { DataGrid, GridValueGetterParams } from '@mui/x-data-grid';
-import Link from '@mui/material/Link';
 import { useDashboardContext } from "../../modules/dashboard/context/useDashboarContext";
 import { useNavigate } from "react-router-dom";
 import { Endpoints } from "../../config/Consts";
 import axios from 'axios';
-import Button from '@mui/material/Button';
 import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
 import dtiimage from '../../assets/img/table-dti-icon.svg';
-import TextField from '@mui/material/TextField';
-import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, } from "@mui/material";
+import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, Accordion, TextField, IconButton, Button } from "@mui/material";
 import "./search.scss";
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 
