@@ -9,7 +9,6 @@ import axios from 'axios';
 import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
 import dtiimage from '../../assets/img/table-dti-icon.svg';
 import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, Accordion, TextField, IconButton, Button } from "@mui/material";
-import "./search.scss";
 import CloseIcon from "@mui/icons-material/Close";
 import "./search.scss";
 
