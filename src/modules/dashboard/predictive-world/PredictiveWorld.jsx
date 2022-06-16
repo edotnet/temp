@@ -47,7 +47,7 @@ export const PredictiveWorld = () => {
     caco2: {
       line: 7,
       scale: [0.5, 0.9481],
-      title: 'Caco2 prob.',
+      title: 'CACO2 prob.',
       property: 'calculated_properties.ADMET.caco2.probability'
     },
     bbb: {
@@ -213,7 +213,7 @@ export const PredictiveWorld = () => {
     if (totalDeg === 135) {
       scaleValue += 50;
     }
-    console.log(totalDeg, scaleValue, tipTitle)
+    // console.log(totalDeg, scaleValue, tipTitle)
     const x = (scaleValue) * Math.cos(degrees_to_radians(totalDeg));
     const y = (scaleValue) * Math.sin(degrees_to_radians(totalDeg));
 
@@ -238,7 +238,7 @@ export const PredictiveWorld = () => {
 
   useEffect(() => {
     if (state.protein && state.interactingMoleculesResult) {
-      drawarc();
+     //  drawarc();
     }
   }, [state]);
 

@@ -7,17 +7,14 @@ import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutocomplete";
 import { Navbar } from "../modules/dashboard/Navbar";
-import { DashboardContextProvider } from "../modules/dashboard/context/DashboardContext";
 import { useDashboardContext } from "../modules/dashboard/context/useDashboarContext";
 import { TargetAutocomplete } from "../modules/dti/TargetAutocomplete";
 import { PresentationModal } from "../modules/dashboard/presentation-modal/PresentationModal";
-import { ThreeDMol } from "../modules/3dmol/ThreeDMol";
 import { PDBSelector } from "../modules/3dmol/PDBSelector";
 import './Dashboard.scss'
 
-export const DashboardPage = () => {
+export const Dashboard = () => {
   const {state, dispatch} = useDashboardContext();
-
   const setDetail = (molecule) => (e) => {
     molecule.coordinates = {
       x: e.clientX,
@@ -47,7 +44,7 @@ export const DashboardPage = () => {
       <DndProvider backend={HTML5Backend}>
         <Grid pl={5} pr={5} className="dashboarddnd">
           <Box>
-            <Typography variant="h5" className="title" color="secondary" >DRUG INTERACTOR</Typography>
+            <Typography variant="h5" className="title" color="secondary">DRUG INTERACTOR</Typography>
             <Typography variant="h6" className="subTitle">Drop molecules here for checking
               interactions </Typography>
           </Box>
@@ -78,7 +75,8 @@ export const DashboardPage = () => {
                       label="+ Add Drug Molecule"/>
                   </Box>
                   <Box pl={1} pt={2}>
-                    {state.molecules.length > 0 && <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>}
+                    {state.molecules.length > 0 &&
+                      <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>}
                   </Box>
                   <Grid container spacing={4} pt={2}>
                     {state.molecules.map(molecule => (
@@ -108,9 +106,3 @@ export const DashboardPage = () => {
     </Box>
   )
 }
-
-export const Dashboard = () => (
-  <DashboardContextProvider>
-    <DashboardPage/>
-  </DashboardContextProvider>
-)

@@ -35,7 +35,7 @@ export const CustomChip = styled(Chip)({
     },
     '&.MuiChip-filled': {
       border: 'solid 1px #a4c3dd',
-      boxShadow: `0 5px 12px 0 rgba(133, 153, 170, 0.5)`,
+      boxShadow: `0px 4px 13px 0px rgba(133, 153, 170, 0.5)`,
       backgroundImage: 'linear-gradient(to bottom, #fff 16%, #e1e3e7 84%)',
     },
     '&.MuiChip-outlined': {
