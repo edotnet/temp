@@ -23,7 +23,6 @@ export const SearchFeature = () => {
   const [rowdrugs, setrowDrugs] = useState([]);
   const [selecteddrug, setselecteddrug] = useState('');
   const [selectedtarget, setselectedtarget] = useState('');
-  const [selectedDrugs, setSelectedDrugs] = useState([]);
   const [clickedRow, setClickedRow] = useState('');
   const url = `https://api.prepaire.com/drug-search`;
   const { loading, data, error, fetch } = useApiCall(url, 'POST', null, false);
@@ -37,7 +36,6 @@ export const SearchFeature = () => {
   const [selectionDrugModel, setSelectionDrugModel] = useState([]);
 
   const [selectionTargetModel, setSelectionTargetModel] = useState([]);
-  const [selectedProteins, setSelectedProteins] = useState([]);
   const [Loadingresult, setLoadingresult] = useState(false);
 
   const [open, setOpen] = useState(false);
@@ -103,7 +101,6 @@ export const SearchFeature = () => {
   }
 
   function targetshandleClick(data) {
-    console.log(data)
     setselectedtarget((data.title))
     setrowTargets(data.pmids);
   }
@@ -295,9 +292,6 @@ export const SearchFeature = () => {
                       onCellClick={handleOnCellClick}
                       onSelectionModelChange={(ids) => {
                         setSelectionDrugModel(ids);
-                        const selectedIDs = new Set(ids);
-                        const selectedRows = drugs.filter((row) => selectedIDs.has(row.title.toLowerCase()));
-                        setSelectedDrugs(selectedRows);
                       }}
                       getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
@@ -363,30 +357,13 @@ export const SearchFeature = () => {
                       hideFooterSelectedRowCount
                       selectionModel={selectionTargetModel}
                       onSelectionModelChange={(selection) => {
-                        setSelectedProteins(selection)
                         if (selection.length > 1) {
                           const selectionSet = new Set(selectionTargetModel);
                           const result = selection.filter((s) => !selectionSet.has(s));
                           setSelectionTargetModel(result);
-                          console.log("result", result)
-                        } 
-                        // else {
-                        //   // setSelectionTargetModel(selection => [...selectionTargetModel, selection]);
-                        //   // console.log(selection => [...selectionTargetModel, selection])
-                        //   console.log("error")
-                        // }
-                        // if (selection.length > 1) {
-                        //   const selectionSet = new Set(selectionTargetModel);
-                        //   const result = selection.filter((s) => !selectionSet.has(s));
-                        //   setSelectionTargetModel(result);
-                        //   console.log("result", result)
-                        // } else {
-                        //   setSelectionTargetModel(selection => [...selectionTargetModel, selection]);
-                        //   console.log(selection => [...selectionTargetModel, selection])
-                        // }
+                        }
                       }}
-                      onRowClick={(param) => {targetshandleClick(param.row)
-                      console.log("param.row", param.row)}}
+                      onRowClick={(param) => targetshandleClick(param.row)}
                     />
                   }
                 {/*<Button variant="outlined" onClick={uploadTargetDrugs} className="table-footer">*/}
