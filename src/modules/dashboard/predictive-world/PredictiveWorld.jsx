@@ -67,6 +67,8 @@ export const PredictiveWorld = () => {
 
   const inValues = [135, 180];
 
+  const [drug1, drug2] = state.interactingMolecules;
+
   // To create each tooltip, we need to show
   const drawToolTip = (drugName, title) => {
     tipCtx.current.fillStyle = "#6D69C0";
@@ -196,7 +198,7 @@ export const PredictiveWorld = () => {
         const value = parseFloat(fetchFromObject(molecule, prop.property));
         const scaled = scale(value, key);
         drawDot(prop.line, scaled, moleculeColor);
-        addPropertyTooltip(prop.line, scaled, value, prop.title);
+        // addPropertyTooltip(prop.line, scaled, value, prop.title); // Temporary tooltip added
       })
     })
   }
@@ -297,6 +299,47 @@ export const PredictiveWorld = () => {
     <>
       <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}} onMouseMove={handleMouseMove}/>
       <canvas ref={tooltipCanvas} style={{position: 'absolute', height: 50, width: 100, zIndex: 10}}/>
+      { drug1 && 
+        <div>
+          <div className="tempTooltips">
+            <div className="tips-table">
+              <div className="t-header t-row">
+                <div>Molecules</div>
+                <div>logP</div>
+                <div>logS</div>
+                <div>mass</div>
+                <div>ames_tox</div>
+                <div>CACO2</div>
+                <div>BBB</div>
+                <div>HIA</div>
+                <div>biodegradation</div>
+              </div>
+              <div className="drug1-row t-row">
+                <div>{drug1.name}</div>
+                <div>{drug1.calculated_properties.ALOGPS['logP']}</div>
+                <div>{drug1.calculated_properties.ALOGPS['logS']}</div>
+                <div>{drug1.calculated_properties['Molecular Weight']}</div>
+                <div>{drug1.calculated_properties.ADMET.ames_toxicity['probability']}</div>
+                <div>{drug1.calculated_properties.ADMET.caco2['probability']}</div>
+                <div>{drug1.calculated_properties.ADMET.bbb['probability']}</div>
+                <div>{drug1.calculated_properties.ADMET.hia['probability']}</div>
+                <div>{drug1.calculated_properties.ADMET.biodegradation['probability']}</div>
+              </div>
+              {drug2 && <div className="drug2-row t-row">
+                <div>{drug2.name}</div>
+                <div>{drug2.calculated_properties.ALOGPS['logP'] ? drug2.calculated_properties.ALOGPS['logP'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ALOGPS['logS'] ? drug2.calculated_properties.ALOGPS['logS'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties['Molecular Weight'] ? drug2.calculated_properties['Molecular Weight'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ADMET.ames_toxicity['probability'] ? drug2.calculated_properties.ADMET.ames_toxicity['probability'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ADMET.caco2['probability'] ? drug2.calculated_properties.ADMET.caco2['probability'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ADMET.bbb['probability'] ? drug2.calculated_properties.ADMET.bbb['probability'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ADMET.hia['probability'] ? drug2.calculated_properties.ADMET.hia['probability'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ADMET.biodegradation['probability'] ? drug2.calculated_properties.ADMET.biodegradation['probability'] : 'NaN'}</div>
+              </div>}
+            </div>
+          </div>
+        </div>
+      }
       {renderCenter()}
       <Fullorb/>
     </>
