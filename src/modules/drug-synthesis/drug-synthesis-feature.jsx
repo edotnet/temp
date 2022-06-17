@@ -4,6 +4,8 @@ import Box from '@mui/material/Box';
 import { SynthesisDropzoneArea } from "../../infrastructure/components/SynthesisDropzoneArea";
 import { Typography, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material";
 import TextField from '@mui/material/TextField';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { fileToBase64, NewlineText, prettyformat } from "../../infrastructure/utils";
 import Grid from '@mui/material/Grid';
@@ -13,33 +15,30 @@ import {Endpoints} from "../../config/Consts";
 
 import "./DrugSynthesis.css";
 
-const DrugSelector = ({handleDrugChange, selectedDrug, drugs}) => (<FormControl variant="outlined" size="medium" sx={{ m: 1, minWidth: 120 }} style={{width: '30%', height: '40px', marginBottom: '10px'}} variant="standard">
-      <InputLabel id="pdb-label">Select a Drug</InputLabel>
-      <Select
-        labelId="pdb-labelId"
-        value={selectedDrug}
-        onChange={handleDrugChange}
-      >
-        <MenuItem value={""}>
-          <em>Select a Drug</em>
-        </MenuItem>
-        {drugs.map(drug => <MenuItem key={drug} value={drug}>{drug}</MenuItem>)}
-      </Select>
-    </FormControl>);
+const DrugSelector = ({handleDrugChange, selectedDrug, drugs}) => (<TextField sx={{"width": "30%"}}
+    id="outlined-select-currency"
+    select
+    label="Select a Drug"
+    value={selectedDrug}
+    onChange={handleDrugChange}
+  >
+    {drugs.map(drug => <MenuItem key={drug} value={drug}>{drug}</MenuItem>)}
+  </TextField>
+);
 
-const DrugEditor = ({handleRename, name}) => (<FormControl variant="standard">
+const DrugEditor = ({handleRename, name}) => (<FormControl variant="standard" style={{marginLeft: "5px"}}>
       <TextField label="Edit Drug" value={name} onChange={handleRename} color="secondary" focused />
       </FormControl>
 );
 
 const ActionButtons = ({handleAccept, handleReject}) => (
   <>
-  <Button variant="contained" size="small" color="success" onClick={handleAccept} >
-    Approve
+  <Button variant="contained" size="small" color="success" onClick={handleAccept} style={{margin: "10px 5px"}}>
+    <CheckIcon />
   </Button>
   <Button variant="contained" size="small" color="error" onClick={handleReject}>
-  Reject
-</Button>
+    <ClearIcon />
+  </Button>
 </>
 )
 
@@ -50,13 +49,16 @@ export const DrugSynthesisFeature = () => {
   const [file, setFile] = useState([]);
   const [fileName, setFileName] = useState("");
   const [fileUploaded, setFileUploaded] = useState(false);
+  const [fileInfo, setFileInfo] = useState(null);
   const [xdlData, setXdlData] = useState(null);
   const [drugXdlData, setDrugXdlData] = useState(null);
   const [drugs, setDrugs] = useState([]);
-  const [selectedDrug, setSelectedDrug] = useState(null);
+  const [selectedDrug, setSelectedDrug] = useState("");
   const isFirstRender = useRef(true);
   const [name, setName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [isAccepted, setIsAccepted] = useState(false);
+  const [updatedPdfData, setUpdatedPdfData] = useState({});
   
   useEffect(() => {
     if (isFirstRender.current) {
@@ -82,6 +84,7 @@ export const DrugSynthesisFeature = () => {
     const fileInfo = {
       "file_name": data.file_path,
     }
+    data.file_path && setFileInfo(fileInfo);
     fetch(`${fetchURL}`, 'POST', fileInfo);
   }
 
@@ -128,14 +131,31 @@ export const DrugSynthesisFeature = () => {
 
   const handleAccept = () => {
     console.log("accepted");
-    console.log(delete Object.assign(drugXdlData, {[name]: drugXdlData[selectedDrug] })[selectedDrug]);
+    delete Object.assign(drugXdlData, {[name]: drugXdlData[selectedDrug] })[selectedDrug];
+    drugXdlData[name]["name"] = name;
+    console.log(drugXdlData);
+    setDrugXdlData(drugXdlData);
+    setDrugs(Object.values(drugXdlData).map(obj => obj.name));
     setIsEditing(false);
-
+    setSelectedDrug("");
+    setName("");
+    setXdlData(null);
+    console.log(fileInfo);
+    setIsAccepted(true);
   }
 
   const handleReject = () => {
     setName(selectedDrug);
     setIsEditing(false);
+  }
+
+  const handleSubmit = () => {
+    const updatedPdfData = {};
+    updatedPdfData["filePath"] = fileInfo.file_name;
+    updatedPdfData["drugs"] = Object.values(drugXdlData);
+    console.log(updatedPdfData);
+    fetch(`${Endpoints.pdf.add}`, 'POST', updatedPdfData);
+    setIsAccepted(false);
   }
 
   return (
@@ -158,7 +178,12 @@ export const DrugSynthesisFeature = () => {
             </Typography>
             <DrugSelector handleDrugChange={handleDrugChange} selectedDrug={selectedDrug} drugs={drugs}/>
             <DrugEditor handleRename={handleRename} name={name}/>
-            {isEditing && <ActionButtons handleAccept={handleAccept} handleReject={handleReject}/> }
+            {isEditing && <ActionButtons handleAccept={handleAccept} handleReject={handleReject}/>}
+            {!isEditing && isAccepted && 
+              <Button className={`searchEngin-headerbtn active`} style={{ margin: "5px" }} size="large"  variant="outlined" onClick={handleSubmit}>
+                Save
+              </Button>
+            }
             <div className="searchEngine-xdl">
               <Grid container spacing={2}>
                 <Grid item xs={12}>
