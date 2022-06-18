@@ -114,6 +114,7 @@ export const SearchFeature = () => {
         if(resp.data) {
           dispatch({type: 'addProtein', payload: resp.data[0]});
           dispatch({type: 'resetInteractingMolecules', payload: null});
+          dispatch({type: 'removePdb', payload: null});
           navigate("/dashboard");
           // uploadSelectedDrugs();
         }

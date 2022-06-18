@@ -10,6 +10,7 @@ const useApi = isApi ?
 export const Endpoints = {
   drugbank: {
     drugbank: `${useApi}/drugbank/`,
+    drugsquery: `${useApi}/drugbank/query/`,
     drugs: `${useApi}/drugbank/molecule/`,
     targets: `${useApi}/drugbank/target/query/`,
     categories: `${useApi}/drugbank/category/query/`,
