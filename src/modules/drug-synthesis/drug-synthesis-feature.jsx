@@ -27,16 +27,16 @@ const DrugSelector = ({handleDrugChange, selectedDrug, drugs}) => (<TextField sx
 );
 
 const DrugEditor = ({handleRename, name}) => (<FormControl variant="standard" style={{marginLeft: "5px"}}>
-      <TextField label="Edit Drug" value={name} onChange={handleRename} color="secondary" focused />
+      <TextField label="Edit Drug Name" value={name} onChange={handleRename} color="secondary" focused />
       </FormControl>
 );
 
 const ActionButtons = ({handleAccept, handleReject}) => (
   <>
-  <Button variant="contained" size="small" color="success" onClick={handleAccept} style={{margin: "10px 5px"}}>
+  <Button variant="outlined" size="large" onClick={handleAccept} style={{margin: "10px 5px"}}>
     <CheckIcon />
   </Button>
-  <Button variant="contained" size="small" color="error" onClick={handleReject}>
+  <Button variant="outlined" size="large" onClick={handleReject}>
     <ClearIcon />
   </Button>
 </>
@@ -103,17 +103,21 @@ export const DrugSynthesisFeature = () => {
   if (data && fileUploaded) {
     const parsedData = parseData(data);
     const modifiedData = {};
-    parsedData.drug.forEach((drug, index) => {
-      modifiedData[drug] = {
-        "name": drug,
-        "text": parsedData.text[index],
-        "xml": parsedData.xml[index]
+    if('drug' in parsedData) {
+      if(parsedData.drug.length > 0) {
+        parsedData.drug.forEach((drug, index) => {
+          modifiedData[drug] = {
+            "name": drug,
+            "text": parsedData.text[index],
+            "xml": parsedData.xml[index]
+          }
+        });
+        setDrugXdlData(modifiedData);
+        setDrugs(Object.values(modifiedData).map(obj => obj.name));
       }
-    });
-
-    console.log(modifiedData);
-    setDrugXdlData(modifiedData);
-    setDrugs(Object.values(modifiedData).map(obj => obj.name));
+    } else {
+      console.log('no data');
+    }
   }
 
   const handleDrugChange = (e) => {
@@ -124,23 +128,19 @@ export const DrugSynthesisFeature = () => {
   }
 
   const handleRename = (e) => {
-    console.log(e.target.value);
     setName(e.target.value);
     setIsEditing(true);
   }
 
   const handleAccept = () => {
-    console.log("accepted");
     delete Object.assign(drugXdlData, {[name]: drugXdlData[selectedDrug] })[selectedDrug];
     drugXdlData[name]["name"] = name;
-    console.log(drugXdlData);
     setDrugXdlData(drugXdlData);
     setDrugs(Object.values(drugXdlData).map(obj => obj.name));
     setIsEditing(false);
     setSelectedDrug("");
     setName("");
     setXdlData(null);
-    console.log(fileInfo);
     setIsAccepted(true);
   }
 
@@ -153,7 +153,6 @@ export const DrugSynthesisFeature = () => {
     const updatedPdfData = {};
     updatedPdfData["filePath"] = fileInfo.file_name;
     updatedPdfData["drugs"] = Object.values(drugXdlData);
-    console.log(updatedPdfData);
     fetch(`${Endpoints.pdf.add}`, 'POST', updatedPdfData);
     setIsAccepted(false);
   }
@@ -180,7 +179,7 @@ export const DrugSynthesisFeature = () => {
             <DrugEditor handleRename={handleRename} name={name}/>
             {isEditing && <ActionButtons handleAccept={handleAccept} handleReject={handleReject}/>}
             {!isEditing && isAccepted && 
-              <Button className={`searchEngin-headerbtn active`} style={{ margin: "5px" }} size="large"  variant="outlined" onClick={handleSubmit}>
+              <Button className={`searchEngin-headerbtn active`} style={{ margin: "5px", float: 'right' }} size="large"  variant="outlined" onClick={handleSubmit}>
                 Save
               </Button>
             }
