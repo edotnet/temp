@@ -12,6 +12,8 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import {Endpoints} from "../../config/Consts";
+import Snackbar from '@mui/material/Snackbar';
+import CloseIcon from '@mui/icons-material/Close';
 
 import "./DrugSynthesis.css";
 
@@ -59,6 +61,8 @@ export const DrugSynthesisFeature = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAccepted, setIsAccepted] = useState(false);
   const [updatedPdfData, setUpdatedPdfData] = useState({});
+  const [opensnack, setOpensnack] = useState(false);
+
   
   useEffect(() => {
     if (isFirstRender.current) {
@@ -142,6 +146,7 @@ export const DrugSynthesisFeature = () => {
     setName("");
     setXdlData(null);
     setIsAccepted(true);
+    setOpensnack(true);
   }
 
   const handleReject = () => {
@@ -156,6 +161,14 @@ export const DrugSynthesisFeature = () => {
     fetch(`${Endpoints.pdf.add}`, 'POST', updatedPdfData);
     setIsAccepted(false);
   }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpensnack(false);
+  };
 
   return (
     <div className="fileupload-block">
@@ -179,7 +192,7 @@ export const DrugSynthesisFeature = () => {
             <DrugEditor handleRename={handleRename} name={name}/>
             {isEditing && <ActionButtons handleAccept={handleAccept} handleReject={handleReject}/>}
             {!isEditing && isAccepted && 
-              <Button className={`searchEngin-headerbtn active`} style={{ margin: "5px", float: 'right' }} size="large"  variant="outlined" onClick={handleSubmit}>
+              <Button className="synthesis-save-btn" style={{ margin: "5px", float: 'right' }} size="large"  variant="outlined" onClick={handleSubmit}>
                 Save
               </Button>
             }
@@ -222,6 +235,12 @@ export const DrugSynthesisFeature = () => {
               </Grid>
             </div>
           </div>}
+      <Snackbar
+        open={opensnack}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Drug name updated successfully"
+      />
     </div>
   );
 }
