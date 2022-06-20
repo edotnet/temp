@@ -102,20 +102,34 @@ export const SearchFeature = () => {
             }
           }
         }
+        dispatch({type: 'resetInteractingMolecules', payload: null});
         navigate("/dashboard");
       });
     })
   }
 
-  const uploadTargetDrugs = async () => {
+  const uploadSelectedProtein = async () => {
+      const url = `${Endpoints.drugbank.targets}${selectionTargetModel[0]}`;
+      axios.get(url).then(resp => {
+        if(resp.data) {
+          dispatch({type: 'addProtein', payload: resp.data[0]});
+          dispatch({type: 'resetInteractingMolecules', payload: null});
+          navigate("/dashboard");
+          // uploadSelectedDrugs();
+        }
+      });
+  }
+
+  const uploadSelectedProteinDrugs = async () => {
     const url = `${Endpoints.drugbank.targets}${selectionTargetModel[0]}`;
     axios.get(url).then(resp => {
       if(resp.data) {
         dispatch({type: 'addProtein', payload: resp.data[0]});
-        uploadSelectedDrugs();
+         uploadSelectedDrugs();
       }
     });
   }
+
 
   const handleOnCellClick = (params) => {
     if(params.field === 'title') { 
@@ -125,7 +139,6 @@ export const SearchFeature = () => {
           setModalData(resp.data.items[0]);
         }
       });
-      handleOpen();
     }
   };
 
@@ -210,7 +223,7 @@ export const SearchFeature = () => {
 
   return (
     <div className="searchDefault">
-      <Grid container spacing={2} style={{marginTop: '20px', marginBottom: '20px'}}>
+      <Grid container spacing={2} style={{marginTop: '40px', marginBottom: '40px'}}>
         <Grid item xs={4}>
           <TextField
             fullWidth
@@ -232,29 +245,31 @@ export const SearchFeature = () => {
           <Button className='searchEngin-headerbtn btn-white' variant="outlined" onClick={onRun}>Search</Button>
         </Grid>
         <Grid item>
-          {
-            data && data.result ? <div>
-              <Box className="selecteddata_dti" boxShadow={3}>
-                <h4 className="heading">Selected data to drug interaction</h4>
-                <h4 className="drugs">Drugs</h4>
-                {
-                  selectionDrugModel.length > 0  ? selectionDrugModel.map(item => {
-                    return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />
-                  }) : ''
-                }
-                <h4 className="proteins">Proteins</h4>
-                {
-                  selectionTargetModel.length > 0  ? selectionTargetModel.map(item => {
-                    return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />
-                  }) : ''
-                }
-                <Button className="uploadbtn" variant="outlined" onClick={uploadTargetDrugs}>
-                  <img src={dtiimage} alt="image"/>
-                  <span className="text">Upload</span>
-                </Button>
-              </Box>
-            </div> : ''
-          }
+          {/* this section is removed for demo purpose, later will add with new design.
+          */}
+          {/*{*/}
+          {/*  data && data.result ? <div>*/}
+          {/*    <Box className="selecteddata_dti" boxShadow={3}>*/}
+          {/*      <h4 className="heading">Selected data to drug interaction</h4>*/}
+          {/*      <h4 className="drugs">Drugs</h4>*/}
+          {/*      {*/}
+          {/*        selectionDrugModel.length > 0  ? selectionDrugModel.map(item => {*/}
+          {/*          return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />*/}
+          {/*        }) : ''*/}
+          {/*      }*/}
+          {/*      <h4 className="proteins">Proteins</h4>*/}
+          {/*      {*/}
+          {/*        selectionTargetModel.length > 0  ? selectionTargetModel.map(item => {*/}
+          {/*          return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />*/}
+          {/*        }) : ''*/}
+          {/*      }*/}
+          {/*      <Button className="uploadbtn" variant="outlined" onClick={uploadTargetDrugs}>*/}
+          {/*        <img src={dtiimage} alt="image"/>*/}
+          {/*        <span className="text">Upload</span>*/}
+          {/*      </Button>*/}
+          {/*    </Box>*/}
+          {/*  </div> : ''*/}
+          {/*}*/}
         </Grid>
       </Grid>
       {
@@ -295,10 +310,11 @@ export const SearchFeature = () => {
                       getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
                   }
-                  {/*<Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">*/}
-                  {/*  <img style={{ paddingRight: '10px' }} src={dtiimage} alt="image" />*/}
-                  {/*  Upload selected Data to Drug Interactions*/}
-                  {/*</Button>*/}
+                  {/*onClick={uploadSelectedDrugs} for button */}
+                  <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
+                    <img style={{ paddingRight: '10px' }} src={dtiimage} alt="image" />
+                    Upload selected drug
+                  </Button>
                 </AccordionDetails>
               </Accordion>
             </Grid>
@@ -366,12 +382,15 @@ export const SearchFeature = () => {
                       onRowClick={(param) => targetshandleClick(param.row)}
                     />
                   }
-                {/*<Button variant="outlined" onClick={uploadTargetDrugs} className="table-footer">*/}
-                {/*  <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>*/}
-                {/*  Upload selected Data to Drug Interactions*/}
-                {/*</Button>*/}
+                <Button variant="outlined" onClick={uploadSelectedProtein} className="table-footer">
+                  <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
+                  Upload selected protein
+                </Button>
                 </AccordionDetails>
               </Accordion>
+              <Button variant="contained" onClick={uploadSelectedProteinDrugs} style={{marginTop: '40px', marginLeft: '10px'}}>
+                Upload selected protein & Drug
+              </Button>
             </Grid>
             <Grid item xs={6}>
               <Accordion>

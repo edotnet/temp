@@ -5,7 +5,6 @@ import Logo from '../../assets/svg/logo.svg';
 import './NavBar.scss'
 
 export const Navbar = () => {
-
   return <Box>
     {/* <Box component="div" className="dashboardcircle">
       <Box component="img" alt="image" className="moleculeimg" src={moleculeimg}/>
@@ -18,7 +17,7 @@ export const Navbar = () => {
         </Grid>
         <Grid item xs={10} style={{paddingTop: '25px'}}>
           <nav className="headernavlink">
-            <NavLink to="/engine/search">SEARCH ENGINE</NavLink>
+            <NavLink to="/engine">SEARCH ENGINE</NavLink>
             <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
             <NavLink to="/surface">SURFACE</NavLink>
           </nav>
