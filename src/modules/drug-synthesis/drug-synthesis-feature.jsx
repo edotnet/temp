@@ -15,7 +15,7 @@ import {Endpoints} from "../../config/Consts";
 
 import "./DrugSynthesis.css";
 
-const DrugSelector = ({handleDrugChange, selectedDrug, drugs}) => (<TextField sx={{"width": "30%"}}
+export const DrugSelector = ({handleDrugChange, selectedDrug, drugs}) => (<TextField sx={{"width": "30%"}}
     id="outlined-select-currency"
     select
     label="Select a Drug"
@@ -40,7 +40,7 @@ const ActionButtons = ({handleAccept, handleReject}) => (
     <ClearIcon />
   </Button>
 </>
-)
+);
 
 export const DrugSynthesisFeature = () => {
   const url = Endpoints.pdf.upload;
