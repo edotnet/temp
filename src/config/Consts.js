@@ -36,6 +36,6 @@ export const Endpoints = {
     pdf : `${useApi}/xdl/search`
   },
   musyc: {
-    query: `${useApi}/lotus/query/calculate`,
+    query: `${useApi}/3d/calculate`,
   }
 };
