@@ -13,8 +13,6 @@ import IconButton from '@mui/material/IconButton';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import {Endpoints} from "../../config/Consts";
 import Snackbar from '@mui/material/Snackbar';
-import CloseIcon from '@mui/icons-material/Close';
-
 import "./DrugSynthesis.css";
 
 export const DrugSelector = ({handleDrugChange, selectedDrug, drugs}) => (<TextField sx={{"width": "30%"}}
