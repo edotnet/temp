@@ -31,5 +31,8 @@ export const Endpoints = {
   },
   text2xdl: {
     xdl: `${useApi}/text-to-xdl`
+  },
+  search: {
+    pdf : `${useApi}/xdl/search`
   }
 };

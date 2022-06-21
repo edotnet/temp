@@ -8,9 +8,12 @@ import { Endpoints } from "../../config/Consts";
 import axios from 'axios';
 import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
 import dtiimage from '../../assets/img/table-dti-icon.svg';
-import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, Accordion, TextField, IconButton, Button } from "@mui/material";
+import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, Accordion, TextField, IconButton, Button, ButtonGroup} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import MenuItem from '@mui/material/MenuItem';
 import "./search.scss";
+import ContentCopy from "@mui/icons-material/ContentCopy";
+import beautify from "xml-beautifier";
 
 export const SearchFeature = () => {
   const [rowtargets, setrowTargets] = useState([]);
@@ -42,6 +45,11 @@ export const SearchFeature = () => {
   const handleproteinOpen = () => setOpenprotein(true);
   const handleproteinClose = () => setOpenprotein(false);
 
+
+  const [pdfList, setpdfList] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState("");
+  const [selectedPdfObj, setSelectedPdfObj] = useState();
+
   const onRun = () => {
     fetch(url, 'POST', { drug: text, filter1: true, pmids: true });
     setLoadingresult(true);
@@ -54,6 +62,7 @@ export const SearchFeature = () => {
         setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultDrug}`]);
         const defaultDrugRow = drugs.filter((row) => row.title.toLowerCase() === defaultDrug);
         viewDrugLiterature(defaultDrugRow);
+        getpdfs(text);
         const defaultTarget = targets[0].title.toLowerCase();
         setSelectionTargetModel([`${defaultTarget}`]);
         const defaultTargetRow = targets.filter((row) => row.title.toLowerCase() === defaultTarget);
@@ -159,27 +168,33 @@ export const SearchFeature = () => {
     }
   }
 
-  // const TableFooter = ({tableName}) => {
-  //   return (
-  //     <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
-  //       <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
-  //       Upload selected Data to {tableName}
-  //     </Button>
-  //   )
-  // }
+  const getpdfs = (list) => {
+    if(list !== undefined) {
+      const url = Endpoints.search.pdf;
+      axios.get(`${url}?query=${list}&page=0&pageSize=10`).then((resp) => {
+        setpdfList(resp.data.items);
+      });
+    }
+  }
 
-  //   const CustomPagination = () => {
-  //     const { state, apiRef, options } = useGridSelector(apiRef, gridPageSizeSelector);
-  //     return (
-  //         <TablePagination
-  //             count={state.pagination.rowCount}
-  //             page={state.pagination.page}
-  //             onPageChange={(event, value) => apiRef.current.setPage(value)}
-  //             rowsPerPage={options.pageSize}
-  //             rowsPerPageOptions={[]}
-  //         />
-  //     );
-  // }
+  function prettyformat(value) {
+    const xml = beautify(value);
+    return xml;
+  }
+
+  function NewlineText(value , ind) {
+    const text = value;
+    const newText = text.split('\n').map(str => <p key={ind}>{str}</p>);
+    return newText;
+  }
+
+  const handlePdfChange = (e) => {
+    const selectedpdf = e.target.value;
+    setSelectedPdf(selectedpdf);
+    const selectedObj = pdfList.find(text => text.name === selectedpdf);
+    setSelectedPdfObj(selectedObj);
+  }
+
 
   const drugsColumns = [
     { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1,
@@ -307,6 +322,7 @@ export const SearchFeature = () => {
                       onCellClick={handleOnCellClick}
                       onSelectionModelChange={(ids) => {
                         setSelectionDrugModel(ids);
+                        getpdfs(ids[ids.length - 1])
                       }}
                       getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
@@ -383,15 +399,17 @@ export const SearchFeature = () => {
                       onRowClick={(param) => targetshandleClick(param.row)}
                     />
                   }
-                <Button variant="outlined" onClick={uploadSelectedProtein} className="table-footer">
-                  <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
-                  Upload selected protein
-                </Button>
+                  <ButtonGroup variant="outlined" className="table-footer" aria-label="outlined primary button group">
+                    <Button onClick={uploadSelectedProtein} >
+                      <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
+                      Upload selected protein
+                    </Button>
+                    <Button variant="contained" onClick={uploadSelectedProteinDrugs}>
+                      Upload protein & Drug
+                    </Button>
+                   </ButtonGroup>
                 </AccordionDetails>
               </Accordion>
-              <Button variant="contained" onClick={uploadSelectedProteinDrugs} style={{marginTop: '40px', marginLeft: '10px'}}>
-                Upload selected protein & Drug
-              </Button>
             </Grid>
             <Grid item xs={6}>
               <Accordion>
@@ -415,6 +433,61 @@ export const SearchFeature = () => {
                       </ul> : ''
                     }
                   </div>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+          </Grid>
+          <section id='title-wrapper'>
+            <div className='title'>Drug Synthesis</div>
+            <div className='line'></div>
+            <div className='title'>
+              <TextField sx={{"width": "200px", "background": "#fff"}} id="outlined-select-currency" select label="Select Pdf" value={selectedPdf} onChange={handlePdfChange}>
+                {
+                  pdfList.map(text => <MenuItem key={text.name} value={text.name}>{text.name}</MenuItem>)
+                }
+              </TextField>
+            </div>
+          </section>
+
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5a-content" id="panel5a-header">
+                  <Typography>Drug Synthesis Translated to XDL Code</Typography>
+                </AccordionSummary>
+                <AccordionDetails id="style-3" style={{ height: '500px', overflow: "hidden", paddingBottom: "30px"}}>
+                  {
+                    pdfList.length > 0 ? <Grid container spacing={2}>
+                      <Grid item xs={4} sx={{position: 'relative',}}>
+                        <h4>Synthesis Process</h4>
+                        <Box sx={{ position: 'absolute', right: 10, top: 30}}>
+                          <IconButton color="primary" aria-label="copy to clipboard" component="span">
+                            <ContentCopy />
+                          </IconButton>
+                        </Box>
+                        <div className="process" id="style-2">
+                          {
+                            selectedPdfObj ? NewlineText(selectedPdfObj.text) : ''
+                          }
+                        </div>
+                      </Grid>
+                      <Grid item xs={8} sx={{position: 'relative'}} >
+                        <h4>Synthesis XDL</h4>
+                        <Box sx={{position: 'absolute', right: 10, top: 30}}>
+                          <IconButton color="primary" aria-label="copy to clipboard" component="span">
+                            <ContentCopy />
+                          </IconButton>
+                        </Box>
+                        <div className="synthesis" id="style-2">
+                      <pre>
+                        {
+                          selectedPdfObj ? prettyformat(selectedPdfObj.xml) : ''
+                        }
+                      </pre>
+                        </div>
+                      </Grid>
+                    </Grid> : 'No pdf'
+                  }
                 </AccordionDetails>
               </Accordion>
             </Grid>
