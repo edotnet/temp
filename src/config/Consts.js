@@ -26,6 +26,10 @@ export const Endpoints = {
   },
   pdf: {
     upload: `${useApi}/xdl/upload`,
-    xdl: `${useApi}/pdf-xdl`
+    xdl: `${useApi}/pdf-xdl`,
+    add: `${useApi}/xdl/add`,
+  },
+  text2xdl: {
+    xdl: `${useApi}/text-to-xdl`
   }
 };
