@@ -215,7 +215,7 @@ export const PredictiveWorld = () => {
     if (totalDeg === 135) {
       scaleValue += 50;
     }
-    // console.log(totalDeg, scaleValue, tipTitle)
+  
     const x = (scaleValue) * Math.cos(degrees_to_radians(totalDeg));
     const y = (scaleValue) * Math.sin(degrees_to_radians(totalDeg));
 
@@ -305,36 +305,42 @@ export const PredictiveWorld = () => {
             <div className="tips-table">
               <div className="t-header t-row">
                 <div>Molecules</div>
-                <div>logP</div>
-                <div>logS</div>
-                <div>mass</div>
-                <div>ames_tox</div>
-                <div>CACO2</div>
+                <div>LogP</div>
+                <div>LogS</div>
+                <div>Mass</div>
+                <div>AMES tox.</div>
+                <div>CACO2 Prob.</div>
                 <div>BBB</div>
                 <div>HIA</div>
-                <div>biodegradation</div>
+                <div>Biodegradation</div>
               </div>
               <div className="drug1-row t-row">
-                <div>{drug1.name}</div>
-                <div>{drug1.calculated_properties.ALOGPS['logP']}</div>
-                <div>{drug1.calculated_properties.ALOGPS['logS']}</div>
-                <div>{drug1.calculated_properties['Molecular Weight']}</div>
-                <div>{drug1.calculated_properties.ADMET.ames_toxicity['probability']}</div>
-                <div>{drug1.calculated_properties.ADMET.caco2['probability']}</div>
-                <div>{drug1.calculated_properties.ADMET.bbb['probability']}</div>
-                <div>{drug1.calculated_properties.ADMET.hia['probability']}</div>
-                <div>{drug1.calculated_properties.ADMET.biodegradation['probability']}</div>
+                <div className="mlc-color-dot" style={{borderColor: `hsla(${drug1.color.hue},${drug1.color.saturation}%, ${drug1.color.luminosity}%, 0.7)`}}>
+                  <span style={{backgroundColor: `hsla(${drug1.color.hue},${drug1.color.saturation}%, ${drug1.color.luminosity}%, 0.7)`}}></span>
+                </div>
+                <div>{drug1.name? drug1.name : 'Molecular Name'}</div>
+                <div>{drug1.calculated_properties.ALOGPS['logP'] ? drug1.calculated_properties.ALOGPS['logP'] : 'NaN'}</div>
+                <div>{drug1.calculated_properties.ALOGPS['logS'] ? drug1.calculated_properties.ALOGPS['logS'] : 'NaN'}</div>
+                <div>{drug1.calculated_properties['Molecular Weight'] ? drug1.calculated_properties['Molecular Weight'] : 'NaN'}</div>
+                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.ames_toxicity['probability'] : 'NaN'}</div>
+                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.caco2['probability'] : 'NaN'}</div>
+                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.hia['probability'] : 'NaN'}</div>
+                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.bbb['probability'] : 'NaN'}</div>
+                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.biodegradation['probability'] : 'NaN'}</div>
               </div>
               {drug2 && <div className="drug2-row t-row">
-                <div>{drug2.name}</div>
+                <div className="mlc-color-dot" style={{borderColor: `hsla(${drug2.color.hue},${drug2.color.saturation}%, ${drug2.color.luminosity}%, 0.7)`}}>
+                  <span style={{backgroundColor: `hsla(${drug2.color.hue},${drug2.color.saturation}%, ${drug2.color.luminosity}%, 0.7)`}}></span>
+                </div>
+                <div>{drug2.name? drug2.name : 'Molecular Name'}</div>
                 <div>{drug2.calculated_properties.ALOGPS['logP'] ? drug2.calculated_properties.ALOGPS['logP'] : 'NaN'}</div>
                 <div>{drug2.calculated_properties.ALOGPS['logS'] ? drug2.calculated_properties.ALOGPS['logS'] : 'NaN'}</div>
                 <div>{drug2.calculated_properties['Molecular Weight'] ? drug2.calculated_properties['Molecular Weight'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ADMET.ames_toxicity['probability'] ? drug2.calculated_properties.ADMET.ames_toxicity['probability'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ADMET.caco2['probability'] ? drug2.calculated_properties.ADMET.caco2['probability'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ADMET.bbb['probability'] ? drug2.calculated_properties.ADMET.bbb['probability'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ADMET.hia['probability'] ? drug2.calculated_properties.ADMET.hia['probability'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ADMET.biodegradation['probability'] ? drug2.calculated_properties.ADMET.biodegradation['probability'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.ames_toxicity['probability'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.caco2['probability'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.bbb['probability'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.hia['probability'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.biodegradation['probability'] : 'NaN'}</div>
               </div>}
             </div>
           </div>
