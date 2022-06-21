@@ -26,5 +26,8 @@ export const Endpoints = {
   pdf: {
     upload: `${useApi}/xdl/upload`,
     xdl: `${useApi}/pdf-xdl`
+  },
+  musyc: {
+    query: `${useApi}/lotus/query/calculate`,
   }
 };
