@@ -26,6 +26,10 @@ export const Surface3d = memo(() => {
     gamma12_slider_value: 0,
   }
   const [sliderValues, setSliderValues] = useState(initialSliderValues);
+  const [titles, setTitles] = useState({
+    drug1: "Select molecule in drug interactor",
+    drug2: "Select molecule in drug interactor",
+  });
   const debouncedState = useDebounce(sliderValues);
   const {data, loading, fetch} = useApiCall(`${Endpoints.musyc.query}`, 'GET', null, false)
   const lastData = useRef({
@@ -59,6 +63,10 @@ export const Surface3d = memo(() => {
       E1_slider_value: logS1,
       E2_slider_value: logS2,
     }));
+    setTitles({
+      drug1: `${state.interactingMolecules[0].name} (logS)`,
+      drug2: `${state.interactingMolecules[1].name} (logS)`,
+    })
   }, [state.interactingMoleculesResult])
 
   return (
@@ -78,10 +86,18 @@ export const Surface3d = memo(() => {
 
         />
       </Box>
-      <Box sx={{height: 10}}>
-        {loading && <LinearProgress />}
+      <Box sx={{height: 10, px: 20}}>
+        {loading && <LinearProgress color="info"/>}
       </Box>
-      <Typography gutterBottom>Single drug parameters</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <Typography textAlign="center">{titles.drug1}</Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography textAlign="center">{titles.drug2}</Typography>
+        </Grid>
+      </Grid>
+      <Typography gutterBottom textAlign="center">Single drug parameters</Typography>
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <LabeledSlider label="E1" value={sliderValues.E1_slider_value} min={-6} max={6} step={0.05}
@@ -102,7 +118,7 @@ export const Surface3d = memo(() => {
       </Grid>
 
 
-      <Typography gutterBottom>Synergy parameters</Typography>
+      <Typography gutterBottom textAlign="center">Synergy parameters</Typography>
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <LabeledSlider label="beta" value={sliderValues.beta_slider_value} min={-1} max={1} step={0.2}
