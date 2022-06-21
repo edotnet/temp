@@ -319,28 +319,28 @@ export const PredictiveWorld = () => {
                   <span style={{backgroundColor: `hsla(${drug1.color.hue},${drug1.color.saturation}%, ${drug1.color.luminosity}%, 0.7)`}}></span>
                 </div>
                 <div>{drug1.name? drug1.name : 'Molecular Name'}</div>
-                <div>{drug1.calculated_properties.ALOGPS['logP'] ? drug1.calculated_properties.ALOGPS['logP'] : 'NaN'}</div>
-                <div>{drug1.calculated_properties.ALOGPS['logS'] ? drug1.calculated_properties.ALOGPS['logS'] : 'NaN'}</div>
-                <div>{drug1.calculated_properties['Molecular Weight'] ? drug1.calculated_properties['Molecular Weight'] : 'NaN'}</div>
-                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.ames_toxicity['probability'] : 'NaN'}</div>
-                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.caco2['probability'] : 'NaN'}</div>
-                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.hia['probability'] : 'NaN'}</div>
-                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.bbb['probability'] : 'NaN'}</div>
-                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.biodegradation['probability'] : 'NaN'}</div>
+                <div>{drug1.calculated_properties.ALOGPS['logP'] ? drug1.calculated_properties.ALOGPS['logP'] : '-'}</div>
+                <div>{drug1.calculated_properties.ALOGPS['logS'] ? drug1.calculated_properties.ALOGPS['logS'] : '-'}</div>
+                <div>{drug1.calculated_properties['Molecular Weight'] ? drug1.calculated_properties['Molecular Weight'] : '-'}</div>
+                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.ames_toxicity['probability'] : '-'}</div>
+                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.caco2['probability'] : '-'}</div>
+                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.hia['probability'] : '-'}</div>
+                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.bbb['probability'] : '-'}</div>
+                <div>{drug1.calculated_properties.ADMET ? drug1.calculated_properties.ADMET.biodegradation['probability'] : '-'}</div>
               </div>
               {drug2 && <div className="drug2-row t-row">
                 <div className="mlc-color-dot" style={{borderColor: `hsla(${drug2.color.hue},${drug2.color.saturation}%, ${drug2.color.luminosity}%, 0.7)`}}>
                   <span style={{backgroundColor: `hsla(${drug2.color.hue},${drug2.color.saturation}%, ${drug2.color.luminosity}%, 0.7)`}}></span>
                 </div>
                 <div>{drug2.name? drug2.name : 'Molecular Name'}</div>
-                <div>{drug2.calculated_properties.ALOGPS['logP'] ? drug2.calculated_properties.ALOGPS['logP'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ALOGPS['logS'] ? drug2.calculated_properties.ALOGPS['logS'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties['Molecular Weight'] ? drug2.calculated_properties['Molecular Weight'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.ames_toxicity['probability'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.caco2['probability'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.bbb['probability'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.hia['probability'] : 'NaN'}</div>
-                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.biodegradation['probability'] : 'NaN'}</div>
+                <div>{drug2.calculated_properties.ALOGPS['logP'] ? drug2.calculated_properties.ALOGPS['logP'] : '-'}</div>
+                <div>{drug2.calculated_properties.ALOGPS['logS'] ? drug2.calculated_properties.ALOGPS['logS'] : '-'}</div>
+                <div>{drug2.calculated_properties['Molecular Weight'] ? drug2.calculated_properties['Molecular Weight'] : '-'}</div>
+                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.ames_toxicity['probability'] : '-'}</div>
+                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.caco2['probability'] : '-'}</div>
+                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.bbb['probability'] : '-'}</div>
+                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.hia['probability'] : '-'}</div>
+                <div>{drug2.calculated_properties.ADMET ? drug2.calculated_properties.ADMET.biodegradation['probability'] : '-'}</div>
               </div>}
             </div>
           </div>
