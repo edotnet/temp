@@ -3,7 +3,6 @@ import { memo, useRef, useState } from "react";
 import { Box, Container, Grid, Slider, Typography } from "@mui/material";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Endpoints } from "../../config/Consts";
-import { initializedState } from "react-slick/lib/utils/innerSliderUtils";
 import { useDebounce } from "../../infrastructure/hooks/useDebounce";
 
 function LabeledSlider({label, scaledValue, value, min, max, step, onChange}) {
@@ -42,9 +41,17 @@ export const Surface3d = memo(() => {
   const debouncedState = useDebounce(state);
   const encodedObject = new URLSearchParams(debouncedState);
   const {data, loading} = useApiCall(`${Endpoints.musyc.query}?${encodedObject}`, 'GET')
-  const lastData = useRef([]);
+  const lastData = useRef({
+    x: [],
+    y: [],
+    z: [],
+  });
   if (data){
-    lastData.current = data.z.E
+    lastData.current = {
+      x: data.x,
+      y: data.y,
+      z: data.z.E,
+    }
   }
   const onChange = prop => (ev, v) => {
     setState(prev => ({...prev, [prop]: v}));
@@ -55,7 +62,9 @@ export const Surface3d = memo(() => {
       <Box sx={{display: 'flex', justifyContent: 'center'}}>
           <Plot
             data={[{
-              z: lastData.current,
+              z: lastData.current.z,
+              x: lastData.current.x,
+              y: lastData.current.y,
               type: 'surface',
             }]}
             layout={{
@@ -92,7 +101,7 @@ export const Surface3d = memo(() => {
       <Typography gutterBottom>Synergy parameters</Typography>
       <Grid container spacing={2}>
         <Grid item xs={6}>
-          <LabeledSlider label="beta" value={state.beta_slider_value} min={-3} max={3} step={0.2}
+          <LabeledSlider label="beta" value={state.beta_slider_value} min={-1} max={1} step={0.2}
                          onChange={onChange('beta_slider_value')}/>
           <LabeledSlider label="log(alp21)" value={state.alpha21_slider_value} min={-3} max={3} step={0.2}
                          onChange={onChange('alpha21_slider_value')}/>
