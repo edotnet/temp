@@ -1,8 +1,10 @@
 import Plot from "react-plotly.js";
-import { memo, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { Box, Container, Grid, Slider, Typography } from "@mui/material";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { Endpoints } from "../../config/Consts";
+import { initializedState } from "react-slick/lib/utils/innerSliderUtils";
+import { useDebounce } from "../../infrastructure/hooks/useDebounce";
 
 function LabeledSlider({label, scaledValue, value, min, max, step, onChange}) {
   return (
@@ -21,24 +23,29 @@ function LabeledSlider({label, scaledValue, value, min, max, step, onChange}) {
 }
 
 export const Surface3d = memo(() => {
-
-  const [state, setState] = useState({
+  const initialState = {
     E0: 1,
     E1_slider_value: 0.4,
     E2_slider_value: 0.5,
     E3_slider_value: 0.4,
-    h1_slider_value: 2,
+    h1_slider_value: 1,
     h2_slider_value: 0.5,
-    C1_slider_value: 1,
-    C2_slider_value: 1,
+    C1_slider_value: 0,
+    C2_slider_value: 0,
     beta_slider_value: 0,
     alpha21_slider_value: 0,
     alpha12_slider_value: 0,
     gamma21_slider_value: 0,
     gamma12_slider_value: 0,
-  });
-  const encodedObject = new URLSearchParams(state);
+  }
+  const [state, setState] = useState(initialState);
+  const debouncedState = useDebounce(state);
+  const encodedObject = new URLSearchParams(debouncedState);
   const {data, loading} = useApiCall(`${Endpoints.musyc.query}?${encodedObject}`, 'GET')
+  const lastData = useRef([]);
+  if (data){
+    lastData.current = data.z.E
+  }
   const onChange = prop => (ev, v) => {
     setState(prev => ({...prev, [prop]: v}));
   }
@@ -46,10 +53,9 @@ export const Surface3d = memo(() => {
   return (
     <Container>
       <Box sx={{display: 'flex', justifyContent: 'center'}}>
-        {loading ? <Typography>Loading...</Typography> :
           <Plot
             data={[{
-              z: data ? data.z.ls : [],
+              z: lastData.current,
               type: 'surface',
             }]}
             layout={{
@@ -61,7 +67,6 @@ export const Surface3d = memo(() => {
             }}
 
           />
-        }
       </Box>
       <Typography gutterBottom>Single drug parameters</Typography>
       <Grid container spacing={2}>
