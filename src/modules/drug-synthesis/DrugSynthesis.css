@@ -31,3 +31,8 @@
     letter-spacing: normal;
     color: #1f2da9;
 }
+
+.synthesis-save-btn {
+    background: linear-gradient(to top, #6e54c2 100%, #5245b3);
+    color: #fff !important;
+}

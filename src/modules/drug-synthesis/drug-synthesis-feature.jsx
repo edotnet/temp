@@ -2,15 +2,45 @@ import { useState, useEffect, useRef } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { SynthesisDropzoneArea } from "../../infrastructure/components/SynthesisDropzoneArea";
-import { Typography, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Typography, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material";
+import TextField from '@mui/material/TextField';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import { fileToBase64, NewlineText, prettyformat } from "../../infrastructure/utils";
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import {Endpoints} from "../../config/Consts";
-
+import Snackbar from '@mui/material/Snackbar';
 import "./DrugSynthesis.css";
+
+export const DrugSelector = ({handleDrugChange, selectedDrug, drugs}) => (<TextField sx={{"width": "30%"}}
+    id="outlined-select-currency"
+    select
+    label="Select a Drug"
+    value={selectedDrug}
+    onChange={handleDrugChange}
+  >
+    {drugs.map(drug => <MenuItem key={drug} value={drug}>{drug}</MenuItem>)}
+  </TextField>
+);
+
+const DrugEditor = ({handleRename, name}) => (<FormControl variant="standard" style={{marginLeft: "5px"}}>
+      <TextField label="Edit Drug Name" value={name} onChange={handleRename} color="secondary" focused />
+      </FormControl>
+);
+
+const ActionButtons = ({handleAccept, handleReject}) => (
+  <>
+  <Button variant="outlined" size="large" onClick={handleAccept} style={{margin: "10px 5px"}}>
+    <CheckIcon />
+  </Button>
+  <Button variant="outlined" size="large" onClick={handleReject}>
+    <ClearIcon />
+  </Button>
+</>
+);
 
 export const DrugSynthesisFeature = () => {
   const url = Endpoints.pdf.upload;
@@ -19,11 +49,18 @@ export const DrugSynthesisFeature = () => {
   const [file, setFile] = useState([]);
   const [fileName, setFileName] = useState("");
   const [fileUploaded, setFileUploaded] = useState(false);
+  const [fileInfo, setFileInfo] = useState(null);
   const [xdlData, setXdlData] = useState(null);
   const [drugXdlData, setDrugXdlData] = useState(null);
   const [drugs, setDrugs] = useState([]);
-  const [selectedDrug, setSelectedDrug] = useState(null);
+  const [selectedDrug, setSelectedDrug] = useState("");
   const isFirstRender = useRef(true);
+  const [name, setName] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [isAccepted, setIsAccepted] = useState(false);
+  const [updatedPdfData, setUpdatedPdfData] = useState({});
+  const [opensnack, setOpensnack] = useState(false);
+
   
   useEffect(() => {
     if (isFirstRender.current) {
@@ -49,6 +86,7 @@ export const DrugSynthesisFeature = () => {
     const fileInfo = {
       "file_name": data.file_path,
     }
+    data.file_path && setFileInfo(fileInfo);
     fetch(`${fetchURL}`, 'POST', fileInfo);
   }
 
@@ -57,8 +95,8 @@ export const DrugSynthesisFeature = () => {
     const filteredData = Object.fromEntries(
       Object.entries(data).filter(
          ([key, val])=>allowedKeys.includes(key)
-      )
-   );
+        )
+      );
       Object.keys(filteredData).forEach((key) => {
       filteredData[key] = filteredData[key].split("@#@")});
       return filteredData;
@@ -67,37 +105,68 @@ export const DrugSynthesisFeature = () => {
   if (data && fileUploaded) {
     const parsedData = parseData(data);
     const modifiedData = {};
-    parsedData.drug.forEach((drug, index) => {
-      modifiedData[drug] = {
-        "text": parsedData.text[index],
-        "xml": parsedData.xml[index]
+    if('drug' in parsedData) {
+      if(parsedData.drug.length > 0) {
+        parsedData.drug.forEach((drug, index) => {
+          modifiedData[drug] = {
+            "name": drug,
+            "text": parsedData.text[index],
+            "xml": parsedData.xml[index]
+          }
+        });
+        setDrugXdlData(modifiedData);
+        setDrugs(Object.values(modifiedData).map(obj => obj.name));
       }
-    });
-
-    console.log(modifiedData);
-    setDrugXdlData(modifiedData);
-    setDrugs(Object.keys(modifiedData));
+    } else {
+      console.log('no data');
+    }
   }
 
   const handleDrugChange = (e) => {
     const drug = e.target.value;
     setSelectedDrug(drug);
+    setName(drug);
     setXdlData(drugXdlData[drug]);
   }
 
-  const DrugSelector = () => (<FormControl style={{width: '30%', marginBottom: '10px'}} variant="standard">
-      <InputLabel id="pdb-label">Select a Drug</InputLabel>
-      <Select
-        labelId="pdb-labelId"
-        value={selectedDrug}
-        onChange={handleDrugChange}
-      >
-        <MenuItem value={""}>
-          <em>Select a Drug</em>
-        </MenuItem>
-        {drugs.map(drug => <MenuItem key={drug} value={drug}>{drug}</MenuItem>)}
-      </Select>
-    </FormControl>);
+  const handleRename = (e) => {
+    setName(e.target.value);
+    setIsEditing(true);
+  }
+
+  const handleAccept = () => {
+    delete Object.assign(drugXdlData, {[name]: drugXdlData[selectedDrug] })[selectedDrug];
+    drugXdlData[name]["name"] = name;
+    setDrugXdlData(drugXdlData);
+    setDrugs(Object.values(drugXdlData).map(obj => obj.name));
+    setIsEditing(false);
+    setSelectedDrug("");
+    setName("");
+    setXdlData(null);
+    setIsAccepted(true);
+    setOpensnack(true);
+  }
+
+  const handleReject = () => {
+    setName(selectedDrug);
+    setIsEditing(false);
+  }
+
+  const handleSubmit = () => {
+    const updatedPdfData = {};
+    updatedPdfData["filePath"] = fileInfo.file_name;
+    updatedPdfData["drugs"] = Object.values(drugXdlData);
+    fetch(`${Endpoints.pdf.add}`, 'POST', updatedPdfData);
+    setIsAccepted(false);
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpensnack(false);
+  };
 
   return (
     <div className="fileupload-block">
@@ -117,7 +186,14 @@ export const DrugSynthesisFeature = () => {
             <Typography variant="h6" textAlign="left" color="primary" gutterBottom>
               Uploaded File - <Typography variant="span" className="fileName">{fileName}</Typography>
             </Typography>
-            <DrugSelector />
+            <DrugSelector handleDrugChange={handleDrugChange} selectedDrug={selectedDrug} drugs={drugs}/>
+            <DrugEditor handleRename={handleRename} name={name}/>
+            {isEditing && <ActionButtons handleAccept={handleAccept} handleReject={handleReject}/>}
+            {!isEditing && isAccepted && 
+              <Button className="synthesis-save-btn" style={{ margin: "5px", float: 'right' }} size="large"  variant="outlined" onClick={handleSubmit}>
+                Save
+              </Button>
+            }
             <div className="searchEngine-xdl">
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -157,6 +233,12 @@ export const DrugSynthesisFeature = () => {
               </Grid>
             </div>
           </div>}
+      <Snackbar
+        open={opensnack}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Drug name updated successfully"
+      />
     </div>
   );
 }

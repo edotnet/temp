@@ -9,3 +9,57 @@
 .selected-bg{
     background-color: #aba8ff !important;
 }
+
+.tempTooltips{
+    position: absolute;
+    bottom: -30px;
+    right: 0;
+    font-size: 9px;
+
+    .t-header{
+        font-weight: 500;
+        border-bottom: 1px solid #e9e9e9;
+    }
+
+    .t-row{
+        display: flex;
+        flex-wrap: nowrap;
+        position: relative;
+
+        .mlc-color-dot{
+            position: absolute;
+            background-color: transparent;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            left: -12px;
+            top: 2px;
+            border: 1px solid;
+            display: flex;
+            padding: 0;
+
+            span{
+                width: 7px;
+                height: 7px;
+                background-color: blueviolet;
+                border-radius: 50%;
+                display: block;
+                margin: auto;
+            }
+        }
+
+        > div {
+            width: 78px;
+            padding: 2px 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 28px;
+            white-space: nowrap;
+            border-right: 1px solid #e9e9e9;
+
+            &:nth-last-child(1) {
+                border-right: 0;
+            } 
+        }
+    }
+  }
