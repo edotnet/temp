@@ -1,159 +1,84 @@
 import Plot from "react-plotly.js";
-import { memo, useEffect, useState } from "react";
-import { Box, Container, Grid, Slider, Typography } from "@mui/material";
-import { Utils } from "./utils";
+import { memo, useEffect, useRef, useState } from "react";
+import { Box, CircularProgress, Container, Grid, LinearProgress, Slider, Typography } from "@mui/material";
+import { useApiCall } from "../../infrastructure/hooks/useApiCall";
+import { Endpoints } from "../../config/Consts";
+import { useDebounce } from "../../infrastructure/hooks/useDebounce";
+import { useDashboardContext } from "../dashboard/context/useDashboarContext";
+import { LabeledSlider } from "../../infrastructure/components/LabeledSlider";
 
-function LabeledSlider({label, scaledValue, value, min, max, step, onChange}) {
-  return (
-    <Grid container spacing={2}>
-      <Grid item xs={2}>
-        <Typography align="right">{label}</Typography>
-      </Grid>
-      <Grid item xs={8}>
-        <Slider value={value} min={min || 0} max={max || 100} step={step || 1} onChange={onChange}/>
-      </Grid>
-      <Grid item xs={2}>
-        <Typography>{parseFloat(value).toFixed(2)}</Typography>
-      </Grid>
-    </Grid>
-  );
-}
-const initialValues = [[8, 8, 8, 8, 8, 4, 3, 3, 3],
-  [8, 8, 8, 8, 8, 4, 3, 3, 3],
-  [7.5, 7.5, 7.5, 7.5, 7.5, 4, 3, 3, 3],
-  [7, 7, 7, 7, 7, 4, 3, 3, 3],
-  [6, 6, 6, 6, 6, 4, 3, 3, 3],
-  [5, 5, 5, 5, 5, 4, 3, 3, 3],
-  [4.5, 4.5, 4.5, 4.5, 4.5, 4, 3, 3, 3],
-  [3, 3, 3, 3, 3, 4, 3, 3, 3]]
 export const Surface3d = memo(() => {
-  const [data, setData] = useState([{
-    z: initialValues,
-    type: 'surface',
-  }])
-  const [state, setState] = useState({
-    E0: 1,
-    E1: 0.4,
-    E2: 0.5,
-    E3: 0.4,
-    h1: 2,
-    h2: 0.5,
-    C1: 1,
-    C2: 1,
-    beta: 0,
-    alpha21: 0,
-    alpha12: 0,
-    gamma21: 0,
-    gamma12: 0,
-  });
+  const {state} = useDashboardContext();
 
-  const {E0, E1, E2, E3, h1, h2, C1, C2, alpha12, alpha21, gamma12, gamma21, d1, d2} = Utils.get_parameters(state);
-  const E = Utils._MuSyC_E(d1, d2, E0, E1, E2, E3, h1, h2, C1, C2, alpha12, alpha21, gamma12, gamma21)
-  const onChange = prop => (ev, v) => {
-    let z_data = [...data[0].z];
-    if (prop === 'E1') {
-      z_data = z_data.map((val, i) => {
-        const newVal = [...val];
-        newVal[9] = initialValues[i][9] * v;
-        return newVal;
-      });
-      z_data = z_data.map((val, i) => {
-        const newVal = [...val];
-        newVal[8] = initialValues[i][8] * (v/2);
-        return newVal;
-      });
-    }
-    if (prop === 'E2') {
-      z_data = z_data.map((val, i) => {
-        const newVal = [...val];
-        newVal[7] = initialValues[i][7] * v;
-        return newVal;
-      });
-      z_data = z_data.map((val, i) => {
-        const newVal = [...val];
-        newVal[6] = initialValues[i][6] * (v/2);
-        return newVal;
-      });
-    }
-    if (prop === 'C1') {
-      z_data = z_data.map((val, i) => {
-        const newVal = [...val];
-        newVal[5] = initialValues[i][5] * v;
-        return newVal;
-      });
-      z_data = z_data.map((val, i) => {
-        const newVal = [...val];
-        newVal[4] = initialValues[i][4] * (v/2);
-        return newVal;
-      });
-    }
-    if (prop === 'C2') {
-      z_data = z_data.map((val, i) => {
-        const newVal = [...val];
-        newVal[3] = initialValues[i][3] * v;
-        return newVal;
-      });
-      z_data = z_data.map((val, i) => {
-        const newVal = [...val];
-        newVal[2] = initialValues[i][2] * (v/2);
-        return newVal;
-      });
-    }
-    if (prop === 'h1') {
-      z_data = z_data.map((val, i) => {
-        let newVal = [...val];
-        if (i===4) {
-          newVal = newVal.map((nv, col) => {
-            return initialValues[i][col] * v
-          })
-        }
-        return newVal;
-      });
-      z_data = z_data.map((val, i) => {
-        let newVal = [...val];
-        if (i===5) {
-          newVal = newVal.map((nv, col) => {
-            return initialValues[i][col] * v/2
-          })
-        }
-        return newVal;
-      });
-    }
-    if (prop === 'h2') {
-      z_data = z_data.map((val, i) => {
-        let newVal = [...val];
-        if (i===6) {
-          newVal = newVal.map((nv, col) => {
-            return initialValues[i][col] * v
-          })
-        }
-        return newVal;
-      });
-      z_data = z_data.map((val, i) => {
-        let newVal = [...val];
-        if (i===7) {
-          newVal = newVal.map((nv, col) => {
-            return initialValues[i][col] * v/2
-          })
-        }
-        return newVal;
-      });
-    }
-    setData([{
-      z: z_data,
-      type: 'surface',
-    }]);
-    setState(prev => ({...prev, [prop]: v}));
+  const initialSliderValues = {
+    E0: 1,
+    E1_slider_value: 0.5,
+    E2_slider_value: 0.5,
+    E3_slider_value: 0.4,
+    h1_slider_value: 1,
+    h2_slider_value: 0.5,
+    C1_slider_value: 0,
+    C2_slider_value: 0,
+    beta_slider_value: 0,
+    alpha21_slider_value: 0,
+    alpha12_slider_value: 0,
+    gamma21_slider_value: 0,
+    gamma12_slider_value: 0,
   }
+  const [sliderValues, setSliderValues] = useState(initialSliderValues);
+  const [titles, setTitles] = useState({
+    drug1: "Select molecule in drug interactor",
+    drug2: "Select molecule in drug interactor",
+  });
+  const debouncedState = useDebounce(sliderValues);
+  const {data, loading, fetch} = useApiCall(`${Endpoints.musyc.query}`, 'GET', null, false)
+  const lastData = useRef({
+    x: [],
+    y: [],
+    z: [],
+  });
+  if (data) {
+    lastData.current = {
+      x: data.x,
+      y: data.y,
+      z: data.z.E,
+    }
+  }
+  const onChange = prop => (ev, v) => {
+    setSliderValues(prev => ({...prev, [prop]: v}));
+  }
+
+  useEffect(() => {
+    const encodedObject = new URLSearchParams(debouncedState);
+    fetch(`${Endpoints.musyc.query}?${encodedObject}`, 'GET', null);
+  }, [debouncedState])
+
+  useEffect(() => {
+    if (!state.interactingMoleculesResult) {
+      return;
+    }
+    const logS1 = state.interactingMolecules[0].calculated_properties.ALOGPS.logS ?? 0;
+    const logS2 = state.interactingMolecules[1].calculated_properties.ALOGPS.logS ?? 0;
+    setSliderValues(prev => ({...prev,
+      E1_slider_value: logS1,
+      E2_slider_value: logS2,
+    }));
+    setTitles({
+      drug1: `${state.interactingMolecules[0].name} (logS)`,
+      drug2: `${state.interactingMolecules[1].name} (logS)`,
+    })
+  }, [state.interactingMoleculesResult])
 
   return (
     <Container>
       <Box sx={{display: 'flex', justifyContent: 'center'}}>
         <Plot
-          data={data}
+          data={[{
+            z: lastData.current.z,
+            type: 'surface',
+          }]}
           layout={{
-            width: 500,
-            height: 500,
+
             paper_bgcolor: 'transparent',
             legend: {title: {text: 'tee'}},
             yaxis: {title: 'Drug2'}
@@ -161,46 +86,57 @@ export const Surface3d = memo(() => {
 
         />
       </Box>
-      <Typography gutterBottom>Single drug parameters</Typography>
+      <Box sx={{height: 10, px: 20}}>
+        {loading && <LinearProgress color="info"/>}
+      </Box>
       <Grid container spacing={2}>
         <Grid item xs={6}>
-          <LabeledSlider label="E1" value={state.E1} min={0} max={1} step={0.05}
-                         onChange={onChange('E1')}/>
-          <LabeledSlider label="log(C1)" value={state.C1} min={-2} max={2} step={0.2}
-                         onChange={onChange('C1')}/>
-          <LabeledSlider label="log(h1)" value={state.h1} min={-1} max={1} step={0.2}
-                         onChange={onChange('h1')} />
+          <Typography textAlign="center">{titles.drug1}</Typography>
         </Grid>
         <Grid item xs={6}>
-          <LabeledSlider label="E2" value={state.E2} min={0} max={1} step={0.05}
-                         onChange={onChange('E2')} />
-          <LabeledSlider label="log(C2)" value={state.C2} min={-2} max={2} step={0.2}
-                         onChange={onChange('C2')}/>
-          <LabeledSlider label="log(h2)" value={state.h2} min={-1} max={1} step={0.2}
-                         onChange={onChange('h2')}/>
+          <Typography textAlign="center">{titles.drug2}</Typography>
+        </Grid>
+      </Grid>
+      <Typography gutterBottom textAlign="center">Single drug parameters</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <LabeledSlider label="E1" value={sliderValues.E1_slider_value} min={-6} max={6} step={0.05}
+                         onChange={onChange('E1_slider_value')}/>
+          <LabeledSlider label="log(C1)" value={sliderValues.C1_slider_value} min={-2} max={2} step={0.2}
+                         onChange={onChange('C1_slider_value')}/>
+          <LabeledSlider label="log(h1)" value={sliderValues.h1_slider_value} min={-1} max={1} step={0.2}
+                         onChange={onChange('h1_slider_value')}/>
+        </Grid>
+        <Grid item xs={6}>
+          <LabeledSlider label="E2" value={sliderValues.E2_slider_value} min={-6} max={6} step={0.05}
+                         onChange={onChange('E2_slider_value')}/>
+          <LabeledSlider label="log(C2)" value={sliderValues.C2_slider_value} min={-2} max={2} step={0.2}
+                         onChange={onChange('C2_slider_value')}/>
+          <LabeledSlider label="log(h2)" value={sliderValues.h2_slider_value} min={-1} max={1} step={0.2}
+                         onChange={onChange('h2_slider_value')}/>
         </Grid>
       </Grid>
 
-      {/*
-      <Typography gutterBottom>Synergy parameters</Typography>
+
+      <Typography gutterBottom textAlign="center">Synergy parameters</Typography>
       <Grid container spacing={2}>
         <Grid item xs={6}>
-          <LabeledSlider label="beta" value={state.beta} min={-3} max={3} step={0.2}
-                         onChange={onChange('beta')}/>
-          <LabeledSlider label="log(alp21)" value={state.alpha21} min={-3} max={3} step={0.2}
-                         onChange={onChange('alpha21')}/>
-          <LabeledSlider label="log(gam21)" value={state.gamma21} min={-1.4} max={1.6} step={0.2}
-                         onChange={onChange('gamma21')}/>
+          <LabeledSlider label="beta" value={sliderValues.beta_slider_value} min={-1} max={1} step={0.2}
+                         onChange={onChange('beta_slider_value')}/>
+          <LabeledSlider label="log(alp21)" value={sliderValues.alpha21_slider_value} min={-3} max={3} step={0.2}
+                         onChange={onChange('alpha21_slider_value')}/>
+          <LabeledSlider label="log(gam21)" value={sliderValues.gamma21_slider_value} min={-1.4} max={1.6} step={0.2}
+                         onChange={onChange('gamma21_slider_value')}/>
         </Grid>
         <Grid item xs={6}>
           <Box p={2}></Box>
-          <LabeledSlider label="log(alp12)" value={state.alpha12} min={-3} max={3} step={0.2}
-                         onChange={onChange('alpha12')}/>
-          <LabeledSlider label="log(gam12)" value={state.gamma12} min={-1.4} max={1.6} step={0.2}
-                         onChange={onChange('gamma12')}/>
+          <LabeledSlider label="log(alp12)" value={sliderValues.alpha12_slider_value} min={-3} max={3} step={0.2}
+                         onChange={onChange('alpha12_slider_value')}/>
+          <LabeledSlider label="log(gam12)" value={sliderValues.gamma12_slider_value} min={-1.4} max={1.6} step={0.2}
+                         onChange={onChange('gamma12_slider_value')}/>
         </Grid>
       </Grid>
-      */}
+
     </Container>
   )
 })

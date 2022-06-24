@@ -8,9 +8,12 @@ import { Endpoints } from "../../config/Consts";
 import axios from 'axios';
 import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
 import dtiimage from '../../assets/img/table-dti-icon.svg';
-import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, Accordion, TextField, IconButton, Button } from "@mui/material";
+import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, Accordion, TextField, IconButton, Button, ButtonGroup} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import MenuItem from '@mui/material/MenuItem';
 import "./search.scss";
+import ContentCopy from "@mui/icons-material/ContentCopy";
+import beautify from "xml-beautifier";
 
 export const SearchFeature = () => {
   const [rowtargets, setrowTargets] = useState([]);
@@ -42,6 +45,11 @@ export const SearchFeature = () => {
   const handleproteinOpen = () => setOpenprotein(true);
   const handleproteinClose = () => setOpenprotein(false);
 
+
+  const [pdfList, setpdfList] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState("");
+  const [selectedPdfObj, setSelectedPdfObj] = useState();
+
   const onRun = () => {
     fetch(url, 'POST', { drug: text, filter1: true, pmids: true });
     setLoadingresult(true);
@@ -54,6 +62,7 @@ export const SearchFeature = () => {
         setSelectionDrugModel(selectionDrugModel => [...selectionDrugModel, `${defaultDrug}`]);
         const defaultDrugRow = drugs.filter((row) => row.title.toLowerCase() === defaultDrug);
         viewDrugLiterature(defaultDrugRow);
+        getpdfs(text);
         const defaultTarget = targets[0].title.toLowerCase();
         setSelectionTargetModel([`${defaultTarget}`]);
         const defaultTargetRow = targets.filter((row) => row.title.toLowerCase() === defaultTarget);
@@ -102,20 +111,35 @@ export const SearchFeature = () => {
             }
           }
         }
+        dispatch({type: 'resetInteractingMolecules', payload: null});
         navigate("/dashboard");
       });
     })
   }
 
-  const uploadTargetDrugs = async () => {
+  const uploadSelectedProtein = async () => {
+      const url = `${Endpoints.drugbank.targets}${selectionTargetModel[0]}`;
+      axios.get(url).then(resp => {
+        if(resp.data) {
+          dispatch({type: 'addProtein', payload: resp.data[0]});
+          dispatch({type: 'resetInteractingMolecules', payload: null});
+          dispatch({type: 'removePdb', payload: null});
+          navigate("/dashboard");
+          // uploadSelectedDrugs();
+        }
+      });
+  }
+
+  const uploadSelectedProteinDrugs = async () => {
     const url = `${Endpoints.drugbank.targets}${selectionTargetModel[0]}`;
     axios.get(url).then(resp => {
       if(resp.data) {
         dispatch({type: 'addProtein', payload: resp.data[0]});
-        uploadSelectedDrugs();
+         uploadSelectedDrugs();
       }
     });
   }
+
 
   const handleOnCellClick = (params) => {
     if(params.field === 'title') { 
@@ -125,7 +149,6 @@ export const SearchFeature = () => {
           setModalData(resp.data.items[0]);
         }
       });
-      handleOpen();
     }
   };
 
@@ -145,27 +168,33 @@ export const SearchFeature = () => {
     }
   }
 
-  // const TableFooter = ({tableName}) => {
-  //   return (
-  //     <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
-  //       <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
-  //       Upload selected Data to {tableName}
-  //     </Button>
-  //   )
-  // }
+  const getpdfs = (list) => {
+    if(list !== undefined) {
+      const url = Endpoints.search.pdf;
+      axios.get(`${url}?query=${list}&page=0&pageSize=10`).then((resp) => {
+        setpdfList(resp.data.items);
+      });
+    }
+  }
 
-  //   const CustomPagination = () => {
-  //     const { state, apiRef, options } = useGridSelector(apiRef, gridPageSizeSelector);
-  //     return (
-  //         <TablePagination
-  //             count={state.pagination.rowCount}
-  //             page={state.pagination.page}
-  //             onPageChange={(event, value) => apiRef.current.setPage(value)}
-  //             rowsPerPage={options.pageSize}
-  //             rowsPerPageOptions={[]}
-  //         />
-  //     );
-  // }
+  function prettyformat(value) {
+    const xml = beautify(value);
+    return xml;
+  }
+
+  function NewlineText(value , ind) {
+    const text = value;
+    const newText = text.split('\n').map(str => <p key={ind}>{str}</p>);
+    return newText;
+  }
+
+  const handlePdfChange = (e) => {
+    const selectedpdf = e.target.value;
+    setSelectedPdf(selectedpdf);
+    const selectedObj = pdfList.find(text => text.name === selectedpdf);
+    setSelectedPdfObj(selectedObj);
+  }
+
 
   const drugsColumns = [
     { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1,
@@ -210,7 +239,7 @@ export const SearchFeature = () => {
 
   return (
     <div className="searchDefault">
-      <Grid container spacing={2} style={{marginTop: '20px', marginBottom: '20px'}}>
+      <Grid container spacing={2} style={{marginTop: '40px', marginBottom: '40px'}}>
         <Grid item xs={4}>
           <TextField
             fullWidth
@@ -232,29 +261,31 @@ export const SearchFeature = () => {
           <Button className='searchEngin-headerbtn btn-white' variant="outlined" onClick={onRun}>Search</Button>
         </Grid>
         <Grid item>
-          {
-            data && data.result ? <div>
-              <Box className="selecteddata_dti" boxShadow={3}>
-                <h4 className="heading">Selected data to drug interaction</h4>
-                <h4 className="drugs">Drugs</h4>
-                {
-                  selectionDrugModel.length > 0  ? selectionDrugModel.map(item => {
-                    return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />
-                  }) : ''
-                }
-                <h4 className="proteins">Proteins</h4>
-                {
-                  selectionTargetModel.length > 0  ? selectionTargetModel.map(item => {
-                    return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />
-                  }) : ''
-                }
-                <Button className="uploadbtn" variant="outlined" onClick={uploadTargetDrugs}>
-                  <img src={dtiimage} alt="image"/>
-                  <span className="text">Upload</span>
-                </Button>
-              </Box>
-            </div> : ''
-          }
+          {/* this section is removed for demo purpose, later will add with new design.
+          */}
+          {/*{*/}
+          {/*  data && data.result ? <div>*/}
+          {/*    <Box className="selecteddata_dti" boxShadow={3}>*/}
+          {/*      <h4 className="heading">Selected data to drug interaction</h4>*/}
+          {/*      <h4 className="drugs">Drugs</h4>*/}
+          {/*      {*/}
+          {/*        selectionDrugModel.length > 0  ? selectionDrugModel.map(item => {*/}
+          {/*          return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />*/}
+          {/*        }) : ''*/}
+          {/*      }*/}
+          {/*      <h4 className="proteins">Proteins</h4>*/}
+          {/*      {*/}
+          {/*        selectionTargetModel.length > 0  ? selectionTargetModel.map(item => {*/}
+          {/*          return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />*/}
+          {/*        }) : ''*/}
+          {/*      }*/}
+          {/*      <Button className="uploadbtn" variant="outlined" onClick={uploadTargetDrugs}>*/}
+          {/*        <img src={dtiimage} alt="image"/>*/}
+          {/*        <span className="text">Upload</span>*/}
+          {/*      </Button>*/}
+          {/*    </Box>*/}
+          {/*  </div> : ''*/}
+          {/*}*/}
         </Grid>
       </Grid>
       {
@@ -291,14 +322,16 @@ export const SearchFeature = () => {
                       onCellClick={handleOnCellClick}
                       onSelectionModelChange={(ids) => {
                         setSelectionDrugModel(ids);
+                        getpdfs(ids[ids.length - 1])
                       }}
                       getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
                   }
-                  {/*<Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">*/}
-                  {/*  <img style={{ paddingRight: '10px' }} src={dtiimage} alt="image" />*/}
-                  {/*  Upload selected Data to Drug Interactions*/}
-                  {/*</Button>*/}
+                  {/*onClick={uploadSelectedDrugs} for button */}
+                  <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
+                    <img style={{ paddingRight: '10px' }} src={dtiimage} alt="image" />
+                    Upload selected drug
+                  </Button>
                 </AccordionDetails>
               </Accordion>
             </Grid>
@@ -366,10 +399,15 @@ export const SearchFeature = () => {
                       onRowClick={(param) => targetshandleClick(param.row)}
                     />
                   }
-                {/*<Button variant="outlined" onClick={uploadTargetDrugs} className="table-footer">*/}
-                {/*  <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>*/}
-                {/*  Upload selected Data to Drug Interactions*/}
-                {/*</Button>*/}
+                  <ButtonGroup variant="outlined" className="table-footer" aria-label="outlined primary button group">
+                    <Button onClick={uploadSelectedProtein} >
+                      <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
+                      Upload selected protein
+                    </Button>
+                    <Button variant="contained" onClick={uploadSelectedProteinDrugs}>
+                      Upload protein & Drug
+                    </Button>
+                   </ButtonGroup>
                 </AccordionDetails>
               </Accordion>
             </Grid>
@@ -395,6 +433,61 @@ export const SearchFeature = () => {
                       </ul> : ''
                     }
                   </div>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+          </Grid>
+          <section id='title-wrapper'>
+            <div className='title'>Drug Synthesis</div>
+            <div className='line'></div>
+            <div className='title'>
+              <TextField sx={{"width": "200px", "background": "#fff"}} id="outlined-select-currency" select label="Select Pdf" value={selectedPdf} onChange={handlePdfChange}>
+                {
+                  pdfList.map(text => <MenuItem key={text.name} value={text.name}>{text.name}</MenuItem>)
+                }
+              </TextField>
+            </div>
+          </section>
+
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5a-content" id="panel5a-header">
+                  <Typography>Drug Synthesis Translated to XDL Code</Typography>
+                </AccordionSummary>
+                <AccordionDetails id="style-3" style={{ height: '500px', overflow: "hidden", paddingBottom: "30px"}}>
+                  {
+                    pdfList.length > 0 ? <Grid container spacing={2}>
+                      <Grid item xs={4} sx={{position: 'relative',}}>
+                        <h4>Synthesis Process</h4>
+                        <Box sx={{ position: 'absolute', right: 10, top: 30}}>
+                          <IconButton color="primary" aria-label="copy to clipboard" component="span">
+                            <ContentCopy />
+                          </IconButton>
+                        </Box>
+                        <div className="process" id="style-2">
+                          {
+                            selectedPdfObj ? NewlineText(selectedPdfObj.text) : ''
+                          }
+                        </div>
+                      </Grid>
+                      <Grid item xs={8} sx={{position: 'relative'}} >
+                        <h4>Synthesis XDL</h4>
+                        <Box sx={{position: 'absolute', right: 10, top: 30}}>
+                          <IconButton color="primary" aria-label="copy to clipboard" component="span">
+                            <ContentCopy />
+                          </IconButton>
+                        </Box>
+                        <div className="synthesis" id="style-2">
+                      <pre>
+                        {
+                          selectedPdfObj ? prettyformat(selectedPdfObj.xml) : ''
+                        }
+                      </pre>
+                        </div>
+                      </Grid>
+                    </Grid> : 'No pdf'
+                  }
                 </AccordionDetails>
               </Accordion>
             </Grid>

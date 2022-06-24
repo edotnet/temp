@@ -90,6 +90,10 @@ const reducer = (state, action) => {
       ...state,
       pdbid
     }),
+    removePdb:() => ({
+      ...state,
+      pdbid: ""
+    })
   }
   return actions[action.type](action.payload);
 }

@@ -20,7 +20,8 @@ const PillAutocomplete = styled(Autocomplete)({
 
 
 export const MoleculeAutocomplete = ({label, onChange, category}) => {
-  const url = Endpoints.drugbank.drugs;
+  //const url = Endpoints.drugbank.drugs;
+  const url = Endpoints.drugbank.drugsquery;
   const {loading, data, error, fetch} = useApiCall(url, null, null, false);
   const executeSearch = (search) => {
     if (search.length > 3) {
