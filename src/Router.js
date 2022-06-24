@@ -28,9 +28,7 @@ export const Router = () => (
     <Route path="categories" element={<DrugbankCategories/>}/>
     <Route path="drug-interaction" element={<DrugInteractionPage />}/>
     <Route path="dti" element={<DTIPage />}/>
-    <Route path="engine/*" element={<Engine />}>
-      <Route path="text2xdl" element={<Text2xdlFeature/>}></Route>
-    </Route>
+    <Route path="engine/*" element={<Engine />}/>
     <Route path="surface" element={<SurfacePage />}/>
     <Route path="start" element={<StartView/>} />
     {/* <Route component={NotFoundPage} />  */}

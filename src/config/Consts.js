@@ -10,6 +10,7 @@ const useApi = isApi ?
 export const Endpoints = {
   drugbank: {
     drugbank: `${useApi}/drugbank/`,
+    drugsquery: `${useApi}/drugbank/query/`,
     drugs: `${useApi}/drugbank/molecule/`,
     targets: `${useApi}/drugbank/target/query/`,
     categories: `${useApi}/drugbank/category/query/`,
@@ -25,6 +26,16 @@ export const Endpoints = {
   },
   pdf: {
     upload: `${useApi}/xdl/upload`,
-    xdl: `${useApi}/pdf-xdl`
+    xdl: `${useApi}/pdf-xdl`,
+    add: `${useApi}/xdl/add`,
+  },
+  text2xdl: {
+    xdl: `${useApi}/text-to-xdl`
+  },
+  search: {
+    pdf : `${useApi}/xdl/search`
+  },
+  musyc: {
+    query: `${useApi}/3d/calculate`,
   }
 };
