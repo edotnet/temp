@@ -231,7 +231,7 @@ export const PredictiveWorld = () => {
       return;
     }
     drawMolecules();
-    if(state.interactingMolecules.length === 1){
+    if(state.interactingMolecules.length > 0){
       drawLines();
     }
   }, [state.interactingMolecules])
