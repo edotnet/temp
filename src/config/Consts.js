@@ -35,5 +35,8 @@ export const Endpoints = {
   },
   search: {
     pdf : `${useApi}/xdl/search`
+  },
+  musyc: {
+    query: `${useApi}/3d/calculate`,
   }
 };
