@@ -68,7 +68,6 @@ export const PredictiveWorld = () => {
   const inValues = [135, 180];
 
   const [drug1, drug2] = state.interactingMolecules;
-  
   // To create each tooltip, we need to show
   const drawToolTip = (drugName, title) => {
     tipCtx.current.fillStyle = "#6D69C0";
