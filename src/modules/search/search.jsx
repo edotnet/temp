@@ -203,7 +203,7 @@ export const SearchFeature = () => {
 
   const downloadpdf = () => {
     const url = Endpoints.pdf.download
-    axios.get(`${url}${selectedPdfObj.path}`).then(resp => {
+    axios.get(`${url}${selectedPdfObj.filePath}`).then(resp => {
       if(resp.data) {
         window.open(resp.data.url , '_blank');
       }
@@ -328,7 +328,7 @@ export const SearchFeature = () => {
                       onRowClick={(param) => {
                           drughandleClick(param.row);
                           setClickedRow(param.row.title.toLowerCase());
-                          getpdfs(param.row.title.toLocaleString())
+                          getpdfs(param.row.title.toLowerCase())
                         }
                       }
                       disableSelectionOnClick
