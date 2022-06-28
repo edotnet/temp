@@ -260,6 +260,12 @@ export const SearchFeature = () => {
             id="standard-basic"
             value={text}
             onChange={e => setText(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                setText(e.target.value);
+                onRun()
+              }
+            }}
             variant="standard"
             placeholder="Search for..."
             className="searchEngine-input"
