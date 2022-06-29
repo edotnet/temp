@@ -99,7 +99,7 @@ export const DrugSynthesisFeature = () => {
         )
       );
       Object.keys(filteredData).forEach((key) => {
-      filteredData[key] = filteredData[key].split("@#@")});
+      filteredData[key] = filteredData[key].replaceAll('‑', '-').split("@#@")});
       return filteredData;
   }
 
