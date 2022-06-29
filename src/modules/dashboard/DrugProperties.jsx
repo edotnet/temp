@@ -7,6 +7,8 @@ import { AdverseEffectsInfo } from "./adverse-effects/AdverseEffectsInfo";
 import { Close, ContentCopy } from "@mui/icons-material";
 import { CopyComponent } from "../../infrastructure/components/Copy.component";
 import { fetchFromObject } from "../../infrastructure/utils";
+import $3Dmol from '3dmol';
+import $ from 'jquery/dist/jquery.min.js';
 
 const keys = [
   {key: 'calculated_properties.Molecular Weight', title: 'Mass.', color: '#AE2AFF'}, //900 / 1
@@ -36,6 +38,20 @@ export const DrugProperties = () => {
   const {state, dispatch} = useDashboardContext()
   if (!state.selectedMolecule) {
     return null;
+  } else {
+    if(state.selectedMolecule.cid !== null) {
+      setTimeout(()=> {
+        const element = $('#container-01')
+        const config = { backgroundColor: 'white' }
+        const viewer = $3Dmol.createViewer(element, config)
+        $3Dmol.download(`cid:${state.selectedMolecule.cid}`, viewer, {}, function() {
+          viewer.setStyle({}, { stick: {} })
+          viewer.render()
+        })
+      },1000);
+    } else {
+      return null;
+    }
   }
 
   const close = () => {
@@ -111,6 +127,8 @@ export const DrugProperties = () => {
             {renderCalculatedProperties()}
           </Grid>
           <AdverseEffectsInfo/>
+          <Hr/>
+          <div id="container-01" className="mol-container"></div>
         </Box>
       </ModalPaper>
     </Box>
