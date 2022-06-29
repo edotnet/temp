@@ -14,6 +14,7 @@ import ContentCopy from '@mui/icons-material/ContentCopy';
 import {Endpoints} from "../../config/Consts";
 import Snackbar from '@mui/material/Snackbar';
 import "./DrugSynthesis.css";
+import {CopyComponent} from "../../infrastructure/components/Copy.component";
 
 export const DrugSelector = ({handleDrugChange, selectedDrug, drugs}) => (<TextField sx={{"width": "30%"}}
     id="outlined-select-currency"
@@ -205,9 +206,7 @@ export const DrugSynthesisFeature = () => {
                           <Grid item xs={8} sx={{ position: 'relative' }}>
                             <h4>Synthesis Process</h4>
                             <Box sx={{ position: 'absolute', right: 10, top: 30 }}>
-                              <IconButton color="primary" aria-label="copy to clipboard" component="span">
-                                <ContentCopy />
-                              </IconButton>
+                              <CopyComponent text={xdlData.text} />
                             </Box>
                             <div className="process" id="style-2">
                               {xdlData ? NewlineText(xdlData.text) : ''}
@@ -217,9 +216,7 @@ export const DrugSynthesisFeature = () => {
                             <div className="synthesis" id="style-2">
                               <h4>Synthesis XDL</h4>
                               <Box sx={{ position: 'absolute', right: 10, top: 30 }}>
-                                <IconButton color="primary" aria-label="copy to clipboard" component="span">
-                                  <ContentCopy />
-                                </IconButton>
+                                <CopyComponent text={xdlData.xml} />
                               </Box>
                               <pre>
                                 {xdlData ? prettyformat(xdlData.xml) : ''}

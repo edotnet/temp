@@ -12,6 +12,10 @@ export const ThreeDMol = () => {
   const {state} = useDashboardContext()
   useEffect(() => {
     if (state.pdbid) {
+      const element = document.getElementById('gldiv').getElementsByTagName('canvas');
+      if(element.length > 0) {
+        document.getElementById('gldiv').firstElementChild.remove();
+      }
       const viewer = $3Dmol.createViewer(
         'gldiv', //id of div to create canvas in
         {

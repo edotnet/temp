@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import "./search.scss";
 import ContentCopy from "@mui/icons-material/ContentCopy";
 import beautify from "xml-beautifier";
+import {CopyComponent} from "../../infrastructure/components/Copy.component";
 
 export const SearchFeature = () => {
   const [rowtargets, setrowTargets] = useState([]);
@@ -48,7 +49,7 @@ export const SearchFeature = () => {
 
   const [pdfList, setpdfList] = useState([]);
   const [selectedPdf, setSelectedPdf] = useState("");
-  const [selectedPdfObj, setSelectedPdfObj] = useState();
+  const [selectedPdfObj, setSelectedPdfObj] = useState("");
 
   const onRun = () => {
     fetch(url, 'POST', { drug: text, filter1: true, pmids: true });
@@ -147,6 +148,7 @@ export const SearchFeature = () => {
       axios.get(url).then(resp => {
         if (resp.data) {
           setModalData(resp.data.items[0]);
+          handleOpen();
         }
       });
     }
@@ -159,20 +161,25 @@ export const SearchFeature = () => {
         if (resp.data) {
           for (let i = 0; i < resp.data.length; i++) {
             if (resp.data[i].name === params.value) {
-              setproteinModalData(resp.data[i])
+              setproteinModalData(resp.data[i]);
+              handleproteinOpen();
             }
           }
         }
       })
-      handleproteinOpen();
     }
   }
 
   const getpdfs = (list) => {
     if(list !== undefined) {
       const url = Endpoints.search.pdf;
+      // reset pdflists and selected pdf object on click drug name
+      setpdfList([]);
+      setSelectedPdfObj("");
       axios.get(`${url}?query=${list}&page=0&pageSize=10`).then((resp) => {
-        setpdfList(resp.data.items);
+        if(resp.data.items) {
+            setpdfList(resp.data.items);
+        }
       });
     }
   }
@@ -191,10 +198,18 @@ export const SearchFeature = () => {
   const handlePdfChange = (e) => {
     const selectedpdf = e.target.value;
     setSelectedPdf(selectedpdf);
-    const selectedObj = pdfList.find(text => text.name === selectedpdf);
+    const selectedObj = pdfList.find(text => text.title === selectedpdf);
     setSelectedPdfObj(selectedObj);
   }
 
+  const downloadpdf = () => {
+    const url = Endpoints.pdf.download
+    axios.get(`${url}${selectedPdfObj.filePath}`).then(resp => {
+      if(resp.data) {
+        window.open(resp.data.url , '_blank');
+      }
+    });
+  }
 
   const drugsColumns = [
     { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1,
@@ -246,6 +261,12 @@ export const SearchFeature = () => {
             id="standard-basic"
             value={text}
             onChange={e => setText(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                setText(e.target.value);
+                onRun()
+              }
+            }}
             variant="standard"
             placeholder="Search for..."
             className="searchEngine-input"
@@ -312,8 +333,9 @@ export const SearchFeature = () => {
                       getRowId={(row) => row.title.toLowerCase()}
                       getRowHeight={() => 'auto'}
                       onRowClick={(param) => {
-                          drughandleClick(param.row)
-                          setClickedRow(param.row.title.toLowerCase())
+                          drughandleClick(param.row);
+                          setClickedRow(param.row.title.toLowerCase());
+                          getpdfs(param.row.title.toLowerCase())
                         }
                       }
                       disableSelectionOnClick
@@ -322,13 +344,12 @@ export const SearchFeature = () => {
                       onCellClick={handleOnCellClick}
                       onSelectionModelChange={(ids) => {
                         setSelectionDrugModel(ids);
-                        getpdfs(ids[ids.length - 1])
                       }}
                       getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                     />
                   }
                   {/*onClick={uploadSelectedDrugs} for button */}
-                  <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer">
+                  <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer uploadbtn">
                     <img style={{ paddingRight: '10px' }} src={dtiimage} alt="image" />
                     Upload selected drug
                   </Button>
@@ -394,13 +415,15 @@ export const SearchFeature = () => {
                           const selectionSet = new Set(selectionTargetModel);
                           const result = selection.filter((s) => !selectionSet.has(s));
                           setSelectionTargetModel(result);
+                          const selectedRowData = targets.filter((row) => row.title.toLowerCase() === selection[selection.length-1]);
+                          setselectedtarget(selectedRowData[0].title);
+                          setrowTargets(selectedRowData[0].pmids);
                         }
                       }}
-                      onRowClick={(param) => targetshandleClick(param.row)}
                     />
                   }
                   <ButtonGroup variant="outlined" className="table-footer" aria-label="outlined primary button group">
-                    <Button onClick={uploadSelectedProtein} >
+                    <Button onClick={uploadSelectedProtein} className="uploadbtn">
                       <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
                       Upload selected protein
                     </Button>
@@ -441,9 +464,9 @@ export const SearchFeature = () => {
             <div className='title'>Drug Synthesis</div>
             <div className='line'></div>
             <div className='title'>
-              <TextField sx={{"width": "200px", "background": "#fff"}} id="outlined-select-currency" select label="Select Pdf" value={selectedPdf} onChange={handlePdfChange}>
+              <TextField sx={{"width": "200px", "background": "#fff", "maxWidth": "200px"}} id="outlined-select-currency" select label="Select Pdf" value={selectedPdf} onChange={handlePdfChange}>
                 {
-                  pdfList.map(text => <MenuItem key={text.name} value={text.name}>{text.name}</MenuItem>)
+                  pdfList.map(text => <MenuItem key={text.id} value={text.title}>{text.title}</MenuItem>)
                 }
               </TextField>
             </div>
@@ -451,6 +474,9 @@ export const SearchFeature = () => {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
+              {
+                selectedPdfObj ? <p>Please download the pdf <a style={{'color': '#6E54C2', 'cursor': 'pointer', fontWeight: 'bold'}} onClick={downloadpdf}>{selectedPdfObj.title}</a></p> : ''
+              }
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5a-content" id="panel5a-header">
                   <Typography>Drug Synthesis Translated to XDL Code</Typography>
@@ -461,9 +487,7 @@ export const SearchFeature = () => {
                       <Grid item xs={4} sx={{position: 'relative',}}>
                         <h4>Synthesis Process</h4>
                         <Box sx={{ position: 'absolute', right: 10, top: 30}}>
-                          <IconButton color="primary" aria-label="copy to clipboard" component="span">
-                            <ContentCopy />
-                          </IconButton>
+                          <CopyComponent text={selectedPdfObj.text} />
                         </Box>
                         <div className="process" id="style-2">
                           {
@@ -474,9 +498,7 @@ export const SearchFeature = () => {
                       <Grid item xs={8} sx={{position: 'relative'}} >
                         <h4>Synthesis XDL</h4>
                         <Box sx={{position: 'absolute', right: 10, top: 30}}>
-                          <IconButton color="primary" aria-label="copy to clipboard" component="span">
-                            <ContentCopy />
-                          </IconButton>
+                          <CopyComponent text={selectedPdfObj.xml} />
                         </Box>
                         <div className="synthesis" id="style-2">
                       <pre>
