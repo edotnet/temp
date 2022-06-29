@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import "./search.scss";
 import ContentCopy from "@mui/icons-material/ContentCopy";
 import beautify from "xml-beautifier";
+import {CopyComponent} from "../../infrastructure/components/Copy.component";
 
 export const SearchFeature = () => {
   const [rowtargets, setrowTargets] = useState([]);
@@ -486,9 +487,7 @@ export const SearchFeature = () => {
                       <Grid item xs={4} sx={{position: 'relative',}}>
                         <h4>Synthesis Process</h4>
                         <Box sx={{ position: 'absolute', right: 10, top: 30}}>
-                          <IconButton color="primary" aria-label="copy to clipboard" component="span">
-                            <ContentCopy />
-                          </IconButton>
+                          <CopyComponent text={selectedPdfObj.text} />
                         </Box>
                         <div className="process" id="style-2">
                           {
@@ -499,9 +498,7 @@ export const SearchFeature = () => {
                       <Grid item xs={8} sx={{position: 'relative'}} >
                         <h4>Synthesis XDL</h4>
                         <Box sx={{position: 'absolute', right: 10, top: 30}}>
-                          <IconButton color="primary" aria-label="copy to clipboard" component="span">
-                            <ContentCopy />
-                          </IconButton>
+                          <CopyComponent text={selectedPdfObj.xml} />
                         </Box>
                         <div className="synthesis" id="style-2">
                       <pre>

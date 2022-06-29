@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import {Endpoints} from "../../config/Consts";
 import TextList from './TextList.json';
+import {CopyComponent} from "../../infrastructure/components/Copy.component";
 
 
 export const Text2xdlFeature = () => {
@@ -57,9 +58,7 @@ export const Text2xdlFeature = () => {
             <div className="translate-block">
               <h4>2XDL text</h4>
               <Box sx={{position: 'absolute', right: 40, top: 13}}>
-                <IconButton color="primary" aria-label="copy to clipboard" component="span">
-                  <ContentCopy/>
-                </IconButton>
+                <CopyComponent text={text} />
               </Box>
               <TextField id="style-2" ref={xdlText}
                          variant="standard" InputProps={{disableUnderline: true}} className="area" fullWidth multiline
@@ -79,9 +78,7 @@ export const Text2xdlFeature = () => {
                   <Grid item xs={6} sx={{position: 'relative'}}>
                     <h4>Synthesis Process</h4>
                     <Box sx={{position: 'absolute', right: 10, top: 30}}>
-                      <IconButton color="primary" aria-label="copy to clipboard" component="span">
-                        <ContentCopy/>
-                      </IconButton>
+                      <CopyComponent text={data.result.text} />
                     </Box>
                     <div className="process" id="style-2">
                       {data && data.result ? NewlineText(data.result.text) : ''}
@@ -90,9 +87,7 @@ export const Text2xdlFeature = () => {
                   <Grid item xs={6} sx={{position: 'relative'}}>
                     <h4>Synthesis XDL</h4>
                     <Box sx={{position: 'absolute', right: 10, top: 30}}>
-                      <IconButton color="primary" aria-label="copy to clipboard" component="span">
-                        <ContentCopy/>
-                      </IconButton>
+                      <CopyComponent text={prettyformat(data.result.xml)} />
                     </Box>
                     <div className="synthesis" id="style-2">
                       <pre>
