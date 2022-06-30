@@ -32,7 +32,7 @@ export const DTI = () => {
     return data.result.map((drug, i) => (
         <Box key={drug.name} sx={{position: 'relative'}}>
           <Typography component="span" sx={{fontSize: 16, fontWeight: 'bold'}}>{state.molecules[i].name}</Typography><br/>
-          <Typography component="span" sx={progressStyle(drug)}>{drug.toFixed(4)}</Typography>
+          <Typography component="span" sx={progressStyle(drug)}>{(drug + 6).toFixed(4)}</Typography>
           <div style={{height: 35}}/>
         </Box>
     ))
@@ -65,7 +65,7 @@ export const DTI = () => {
       </Box>
       <ThreeDMol />
       <Hr />
-      <Typography variant="subtitle1" gutterBottom>Binding Interaction score (EC50)</Typography>
+      <Typography variant="subtitle1" gutterBottom>Binding Interaction score (pEC50)</Typography>
       {loading && <LinearProgress />}
       <GraphBackground>
         <Grid container spacing={1}>
