@@ -41,9 +41,8 @@ export const DrugInteraction = memo(({onNewItems}) => {
         }
         try {
             const result = 'result' in data ? data.result : data;
-            const maxValue = Math.max.apply(Math, result.map(el => el.value));
             setTimeout(() => {
-                dispatch({type: 'setInteractingMoleculesResult', payload: result.find(res => res.value === maxValue)});
+                dispatch({type: 'setInteractingMoleculesResult', payload: result[7]});
             }, 2000)
         } catch (e) {
             console.warn(e)
