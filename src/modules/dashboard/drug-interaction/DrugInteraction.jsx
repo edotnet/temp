@@ -42,7 +42,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
         try {
             const result = 'result' in data ? data.result : data;
             setTimeout(() => {
-                dispatch({type: 'setInteractingMoleculesResult', payload: result[7]});
+                dispatch({type: 'setInteractingMoleculesResult', payload: result[8]});
             }, 2000)
         } catch (e) {
             console.warn(e)
