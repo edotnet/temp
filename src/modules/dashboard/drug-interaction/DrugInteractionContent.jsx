@@ -64,11 +64,12 @@ export const DrugInteractionContent = () => {
 
   return (
     <>
-      <Typography variant="subtitle1" gutterBottom>Drug Interaction molecules</Typography>
+      <Typography variant="subtitle1" gutterBottom>Molecule Synergy probability</Typography>
       <Box sx={{display: "flex"}}>
         {renderPercentage()}
         {renderPills()}
       </Box>
+      {/*
       <Hr/>
       <Typography variant="subtitle1" >Result Description</Typography>
       <Typography variant="body1" className='body1-lg-light'>
@@ -76,6 +77,7 @@ export const DrugInteractionContent = () => {
           .replace("#Drug1", drug1.name)
           .replace("#Drug2", drug2.name)}
       </Typography>
+        */}
     </>
   );
 }
