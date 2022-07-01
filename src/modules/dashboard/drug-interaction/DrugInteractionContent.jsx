@@ -55,7 +55,7 @@ export const DrugInteractionContent = () => {
   function renderPercentage() {
     return <Avatar sx={{bgcolor: "#d0eed2", width: 100, height: 100}}>
       <Typography sx={{
-        fontSize: 40,
+        fontSize: 30,
         fontWeight: 300,
         color: "#1d1d1d"
       }}>{state.interactingMoleculesResult.value}%</Typography>
@@ -64,11 +64,12 @@ export const DrugInteractionContent = () => {
 
   return (
     <>
-      <Typography variant="subtitle1" gutterBottom>Drug Interaction molecules</Typography>
+      <Typography variant="subtitle1" gutterBottom>Molecule Synergy probability</Typography>
       <Box sx={{display: "flex"}}>
         {renderPercentage()}
         {renderPills()}
       </Box>
+      {/*
       <Hr/>
       <Typography variant="subtitle1" >Result Description</Typography>
       <Typography variant="body1" className='body1-lg-light'>
@@ -76,6 +77,7 @@ export const DrugInteractionContent = () => {
           .replace("#Drug1", drug1.name)
           .replace("#Drug2", drug2.name)}
       </Typography>
+        */}
     </>
   );
 }
