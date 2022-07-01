@@ -41,8 +41,12 @@ export const DrugInteraction = memo(({onNewItems}) => {
         }
         try {
             const result = 'result' in data ? data.result : data;
+            const therapeuticEffect = {
+                label: result[8].label,
+                value: result[8].value * 100
+            }
             setTimeout(() => {
-                dispatch({type: 'setInteractingMoleculesResult', payload: result[8]});
+                dispatch({type: 'setInteractingMoleculesResult', payload: therapeuticEffect});
             }, 2000)
         } catch (e) {
             console.warn(e)

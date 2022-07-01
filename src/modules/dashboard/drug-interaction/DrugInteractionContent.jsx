@@ -55,7 +55,7 @@ export const DrugInteractionContent = () => {
   function renderPercentage() {
     return <Avatar sx={{bgcolor: "#d0eed2", width: 100, height: 100}}>
       <Typography sx={{
-        fontSize: 40,
+        fontSize: 25,
         fontWeight: 300,
         color: "#1d1d1d"
       }}>{state.interactingMoleculesResult.value}%</Typography>
