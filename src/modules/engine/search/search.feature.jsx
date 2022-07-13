@@ -18,7 +18,13 @@ import {CopyComponent} from "../../../infrastructure/components/Copy.component";
 import * as PropTypes from "prop-types";
 import { ProteinModal } from "./ProteinModal";
 import { DrugProperties } from "../../dashboard/DrugProperties";
-
+import { DrugLiterature } from "./DrugLiterature";
+import { DrugResults } from "./DrugResults";
+import { SearchInput } from "./SearchInput";
+import { ProteinResults } from "./ProteinResults";
+import { DrugSynthesisToXDL } from "./DrugSynthesisToXDL";
+import { SectionTitle } from "./SectionTitle";
+import { TargetLiterature } from "./TargetLiterature";
 
 export const SearchFeature = () => {
   const [rowtargets, setrowTargets] = useState([]);
@@ -39,16 +45,6 @@ export const SearchFeature = () => {
 
   const [selectionTargetModel, setSelectionTargetModel] = useState([]);
   const [Loadingresult, setLoadingresult] = useState(false);
-
-  const [open, setOpen] = useState(false);
-  const [modalData, setModalData] = useState([]);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const [openprotein, setOpenprotein] = useState(false);
-  const [proteinmodalData, setproteinModalData] = useState([]);
-  const handleproteinOpen = () => setOpenprotein(true);
-  const handleproteinClose = () => setOpenprotein(false);
 
 
   const [pdfList, setpdfList] = useState([]);
@@ -151,7 +147,6 @@ export const SearchFeature = () => {
       const url = `${Endpoints.drugbank.drugs}${params.value}?page=${0}`;
       axios.get(url).then(resp => {
         if (resp.data) {
-          setModalData(resp.data.items[0]);
           const molecule = resp.data.items[0];
           molecule.coordinates = {
             x: e.clientX,
@@ -162,22 +157,6 @@ export const SearchFeature = () => {
       });
     }
   };
-
-  const ProteinOnCellClick = (params) => {
-    if(params.field === 'title') {
-      const url = `${Endpoints.drugbank.targets}${params.value}`;
-      axios.get(url).then(resp => {
-        if (resp.data) {
-          for (let i = 0; i < resp.data.length; i++) {
-            if (resp.data[i].name === params.value) {
-              setproteinModalData(resp.data[i]);
-              handleproteinOpen();
-            }
-          }
-        }
-      })
-    }
-  }
 
   const getpdfs = (list) => {
     if(list !== undefined) {
@@ -191,17 +170,6 @@ export const SearchFeature = () => {
         }
       });
     }
-  }
-
-  function prettyformat(value) {
-    const xml = beautify(value);
-    return xml;
-  }
-
-  function NewlineText(value , ind) {
-    const text = value;
-    const newText = text.split('\n').map(str => <p key={ind}>{str}</p>);
-    return newText;
   }
 
   const handlePdfChange = (e) => {
@@ -220,76 +188,26 @@ export const SearchFeature = () => {
     });
   }
 
-  const drugsColumns = [
-    { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1,
-      renderCell: (params) => (
-        <span className='link-btn'>{params.value}</span>
-      ),
-    },
-    {
-      field: `metrics['(Search + {}) Publications']`,
-      headerName: '(Search + Drug)Publications',
-      minWidth: 250,
-      valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
-    },
-    {
-      field: `metrics['{} Publications']`,
-      headerName: 'Drug Publications',
-      minWidth: 120, flex: 1,
-      valueGetter: (params) => params.row.metrics['{} Publications'],
+  const getOnSelectionModelChange = (selection) => {
+    if (selection.length > 1) {
+      const selectionSet = new Set(selectionTargetModel);
+      const result = selection.filter((s) => !selectionSet.has(s));
+      setSelectionTargetModel(result);
+      const selectedRowData = targets.filter((row) => row.title.toLowerCase() === selection[selection.length - 1]);
+      setselectedtarget(selectedRowData[0].title);
+      setrowTargets(selectedRowData[0].pmids);
     }
-  ];
-
-  const protienColumns = [
-    {
-      field: `title`, headerName: 'Target Name', minWidth: 150, flex: 1,
-      renderCell: (params) => (
-        <span className='link-btn'>{params.value}</span>
-      ),
-    },
-    {
-      field: `metrics['(Search + {}) Publications']`,
-      headerName: '(Search + Target)Publications',
-      minWidth: 250,
-      valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
-    },
-    {
-      field: `metrics['{} Publications']`,
-      headerName: 'Target Publications',
-      minWidth: 120, flex: 1,
-      valueGetter: (params) => params.row.metrics['{} Publications'],
-    },
-  ];
+  }
 
   return (
     <div className="searchDefault">
       <Grid container spacing={2} style={{marginTop: '40px', marginBottom: '40px'}}>
-        <Grid item xs={4}>
-          <TextField
-            fullWidth
-            id="standard-basic"
-            value={text}
-            onChange={e => setText(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                setText(e.target.value);
-                onRun()
-              }
-            }}
-            variant="standard"
-            placeholder="Search for..."
-            className="searchEngine-input"
-            inputProps={{
-              style: {
-                height: "41px",
-                paddingLeft: '10px'
-              },
-            }}
-          />
-        </Grid>
-        <Grid item style={{paddingLeft: '0px'}}>
-          <Button className='searchEngin-headerbtn btn-white' variant="outlined" onClick={onRun}>Search</Button>
-        </Grid>
+        <SearchInput value={text} onChange={e => setText(e.target.value)} onKeyPress={(e) => {
+          if (e.key === 'Enter') {
+            setText(e.target.value);
+            onRun()
+          }
+        }} onClick={onRun}/>
         <Grid item>
           {/* this section is removed for demo purpose, later will add with new design.
           */}
@@ -320,155 +238,36 @@ export const SearchFeature = () => {
       </Grid>
       {
         data && data.result ? <div>
-          <section id='title-wrapper'>
-            <div className='title'>Related Drugs</div>
-            <div className='line'></div>
-            <div className='line'></div>
-          </section>
+          <SectionTitle text="Related Drugs"/>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel3a-content" id="panel3a-header">
-                  <Typography>Drug Results</Typography>
-                </AccordionSummary>
-                <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
-                  {drugs.length > 0 &&
-                    <DataGrid
-                      rows={drugs}
-                      columns={drugsColumns}
-                      pageSize={5}
-                      rowsPerPageOptions={[5]}
-                      checkboxSelection
-                      getRowId={(row) => row.title.toLowerCase()}
-                      getRowHeight={() => 'auto'}
-                      onRowClick={(param) => {
-                        drughandleClick(param.row);
-                        setClickedRow(param.row.title.toLowerCase());
-                        getpdfs(param.row.title.toLowerCase())
-                      }
-                      }
-                      disableSelectionOnClick
-                      pagination
-                      selectionModel={selectionDrugModel}
-                      onCellClick={handleOnCellClick}
-                      onSelectionModelChange={(ids) => {
-                        setSelectionDrugModel(ids);
-                      }}
-                      getRowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
-                    />
-                  }
-                  {/*onClick={uploadSelectedDrugs} for button */}
-                  <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer uploadbtn">
-                    <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
-                    Upload selected drug
-                  </Button>
-                </AccordionDetails>
-              </Accordion>
+              <DrugResults drugs={drugs}
+                           onRowClick={(param) => {
+                             drughandleClick(param.row);
+                             setClickedRow(param.row.title.toLowerCase());
+                             getpdfs(param.row.title.toLowerCase())
+                           }}
+                           selectionModel={selectionDrugModel}
+                           onCellClick={handleOnCellClick}
+                           onSelectionModelChange={(ids) => setSelectionDrugModel(ids)}
+                           rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
+                           onClick={uploadSelectedDrugs}/>
             </Grid>
             <Grid item xs={6}>
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel4a-content" id="panel4a-header">
-                  <Typography>Drug Literature</Typography>
-                </AccordionSummary>
-                <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
-
-                  {
-                    selecteddrug !== '' ?
-                      <p><b>Publications that contain contain the search query and <span
-                        style={{color: '#5645ba'}}>{selecteddrug}</span></b></p> : ''
-                  }
-                  <div className="literature-list">
-                    {
-                      rowdrugs.length > 0 ? <ul>
-                          {
-                            rowdrugs.map((row) => (
-                              <li key={row.pmid}>
-                                <a href={row.url} target="_blank">{row.title}</a>
-                              </li>
-                            ))
-                          }
-                        </ul>
-                        : ''
-                    }
-                  </div>
-                </AccordionDetails>
-              </Accordion>
+              <DrugLiterature selecteddrug={selecteddrug} rowdrugs={rowdrugs}/>
             </Grid>
           </Grid>
-          <section id='title-wrapper'>
-            <div className='title'>Related Target Proteins</div>
-            <div className='line'></div>
-            <div className='line'></div>
-          </section>
+          <SectionTitle text="Related Target Proteins"/>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel5a-content" id="panel5a-header">
-                  <Typography>Target Protein Results</Typography>
-                </AccordionSummary>
-                <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
-                  {
-                    targets.length > 0 &&
-                    <DataGrid
-                      rows={targets}
-                      columns={protienColumns}
-                      pageSize={5}
-                      rowsPerPageOptions={[5]}
-                      checkboxSelection
-                      getRowId={(row) => row.title.toLowerCase()}
-                      getRowHeight={() => 'auto'}
-                      hideFooterSelectedRowCount
-                      selectionModel={selectionTargetModel}
-                      onCellClick={ProteinOnCellClick}
-                      onSelectionModelChange={(selection) => {
-                        if (selection.length > 1) {
-                          const selectionSet = new Set(selectionTargetModel);
-                          const result = selection.filter((s) => !selectionSet.has(s));
-                          setSelectionTargetModel(result);
-                          const selectedRowData = targets.filter((row) => row.title.toLowerCase() === selection[selection.length - 1]);
-                          setselectedtarget(selectedRowData[0].title);
-                          setrowTargets(selectedRowData[0].pmids);
-                        }
-                      }}
-                    />
-                  }
-                  <ButtonGroup variant="outlined" className="table-footer" aria-label="outlined primary button group">
-                    <Button onClick={uploadSelectedProtein} className="uploadbtn">
-                      <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
-                      Upload selected protein
-                    </Button>
-                    <Button variant="contained" onClick={uploadSelectedProteinDrugs}>
-                      Upload protein & Drug
-                    </Button>
-                  </ButtonGroup>
-                </AccordionDetails>
-              </Accordion>
+              <ProteinResults targets={targets}
+                              selectionModel={selectionTargetModel}
+                              onSelectionModelChange={getOnSelectionModelChange}
+                              onUploadSelectedProtein={uploadSelectedProtein}
+                              onUpdateProteinAndDrug={uploadSelectedProteinDrugs}/>
             </Grid>
             <Grid item xs={6}>
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel6a-content" id="panel6a-header">
-                  <Typography>Target Literature</Typography>
-                </AccordionSummary>
-                <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
-                  {
-                    selectedtarget !== '' ? <p><b>Publications that contain contain the search query and <span
-                      style={{color: '#5645ba'}}>{selectedtarget}</span></b></p> : ''
-                  }
-                  <div className="literature-list">
-                    {
-                      rowtargets.length > 0 ? <ul>
-                        {
-                          rowtargets.map((row) => (
-                            <li key={row.pmid}>
-                              <a href={row.url} target="_blank">{row.title}</a>
-                            </li>
-                          ))
-                        }
-                      </ul> : ''
-                    }
-                  </div>
-                </AccordionDetails>
-              </Accordion>
+              <TargetLiterature selectedtarget={selectedtarget} rowtargets={rowtargets} />
             </Grid>
           </Grid>
           <section id='title-wrapper'>
@@ -492,48 +291,14 @@ export const SearchFeature = () => {
                   <p>Please download the pdf <a style={{'color': '#6E54C2', 'cursor': 'pointer', fontWeight: 'bold'}}
                                                 onClick={downloadpdf}>{selectedPdfObj.title}</a></p> : ''
               }
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel5a-content" id="panel5a-header">
-                  <Typography>Drug Synthesis Translated to XDL Code</Typography>
-                </AccordionSummary>
-                <AccordionDetails id="style-3" style={{height: '500px', overflow: "hidden", paddingBottom: "30px"}}>
-                  {
-                    pdfList.length > 0 ? <Grid container spacing={2}>
-                      <Grid item xs={4} sx={{position: 'relative',}}>
-                        <h4>Synthesis Process</h4>
-                        <Box sx={{position: 'absolute', right: 10, top: 30}}>
-                          <CopyComponent text={selectedPdfObj.text}/>
-                        </Box>
-                        <div className="process" id="style-2">
-                          {
-                            selectedPdfObj ? NewlineText(selectedPdfObj.text) : ''
-                          }
-                        </div>
-                      </Grid>
-                      <Grid item xs={8} sx={{position: 'relative'}}>
-                        <h4>Synthesis XDL</h4>
-                        <Box sx={{position: 'absolute', right: 10, top: 30}}>
-                          <CopyComponent text={selectedPdfObj.xml}/>
-                        </Box>
-                        <div className="synthesis" id="style-2">
-                      <pre>
-                        {
-                          selectedPdfObj ? prettyformat(selectedPdfObj.xml) : ''
-                        }
-                      </pre>
-                        </div>
-                      </Grid>
-                    </Grid> : 'No pdf'
-                  }
-                </AccordionDetails>
-              </Accordion>
+              <DrugSynthesisToXDL pdfList={pdfList}
+                                  selectedPdfObj={selectedPdfObj}
+              />
             </Grid>
           </Grid>
-        </div> : Loadingresult === true ?
-          <div style={{height: '500px', position: 'relative',}}><CircularProgressComponent/></div> : ''
+        </div> : Loadingresult && <CircularProgressComponent/>
       }
-      <ProteinModal open={openprotein} onClose={handleproteinClose} proteinmodalData={proteinmodalData}/>
-      <DrugProperties />
+      <DrugProperties/>
     </div>
   )
 }
