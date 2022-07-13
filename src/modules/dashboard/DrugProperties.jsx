@@ -99,7 +99,7 @@ export const DrugProperties = () => {
 
 
   return (
-    <Box sx={{position: 'absolute', top: state.selectedMolecule.coordinates.y, left: state.selectedMolecule.coordinates.x}}>
+    <Box sx={{position: 'absolute', top: state.selectedMolecule?.coordinates?.y || '50%', left: state.selectedMolecule?.coordinates?.x || '50%'}}>
       <ModalPaper elevation={2} sx={{width: 450, marginBottom: '50px', px: 2}}>
         <IconButton sx={{position: "absolute", top: 0, right: 0}} size="large" onClick={close}>
           <Close/>
@@ -110,7 +110,7 @@ export const DrugProperties = () => {
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
               <Box>
                 <Typography sx={{color: '#383874', fontWeight: 400, fontSize: 30}} gutterBottom
-                            component="span">{state.selectedMolecule.name} 
+                            component="span">{state.selectedMolecule.name}
                   <Typography sx={{color: '#373767', fontSize: 30}} gutterBottom
                             component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
                 </Typography>

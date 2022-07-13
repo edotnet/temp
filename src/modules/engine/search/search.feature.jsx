@@ -1,20 +1,24 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useApiCall } from "../../infrastructure/hooks/useApiCall";
+import { useApiCall } from "../../../infrastructure/hooks/useApiCall";
 import { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { useDashboardContext } from "../../modules/dashboard/context/useDashboarContext";
+import { useDashboardContext } from "../../../modules/dashboard/context/useDashboarContext";
 import { useNavigate } from "react-router-dom";
-import { Endpoints } from "../../config/Consts";
+import { Endpoints } from "../../../config/Consts";
 import axios from 'axios';
-import { CircularProgressComponent } from "../../infrastructure/components/CircularProgress.component";
-import dtiimage from '../../assets/img/table-dti-icon.svg';
+import { CircularProgressComponent } from "../../../infrastructure/components/CircularProgress.component";
+import dtiimage from '../../../assets/img/table-dti-icon.svg';
 import { Grid, Box, Chip, Modal, AccordionSummary, AccordionDetails, Typography, Accordion, TextField, IconButton, Button, ButtonGroup} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuItem from '@mui/material/MenuItem';
 import "./search.scss";
 import ContentCopy from "@mui/icons-material/ContentCopy";
 import beautify from "xml-beautifier";
-import {CopyComponent} from "../../infrastructure/components/Copy.component";
+import {CopyComponent} from "../../../infrastructure/components/Copy.component";
+import * as PropTypes from "prop-types";
+import { ProteinModal } from "./ProteinModal";
+import { DrugProperties } from "../../dashboard/DrugProperties";
+
 
 export const SearchFeature = () => {
   const [rowtargets, setrowTargets] = useState([]);
@@ -142,13 +146,18 @@ export const SearchFeature = () => {
   }
 
 
-  const handleOnCellClick = (params) => {
-    if(params.field === 'title') { 
+  const handleOnCellClick = (params, e) => {
+    if(params.field === 'title') {
       const url = `${Endpoints.drugbank.drugs}${params.value}?page=${0}`;
       axios.get(url).then(resp => {
         if (resp.data) {
           setModalData(resp.data.items[0]);
-          handleOpen();
+          const molecule = resp.data.items[0];
+          molecule.coordinates = {
+            x: e.clientX,
+            y: e.clientY,
+          }
+          dispatch({type: 'selectMolecule', payload: molecule});
         }
       });
     }
@@ -319,10 +328,10 @@ export const SearchFeature = () => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
+                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel3a-content" id="panel3a-header">
                   <Typography>Drug Results</Typography>
                 </AccordionSummary>
-                <AccordionDetails id="style-3" style={{ height: '400px', overflowY: 'auto' }}>
+                <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
                   {drugs.length > 0 &&
                     <DataGrid
                       rows={drugs}
@@ -333,10 +342,10 @@ export const SearchFeature = () => {
                       getRowId={(row) => row.title.toLowerCase()}
                       getRowHeight={() => 'auto'}
                       onRowClick={(param) => {
-                          drughandleClick(param.row);
-                          setClickedRow(param.row.title.toLowerCase());
-                          getpdfs(param.row.title.toLowerCase())
-                        }
+                        drughandleClick(param.row);
+                        setClickedRow(param.row.title.toLowerCase());
+                        getpdfs(param.row.title.toLowerCase())
+                      }
                       }
                       disableSelectionOnClick
                       pagination
@@ -350,7 +359,7 @@ export const SearchFeature = () => {
                   }
                   {/*onClick={uploadSelectedDrugs} for button */}
                   <Button variant="outlined" onClick={uploadSelectedDrugs} className="table-footer uploadbtn">
-                    <img style={{ paddingRight: '10px' }} src={dtiimage} alt="image" />
+                    <img style={{paddingRight: '10px'}} src={dtiimage} alt="image"/>
                     Upload selected drug
                   </Button>
                 </AccordionDetails>
@@ -358,26 +367,27 @@ export const SearchFeature = () => {
             </Grid>
             <Grid item xs={6}>
               <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel4a-content" id="panel4a-header">
+                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel4a-content" id="panel4a-header">
                   <Typography>Drug Literature</Typography>
                 </AccordionSummary>
-                <AccordionDetails id="style-3" style={{ height: '400px', overflowY: 'auto' }}>
+                <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
 
                   {
                     selecteddrug !== '' ?
-                      <p><b>Publications that contain contain the search query and  <span style={{ color: '#5645ba' }}>{selecteddrug}</span></b></p> : ''
+                      <p><b>Publications that contain contain the search query and <span
+                        style={{color: '#5645ba'}}>{selecteddrug}</span></b></p> : ''
                   }
                   <div className="literature-list">
                     {
                       rowdrugs.length > 0 ? <ul>
-                        {
-                          rowdrugs.map((row) => (
-                            <li key={row.pmid}>
-                              <a href={row.url} target="_blank">{row.title}</a>
-                            </li>
-                          ))
-                        }
-                      </ul>
+                          {
+                            rowdrugs.map((row) => (
+                              <li key={row.pmid}>
+                                <a href={row.url} target="_blank">{row.title}</a>
+                              </li>
+                            ))
+                          }
+                        </ul>
                         : ''
                     }
                   </div>
@@ -393,10 +403,10 @@ export const SearchFeature = () => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5a-content" id="panel5a-header">
+                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel5a-content" id="panel5a-header">
                   <Typography>Target Protein Results</Typography>
                 </AccordionSummary>
-                <AccordionDetails id="style-3" style={{ height: '400px', overflowY: 'auto' }}>
+                <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
                   {
                     targets.length > 0 &&
                     <DataGrid
@@ -415,7 +425,7 @@ export const SearchFeature = () => {
                           const selectionSet = new Set(selectionTargetModel);
                           const result = selection.filter((s) => !selectionSet.has(s));
                           setSelectionTargetModel(result);
-                          const selectedRowData = targets.filter((row) => row.title.toLowerCase() === selection[selection.length-1]);
+                          const selectedRowData = targets.filter((row) => row.title.toLowerCase() === selection[selection.length - 1]);
                           setselectedtarget(selectedRowData[0].title);
                           setrowTargets(selectedRowData[0].pmids);
                         }
@@ -430,18 +440,19 @@ export const SearchFeature = () => {
                     <Button variant="contained" onClick={uploadSelectedProteinDrugs}>
                       Upload protein & Drug
                     </Button>
-                   </ButtonGroup>
+                  </ButtonGroup>
                 </AccordionDetails>
               </Accordion>
             </Grid>
             <Grid item xs={6}>
               <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel6a-content" id="panel6a-header">
+                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel6a-content" id="panel6a-header">
                   <Typography>Target Literature</Typography>
                 </AccordionSummary>
-                <AccordionDetails id="style-3" style={{ height: '400px', overflowY: 'auto' }}>
+                <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
                   {
-                    selectedtarget !== '' ? <p><b>Publications that contain contain the search query and  <span style={{ color: '#5645ba' }}>{selectedtarget}</span></b></p> : ''
+                    selectedtarget !== '' ? <p><b>Publications that contain contain the search query and <span
+                      style={{color: '#5645ba'}}>{selectedtarget}</span></b></p> : ''
                   }
                   <div className="literature-list">
                     {
@@ -464,7 +475,9 @@ export const SearchFeature = () => {
             <div className='title'>Drug Synthesis</div>
             <div className='line'></div>
             <div className='title'>
-              <TextField sx={{"width": "200px", "background": "#fff", "maxWidth": "200px"}} id="outlined-select-currency" select label="Select Pdf" value={selectedPdf} onChange={handlePdfChange}>
+              <TextField sx={{"width": "200px", "background": "#fff", "maxWidth": "200px"}}
+                         id="outlined-select-currency" select label="Select Pdf" value={selectedPdf}
+                         onChange={handlePdfChange}>
                 {
                   pdfList.map(text => <MenuItem key={text.id} value={text.title}>{text.title}</MenuItem>)
                 }
@@ -475,19 +488,21 @@ export const SearchFeature = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               {
-                selectedPdfObj ? <p>Please download the pdf <a style={{'color': '#6E54C2', 'cursor': 'pointer', fontWeight: 'bold'}} onClick={downloadpdf}>{selectedPdfObj.title}</a></p> : ''
+                selectedPdfObj ?
+                  <p>Please download the pdf <a style={{'color': '#6E54C2', 'cursor': 'pointer', fontWeight: 'bold'}}
+                                                onClick={downloadpdf}>{selectedPdfObj.title}</a></p> : ''
               }
               <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5a-content" id="panel5a-header">
+                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel5a-content" id="panel5a-header">
                   <Typography>Drug Synthesis Translated to XDL Code</Typography>
                 </AccordionSummary>
-                <AccordionDetails id="style-3" style={{ height: '500px', overflow: "hidden", paddingBottom: "30px"}}>
+                <AccordionDetails id="style-3" style={{height: '500px', overflow: "hidden", paddingBottom: "30px"}}>
                   {
                     pdfList.length > 0 ? <Grid container spacing={2}>
                       <Grid item xs={4} sx={{position: 'relative',}}>
                         <h4>Synthesis Process</h4>
-                        <Box sx={{ position: 'absolute', right: 10, top: 30}}>
-                          <CopyComponent text={selectedPdfObj.text} />
+                        <Box sx={{position: 'absolute', right: 10, top: 30}}>
+                          <CopyComponent text={selectedPdfObj.text}/>
                         </Box>
                         <div className="process" id="style-2">
                           {
@@ -495,10 +510,10 @@ export const SearchFeature = () => {
                           }
                         </div>
                       </Grid>
-                      <Grid item xs={8} sx={{position: 'relative'}} >
+                      <Grid item xs={8} sx={{position: 'relative'}}>
                         <h4>Synthesis XDL</h4>
                         <Box sx={{position: 'absolute', right: 10, top: 30}}>
-                          <CopyComponent text={selectedPdfObj.xml} />
+                          <CopyComponent text={selectedPdfObj.xml}/>
                         </Box>
                         <div className="synthesis" id="style-2">
                       <pre>
@@ -514,60 +529,11 @@ export const SearchFeature = () => {
               </Accordion>
             </Grid>
           </Grid>
-        </div> : Loadingresult === true ? <div style={{height: '500px', position: 'relative', }}> <CircularProgressComponent /> </div>: ''
+        </div> : Loadingresult === true ?
+          <div style={{height: '500px', position: 'relative',}}><CircularProgressComponent/></div> : ''
       }
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-
-        <Box className="search-column-popup">
-        <IconButton aria-label="close" onClick={handleClose} sx={{position: "absolute", top: 5, right: 5}} size="large">
-          <CloseIcon />
-        </IconButton>
-          <Box>
-          {
-            modalData  ? <div>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                {modalData.name}{modalData.calculated_properties ? <span> {modalData.calculated_properties['Molecular Formula']} </span>: ''}
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                {modalData.clinical_description}
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                {modalData.calculated_properties ? <span>LogP: {modalData.calculated_properties.logP} </span>: ''}
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                {modalData.calculated_properties ? <span>Molecular Weight: {modalData.calculated_properties['Molecular Weight']} </span>: ''}
-              </Typography>
-            </div> : 'Loading'
-          }
-          </Box>
-        </Box>
-      </Modal>
-      {/*Protein Modal*/}
-      <Modal open={openprotein} onClose={handleproteinClose} aria-labelledby="modal-modal-title"aria-describedby="modal-modal-description">
-        <Box className="search-column-popup">
-          <IconButton aria-label="close" onClick={handleproteinClose} sx={{position: "absolute", top: 5, right: 5}} size="large"><CloseIcon /></IconButton>
-          <Box>
-            {
-              proteinmodalData ? <div>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  {proteinmodalData.name}
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  {proteinmodalData.id ? <span>Id: {proteinmodalData.id} </span> : ''}
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  {proteinmodalData.organism ? <span>Organism: {proteinmodalData.organism} </span>: ''}
-                </Typography>
-              </div> : 'Loading'
-            }
-          </Box>
-        </Box>
-      </Modal>
+      <ProteinModal open={openprotein} onClose={handleproteinClose} proteinmodalData={proteinmodalData}/>
+      <DrugProperties />
     </div>
   )
 }
