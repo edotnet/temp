@@ -34,7 +34,8 @@ export const Endpoints = {
     xdl: `${useApi}/text-to-xdl`
   },
   search: {
-    pdf : `${useApi}/xdl/search`
+    pdf : `${useApi}/xdl/search`,
+    drug: `${useApi}/drug-search`,
   },
   musyc: {
     query: `${useApi}/3d/calculate`,

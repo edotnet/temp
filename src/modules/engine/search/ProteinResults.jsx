@@ -7,6 +7,8 @@ import { Endpoints } from "../../../config/Consts";
 import axios from "axios";
 import { ProteinModal } from "./ProteinModal";
 import { useState } from "react";
+import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
+import { useNavigate } from "react-router-dom";
 
 const proteinColumns = [
   {
@@ -31,10 +33,24 @@ const proteinColumns = [
 
 
 export function ProteinResults(props) {
+  const {state, dispatch} = useDashboardContext();
+  const navigate = useNavigate();
   const [openprotein, setOpenprotein] = useState(false);
   const [proteinmodalData, setproteinModalData] = useState([]);
   const handleproteinOpen = () => setOpenprotein(true);
   const handleproteinClose = () => setOpenprotein(false);
+
+  const uploadSelectedProtein = async () => {
+    const url = `${Endpoints.drugbank.targets}${props.selectionModel[0]}`;
+    axios.get(url).then(resp => {
+      if (resp.data) {
+        dispatch({type: 'addProtein', payload: resp.data[0]});
+        dispatch({type: 'resetInteractingMolecules', payload: null});
+        dispatch({type: 'removePdb', payload: null});
+        navigate("/dashboard");
+      }
+    });
+  }
 
   const ProteinOnCellClick = (params) => {
     if (params.field === 'title') {
@@ -75,7 +91,7 @@ export function ProteinResults(props) {
             />
           }
           <ButtonGroup variant="outlined" className="table-footer" aria-label="outlined primary button group">
-            <Button onClick={props.onUploadSelectedProtein} className="uploadbtn">
+            <Button onClick={uploadSelectedProtein} className="uploadbtn">
               <img style={{paddingRight: "10px"}} src={dtiimage} alt="image"/>
               Upload selected protein
             </Button>
@@ -84,7 +100,7 @@ export function ProteinResults(props) {
             </Button>
           </ButtonGroup>
         </AccordionDetails>
-      </Accordion>;
+      </Accordion>
       <ProteinModal open={openprotein} onClose={handleproteinClose} proteinmodalData={proteinmodalData}/>
     </>
   );

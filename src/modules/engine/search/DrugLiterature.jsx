@@ -5,7 +5,7 @@ import * as PropTypes from "prop-types";
 export function DrugLiterature(props) {
   const renderItem = (row) => (
     <li key={row.pmid}>
-      <a href={row.url} target="_blank">{row.title}</a>
+      <a href={row.url} target="_blank" rel="noreferrer">{row.title}</a>
     </li>
   );
   return (
@@ -31,5 +31,4 @@ export function DrugLiterature(props) {
 DrugLiterature.propTypes = {
   selecteddrug: PropTypes.string,
   rowdrugs: PropTypes.arrayOf(PropTypes.any),
-  callbackfn: PropTypes.func
 };

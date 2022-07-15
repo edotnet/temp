@@ -3,6 +3,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DataGrid } from "@mui/x-data-grid";
 import dtiimage from "../../../assets/img/table-dti-icon.svg";
 import * as PropTypes from "prop-types";
+import { Endpoints } from "../../../config/Consts";
+import axios from "axios";
+import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
 
 const drugsColumns = [
   { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1,
@@ -24,6 +27,23 @@ const drugsColumns = [
   }
 ];
 export function DrugResults(props) {
+  const {state, dispatch} = useDashboardContext();
+
+  const handleOnCellClick = (params, e) => {
+    if (params.field === 'title') {
+      const url = `${Endpoints.drugbank.drugs}${params.value}?page=${0}`;
+      axios.get(url).then(resp => {
+        if (resp.data) {
+          const molecule = resp.data.items[0];
+          molecule.coordinates = {
+            x: e.clientX,
+            y: e.clientY,
+          }
+          dispatch({type: 'selectMolecule', payload: molecule});
+        }
+      });
+    }
+  };
   return (
     <Accordion>
     <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel3a-content" id="panel3a-header">
@@ -43,7 +63,7 @@ export function DrugResults(props) {
           disableSelectionOnClick
           pagination
           selectionModel={props.selectionModel}
-          onCellClick={props.onCellClick}
+          onCellClick={handleOnCellClick}
           onSelectionModelChange={props.onSelectionModelChange}
           getRowClassName={props.rowClassName}
         />
