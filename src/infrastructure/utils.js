@@ -59,7 +59,7 @@ export function colorful_language(word) {
 
 export function fetchFromObject(obj, prop) {
   if (typeof obj === 'undefined') {
-    return false;
+    return "-";
   }
 
   var _index = prop.indexOf('.')
