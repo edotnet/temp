@@ -16,9 +16,9 @@ export function DrugLiterature(props) {
     <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
 
       {
-        props.selecteddrug !== "" &&
+        props.selectedDrug !== "" &&
           <p><b>Publications that contain contain the search query and <span
-            style={{color: "#5645ba"}}>{props.selecteddrug}</span></b></p>
+            style={{color: "#5645ba"}}>{props.selectedDrug}</span></b></p>
       }
       <div className="literature-list">
         {props.rowdrugs.length > 0 && <ul>{props.rowdrugs.map(renderItem)}</ul>}
@@ -29,6 +29,6 @@ export function DrugLiterature(props) {
 }
 
 DrugLiterature.propTypes = {
-  selecteddrug: PropTypes.string,
+  selectedDrug: PropTypes.string,
   rowdrugs: PropTypes.arrayOf(PropTypes.any),
 };

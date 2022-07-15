@@ -33,9 +33,9 @@ export const SearchFeature = () => {
   const [selectionDrugModel, setSelectionDrugModel] = useState([]);
   const [selectionTargetModel, setSelectionTargetModel] = useState([]);
   const [pdfList, setPdfList] = useState([]);
-  const [selectedPdf, setSelectedPdf] = useState("");
+  const [selectedPdf, setSelectedPdf] = useState(null);
   const [selectedPdfObj, setSelectedPdfObj] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [secondaryLoader, setSecondaryLoader] = useState(false);
 
   const drugs = useMemo(() => data && data.result && 'drugs' in data.result ? Object.entries(data.result.drugs).map(([_key, _value]) => ({
     'title': _key,
@@ -101,7 +101,7 @@ export const SearchFeature = () => {
       const url = `${Endpoints.drugbank.drugs}${drug}?page=${0}`;
       promises.push(axios.get(url));
     });
-    setUploading(true);
+    setSecondaryLoader(true);
     Promise.all(promises).then((responses) => {
       responses.forEach((resp, drugIndex) => {
         if (resp.data) {
@@ -114,7 +114,7 @@ export const SearchFeature = () => {
       });
       dispatch({type: 'resetInteractingMolecules', payload: null});
       navigate("/dashboard");
-      setUploading(false);
+      setSecondaryLoader(false);
     });
   }
 
@@ -147,15 +147,6 @@ export const SearchFeature = () => {
     setSelectedPdf(selectedpdf);
     const selectedObj = pdfList.find(text => text.title === selectedpdf);
     setSelectedPdfObj(selectedObj);
-  }
-
-  const downloadpdf = () => {
-    const url = Endpoints.pdf.download
-    axios.get(`${url}${selectedPdfObj.filePath}`).then(resp => {
-      if (resp.data) {
-        window.open(resp.data.url, '_blank');
-      }
-    });
   }
 
   const getOnSelectionModelChange = (selection) => {
@@ -223,7 +214,7 @@ export const SearchFeature = () => {
                            onClick={uploadSelectedDrugs}/>
             </Grid>
             <Grid item xs={6}>
-              <DrugLiterature selecteddrug={selectedDrug} rowdrugs={rowDrugs}/>
+              <DrugLiterature selectedDrug={selectedDrug} rowdrugs={rowDrugs}/>
             </Grid>
           </Grid>
           <SectionTitle text="Related Target Proteins"/>
@@ -254,19 +245,13 @@ export const SearchFeature = () => {
 
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              {
-                selectedPdfObj ?
-                  <p>Please download the pdf <a style={{'color': '#6E54C2', 'cursor': 'pointer', fontWeight: 'bold'}}
-                                                onClick={downloadpdf}>{selectedPdfObj.title}</a></p> : ''
-              }
-              <DrugSynthesisToXDL pdfList={pdfList}
-                                  selectedPdfObj={selectedPdfObj}
+              <DrugSynthesisToXDL pdfObj={selectedPdfObj}
               />
             </Grid>
           </Grid>
         </div> : loading && <CircularProgressComponent/>
       }
-      {uploading && <CircularProgressComponent/>}
+      {secondaryLoader && <CircularProgressComponent/>}
       <DrugProperties/>
     </div>
   )
