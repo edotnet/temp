@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { MoleculeAutocomplete } from "../modules/dashboard/MoleculeAutocomplete";
 import { MoleculeCard } from "../modules/dashboard/MoleculeCard";
 import { DrugProperties } from "../modules/dashboard/DrugProperties";
@@ -12,10 +12,11 @@ import { TargetAutocomplete } from "../modules/dti/TargetAutocomplete";
 import { PresentationModal } from "../modules/dashboard/presentation-modal/PresentationModal";
 import { PDBSelector } from "../modules/3dmol/PDBSelector";
 import './Dashboard.scss'
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
   const {state, dispatch} = useDashboardContext();
-
+  const navigate = useNavigate();
   const setDetail = (molecule) => (e) => {
     molecule.coordinates = {
       x: e.clientX,
@@ -37,6 +38,10 @@ export const Dashboard = () => {
 
   const _onProteinSelected = (protein) => {
     dispatch({type: 'addProtein', payload: protein})
+  }
+
+  const _onDrugToXDL = () => {
+    navigate('/engine/drug2xdl')
   }
 
   return (
@@ -75,9 +80,14 @@ export const Dashboard = () => {
                       category={state.category}
                       label="+ Add Drug Molecule"/>
                   </Box>
-                  <Box pl={1} pt={2}>
+                  <Box sx={{pt: 3, pl: 1, display: 'flex', justifyContent: 'space-between'}}>
                     {state.molecules.length > 0 &&
-                      <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>}
+                      <>
+                      <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>
+                    <Button variant="outlined" onClick={_onDrugToXDL} sx={{mt: -1}}>
+                      to XDL
+                    </Button>
+                      </>}
                   </Box>
                   <Grid container spacing={4} pt={2}>
                     {state.molecules.map(molecule => (

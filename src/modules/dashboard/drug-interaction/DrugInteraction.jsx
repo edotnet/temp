@@ -5,6 +5,7 @@ import {useApiCall} from "../../../infrastructure/hooks/useApiCall";
 import {useDashboardContext} from "../context/useDashboarContext";
 import {PredictiveWorld} from "../predictive-world/PredictiveWorld";
 import {Endpoints} from "../../../config/Consts";
+import { InteractingDrugsTable } from "../InteractingDrugsTable";
 
 const url = Endpoints.ml.drugInteraction;
 
@@ -54,20 +55,6 @@ export const DrugInteraction = memo(({onNewItems}) => {
     }, [data])
 
 
-    const calculateSpeed = () => {
-        if (!state.interactingMolecules.length) {
-            return 0.04;
-        }
-        if (state.interactingMolecules.length === 1) {
-            return 0.1;
-        }
-        if (state.interactingMolecules.length === 2) {
-            if (!state.interactingMoleculesResult) {
-                return 0.4;
-            }
-        }
-    }
-
     return (
         <Box pt={3} ref={drop} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Box sx={{
@@ -81,6 +68,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
                 position: 'relative'
             }} id="blob-circle">
                 <PredictiveWorld/>
+                <InteractingDrugsTable interactingMolecules={state.interactingMolecules}/>
             </Box>
         </Box>
     );

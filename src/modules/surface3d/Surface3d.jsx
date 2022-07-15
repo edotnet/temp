@@ -57,15 +57,15 @@ export const Surface3d = memo(() => {
     if (!state.interactingMoleculesResult) {
       return;
     }
-    const logS1 = state.interactingMolecules[0].calculated_properties.ALOGPS.logS ?? 0;
-    const logS2 = state.interactingMolecules[1].calculated_properties.ALOGPS.logS ?? 0;
+    const logS1 = state.interactingMolecules[0]?.calculated_properties?.ALOGPS?.logS ?? 0;
+    const logS2 = state.interactingMolecules[1]?.calculated_properties?.ALOGPS?.logS ?? 0;
     setSliderValues(prev => ({...prev,
       E1_slider_value: logS1,
       E2_slider_value: logS2,
     }));
     setTitles({
-      drug1: `${state.interactingMolecules[0].name} (logS)`,
-      drug2: `${state.interactingMolecules[1].name} (logS)`,
+      drug1: `${state.interactingMolecules[0]?.name} (logS)`,
+      drug2: `${state.interactingMolecules[1]?.name} (logS)`,
     })
   }, [state.interactingMoleculesResult])
 
