@@ -16,6 +16,8 @@ import { ProteinResults } from "./ProteinResults";
 import { DrugSynthesisToXDL } from "./DrugSynthesisToXDL";
 import { SectionTitle } from "./SectionTitle";
 import { TargetLiterature } from "./TargetLiterature";
+import * as PropTypes from "prop-types";
+import { DrugSynthesis } from "./DrugSynthesis";
 
 export const SearchFeature = () => {
   const {loading, data, error, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
@@ -32,9 +34,7 @@ export const SearchFeature = () => {
 
   const [selectionDrugModel, setSelectionDrugModel] = useState([]);
   const [selectionTargetModel, setSelectionTargetModel] = useState([]);
-  const [pdfList, setPdfList] = useState([]);
-  const [selectedPdf, setSelectedPdf] = useState(null);
-  const [selectedPdfObj, setSelectedPdfObj] = useState("");
+
   const [secondaryLoader, setSecondaryLoader] = useState(false);
 
   const drugs = useMemo(() => data && data.result && 'drugs' in data.result ? Object.entries(data.result.drugs).map(([_key, _value]) => ({
@@ -62,7 +62,6 @@ export const SearchFeature = () => {
         setSelectionDrugModel(prev => [...prev, `${defaultDrug}`]);
         const defaultDrugRow = drugs.filter((row) => row.title.toLowerCase() === defaultDrug);
         viewDrugLiterature(defaultDrugRow);
-        getpdfs(searchText);
         const defaultTarget = targets[0].title.toLowerCase();
         setSelectionTargetModel([`${defaultTarget}`]);
         const defaultTargetRow = targets.filter((row) => row.title.toLowerCase() === defaultTarget);
@@ -128,27 +127,6 @@ export const SearchFeature = () => {
     });
   }
 
-  const getpdfs = (list) => {
-    if (list !== undefined) {
-      const url = Endpoints.search.pdf;
-      // reset pdflists and selected pdf object on click drug name
-      setPdfList([]);
-      setSelectedPdfObj("");
-      axios.get(`${url}?query=${list}&page=0&pageSize=10`).then((resp) => {
-        if (resp.data.items) {
-          setPdfList(resp.data.items);
-        }
-      });
-    }
-  }
-
-  const handlePdfChange = (e) => {
-    const selectedpdf = e.target.value;
-    setSelectedPdf(selectedpdf);
-    const selectedObj = pdfList.find(text => text.title === selectedpdf);
-    setSelectedPdfObj(selectedObj);
-  }
-
   const getOnSelectionModelChange = (selection) => {
     if (selection.length > 1) {
       const selectionSet = new Set(selectionTargetModel);
@@ -206,7 +184,6 @@ export const SearchFeature = () => {
                            onRowClick={(param) => {
                              drughandleClick(param.row);
                              setClickedRow(param.row.title.toLowerCase());
-                             getpdfs(param.row.title.toLowerCase())
                            }}
                            selectionModel={selectionDrugModel}
                            onSelectionModelChange={(ids) => setSelectionDrugModel(ids)}
@@ -229,26 +206,7 @@ export const SearchFeature = () => {
               <TargetLiterature selectedtarget={selectedTarget} rowtargets={rowTargets}/>
             </Grid>
           </Grid>
-          <section id='title-wrapper'>
-            <div className='title'>Drug Synthesis</div>
-            <div className='line'></div>
-            <div className='title'>
-              <TextField sx={{"width": "200px", "background": "#fff", "maxWidth": "200px"}}
-                         id="outlined-select-currency" select label="Select Pdf" value={selectedPdf}
-                         onChange={handlePdfChange}>
-                {
-                  pdfList.map(text => <MenuItem key={text.id} value={text.title}>{text.title}</MenuItem>)
-                }
-              </TextField>
-            </div>
-          </section>
-
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <DrugSynthesisToXDL pdfObj={selectedPdfObj}
-              />
-            </Grid>
-          </Grid>
+          <DrugSynthesis searchText={selectedDrug !== '' ? selectedDrug : searchText}/>
         </div> : loading && <CircularProgressComponent/>
       }
       {secondaryLoader && <CircularProgressComponent/>}

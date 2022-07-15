@@ -14,7 +14,8 @@ import { Engine } from "./pages/Engine";
 import { SurfacePage } from "./pages/Surface.page";
 import {Text2xdlFeature} from "./modules/text2xdl/Text2xdl";
 import {SearchFeature} from "./modules/engine/search/search.feature";
-import {DrugSynthesisFeature} from "./modules/drug-synthesis/drug-synthesis-feature";
+import { DrugSynthesisFeature } from "./modules/engine/drug-synthesis/drug-synthesis-feature";
+import { Drug2XDL, Drug2XDLFeature } from "./modules/engine/drug2xdl/Drug2xdl.feature";
 
 export const Router = () => (
   <Routes>
@@ -34,6 +35,7 @@ export const Router = () => (
         <Route path="search" element={<SearchFeature/>} />
         <Route path="text2xdl" element={<Text2xdlFeature/>} />
         <Route path="drugsynthesis" element={<DrugSynthesisFeature />}/>
+        <Route path="drug2xdl" element={<Drug2XDLFeature/>} />
     </Route>
     <Route path="surface" element={<SurfacePage />}/>
     <Route path="start" element={<StartView/>} />

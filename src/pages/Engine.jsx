@@ -3,8 +3,10 @@ import {Container} from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {NavLink, Outlet } from "react-router-dom";
 import './Engine.scss';
+import { useDashboardContext } from "../modules/dashboard/context/useDashboarContext";
 
 export const Engine = () => {
+  const {state} = useDashboardContext();
   return (
     <DashboardLayout style={{height: '100%'}}>
       <Container maxWidth="xl">

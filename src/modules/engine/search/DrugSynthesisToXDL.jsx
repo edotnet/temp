@@ -22,7 +22,8 @@ const downloadpdf = (pdf) => () => {
 }
 
 const Details = (props) => {
-  if (!props.selectedPdfObj) {
+  console.log('shouldRender', props.pdfObj)
+  if (!props.pdfObj) {
     return <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>Select a PDF</Box>;
   }
   return (
@@ -30,20 +31,20 @@ const Details = (props) => {
       <Grid item xs={4} sx={{position: "relative",}}>
         <h4>Synthesis Process</h4>
         <Box sx={{position: "absolute", right: 10, top: 30}}>
-          <CopyComponent text={props.selectedPdfObj.text}/>
+          <CopyComponent text={props.pdfObj.text}/>
         </Box>
         <div className="process" id="style-2">
-          {NewlineText(props.selectedPdfObj.text)}
+          {NewlineText(props.pdfObj.text)}
         </div>
       </Grid>
       <Grid item xs={8} sx={{position: "relative"}}>
         <h4>Synthesis XDL</h4>
         <Box sx={{position: "absolute", right: 10, top: 30}}>
-          <CopyComponent text={props.selectedPdfObj.xml}/>
+          <CopyComponent text={props.pdfObj.xml}/>
         </Box>
         <div className="synthesis" id="style-2">
           <pre>
-            {beautify(props.selectedPdfObj.xml)}
+            {beautify(props.pdfObj.xml)}
           </pre>
         </div>
       </Grid>
@@ -51,7 +52,7 @@ const Details = (props) => {
 }
 
 Details.propTypes = {
-  selectedPdfObj: PropTypes.string,
+  pdfObj: PropTypes.string,
 }
 
 export function DrugSynthesisToXDL(props) {
@@ -62,7 +63,7 @@ export function DrugSynthesisToXDL(props) {
           <p>Please download the pdf <a style={{'color': '#6E54C2', 'cursor': 'pointer', fontWeight: 'bold'}}
                                         onClick={downloadpdf(props.pdfObj.filePath)}>{props.pdfObj.title}</a></p> : ''
       }
-    <Accordion>
+    <Accordion expanded={props.expanded}>
     <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel5a-content" id="panel5a-header">
       <Typography>Drug Synthesis Translated to XDL Code</Typography>
     </AccordionSummary>
@@ -75,8 +76,6 @@ export function DrugSynthesisToXDL(props) {
 }
 
 DrugSynthesisToXDL.propTypes = {
-  pdfObj: PropTypes.oneOf([PropTypes.shape({
-    text: PropTypes.string,
-    xml: PropTypes.string,
-  }), null]),
+  pdfObj: PropTypes.any,
+  expanded: PropTypes.bool
 };
