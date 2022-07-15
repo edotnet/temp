@@ -33,8 +33,6 @@ export function DrugSynthesis({searchText, filter, expanded}) {
     const selectedpdf = e.target.value;
     setSelectedPdf(selectedpdf);
     const selectedObj = pdfList.find(text => text.title === selectedpdf);
-    console.log('pdfList', pdfList);
-    console.log('selectedObj', selectedObj);
     setSelectedPdfObj(selectedObj);
   }
   return <>

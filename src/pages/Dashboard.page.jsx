@@ -80,12 +80,12 @@ export const Dashboard = () => {
                       category={state.category}
                       label="+ Add Drug Molecule"/>
                   </Box>
-                  <Box pl={1} pt={2}>
+                  <Box sx={{pt: 3, pl: 1, display: 'flex', justifyContent: 'space-between'}}>
                     {state.molecules.length > 0 &&
                       <>
                       <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>
-                    <Button variant="outlined" onClick={_onDrugToXDL}>
-                      Drug to XDL
+                    <Button variant="outlined" onClick={_onDrugToXDL} sx={{mt: -1}}>
+                      to XDL
                     </Button>
                       </>}
                   </Box>
