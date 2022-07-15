@@ -63,7 +63,7 @@ export function DrugSynthesisToXDL(props) {
           <p>Please download the pdf <a style={{'color': '#6E54C2', 'cursor': 'pointer', fontWeight: 'bold'}}
                                         onClick={downloadpdf(props.pdfObj.filePath)}>{props.pdfObj.title}</a></p> : ''
       }
-    <Accordion expanded={props.expanded}>
+    <Accordion>
     <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel5a-content" id="panel5a-header">
       <Typography>Drug Synthesis Translated to XDL Code</Typography>
     </AccordionSummary>
@@ -77,5 +77,4 @@ export function DrugSynthesisToXDL(props) {
 
 DrugSynthesisToXDL.propTypes = {
   pdfObj: PropTypes.any,
-  expanded: PropTypes.bool
 };

@@ -6,7 +6,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 
-export function DrugSynthesis({searchText, filter, expanded}) {
+export function DrugSynthesis({searchText, filter}) {
   const [pdfList, setPdfList] = useState([]);
   const [selectedPdf, setSelectedPdf] = useState('');
   const [selectedPdfObj, setSelectedPdfObj] = useState("");
@@ -53,7 +53,7 @@ export function DrugSynthesis({searchText, filter, expanded}) {
 
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <DrugSynthesisToXDL pdfObj={selectedPdfObj} expanded={expanded} />
+        <DrugSynthesisToXDL pdfObj={selectedPdfObj} />
       </Grid>
     </Grid>
   </>;
@@ -62,11 +62,9 @@ export function DrugSynthesis({searchText, filter, expanded}) {
 DrugSynthesis.propTypes = {
   searchText: PropTypes.string,
   filter: PropTypes.node,
-  expanded: PropTypes.bool,
 };
 
 DrugSynthesis.defaultProps = {
   searchText: "",
   filter: null,
-  expanded: false,
 }

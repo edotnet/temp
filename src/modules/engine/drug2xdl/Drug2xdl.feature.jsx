@@ -8,7 +8,7 @@ export const Drug2XDLFeature = () => {
   const {state} = useDashboardContext();
   return (
     <>
-      <DrugSynthesis searchText={molecule} expanded filter={<TextField
+      <DrugSynthesis searchText={molecule} filter={<TextField
         select
         sx={{"width": "200px", "background": "#fff", "maxWidth": "200px"}}
         value={molecule}
