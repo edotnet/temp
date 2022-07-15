@@ -1,13 +1,12 @@
-import { DashboardLayout } from "../infrastructure/layouts/Dashboard.layout";
-import { Container } from '@mui/material';
+import {DashboardLayout} from "../infrastructure/layouts/Dashboard.layout";
+import {Container} from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { Route, Routes, NavLink,} from "react-router-dom";
-import {Text2xdlFeature} from "../modules/text2xdl/Text2xdl";
-import {SearchFeature} from "../modules/search/search";
-import { DrugSynthesisFeature } from "../modules/drug-synthesis/drug-synthesis-feature";
+import {NavLink, Outlet } from "react-router-dom";
 import './Engine.scss';
+import { useDashboardContext } from "../modules/dashboard/context/useDashboarContext";
 
 export const Engine = () => {
+  const {state} = useDashboardContext();
   return (
     <DashboardLayout style={{height: '100%'}}>
       <Container maxWidth="xl">
@@ -21,13 +20,8 @@ export const Engine = () => {
             </nav>
           </Grid>
         </Grid>
-
-        <Routes>
-          <Route path="search" element={<SearchFeature/>}></Route>
-          <Route path="text2xdl" element={<Text2xdlFeature/>}></Route>
-          <Route path="drugsynthesis" element={<DrugSynthesisFeature />}/>
-        </Routes>
-        </Container>
+        <Outlet/>
+      </Container>
     </DashboardLayout>
   );
 }

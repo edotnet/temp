@@ -1,20 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import { SynthesisDropzoneArea } from "../../infrastructure/components/SynthesisDropzoneArea";
 import { Typography, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material";
 import TextField from '@mui/material/TextField';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import { fileToBase64, NewlineText, prettyformat } from "../../infrastructure/utils";
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import ContentCopy from '@mui/icons-material/ContentCopy';
-import {Endpoints} from "../../config/Consts";
 import Snackbar from '@mui/material/Snackbar';
 import "./DrugSynthesis.css";
-import {CopyComponent} from "../../infrastructure/components/Copy.component";
+import { Endpoints } from "../../../config/Consts";
+import { useApiCall } from "../../../infrastructure/hooks/useApiCall";
+import { fileToBase64, NewlineText, prettyformat } from "../../../infrastructure/utils";
+import { CopyComponent } from "../../../infrastructure/components/Copy.component";
+import { SynthesisDropzoneArea } from "../../../infrastructure/components/SynthesisDropzoneArea";
 
 export const DrugSelector = ({handleDrugChange, selectedDrug, drugs}) => (<TextField sx={{"width": "30%"}}
     id="outlined-select-currency"
@@ -62,7 +60,7 @@ export const DrugSynthesisFeature = () => {
   const [updatedPdfData, setUpdatedPdfData] = useState({});
   const [opensnack, setOpensnack] = useState(false);
 
-  
+
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false // toggle flag after first render/mounting
@@ -99,7 +97,7 @@ export const DrugSynthesisFeature = () => {
         )
       );
       Object.keys(filteredData).forEach((key) => {
-      filteredData[key] = filteredData[key].split("@#@")});
+      filteredData[key] = filteredData[key].replaceAll('‑', '-').split("@#@")});
       return filteredData;
   }
 
@@ -190,7 +188,7 @@ export const DrugSynthesisFeature = () => {
             <DrugSelector handleDrugChange={handleDrugChange} selectedDrug={selectedDrug} drugs={drugs}/>
             <DrugEditor handleRename={handleRename} name={name}/>
             {isEditing && <ActionButtons handleAccept={handleAccept} handleReject={handleReject}/>}
-            {!isEditing && isAccepted && 
+            {!isEditing && isAccepted &&
               <Button className="synthesis-save-btn" style={{ margin: "5px", float: 'right' }} size="large"  variant="outlined" onClick={handleSubmit}>
                 Save
               </Button>

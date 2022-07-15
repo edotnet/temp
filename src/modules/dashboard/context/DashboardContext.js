@@ -75,7 +75,7 @@ const reducer = (state, action) => {
       ...state,
       interactingMoleculesResult: {
         ...interactingMoleculesResult,
-        value: interactingMoleculesResult.value.toFixed(0)
+        value: interactingMoleculesResult.value.toFixed(1)
       },
     }),
     addProtein: (protein) => ({
