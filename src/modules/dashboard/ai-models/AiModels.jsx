@@ -6,7 +6,6 @@ import {useDashboardContext} from "../context/useDashboarContext";
 
 export const AiModels = () => {
     const {state} = useDashboardContext();
-    console.log(state.selectedMolecule)
     const solubility = 67;
     const toxicity =
         {
