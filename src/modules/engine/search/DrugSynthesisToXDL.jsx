@@ -5,11 +5,10 @@ import * as PropTypes from "prop-types";
 import beautify from "xml-beautifier";
 import { Endpoints } from "../../../config/Consts";
 import axios from "axios";
+import { memo } from "react";
 
 function NewlineText(value, ind) {
-  const text = value;
-  const newText = text.split('\n').map(str => <p key={ind}>{str}</p>);
-  return newText;
+  return value.split('\n').map(str => <p key={ind}>{str}</p>);
 }
 
 const downloadpdf = (pdf) => () => {
@@ -21,8 +20,7 @@ const downloadpdf = (pdf) => () => {
   });
 }
 
-const Details = (props) => {
-  console.log('shouldRender', props.pdfObj)
+const Details = memo((props) => {
   if (!props.pdfObj) {
     return <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>Select a PDF</Box>;
   }
@@ -49,7 +47,7 @@ const Details = (props) => {
         </div>
       </Grid>
     </Grid>);
-}
+})
 
 Details.propTypes = {
   pdfObj: PropTypes.string,

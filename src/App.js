@@ -3,6 +3,7 @@ import { CssBaseline } from "@mui/material";
 import { EventEmitter } from "./infrastructure/event-system/EventEmitter";
 import './App.scss';
 import { DashboardContext, DashboardContextProvider } from "./modules/dashboard/context/DashboardContext";
+import { EngineContextProvider } from "./modules/engine/EngineContext";
 
 function App() {
   return (
@@ -10,7 +11,9 @@ function App() {
       <EventEmitter>
         <CssBaseline />
         <DashboardContextProvider>
-          <Router/>
+          <EngineContextProvider>
+            <Router/>
+          </EngineContextProvider>
         </DashboardContextProvider>
       </EventEmitter>
     </>

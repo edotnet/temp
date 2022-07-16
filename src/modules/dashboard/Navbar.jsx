@@ -17,7 +17,7 @@ export const Navbar = () => {
         </Grid>
         <Grid item xs={10} style={{paddingTop: '25px'}}>
           <nav className="headernavlink">
-            <NavLink to="/engine">SEARCH ENGINE</NavLink>
+            <NavLink to="/engine/search">SEARCH ENGINE</NavLink>
             <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
             <NavLink to="/surface">SURFACE</NavLink>
           </nav>

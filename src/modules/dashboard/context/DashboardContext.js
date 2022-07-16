@@ -39,6 +39,17 @@ const reducer = (state, action) => {
         molecules: [...state.molecules, molecule]
       };
     },
+    addMolecules: (molecules) => {
+      const newMolecules = molecules.map(molecule => {
+        molecule.color = colorful_language(molecule.name, 0.25)
+        return molecule;
+      }).filter(molecule => !state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id));
+
+      return {
+        ...state,
+        molecules: [...state.molecules, ...newMolecules],
+      };
+    },
     removeMolecule: (molecule) => ({
       ...state,
       molecules: state.molecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
