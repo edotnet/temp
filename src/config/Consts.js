@@ -16,6 +16,7 @@ export const Endpoints = {
     categories: `${useApi}/drugbank/category/query/`,
     drugsByCategory: `${useApi}/drugbank/drugs/category/`,
     targetDisease: '', // TODO
+    calculateMaintenanceDosage: `${useApi}/drugbank/calculateMaintenanceDosage`,
   },
   naturalProducts: {
     query: `${useApi}/natural_products/query`,
