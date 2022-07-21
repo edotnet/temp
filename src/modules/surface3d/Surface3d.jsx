@@ -30,7 +30,7 @@ export const Surface3d = memo(() => {
     drug1: "Select molecule in drug interactor",
     drug2: "Select molecule in drug interactor",
   });
-  const debouncedState = useDebounce(sliderValues);
+  const debouncedState = useDebounce(sliderValues, 300);
   const {data, loading, fetch} = useApiCall(`${Endpoints.musyc.query}`, 'GET', null, false)
   const lastData = useRef({
     x: [],
