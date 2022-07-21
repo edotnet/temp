@@ -92,6 +92,8 @@ export const DemographicFeature = () => {
         ValueLabel: ValueLabelComponent,
       }}
       defaultValue={20}
+      min={options[type].values.min}
+      max={options[type].values.max}
       value={information[type]}
       onChange={(e, value) => {setInformation({...information, [type]: value})}}
     />
