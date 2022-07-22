@@ -7,7 +7,10 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
 
   const [{isDragging, didDrop}, drag] = useDrag({
     type: 'MoleculeCard',
-    item: molecule,
+    item: {
+      type: 'MoleculeCard',
+      value: molecule,
+    },
     collect: monitor => ({
       isDragging: !!monitor.isDragging(),
       didDrop: !!monitor.didDrop(),

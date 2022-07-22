@@ -254,6 +254,9 @@ export const PredictiveWorld = () => {
   }
 
   const renderCenter = () => {
+    if (state.demographicsResult) {
+      return <div style={{position: 'absolute', fontSize: '30px'}}>{parseFloat(state.demographicsResult[state.selectedDemographics.id]).toFixed(3)} ml</div>;
+    }
     if (!state.interactingMolecules.length) {
       return renderDropMolecule("1st")
     }

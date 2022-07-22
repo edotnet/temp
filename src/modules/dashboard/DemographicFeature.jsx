@@ -1,20 +1,24 @@
 import {
-  Box, Button,
+  Box,
+  Button,
   FormControl,
   FormControlLabel,
-  FormLabel,
   Grid,
   Modal,
   Radio,
-  RadioGroup, Slider, Tooltip,
+  RadioGroup,
+  Slider,
+  Stack,
+  Tooltip,
   Typography
 } from "@mui/material";
-import { DemographicItem } from "./DemographicItem";
-import { useEffect, useState } from "react";
-import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import { Endpoints } from "../../config/Consts";
+import {DemographicItem} from "./DemographicItem";
+import {useMemo, useState} from "react";
+import {useDashboardContext} from "./context/useDashboarContext";
+import {styled} from "@mui/material/styles";
+
 function ValueLabelComponent(props) {
-  const { children, value } = props;
+  const {children, value} = props;
 
   return (
     <Tooltip enterTouchDelay={0} placement="top" title={value}>
@@ -22,53 +26,82 @@ function ValueLabelComponent(props) {
     </Tooltip>
   );
 }
-export const DemographicFeature = () => {
-  const url = Endpoints.drugbank.calculateMaintenanceDosage;
-  const {fetch, data} = useApiCall(url, 'POST', null, false);
-  const options = {
-    drug: {
-      values: ["favipiravir", "balicatib", "ritonavir", "remdesivir", "cephalexin", "ivermectin"],
-      type: 'radio'
-    },
-    weight: {
-      type: 'number',
-      values: {
-        min: 1,
-        max: 150,
-      },
-    },
-    age: {
-      type: 'number',
-      min: 1,
-      max: 110,
-    },
-    gender: {
-      type: 'radio',
-      values: ["male", "female"]
-    },
-    geo: {
-      type: 'radio',
-      values: ["asia", "europe", "africa", "australia", "america"]
-    }
+
+const PillButton = styled(Button)({
+  '&.MuiButton-root': {
+    borderRadius: 50,
+    width: '70%',
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    border: '1px dashed #ccc',
+    paddingTop: 10,
+    paddingBottom: 10,
+    float: 'left'
+  },
+  '&.MuiLabel': {
+    textAlign: 'left'
   }
-  const [property, setProperty] = useState(null);
-  const [information, setInformation] = useState(() => {
-    const info = {};
+});
+
+const options = {
+  drug: {
+    values: ["favipiravir", "balicatib", "ritonavir", "remdesivir", "cephalexin", "ivermectin"],
+    type: 'checkbox',
+  },
+  weight: {
+    type: 'number',
+    values: {
+      min: 1,
+      max: 150,
+    },
+  },
+  age: {
+    type: 'number',
+    values: {
+      min: 1,
+      max: 150,
+    },
+  },
+  gender: {
+    type: 'radio',
+    values: ["male", "female"],
+  },
+  geo: {
+    type: 'radio',
+    values: ["asia", "europe", "africa", "australia", "america"]
+  }
+}
+export const DemographicFeature = () => {
+  const {state, dispatch} = useDashboardContext();
+  const [open, setOpen] = useState(false);
+  const initialState = useMemo(() => {
+    const info = {
+      id: state.demographics.length+1
+    };
     Object.keys(options).forEach(key => {
       info[key] = null;
     });
     return info;
-  });
+  }, [state.demographics]);
+  const [information, setInformation] = useState(() => initialState);
 
-  const openDemographicModal = (type) => () => {
-    setProperty(type);
+  const openModal = () => {
+    setInformation(() => initialState)
+    setOpen(true);
   }
 
-  useEffect(() => {
-    if (information.drug && information.weight && information.age && information.gender && information.geo) {
-      fetch(url, 'POST', information)
-    }
-  }, [information]);
+  const closeModal = () => {
+    setOpen(false);
+  }
+
+  const editDemographics = (id) => () => {
+    setInformation(state.demographics.find(demo => demo.id === id));
+    setOpen(true);
+  }
+
+  const onSubmit = () => {
+    dispatch({type: 'addDemographics', payload: information});
+    closeModal();
+  }
 
   const renderRadio = (type) => {
     return (
@@ -79,55 +112,113 @@ export const DemographicFeature = () => {
           onChange={(e, v) => setInformation(prev => ({...prev, [type]: v}))}
           value={information[type]}
         >
-          {options[type].values.map(value => <FormControlLabel value={value} control={<Radio />} label={value} key={value}/>)}
+          {options[type].values.map(value => <FormControlLabel value={value} control={<Radio/>} label={value}
+                                                               key={value}/>)}
         </RadioGroup>
       </FormControl>
     )
   }
 
   const renderNumber = (type) => (
-    <Slider
-      valueLabelDisplay="auto"
-      components={{
-        ValueLabel: ValueLabelComponent,
-      }}
-      defaultValue={20}
-      min={options[type].values.min}
-      max={options[type].values.max}
-      value={information[type]}
-      onChange={(e, value) => {setInformation({...information, [type]: value})}}
-    />
+    <Box sx={{px: 3}}>
+      <Slider
+        valueLabelDisplay="auto"
+        components={{
+          ValueLabel: ValueLabelComponent,
+        }}
+        defaultValue={20}
+        min={options[type].values.min}
+        max={options[type].values.max}
+        value={information[type]}
+        onChange={(e, value) => {
+          setInformation({...information, [type]: value})
+        }}
+      />
+    </Box>
   )
+
+  const isValid = useMemo(() => {
+    return Object.keys(information).every(key => information[key] !== null);
+  }, [information]);
 
   return (
     <>
-    <Grid container spacing={2}>
-      {Object.keys(options).map((prop) => (
-        <Grid item xs={6} sm={6} md={4} key={prop}>
-          <DemographicItem onClick={openDemographicModal(prop)} title={prop} value={information[prop]}/>
-        </Grid>
-      ))}
-      {!!data && <Grid item xs={6} sm={6} md={4}>
-        <Box sx={{display: 'flex', alignContent: 'center', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
-          <Typography variant="h4">{parseFloat(data.maintenanceDosage).toFixed(2)}</Typography>
+      <Stack>
+        <PillButton onClick={openModal}>+ Add demographic</PillButton>
+        <Box sx={{pt: 3, pl: 1, display: 'flex', justifyContent: 'space-between'}}>
+          {state.demographics.length > 0 &&
+            <>
+              <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>
+            </>}
         </Box>
-      </Grid>}
-    </Grid>
-      <Modal open={!!property} onClose={() => setProperty(null)}>
+        <Grid container spacing={4} pt={2} style={{minHeight: 150}}>
+          {state.demographics.map(demographic => <Grid item xs={3} key={demographic.id}>
+            <DemographicItem
+              key={demographic.id}
+              demographic={demographic}
+              onClick={editDemographics(demographic.id)}
+            />
+          </Grid>)}
+        </Grid>
+      </Stack>
+      <Modal open={open} onClose={closeModal}>
         <Box sx={{
           position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 300,
+          width: 800,
           p: 4,
           boxShadow: 24,
           bgcolor: 'background.paper',
         }}>
-          <Typography>{property}</Typography>
+          <Grid container>
+            <Grid item sm={6}>
+              <Box sx={{px: 2}}>
+                <Grid container>
+                  <Grid item xs={3}>
+                    <Typography>AGE</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    {renderNumber('age')}
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography>{information.age}</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography>WEIGHT</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    {renderNumber('weight')}
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography>{information.weight}</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography>GENDER</Typography>
+                    {renderRadio('gender')}
+                  </Grid>
+                  <Grid item xs={6}>
+
+                  </Grid>
+                </Grid>
+              </Box>
+
+            </Grid>
+            <Grid item sm={3}>
+              <Typography>GEO</Typography>
+              {renderRadio('geo')}
+            </Grid>
+            <Grid item sm={3}>
+              <Typography>DRUG</Typography>
+              {renderRadio('drug')}
+            </Grid>
+          </Grid>
           <Box>
-            {!!property && options[property].type === 'radio' && renderRadio(property)}
-            {!!property && options[property].type === 'number' && renderNumber(property)}
+            <Button
+              variant="contained"
+              disabled={!isValid}
+              onClick={onSubmit}>Submit</Button>
           </Box>
         </Box>
       </Modal>

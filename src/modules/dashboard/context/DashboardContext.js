@@ -1,5 +1,5 @@
-import { createContext, useReducer } from "react";
-import { colorful_language } from "../../../infrastructure/utils";
+import {createContext, useReducer} from "react";
+import {colorful_language} from "../../../infrastructure/utils";
 
 const initialState = {
   molecules: [],
@@ -9,6 +9,9 @@ const initialState = {
   protein: null,
   category: null,
   pdbid: "",
+  demographics: [],
+  selectedDemographics: null,
+  demographicsResult: null,
 };
 
 const DashboardContext = createContext({state: initialState});
@@ -101,10 +104,31 @@ const reducer = (state, action) => {
       ...state,
       pdbid
     }),
-    removePdb:() => ({
+    removePdb: () => ({
       ...state,
       pdbid: ""
-    })
+    }),
+    addDemographics: (demographics) => {
+      return {
+        ...state,
+        demographics: [...new Set([...state.demographics, demographics])]
+      }
+    },
+    removeDemographics: (demographics) => ({
+      ...state,
+      demographics: state.demographics.filter(demo => demo.id !== demographics.id)
+    }),
+    selectDemographics: (demographics) => ({
+      ...state,
+      selectedDemographics: demographics,
+    }),
+    demographicsResult: (demographicsResult) => ({
+      ...state,
+      demographicsResult: {
+        ...state.demographicsResult,
+        ...demographicsResult,
+      },
+    }),
   }
   return actions[action.type](action.payload);
 }
@@ -115,4 +139,4 @@ const DashboardContextProvider = ({children}) => {
   return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>
 }
 
-export { DashboardContext, DashboardContextProvider };
+export {DashboardContext, DashboardContextProvider};
