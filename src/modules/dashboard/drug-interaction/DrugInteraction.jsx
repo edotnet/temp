@@ -66,12 +66,13 @@ export const DrugInteraction = memo(({onNewItems}) => {
   }, [data])
 
   useEffect(() => {
-    if ((state.selectedDemographics && state.demographicsResult && !Object.keys(state.demographicsResult).includes(state.selectedDemographics.id))
+    if ((state.selectedDemographics && state.demographicsResult
+        && (!Object.keys(state.demographicsResult).includes(state.selectedDemographics.id) || !state.demographicsResult[state.selectedDemographics.id]))
     || (state.selectedDemographics && !state.demographicsResult)) {
       try {
         const demographicsRequest = {
           ...state.selectedDemographics,
-          drugs: [state.selectedDemographics.drug]
+          drugs: state.interactingMolecules.map(molecule => molecule.name.toLowerCase())
         }
         axios.post(Endpoints.drugbank.calculateMaintenanceDosage, demographicsRequest).then((res) => {
           dispatch({

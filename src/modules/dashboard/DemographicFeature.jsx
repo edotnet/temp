@@ -1,31 +1,34 @@
 import {
   Box,
-  Button,
+  Button, capitalize,
   FormControl,
   FormControlLabel,
   Grid,
+  IconButton,
   Modal,
   Radio,
   RadioGroup,
-  Slider,
   Stack,
-  Tooltip,
+  TextField,
   Typography
 } from "@mui/material";
 import {DemographicItem} from "./DemographicItem";
 import {useMemo, useState} from "react";
 import {useDashboardContext} from "./context/useDashboarContext";
 import {styled} from "@mui/material/styles";
+import {Add, Remove} from "@mui/icons-material";
 
-function ValueLabelComponent(props) {
-  const {children, value} = props;
-
-  return (
-    <Tooltip enterTouchDelay={0} placement="top" title={value}>
-      {children}
-    </Tooltip>
-  );
-}
+const CustomTextField = styled(TextField)({
+  '&.MuiTextField-root': {
+    input: {
+      padding: 5,
+      textAlign: 'center',
+    },
+  },
+  '.MuiOutlinedInput-root': {
+    borderRadius: 20,
+  }
+});
 
 const PillButton = styled(Button)({
   '&.MuiButton-root': {
@@ -43,10 +46,6 @@ const PillButton = styled(Button)({
 });
 
 const options = {
-  drug: {
-    values: ["favipiravir", "balicatib", "ritonavir", "remdesivir", "cephalexin", "ivermectin"],
-    type: 'checkbox',
-  },
   weight: {
     type: 'number',
     values: {
@@ -75,7 +74,7 @@ export const DemographicFeature = () => {
   const [open, setOpen] = useState(false);
   const initialState = useMemo(() => {
     const info = {
-      id: state.demographics.length+1
+      id: state.demographics.length + 1,
     };
     Object.keys(options).forEach(key => {
       info[key] = null;
@@ -83,6 +82,9 @@ export const DemographicFeature = () => {
     return info;
   }, [state.demographics]);
   const [information, setInformation] = useState(() => initialState);
+  const isValid = useMemo(() => {
+    return Object.keys(information).every(key => information[key] !== null);
+  }, [information]);
 
   const openModal = () => {
     setInformation(() => initialState)
@@ -112,7 +114,8 @@ export const DemographicFeature = () => {
           onChange={(e, v) => setInformation(prev => ({...prev, [type]: v}))}
           value={information[type]}
         >
-          {options[type].values.map(value => <FormControlLabel value={value} control={<Radio/>} label={value}
+          {options[type].values.map(value => <FormControlLabel value={value} control={<Radio color="info"/>}
+                                                               label={capitalize(value)}
                                                                key={value}/>)}
         </RadioGroup>
       </FormControl>
@@ -121,25 +124,20 @@ export const DemographicFeature = () => {
 
   const renderNumber = (type) => (
     <Box sx={{px: 3}}>
-      <Slider
-        valueLabelDisplay="auto"
-        components={{
-          ValueLabel: ValueLabelComponent,
-        }}
-        defaultValue={20}
-        min={options[type].values.min}
-        max={options[type].values.max}
-        value={information[type]}
-        onChange={(e, value) => {
-          setInformation({...information, [type]: value})
-        }}
-      />
+      <Stack direction="row">
+        <IconButton onClick={() => setInformation(prev => ({...prev, [type]: (parseInt(prev[type]) || 0) + 1}))}>
+          <Add color="info"/>
+        </IconButton>
+        <CustomTextField
+          size="small"
+          value={information[type]}
+          onChange={e => setInformation(prev => ({...prev, [type]: parseFloat(e.target.value)}))}/>
+        <IconButton onClick={() => setInformation(prev => ({...prev, [type]: (parseInt(prev[type]) || 0) - 1}))}>
+          <Remove color="info"/>
+        </IconButton>
+      </Stack>
     </Box>
   )
-
-  const isValid = useMemo(() => {
-    return Object.keys(information).every(key => information[key] !== null);
-  }, [information]);
 
   return (
     <>
@@ -151,15 +149,15 @@ export const DemographicFeature = () => {
               <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>
             </>}
         </Box>
-        <Grid container spacing={4} pt={2} style={{minHeight: 150}}>
-          {state.demographics.map(demographic => <Grid item xs={3} key={demographic.id}>
+        <Box sx={{minHeight: 150}}>
+          {state.demographics.map(demographic =>
             <DemographicItem
               key={demographic.id}
               demographic={demographic}
               onClick={editDemographics(demographic.id)}
             />
-          </Grid>)}
-        </Grid>
+          )}
+        </Box>
       </Stack>
       <Modal open={open} onClose={closeModal}>
         <Box sx={{
@@ -172,54 +170,49 @@ export const DemographicFeature = () => {
           boxShadow: 24,
           bgcolor: 'background.paper',
         }}>
-          <Grid container>
-            <Grid item sm={6}>
-              <Box sx={{px: 2}}>
-                <Grid container>
-                  <Grid item xs={3}>
-                    <Typography>AGE</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    {renderNumber('age')}
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography>{information.age}</Typography>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography>WEIGHT</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    {renderNumber('weight')}
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Typography>{information.weight}</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography>GENDER</Typography>
-                    {renderRadio('gender')}
-                  </Grid>
-                  <Grid item xs={6}>
+          <Stack spacing={2}>
+            <Grid container spacing={2}>
+              <Grid item sm={1}>
+              </Grid>
+              <Grid item sm={6}>
+                <Box sx={{px: 2}}>
+                  <Stack spacing={3}>
+                    <Stack direction="row" spacing={5} sx={{alignItems: 'center'}}>
+                      <Typography>AGE</Typography>
+                      {renderNumber('age')}
+                    </Stack>
+                    <Stack direction="row" spacing={1} sx={{alignItems: 'center'}}>
+                      <Typography>WEIGHT</Typography>
+                      {renderNumber('weight')}
+                    </Stack>
+                    <Box>
+                      <Typography>GENDER</Typography>
+                      {renderRadio('gender')}
+                    </Box>
+                  </Stack>
+                </Box>
 
-                  </Grid>
-                </Grid>
-              </Box>
-
+              </Grid>
+              <Grid sm={1}/>
+              <Grid item sm={3}>
+                <Typography>GEO</Typography>
+                {renderRadio('geo')}
+              </Grid>
             </Grid>
-            <Grid item sm={3}>
-              <Typography>GEO</Typography>
-              {renderRadio('geo')}
-            </Grid>
-            <Grid item sm={3}>
-              <Typography>DRUG</Typography>
-              {renderRadio('drug')}
-            </Grid>
-          </Grid>
-          <Box>
-            <Button
-              variant="contained"
-              disabled={!isValid}
-              onClick={onSubmit}>Submit</Button>
-          </Box>
+            <Stack direction="row" spacing={2} sx={{justifyContent: 'flex-end'}}>
+              <Button
+                sx={{borderRadius: 20}}
+                color="info"
+                variant="outlined"
+                onClick={closeModal}>Cancel</Button>
+              <Button
+                sx={{borderRadius: 20}}
+                color="info"
+                variant="contained"
+                disabled={!isValid}
+                onClick={onSubmit}>Submit</Button>
+            </Stack>
+          </Stack>
         </Box>
       </Modal>
     </>
