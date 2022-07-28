@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Modal, Typography } from "@mui/material";
+import {Box, Button, Grid, Modal, Typography, useTheme} from "@mui/material";
 import { MoleculeAutocomplete } from "../modules/dashboard/MoleculeAutocomplete";
 import { MoleculeCard } from "../modules/dashboard/MoleculeCard";
 import { DrugProperties } from "../modules/dashboard/DrugProperties";
@@ -14,10 +14,13 @@ import { PDBSelector } from "../modules/3dmol/PDBSelector";
 import './Dashboard.scss'
 import { useNavigate } from "react-router-dom";
 import { DemographicFeature } from "../modules/dashboard/DemographicFeature";
+import {PrimaryButton} from "../infrastructure/components/PrimaryButton";
+import {ArrowRight} from "@mui/icons-material";
 
 
 export const Dashboard = () => {
   const {state, dispatch} = useDashboardContext();
+  const theme = useTheme();
   const navigate = useNavigate();
   const setDetail = (molecule) => (e) => {
     molecule.coordinates = {
@@ -87,9 +90,7 @@ export const Dashboard = () => {
                       {state.molecules.length > 0 &&
                         <>
                           <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>
-                          <Button variant="outlined" onClick={_onDrugToXDL} sx={{mt: -1}}>
-                            to XDL
-                          </Button>
+                          <PrimaryButton onClick={_onDrugToXDL} sx={{mt: -1, backgroundColor: theme.palette.info.light}} title="to XDL" endIcon={<ArrowRight />}/>
                         </>}
                     </Box>
                     <Grid container spacing={4} pt={2} style={{minHeight: 150}}>

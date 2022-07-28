@@ -23,16 +23,22 @@ export const DTI = () => {
     top: 23,
     color: 'white',
     display: 'flex',
-    width: `calc(100% + ${value * 5}%)`
+    width: `calc(100% + ${value * 15}%)`
   });
   const result = useMemo(() => {
     if (!data || data.code !== 200)
       return null;
+    const result = []
+    data.result.forEach((drug, i) => {
+      if (state.molecules[i]) {
+        result.push({name: state.molecules[i].name, value: drug})
+      }
+    });
 
-    return data.result.map((drug, i) => (
-        <Box key={drug.name} sx={{position: 'relative'}}>
-          <Typography component="span" sx={{fontSize: 16, fontWeight: 'bold'}}>{state.molecules[i].name}</Typography><br/>
-          <Typography component="span" sx={progressStyle(drug)}>{(drug + 6).toFixed(4)}</Typography>
+    return result.sort((a, b) => a.value - b.value).map((drug) => (
+      <Box key={drug.name} sx={{position: 'relative'}}>
+          <Typography component="span" sx={{fontSize: 16, fontWeight: 'bold'}}>{drug.name}</Typography><br/>
+          <Typography component="span" sx={progressStyle(drug.value)}>{(drug.value + 6).toFixed(4)}</Typography>
           <div style={{height: 35}}/>
         </Box>
     ))

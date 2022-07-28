@@ -109,9 +109,16 @@ const reducer = (state, action) => {
       pdbid: ""
     }),
     addDemographics: (demographics) => {
+      const newDemographics = [...state.demographics];
+      const found = newDemographics.findIndex(d => d.id === demographics.id);
+      if (found !== -1) {
+        newDemographics[found] = demographics;
+      } else {
+        newDemographics.push(demographics);
+      }
       return {
         ...state,
-        demographics: [...new Set([...state.demographics, demographics])]
+        demographics: newDemographics,
       }
     },
     removeDemographics: (demographics) => ({

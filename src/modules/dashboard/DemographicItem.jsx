@@ -40,7 +40,7 @@ const DemographicItemComponent = ({demographic, onClick}) => {
          }} onClick={onClick}>
       <Stack direction="row" spacing={2} pt={2}>
         <Box sx={{display: 'flex', alignContent: 'center', pl: 3}}>
-          {selected ? <img src={Person} style={{width: 30}} alt="person"/> : <img alt="person" src={PersonOutlined} style={{width: 30}}/>}
+          {selected ? <img src={Person} style={{width: 25}} alt="person"/> : <img alt="person" src={PersonOutlined} style={{width: 25}}/>}
         </Box>
         <div style={{height: 100, width: 3, backgroundColor: theme.palette.info.main, opacity: 0.5}}/>
         <Box>

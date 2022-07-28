@@ -77,7 +77,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
         axios.post(Endpoints.drugbank.calculateMaintenanceDosage, demographicsRequest).then((res) => {
           dispatch({
             type: 'demographicsResult',
-            payload: {[state.selectedDemographics.id]: res.data[0].maintenanceDosage}
+            payload: {[state.selectedDemographics.id]: res.data}
           });
         })
       } catch (e) {
