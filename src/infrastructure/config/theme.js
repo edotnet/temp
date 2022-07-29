@@ -11,7 +11,9 @@ const prepaireTheme = createTheme({
       main: '#1d1d1d',
     },
     info: {
-      main: '#8676ff',
+      dark: '#302361',
+      main: '#8070DB',
+      light: '#B0A3FF',
     },
     error: {
       main: '#ff708a'

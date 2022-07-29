@@ -16,12 +16,14 @@ export const Endpoints = {
     categories: `${useApi}/drugbank/category/query/`,
     drugsByCategory: `${useApi}/drugbank/drugs/category/`,
     targetDisease: '', // TODO
+    calculateMaintenanceDosage: `${useApi}/drugbank/calculateMaintenanceDosage`,
   },
   naturalProducts: {
     query: `${useApi}/natural_products/query`,
   },
   ml: {
     drugProtein: `${Consts.API_URL}/drug-protein`,
+    drugProteinOld: `${Consts.API_URL}/drug-protein-old`,
     drugInteraction: `${useApi}/drug-interaction`,
   },
   pdf: {

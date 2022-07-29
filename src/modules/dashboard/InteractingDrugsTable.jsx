@@ -36,14 +36,9 @@ export const InteractingDrugsTable = ({interactingMolecules}) => {
           </div>
           <div className="drug1-row body-row">
             <div className="properties">
-              <div>LogP</div>
-              <div>LogS</div>
-              <div>Mass</div>
-              <div>AMES tox.</div>
-              <div>CACO2 Prob.</div>
-              <div>BBB</div>
-              <div>HIA</div>
-              <div>Biodegradation</div>
+              {keys.map(({key, title}) => (
+                <div key={key}>{title}</div>
+              ))}
             </div>
             <div className="drugvalues">
               {keys.map(key => (

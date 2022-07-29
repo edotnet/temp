@@ -4,6 +4,7 @@ import { Fullorb } from "./FullOrb";
 import { useDashboardContext } from "../context/useDashboarContext";
 import { fetchFromObject } from "../../../infrastructure/utils";
 import { InteractingDrugsTable } from "../InteractingDrugsTable";
+import {Stack, Typography} from "@mui/material";
 
 export const PredictiveWorld = () => {
   const {state} = useDashboardContext()
@@ -254,6 +255,20 @@ export const PredictiveWorld = () => {
   }
 
   const renderCenter = () => {
+    /*
+    if (state.demographicsResult) {
+      if (state.interactingMoleculesResult) {
+        return <div style={{position: 'absolute', fontSize: '30px'}}>
+          <Stack justifyContent="center" alignItems="center">
+            <Typography fontSize={30}>{state.interactingMoleculesResult.value}%</Typography>
+            {state.demographicsResult[state.selectedDemographics.id].map((demo, i) =>
+                <Typography fontSize={30}>{parseFloat(demo.maintenanceDosage).toFixed(3)} ml</Typography>
+            )}
+          </Stack>
+        </div>;
+      }
+      return <div style={{position: 'absolute', fontSize: '30px'}}><Typography>{parseFloat(state.demographicsResult[state.selectedDemographics.id].maintenanceDosage).toFixed(3)} ml/hr</Typography></div>;
+    }*/
     if (!state.interactingMolecules.length) {
       return renderDropMolecule("1st")
     }

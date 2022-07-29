@@ -1,11 +1,23 @@
-import { Avatar, Box, CircularProgress, LinearProgress, Typography } from "@mui/material";
+import {Avatar, Box, CircularProgress, LinearProgress, Stack, Typography} from "@mui/material";
 import { CustomChip } from "../../../infrastructure/components/CustomChip";
 import { Hr } from "../../../infrastructure/components/Hr.component";
 import * as PropTypes from "prop-types";
 import { useDashboardContext } from "../context/useDashboarContext";
 import { CustomWidthTooltip } from "../../../infrastructure/components/CustomWidthTooltip";
 import { colorful_language } from "../../../infrastructure/utils";
+import {Science} from "@mui/icons-material";
 
+const getMaintenanceDosage = (demographicsResult, selectedDemographicsId, drugName) => {
+  const demographics = demographicsResult[selectedDemographicsId];
+  if (!demographics) {
+    return 0;
+  }
+  const found = demographics.find(d => d.drug.toLowerCase() === drugName.toLowerCase());
+  if (found) {
+    return found.maintenanceDosage;
+  }
+  return 0;
+}
 export const DrugInteractionContent = () => {
   const {state, dispatch} = useDashboardContext();
   if (state.interactingMolecules.length !== 2) {
@@ -36,17 +48,27 @@ export const DrugInteractionContent = () => {
   }
 
   function renderPills() {
-    return <Box sx={{pl: 2, pt: 1}}>
+    return <Box sx={{px: 2, pt: 1, flexGrow: 1}}>
       <Box sx={{display: "flex", flexDirection: 'column'}}>
-        <Box pb={1}>
+        <Box sx={{pb: 1, display: 'flex', justifyContent: 'space-between', flexGrow: 1}}>
           <CustomWidthTooltip title={drug1.name}>
             <CustomChip label={drug1.name} style={getStyles(drug1.color)}/>
           </CustomWidthTooltip>
+          {!!state.demographicsResult &&
+          <Stack direction="row" alignItems="center">
+            <Science color="info" />
+            <Typography>{parseFloat(getMaintenanceDosage(state.demographicsResult, state.selectedDemographics.id, drug1.name)).toFixed(3)} ml/hr</Typography>
+          </Stack>}
         </Box>
-        <Box>
+        <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
           <CustomWidthTooltip title={drug2.name}>
             <CustomChip label={drug2.name} style={getStyles(drug2.color)}/>
           </CustomWidthTooltip>
+          {!!state.demographicsResult &&
+          <Stack direction="row" alignItems="center">
+            <Science color="info" />
+            <Typography>{parseFloat(getMaintenanceDosage(state.demographicsResult, state.selectedDemographics.id, drug2.name)).toFixed(3)} ml/hr</Typography>
+          </Stack>}
         </Box>
       </Box>
     </Box>;

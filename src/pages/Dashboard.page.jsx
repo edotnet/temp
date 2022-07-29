@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import {Box, Button, Grid, Modal, Typography, useTheme} from "@mui/material";
 import { MoleculeAutocomplete } from "../modules/dashboard/MoleculeAutocomplete";
 import { MoleculeCard } from "../modules/dashboard/MoleculeCard";
 import { DrugProperties } from "../modules/dashboard/DrugProperties";
@@ -13,9 +13,14 @@ import { PresentationModal } from "../modules/dashboard/presentation-modal/Prese
 import { PDBSelector } from "../modules/3dmol/PDBSelector";
 import './Dashboard.scss'
 import { useNavigate } from "react-router-dom";
+import { DemographicFeature } from "../modules/dashboard/DemographicFeature";
+import {PrimaryButton} from "../infrastructure/components/PrimaryButton";
+import {ArrowRight} from "@mui/icons-material";
+
 
 export const Dashboard = () => {
   const {state, dispatch} = useDashboardContext();
+  const theme = useTheme();
   const navigate = useNavigate();
   const setDetail = (molecule) => (e) => {
     molecule.coordinates = {
@@ -45,75 +50,76 @@ export const Dashboard = () => {
   }
 
   return (
-    <Box>
-      <Navbar/>
-      <DndProvider backend={HTML5Backend}>
-        <Grid pl={5} pr={5} className="dashboarddnd">
-          <Box>
-            <Typography variant="h5" className="title" color="secondary">DRUG INTERACTOR</Typography>
-            <Typography variant="h6" className="subTitle">Drop molecules here for checking
-              interactions </Typography>
-          </Box>
-          <Grid container spacing={2}>
-            <Grid item xs={3}>
-              <Typography variant="h4" color="secondary" gutterBottom>DRUG INTERACTION</Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <CategoryAutocomplete
-                    key="category-autocomplete"
-                    onChange={setCategory}
-                    onEmpty={() => setCategory(null)}
-                    variant="standard"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TargetAutocomplete onChange={_onProteinSelected} label="ADD TARGET PROTEIN"/>
-                  {state.protein && <Box pt={3}>
-                    <PDBSelector options={state.protein.pdb_ids}/>
-                  </Box>}
-                </Grid>
-                <Grid item xs={12}>
-                  <Box pt={2}>
-                    <MoleculeAutocomplete
-                      key="drug-autocomplete"
-                      onChange={_onDrugSelected}
-                      category={state.category}
-                      label="+ Add Drug Molecule"/>
-                  </Box>
-                  <Box sx={{pt: 3, pl: 1, display: 'flex', justifyContent: 'space-between'}}>
-                    {state.molecules.length > 0 &&
-                      <>
-                      <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>
-                    <Button variant="outlined" onClick={_onDrugToXDL} sx={{mt: -1}}>
-                      to XDL
-                    </Button>
-                      </>}
-                  </Box>
-                  <Grid container spacing={4} pt={2}>
-                    {state.molecules.map(molecule => (
-                      <Grid item key={molecule.drugbank_id}>
-                        <MoleculeCard
-                          molecule={molecule}
-                          onClick={setDetail(molecule)}
-                          onDelete={removeMolecule(molecule)}
-                          selected={state.interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)}
-                        />
-                      </Grid>
-                    ))}
+    <>
+      <Box>
+        <Navbar/>
+        <DndProvider backend={HTML5Backend}>
+          <Grid pl={5} pr={5} className="dashboarddnd">
+            <Box>
+              <Typography variant="h5" className="title" color="secondary">DRUG INTERACTOR</Typography>
+              <Typography variant="h6" className="subTitle">Drop molecules here for checking
+                interactions </Typography>
+            </Box>
+            <Grid container spacing={2}>
+              <Grid item xs={3}>
+                <Typography variant="h4" color="secondary" gutterBottom>DRUG INTERACTION</Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <CategoryAutocomplete
+                      key="category-autocomplete"
+                      onChange={setCategory}
+                      onEmpty={() => setCategory(null)}
+                      variant="standard"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TargetAutocomplete onChange={_onProteinSelected} label="ADD TARGET PROTEIN"/>
+                    {state.protein && <Box pt={3}>
+                      <PDBSelector options={state.protein.pdb_ids}/>
+                    </Box>}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box pt={2}>
+                      <MoleculeAutocomplete
+                        key="drug-autocomplete"
+                        onChange={_onDrugSelected}
+                        category={state.category}
+                        label="+ Add Drug Molecule"/>
+                    </Box>
+                    <Box sx={{pt: 3, pl: 1, display: 'flex', justifyContent: 'space-between'}}>
+                      {state.molecules.length > 0 &&
+                        <>
+                          <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>
+                          <PrimaryButton onClick={_onDrugToXDL} sx={{mt: -1, backgroundColor: theme.palette.info.light}} title="to XDL" endIcon={<ArrowRight />}/>
+                        </>}
+                    </Box>
+                    <Grid container spacing={4} pt={2} style={{minHeight: 150}}>
+                      {state.molecules.map(molecule => (
+                        <Grid item key={molecule.drugbank_id}>
+                          <MoleculeCard
+                            molecule={molecule}
+                            onClick={setDetail(molecule)}
+                            onDelete={removeMolecule(molecule)}
+                            selected={state.interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
                   </Grid>
                 </Grid>
+                <DemographicFeature/>
+              </Grid>
+              <Grid item xs={6}>
+                <DrugInteraction/>
+              </Grid>
+              <Grid item xs={3}>
+                <PresentationModal/>
               </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <DrugInteraction/>
-            </Grid>
-            <Grid item xs={3}>
-              <PresentationModal/>
-            </Grid>
           </Grid>
-        </Grid>
-        <DrugProperties/>
-      </DndProvider>
-    </Box>
+          <DrugProperties/>
+        </DndProvider>
+      </Box>
+    </>
   )
 }
