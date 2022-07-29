@@ -48,7 +48,6 @@ export const DrugInteractionContent = () => {
   }
 
   function renderPills() {
-    console.log('demographics', state.demographicsResult)
     return <Box sx={{px: 2, pt: 1, flexGrow: 1}}>
       <Box sx={{display: "flex", flexDirection: 'column'}}>
         <Box sx={{pb: 1, display: 'flex', justifyContent: 'space-between', flexGrow: 1}}>

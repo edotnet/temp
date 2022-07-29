@@ -23,6 +23,7 @@ export const Endpoints = {
   },
   ml: {
     drugProtein: `${Consts.API_URL}/drug-protein`,
+    drugProteinOld: `${Consts.API_URL}/drug-protein-old`,
     drugInteraction: `${useApi}/drug-interaction`,
   },
   pdf: {
