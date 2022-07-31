@@ -41,5 +41,8 @@ export const Endpoints = {
   },
   musyc: {
     query: `${useApi}/3d/calculate`,
+  },
+  auth: {
+    login: `${Consts.API_URL}/auth/login`
   }
 };

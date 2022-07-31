@@ -1,21 +1,16 @@
 import * as React from 'react';
-import { useRef, useState } from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
+import { useEffect, useRef, useState } from 'react';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { LoginAppBarComponent } from '../../infrastructure/components/loginAppbar.component';
-import { useNavigate } from "react-router-dom";
 import './login.scss'
+import { useAuth } from "../../infrastructure/authentication/useAuth";
+import { PrimaryButton } from "../../infrastructure/components/PrimaryButton";
+import { useNavigate } from "react-router-dom";
 
 const LoginTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
@@ -29,24 +24,26 @@ const LoginTextField = styled(TextField)({
 export const Login = () => {
 
   let [message, setMessage] = useState('Please enter your details');
-  let [error, setError] = useState(false);
-  const navigate = useNavigate();
   const loginRef = useRef();
   const successRef = useRef();
+  const {login, error} = useAuth();
+  const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    if (data.get('email') === 'admin@prepaire.com' && data.get('password') === 'admin') {
-      loginRef.current.classList.toggle('hidden');
-      successRef.current.classList.toggle('open')
-      setTimeout(() => {
-        navigate('/engine/search', true);
-      }, 1000);
-    } else {
-      setMessage('Wrong email or password, please try again.');
-      setError(true);
-    }
+    login(data.get('email'), data.get('password'));
+    loginRef.current.classList.toggle('hidden');
+    successRef.current.classList.toggle('open')
+    setTimeout(() => {
+      navigate('/engine/search', true);
+    }, 1000);
   };
+
+  useEffect(() => {
+    if (error) {
+      setMessage('Wrong email or password, please try again.');
+    }
+  }, [error]);
 
   const styles = {
     paperContainer: {
@@ -70,7 +67,6 @@ export const Login = () => {
     <div style={styles.paperContainer}>
       <LoginAppBarComponent/>
       <Container component="main" maxWidth="sm">
-        <CssBaseline/>
         <Box sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -78,7 +74,7 @@ export const Login = () => {
           backgroundColor: '#fff',
           padding: '20px 40px 20px 40px',
           borderRadius: '40px',
-          height: '615px',
+
           position: 'relative'
         }}>
           <Typography component="h1" variant="h3">
@@ -94,6 +90,7 @@ export const Login = () => {
               <label className="loginlabel">Password</label>
               <LoginTextField error={error} margin="normal" required fullWidth name="password" type="password"
                               id="password" autoComplete="current-password" placeholder='****'/>
+              {/*
               <Grid container>
                 <Grid item xs>
                   <FormControlLabel className='logincheckbox' control={<Checkbox value="remember" color="primary"/>}
@@ -105,10 +102,13 @@ export const Login = () => {
                   </Link>
                 </Grid>
               </Grid>
-              <Button className="submitbtn" type="submit" variant="contained" sx={{mt: 3, mb: 2}}> LOG IN </Button>
+              */}
+              <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                <PrimaryButton type="submit" sx={{mt: 3, mb: 2, px: 5}} title="Login"/>
+              </Box>
             </Box>
-            <Typography sx={{color: '#767373', marginTop: '20px', marginBottom: '20px', textAlign: 'center'}}>Log in
-              with</Typography>
+            {/*
+            <Typography sx={{color: '#767373', marginTop: '20px', marginBottom: '20px', textAlign: 'center'}}>Log in with</Typography>
             <Stack spacing={6} direction="row" justifyContent="center">
               <Item>
                 <a href='..#' className='social-content'>
@@ -132,6 +132,7 @@ export const Login = () => {
                 </a>
               </Item>
             </Stack>
+            */}
           </div>
           <div className='login-success-content' ref={successRef}>
             <Box component="img" sx={{maxWidth: '80px'}}
