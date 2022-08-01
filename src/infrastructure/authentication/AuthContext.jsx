@@ -47,14 +47,40 @@ export function AuthProvider({children}) {
         })
     }, []);
 
+    const refresh = useCallback(() => {
+        return new Promise((resolve, reject) => {
+            setLoading(true);
+            axios({
+                url: Endpoints.auth.refresh,
+                data: null,
+                headers: {
+                    auth: user.accessToken,
+                }
+            }).then(res => {
+                const newUser = {
+                    ...user,
+                    accessToken: res.data.accessToken
+                };
+                setUser(newUser);
+                localStorage.setItem('user', JSON.stringify(newUser))
+                resolve();
+            }).catch(err => {
+                reject();
+            }).finally(() => setLoading(false));
+        });
+    }, []);
+
     axios.interceptors.response.use(
         (response) => {
             return response;
         },
         async (error) => {
+            console.log(error)
             if (error.response) {
                 if (error.response.status === 401) {
-                    logout().then();
+                    refresh().catch(() => {
+                        logout().then();
+                    })
                 }
             }
             return Promise.reject(error);

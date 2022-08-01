@@ -43,6 +43,7 @@ export const Endpoints = {
     query: `${useApi}/3d/calculate`,
   },
   auth: {
-    login: `${Consts.API_URL}/auth/login`
+    login: `${Consts.API_URL}/auth/login`,
+    refresh: `${Consts.API_URL}/auth/refreshToken`,
   }
 };
