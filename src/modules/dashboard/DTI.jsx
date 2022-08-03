@@ -41,7 +41,7 @@ export const DTI = () => {
 
   useEffect(() => {
     const smiles = state.molecules.map(molecule => molecule.calculated_properties.SMILES);
-    const smilesKd = state.molecules.map(molecule => ({id: molecule.calculated_properties.SMILES, label: molecule.name}));
+    const smilesKd = state.molecules.map(molecule => ({id: molecule.calculated_properties.SMILES.replaceAll('\\', '\\\\'), label: molecule.name}));
     let smilesKdString = "";
     smilesKd.forEach(smile => {
       smilesKdString += `{"id": "${smile.id}", "label": "${smile.label}"},`;
