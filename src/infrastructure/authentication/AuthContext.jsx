@@ -75,7 +75,7 @@ export function AuthProvider({children}) {
             return response;
         },
         async (error) => {
-            console.log(error)
+            console.log("auth err", error)
             if (error.response) {
                 if (error.response.status === 401) {
                     refresh().catch(() => {

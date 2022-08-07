@@ -47,7 +47,7 @@ export const useApiCall = (url, method = 'GET', body = null, autofetch = true) =
   const controller = new AbortController();
   const [state, dispatch] = useReducer(reducer, initialState, () => {});
   const {user} = useAuth();
-  const fetch = useCallback(
+  const execute = useCallback(
     (url, method, body=null) => {
       dispatch({type: 'ATTEMPT'});
       axios({
@@ -73,11 +73,11 @@ export const useApiCall = (url, method = 'GET', body = null, autofetch = true) =
   }, []);
 
   useEffect(() => {
-    if (autofetch) fetch(url, method, body);
+    if (autofetch) execute(url, method, body);
     return () => {
       controller.abort();
     }
   }, [method, url, body]);
 
-  return {...state, fetch, reset};
+  return {...state, fetch: execute, reset};
 };

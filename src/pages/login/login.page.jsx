@@ -26,17 +26,18 @@ export const Login = () => {
   let [message, setMessage] = useState('Please enter your details');
   const loginRef = useRef();
   const successRef = useRef();
-  const {login, error} = useAuth();
+  const {login, error, loading} = useAuth();
   const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    login(data.get('email'), data.get('password'));
-    loginRef.current.classList.toggle('hidden');
-    successRef.current.classList.toggle('open')
-    setTimeout(() => {
-      navigate('/engine/search', true);
-    }, 1000);
+    login(data.get('email'), data.get('password')).then(() => {
+      loginRef.current.classList.toggle('hidden');
+      successRef.current.classList.toggle('open')
+      setTimeout(() => {
+        navigate('/engine/search', true);
+      }, 500);
+    });
   };
 
   useEffect(() => {
@@ -104,7 +105,7 @@ export const Login = () => {
               </Grid>
               */}
               <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <PrimaryButton type="submit" sx={{mt: 3, mb: 2, px: 5}} title="Login"/>
+                <PrimaryButton type="submit" sx={{mt: 3, mb: 2, px: 5}} title={loading ? 'Login...' : 'Login'} disabled={loading}/>
               </Box>
             </Box>
             {/*
