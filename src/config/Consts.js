@@ -19,7 +19,7 @@ export const Endpoints = {
     calculateMaintenanceDosage: `${useApi}/drugbank/calculateMaintenanceDosage`,
   },
   naturalProducts: {
-    query: `${useApi}/natural_products/query`,
+    query: `${useApi}/natural_products/query/`,
   },
   ml: {
     drugProtein: `${Consts.API_URL}/drug-protein`,
