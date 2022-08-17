@@ -56,15 +56,9 @@ export const DTI = () => {
       Promise.all(promises).then(([pec50, kd]) => {
         const data = [];
         kd.data.result.forEach((kdel, i) => {
-          let element = {};
-          try {
-            element = JSON.parse(kdel.replaceAll('"', '').replaceAll("'", '"'));
-          } catch( e) {
-            element = JSON.parse(kdel)
-          }
           data.push({
-            name: Object.keys(element)[0],
-            kd: Object.values(element)[0],
+            name: Object.keys(kdel)[0],
+            kd: Object.values(kdel)[0],
             pec50: pec50.data.result[i],
           })
         })
