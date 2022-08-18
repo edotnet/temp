@@ -33,6 +33,7 @@ export const DemographicFeature = () => {
 
   const closeModal = () => {
     setOpen(false);
+    setId(null);
   }
 
   const editDemographics = (id) => () => {
