@@ -23,12 +23,13 @@ const PillButton = styled(Button)({
 });
 
 export const DemographicFeature = () => {
-  const {state, dispatch} = useDashboardContext();
+  const {state} = useDashboardContext();
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(null);
 
   const openModal = () => {
     setOpen(true);
+    setId(null);
   }
 
   const closeModal = () => {
