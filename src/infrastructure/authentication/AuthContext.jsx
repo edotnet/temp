@@ -25,6 +25,30 @@ export function AuthProvider({children}) {
         setLoadingInitial(false);
     }, []);
 
+    useEffect(() => {
+        axios.interceptors.response.use(
+          (response) => {
+              return response;
+          },
+          async (error) => {
+              console.log("auth err", error)
+              if (error.response) {
+                  if (error.response.status === 401) {
+                      console.log('status 401, refresh')
+                      requestRefresh().catch(() => {
+                          console.log('catch refresh')
+                          logout().then();
+                      }).then(() => {
+                          console.log('refreshed')
+                      });
+                      return;
+                  }
+              }
+              return Promise.reject(error);
+          }
+        );
+    }, []);
+
 
     const login = useCallback((email, password) => {
         return new Promise((resolve, reject) => {
@@ -47,8 +71,10 @@ export function AuthProvider({children}) {
         })
     }, []);
 
-    const refresh = useCallback(() => {
+    const requestRefresh = useCallback(() => {
+        console.log('callback refresh')
         return new Promise((resolve, reject) => {
+            console.log('promise refresh')
             setLoading(true);
             axios({
                 url: Endpoints.auth.refresh,
@@ -57,35 +83,21 @@ export function AuthProvider({children}) {
                     auth: user.accessToken,
                 }
             }).then(res => {
+                console.log('refresh then')
                 const newUser = {
                     ...user,
                     accessToken: res.data.accessToken
                 };
+                console.log('refresh', newUser)
                 setUser(newUser);
                 localStorage.setItem('user', JSON.stringify(newUser))
                 resolve();
             }).catch(err => {
+                console.log('err refresh', err)
                 reject();
             }).finally(() => setLoading(false));
         });
-    }, []);
-
-    axios.interceptors.response.use(
-        (response) => {
-            return response;
-        },
-        async (error) => {
-            console.log("auth err", error)
-            if (error.response) {
-                if (error.response.status === 401) {
-                    refresh().catch(() => {
-                        logout().then();
-                    })
-                }
-            }
-            return Promise.reject(error);
-        }
-    );
+    }, [user]);
 
     let logout = useCallback(() => {
         return new Promise((resolve) => {
