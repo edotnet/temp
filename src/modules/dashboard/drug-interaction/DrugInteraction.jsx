@@ -70,8 +70,14 @@ export const DrugInteraction = memo(({onNewItems}) => {
         && (!Object.keys(state.demographicsResult).includes(state.selectedDemographics.id) || !state.demographicsResult[state.selectedDemographics.id]))
     || (state.selectedDemographics && !state.demographicsResult)) {
       try {
+        const yearLabels = ["0-10 years (pediatric)", "10-18 years", "19-40 years", "50-60 years", "+60 years"];
+        const yearValues = [5, 14, 30, 55, 70];
+        const bmiLabels = ["Below 18.5", "18.5-24.9", "25-29.9", "30-34.9", "35-39.9", "Above 40"];
+        const bmiValues = [18.5, 22.5, 27.5, 32.5, 37.5, 40];
         const demographicsRequest = {
           ...state.selectedDemographics,
+          age: yearValues[yearLabels.findIndex(age => age === state.selectedDemographics.age)],
+          bmi: bmiValues[bmiLabels.findIndex(bmi => bmi === state.selectedDemographics.bmi)],
           drugs: state.interactingMolecules.map(molecule => molecule.name.toLowerCase())
         }
         axios.post(Endpoints.drugbank.calculateMaintenanceDosage, demographicsRequest).then((res) => {
