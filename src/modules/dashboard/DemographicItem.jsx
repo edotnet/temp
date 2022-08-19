@@ -56,7 +56,7 @@ const DemographicItemComponent = ({demographic, onClick}) => {
             </Grid>
             <Grid item xs={6}>
               <Stack>
-                <Typography nowrap>{demographic.age}</Typography>
+                <Typography sx={{whiteSpace: 'nowrap'}}>{demographic.age}</Typography>
                 <Typography>{demographic.bmi}</Typography>
                 <Typography>{capitalize(demographic.geo)}</Typography>
                 <Typography>{capitalize(demographic.gender)}</Typography>

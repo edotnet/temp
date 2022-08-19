@@ -49,7 +49,7 @@ export const DemographicFeature = () => {
         <Box sx={{pt: 3, pl: 1}}>
           <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
             <Typography style={{fontSize: 16, fontWeight: 300}}>DEMOGRAPHY</Typography>
-            <PillButton onClick={openModal}>+ Add demographic</PillButton>
+            <PillButton onClick={openModal}>+ Add profile</PillButton>
           </Box>
           <hr/>
         </Box>
