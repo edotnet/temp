@@ -44,7 +44,7 @@ const options = {
   },
   age: {
     type: 'radio',
-    values: ["0-10 years (pediatric)", "10-18 years", "19-40 years", "50-60 years", "+60 years"],
+    values: ["0-15 years (pediatrics)", "16-24 years (youths)", "25-64 years (adults)", "65+ years"],
   },
   gender: {
     type: 'radio',
@@ -172,7 +172,7 @@ export const DemographicModal = ({onClose, open, id}) => {
 
         </Box>
         <Box>
-          <Typography variant="h6">Gender</Typography>
+          <Typography variant="h6">Sex</Typography>
           {renderRadio('gender')}
         </Box>
         <Box>
