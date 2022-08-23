@@ -4,7 +4,7 @@ import {memo, useEffect} from "react";
 import {useApiCall} from "../../../infrastructure/hooks/useApiCall";
 import {useDashboardContext} from "../context/useDashboarContext";
 import {PredictiveWorld} from "../predictive-world/PredictiveWorld";
-import {Endpoints} from "../../../config/Consts";
+import {DemographicYears, Endpoints} from "../../../config/Consts";
 import {InteractingDrugsTable} from "../InteractingDrugsTable";
 import axios from 'axios';
 
@@ -70,14 +70,14 @@ export const DrugInteraction = memo(({onNewItems}) => {
         && (!Object.keys(state.demographicsResult).includes(state.selectedDemographics.id) || !state.demographicsResult[state.selectedDemographics.id]))
     || (state.selectedDemographics && !state.demographicsResult)) {
       try {
-        const yearLabels = ["0-15 years (pediatrics)", "16-24 years (youths)", "25-64 years (adults)", "65+ years"];
+        const yearLabels = DemographicYears;
         const yearValues = [7.5, 20, 39, 70];
-        const bmiLabels = ["Below 18.5", "18.5-24.9", "25-29.9", "30-34.9", "35-39.9", "Above 40"];
-        const bmiValues = [18.5, 22.5, 27.5, 32.5, 37.5, 40];
+        /*const bmiLabels = DemographicBmi;
+        const bmiValues = [18.5, 22.5, 27.5, 32.5, 37.5, 40];*/
         const demographicsRequest = {
           ...state.selectedDemographics,
           age: yearValues[yearLabels.findIndex(age => age === state.selectedDemographics.age)],
-          bmi: bmiValues[bmiLabels.findIndex(bmi => bmi === state.selectedDemographics.bmi)],
+          //bmi: bmiValues[bmiLabels.findIndex(bmi => bmi === state.selectedDemographics.bmi)],
           drugs: state.interactingMolecules.map(molecule => molecule.name.toLowerCase())
         }
         axios.post(Endpoints.drugbank.calculateMaintenanceDosage, demographicsRequest).then((res) => {
