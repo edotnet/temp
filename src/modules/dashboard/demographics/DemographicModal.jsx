@@ -2,11 +2,11 @@ import {
   Box,
   capitalize,
   FormControl,
-  FormControlLabel,
-  IconButton,
+  FormControlLabel, Grid,
+  IconButton, InputLabel, MenuItem,
   Modal,
   Radio,
-  RadioGroup,
+  RadioGroup, Select,
   Stack, TextField,
   Typography
 } from "@mui/material";
@@ -16,6 +16,7 @@ import { Add, CheckBoxOutlineBlank, CheckBoxOutlined, Remove } from "@mui/icons-
 import {useDashboardContext} from "../context/useDashboarContext";
 import {useEffect, useMemo, useState} from "react";
 import {styled} from "@mui/material/styles";
+import {DemographicBmi, DemographicYears} from "../../../config/Consts";
 const CustomTextField = styled(TextField)({
   '&.MuiTextField-root': {
     input: {
@@ -44,7 +45,7 @@ const options = {
   },
   age: {
     type: 'radio',
-    values: ["0-15 years (pediatrics)", "16-24 years (youths)", "25-64 years (adults)", "65+ years"],
+    values: DemographicYears,
   },
   gender: {
     type: 'radio',
@@ -56,13 +57,21 @@ const options = {
   },
   bmi: {
     type: 'radio',
-    values: ["Below 18.5", "18.5-24.9", "25-29.9", "30-34.9", "35-39.9", "Above 40"],
+    values: DemographicBmi,
   },
   allergies: {
     type: 'text',
   },
   comorbidities: {
     type: 'text'
+  },
+  weightSystem: {
+    type: 'select',
+    values: ['kg', 'lbs'],
+  },
+  heightSystem: {
+    type: 'select',
+    values: ['cm', 'in'],
   }
 }
 export const DemographicModal = ({onClose, open, id}) => {
@@ -130,6 +139,22 @@ export const DemographicModal = ({onClose, open, id}) => {
     </Box>
   )
 
+  const renderSelect = (type, label) => (
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">{label}</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={information[type]}
+          label={label}
+          onChange={e => setInformation(prev => ({...prev, [type]: e.target.value}))}
+        >
+          {options[type].values.map(value => <MenuItem value={value} key={value}>{value}</MenuItem>)}
+        </Select>
+      </FormControl>
+
+  )
+
   useEffect(() => {
     if (id) {
       setInformation(state.demographics.find(demo => demo.id === id));
@@ -155,7 +180,7 @@ export const DemographicModal = ({onClose, open, id}) => {
       boxShadow: 24,
       bgcolor: "background.paper",
       overflow: 'scroll',
-      height: 'calc(100%-100px)',
+      height: 'calc(100% - 100px)',
       flexGrow: 1
     }}>
       <Stack spacing={5}>
@@ -165,11 +190,30 @@ export const DemographicModal = ({onClose, open, id}) => {
         </Box>
         <Box>
           <Typography variant="h6">BMI {information.bmi}</Typography>
-          <Stack direction="row" sx={{alignItems: 'center'}}>
-            Weight: {renderNumber('weight')}
-            Height: {renderNumber('height')}
-          </Stack>
 
+          <Grid container sx={{alignItems: 'center'}}>
+            <Grid item xs={2}>
+              <Typography>Weight</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              {renderNumber('weight')}
+            </Grid>
+            <Grid item xs={3}>
+              {renderSelect('weightSystem', 'Measure')}
+            </Grid>
+          </Grid>
+          <Box sx={{py: 1}}/>
+          <Grid container sx={{alignItems: 'center'}}>
+            <Grid item xs={2}>
+              <Typography>Height</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              {renderNumber('height')}
+            </Grid>
+            <Grid item xs={3}>
+              {renderSelect('heightSystem', 'Measure')}
+            </Grid>
+          </Grid>
         </Box>
         <Box>
           <Typography variant="h6">Sex</Typography>
