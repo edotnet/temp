@@ -1,4 +1,4 @@
-import { Avatar, Box, Grid, LinearProgress, Typography } from "@mui/material";
+import {Avatar, Box, Grid, LinearProgress, Typography, useTheme} from "@mui/material";
 import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import {useEffect, useMemo, useState} from "react";
 import InfoProtein from '../../assets/info-protein.png';
@@ -15,11 +15,12 @@ export const DTI = () => {
   const urlKd = Endpoints.ml.drugProteinOld;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const theme = useTheme();
   const progressStyle = value => ({
     pl: 1,
     fontSize: 16,
     fontWeight: 400,
-    backgroundColor: 'rgba(127, 112, 218)',
+    backgroundColor: theme.palette.primary.main,
     position: 'absolute',
     top: 23,
     color: 'white',
