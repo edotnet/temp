@@ -1,9 +1,10 @@
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Typography, useTheme} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import * as PropTypes from "prop-types";
 import { useCallback } from "react";
 
 export function DrugLiterature(props) {
+  const theme = useTheme();
   const renderItem = useCallback((row) => (
     <li key={row.pmid}>
       <a href={row.url} target="_blank" rel="noreferrer">{row.title}</a>
@@ -22,7 +23,7 @@ export function DrugLiterature(props) {
         {
           props.drug.title !== "" &&
           <p><b>Publications that contain contain the search query and <span
-            style={{color: "#5645ba"}}>{props.drug.title}</span></b></p>
+            style={{color: theme.palette.primary.main}}>{props.drug.title}</span></b></p>
         }
         <div className="literature-list">
           {props.drug.pmids.length > 0 && <ul>{props.drug.pmids.map(renderItem)}</ul>}

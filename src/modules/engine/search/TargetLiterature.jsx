@@ -1,10 +1,10 @@
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Typography, useTheme} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import * as PropTypes from "prop-types";
 import { useCallback } from "react";
 
 export function TargetLiterature(props) {
-
+  const theme = useTheme();
   const renderItem = useCallback((row) => (
     <li key={row.pmid}>
       <a href={row.url} target="_blank" rel="noreferrer">{row.title}</a>
@@ -21,7 +21,7 @@ export function TargetLiterature(props) {
       <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
         {
           props.target.title !== "" && <p><b>Publications that contain contain the search query and <span
-            style={{color: "#5645ba"}}>{props.target.title}</span></b></p>
+            style={{color: theme.palette.primary.main}}>{props.target.title}</span></b></p>
         }
         <div className="literature-list">
           {props.target.pmids.length > 0 && <ul>{props.target.pmids.map(renderItem)}</ul>}
