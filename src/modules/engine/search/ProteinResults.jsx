@@ -77,7 +77,7 @@ export function ProteinResults(props) {
           {
             props.targets.length > 0 &&
             <DataGrid
-              rows={props.targets}
+              rows={[...props.targets].sort((a, b) => b.metrics.ranking_score - a.metrics.ranking_score)}
               columns={proteinColumns}
               pageSize={5}
               rowsPerPageOptions={[5]}
