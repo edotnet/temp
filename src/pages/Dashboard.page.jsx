@@ -90,7 +90,7 @@ export const Dashboard = () => {
                       {state.molecules.length > 0 &&
                         <>
                           <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>
-                          <PrimaryButton onClick={_onDrugToXDL} sx={{mt: -1, backgroundColor: theme.palette.info.light}} title="to XDL" endIcon={<ArrowRight />}/>
+                          <PrimaryButton onClick={_onDrugToXDL} sx={{mt: -1}} title="to XDL" endIcon={<ArrowRight />}/>
                         </>}
                     </Box>
                     <Grid container spacing={4} pt={2} style={{minHeight: 150}}>

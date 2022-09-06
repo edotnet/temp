@@ -16,6 +16,7 @@ const keys = [
   {key: 'calculated_properties.ADMET.ames_toxicity.probability', title: 'AMES Tox', color: '#001959'},
   //{key: 'calculated_properties.Molecular Formula', title: 'Mol. Form.', color: '#17D74D'},
   {key: 'calculated_properties.ALOGPS.logS', title: 'LogS', color: '#0050C9'}, //-11 / 3
+  {key: 'solubility', title: 'Solubility', color: '#FFC000', parse: val => parseFloat(val).toFixed(3)}, // 0 / 1000
   // { key: 'calculated_properties.Bioavailability', title: 'Bio Availability', color: '#FF9898'},
   // { key: 'calculated_properties.Ghose Filter', title: 'Ghose Filter', color: '#17D74D'},
   // { key: 'calculated_properties.H Bond Acceptor Count', title: 'H Bond Acceptor Count', color: '#AE2AFF'},
@@ -89,12 +90,34 @@ export const DrugProperties = () => {
                   color: '#383874',
                   textAlign: 'right',
                   fontWeight: 500
-                }}>{fetchFromObject(state.selectedMolecule, key.key)}</Typography>
+                }}>{'parse' in key ? key.parse(fetchFromObject(state.selectedMolecule, key.key)) : fetchFromObject(state.selectedMolecule, key.key)}</Typography>
             </Grid>
           </Grid>
         </Grid>
       </Fragment>
     ));
+  }
+
+  const renderToxicity = () => {
+    return (<Grid container>
+      {Object.keys(state.selectedMolecule.toxicity).map(key => <Grid item xs={6}>
+        <Grid container>
+          <Grid item xs={6}>
+            <Typography sx={{color: '#9292C1'}} noWrap>
+              {key}
+            </Typography>
+          </Grid>
+          <Grid item xs={5}>
+            <Typography
+              sx={{
+                color: '#383874',
+                textAlign: 'right',
+                fontWeight: 500
+              }}>{parseFloat(state.selectedMolecule.toxicity[key]).toFixed(3)}</Typography>
+          </Grid>
+        </Grid>
+      </Grid>)}
+    </Grid>)
   }
 
 
@@ -126,6 +149,9 @@ export const DrugProperties = () => {
           <Grid container columnSpacing={3}>
             {renderCalculatedProperties()}
           </Grid>
+          <Hr/>
+          <Typography>Toxicity</Typography>
+          {renderToxicity()}
           <AdverseEffectsInfo/>
           <Hr/>
           <div id="container-01" className="mol-container"></div>

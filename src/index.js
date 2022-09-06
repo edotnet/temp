@@ -1,13 +1,12 @@
-import { StrictMode } from 'react';
+import {StrictMode} from 'react';
 import ReactDOM from 'react-dom';
-import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import theme from "./infrastructure/config/theme";
-import { BrowserRouter } from "react-router-dom";
+import {HashRouter} from "react-router-dom";
 import "@fontsource/work-sans";
-import { ThemeProvider } from '@mui/material/styles';
+import {ThemeProvider} from '@mui/material/styles';
 
 /*const root = createRoot(document.getElementById('root'))
 root.render(
@@ -21,11 +20,11 @@ root.render(
 );
  */
 
-ReactDOM.render( <StrictMode>
+ReactDOM.render(<StrictMode>
   <ThemeProvider theme={theme}>
-    <BrowserRouter>
+    <HashRouter>
       <App/>
-    </BrowserRouter>
+    </HashRouter>
   </ThemeProvider>
 </StrictMode>, document.getElementById('root'))
 
