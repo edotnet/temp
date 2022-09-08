@@ -43,6 +43,7 @@ export const LoginAppBarComponent = () => {
                   </Grid>
                   <Grid item xs={10}>
                       <Stack direction="row" spacing={12} justifyContent="flex-end">
+                        {/*
                           <Item>
                               <Button sx={{color: '#222a47'}} variant="text">Home</Button>
                           </Item>
@@ -55,6 +56,7 @@ export const LoginAppBarComponent = () => {
                           <Item>
                               <Button sx={{width: '200px', borderRadius: '40px' }}  color="neutral" variant="contained">Get Started</Button>
                           </Item>
+                          */}
                       </Stack>
                   </Grid>
               </Grid>
