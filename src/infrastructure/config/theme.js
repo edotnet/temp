@@ -28,9 +28,13 @@ const prepaireTheme = createTheme({
     },
     h4: {
       fontSize: '2rem',
+      fontFamily: 'SF Pro Display',
+      fontWeight: 800,
     },
     h5: {
       fontSize: '2.5rem',
+      fontFamily: 'SF Pro Display',
+      fontWeight: 800,
     },
     h6: {
       fontWeight: 400,

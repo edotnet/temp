@@ -77,7 +77,7 @@ export function ProteinResults(props) {
           {
             props.targets.length > 0 &&
             <DataGrid
-              rows={[...props.targets].sort((a, b) => b.metrics.ranking_score - a.metrics.ranking_score)}
+              rows={props.targets}
               columns={proteinColumns}
               pageSize={5}
               rowsPerPageOptions={[5]}
@@ -88,6 +88,11 @@ export function ProteinResults(props) {
               selectionModel={props.selectionModel}
               onCellClick={ProteinOnCellClick}
               onSelectionModelChange={props.onSelectionModelChange}
+              initialState={{
+                sorting: {
+                  sortModel: [{ field: 'metrics[\'(Search + {}) Publications\']', sort: 'desc' }],
+                },
+              }}
             />
           }
           <ButtonGroup variant="outlined" className="table-footer" aria-label="outlined primary button group">
