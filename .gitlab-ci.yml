@@ -18,7 +18,8 @@
 
 stages:          # List of stages for jobs, and their order of execution
   - build  
-  - deploy
+  - deploy-dev
+  - deploy-prod
 
 build-job:       # This job runs in the build stage, which runs first.
   only:
@@ -34,14 +35,26 @@ build-job:       # This job runs in the build stage, which runs first.
     paths: 
         - build  
 
-deploy-job:      # This job runs in the deploy stage.
+deploy-prod-job:      # This job runs in the deploy stage.
   only:
     - master
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  stage: deploy-prod  # It only runs when *both* jobs in the test stage complete successfully.
   image: 
     name: amazon/aws-cli
     entrypoint: [""]
   script:
     - aws --version
-    - aws s3 rm s3://$S3_BUCKET --recursive
-    - aws s3 cp build s3://$S3_BUCKET --recursive
+    - aws s3 rm s3://$S3_BUCKET_PROD --recursive
+    - aws s3 cp build s3://$S3_BUCKET_PROD --recursive
+
+deploy-dev-job:      # This job runs in the deploy stage.
+  only:
+    - develop
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  script:
+    - aws --version
+    - aws s3 rm s3://$S3_BUCKET_DEV --recursive
+    - aws s3 cp build s3://$S3_BUCKET_DEV --recursive
