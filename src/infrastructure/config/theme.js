@@ -41,7 +41,8 @@ const prepaireTheme = createTheme({
     },
     subtitle1: {
       fontSize: 18,
-      fontWeight: 500,
+      fontWeight: 800,
+      fontFamily: 'SF Pro Display',
       color: '#1d1d1d',
     },
     body1: {
