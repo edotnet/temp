@@ -21,7 +21,10 @@ stages:          # List of stages for jobs, and their order of execution
   - deploy
 
 build-job:       # This job runs in the build stage, which runs first.
+  only:
+    - master
   stage: build
+  image: node:16.15.1
   script:
     - echo "Compiling the code..."
     - yarn
@@ -32,6 +35,8 @@ build-job:       # This job runs in the build stage, which runs first.
         - build  
 
 deploy-job:      # This job runs in the deploy stage.
+  only:
+    - master
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   image: 
     name: amazon/aws-cli
