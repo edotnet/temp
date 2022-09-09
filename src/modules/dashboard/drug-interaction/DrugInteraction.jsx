@@ -54,8 +54,8 @@ export const DrugInteraction = memo(({onNewItems}) => {
     try {
       const result = 'result' in data ? data.result : data;
       const therapeuticEffect = {
-        label: result[8].label,
-        value: result[8].value * 100
+        label: 'Synergy',
+        value: parseFloat(result[0])
       }
       setTimeout(() => {
         dispatch({type: 'setInteractingMoleculesResult', payload: therapeuticEffect});
