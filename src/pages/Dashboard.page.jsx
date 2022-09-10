@@ -16,7 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { DemographicFeature } from "../modules/dashboard/DemographicFeature";
 import {PrimaryButton} from "../infrastructure/components/PrimaryButton";
 import {ArrowRight} from "@mui/icons-material";
-
+import {Endpoints} from "../config/Consts";
+import {dockingFetcher} from "../modules/dashboard/DockingFetcher";
 
 export const Dashboard = () => {
   const {state, dispatch} = useDashboardContext();
@@ -39,6 +40,12 @@ export const Dashboard = () => {
 
   const _onDrugSelected = (molecule) => {
     dispatch({type: 'addMolecule', payload: molecule});
+    if (state.pdbid) {
+      dispatch({type: 'setDocking', payload: true})
+      dockingFetcher(state.pdbid, molecule, dispatch).finally(() => {
+        dispatch({type: 'setDocking', payload: false})
+      });
+    }
   }
 
   const _onProteinSelected = (protein) => {
@@ -57,8 +64,7 @@ export const Dashboard = () => {
           <Grid pl={5} pr={5} className="dashboarddnd">
             <Box>
               <Typography gutterBottom variant="h5" className="title" color="secondary">DRUG INTERACTOR</Typography>
-              <Typography variant="h6" className="subTitle">Drop molecules here for checking
-                interactions </Typography>
+              <Typography variant="h6" className="subTitle">Drop molecules here for checking interactions </Typography>
             </Box>
             <Grid container spacing={2}>
               <Grid item xs={3}>

@@ -41,6 +41,9 @@ export const Endpoints = {
   },
   musyc: {
     query: `${useApi}/3d/calculate`,
+  },
+  docking: {
+    calculate: `${useApi}/docking/calculate`,
   }
 };
 
