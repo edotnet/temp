@@ -4,7 +4,7 @@ import { Fullorb } from "./FullOrb";
 import { useDashboardContext } from "../context/useDashboarContext";
 import { fetchFromObject } from "../../../infrastructure/utils";
 import { InteractingDrugsTable } from "../InteractingDrugsTable";
-import {Stack, Typography} from "@mui/material";
+import {Stack, Typography, useTheme} from "@mui/material";
 
 export const PredictiveWorld = () => {
   const {state} = useDashboardContext()
@@ -14,6 +14,7 @@ export const PredictiveWorld = () => {
   const tooltipCanvas = useRef()
   const toolTips = useRef([]);
   const radius = 130;
+  const theme = useTheme();
 
   const config = {
     logP: {
@@ -71,7 +72,7 @@ export const PredictiveWorld = () => {
 
   // To create each tooltip, we need to show
   const drawToolTip = (drugName, title) => {
-    tipCtx.current.fillStyle = "#6D69C0";
+    tipCtx.current.fillStyle = theme.palette.primary.main;
     tipCtx.current.fillRect(0, 0, 300, 60);
     tipCtx.current.font = "35px Arial";
     tipCtx.current.fillStyle = "#fff";
@@ -84,7 +85,7 @@ export const PredictiveWorld = () => {
 
   const drawarc = () => {
     ctx.current.lineWidth = 4;
-    ctx.current.strokeStyle = "#6d69c0";
+    ctx.current.strokeStyle = theme.palette.primary.main;;
     ctx.current.beginPath();
     ctx.current.moveTo(102, 74);
     // ctx.current.bezierCurveTo(286, 253, 218, 225, 44, 196);
@@ -105,7 +106,7 @@ export const PredictiveWorld = () => {
     ctx.current.save();
     ctx.current.translate(x, y);
     ctx.current.rotate(degrees_to_radians(deg + 90));
-    ctx.current.fillStyle = "#209ff4";
+    ctx.current.fillStyle = theme.palette.primary.dark;
     ctx.current.fillRect(-1 * (w / 2), -1 * (h / 2), w, h);
     ctx.current.fillStyle = "#1d1d1d";
     ctx.current.font = "9px Work Sans ";

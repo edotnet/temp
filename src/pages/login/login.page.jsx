@@ -75,10 +75,9 @@ export const Login = () => {
           backgroundColor: '#fff',
           padding: '20px 40px 20px 40px',
           borderRadius: '40px',
-
           position: 'relative'
         }}>
-          <Typography component="h1" variant="h3">
+          <Typography component="h1" variant="h4">
             LOG IN
           </Typography>
           <div className="login-box" ref={loginRef}>

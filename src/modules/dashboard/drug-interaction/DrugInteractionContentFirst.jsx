@@ -37,7 +37,7 @@ export const DrugInteractionContentFirst = () => {
 
   return (
     <>
-      <Typography variant="subtitle1" sx={{fontSize: 18, fontWeight: 500}} gutterBottom>Drug Interaction molecules</Typography>
+      <Typography variant="subtitle1" gutterBottom>Drug Interaction molecules</Typography>
       <Box sx={{display: "flex"}}>
         {/* <Avatar sx={{bgcolor: "transparent", width: 100, height: 100, border: '1px dashed #806ca2'}}>
           <Typography sx={{

@@ -8,6 +8,7 @@ import PersonOutlined from '../../assets/svg/PersonOutlined.svg';
 import {hexToRgba} from "../../infrastructure/utils";
 
 const DemographicItemComponent = ({demographic, onClick}) => {
+  console.log('demographic', demographic)
   const {state} = useDashboardContext();
   const theme = useTheme();
   const [{isDragging, didDrop}, drag] = useDrag({
@@ -48,15 +49,15 @@ const DemographicItemComponent = ({demographic, onClick}) => {
             <Grid item xs={6}>
               <Stack>
                 <Typography>Age</Typography>
-                <Typography>Weight</Typography>
+                <Typography>BMI</Typography>
                 <Typography>Geo</Typography>
                 <Typography>Gender</Typography>
               </Stack>
             </Grid>
             <Grid item xs={6}>
               <Stack>
-                <Typography>{demographic.age}</Typography>
-                <Typography>{demographic.weight}</Typography>
+                <Typography sx={{whiteSpace: 'nowrap'}}>{demographic.age}</Typography>
+                <Typography>{demographic.bmi}</Typography>
                 <Typography>{capitalize(demographic.geo)}</Typography>
                 <Typography>{capitalize(demographic.gender)}</Typography>
               </Stack>

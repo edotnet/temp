@@ -23,16 +23,18 @@ const PillButton = styled(Button)({
 });
 
 export const DemographicFeature = () => {
-  const {state, dispatch} = useDashboardContext();
+  const {state} = useDashboardContext();
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(null);
 
   const openModal = () => {
     setOpen(true);
+    setId(null);
   }
 
   const closeModal = () => {
     setOpen(false);
+    setId(null);
   }
 
   const editDemographics = (id) => () => {
@@ -46,8 +48,8 @@ export const DemographicFeature = () => {
       <Stack>
         <Box sx={{pt: 3, pl: 1}}>
           <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-            <Typography style={{fontSize: 16, fontWeight: 300}}>DEMOGRAPHY</Typography>
-            <PillButton onClick={openModal}>+ Add demographic</PillButton>
+            <Typography style={{fontSize: 20, fontWeight: 800, fontFamily: 'SF Pro Display'}}>DEMOGRAPHY</Typography>
+            <PillButton onClick={openModal}>+ Add profile</PillButton>
           </Box>
           <hr/>
         </Box>

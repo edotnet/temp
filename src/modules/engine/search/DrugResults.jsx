@@ -52,7 +52,7 @@ export function DrugResults(props) {
     <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
       {props.drugs.length > 0 &&
         <DataGrid
-          rows={props.drugs}
+          rows={[...props.drugs].sort((a, b) => b.metrics.ranking_score - a.metrics.ranking_score)}
           columns={drugsColumns}
           pageSize={5}
           rowsPerPageOptions={[5]}

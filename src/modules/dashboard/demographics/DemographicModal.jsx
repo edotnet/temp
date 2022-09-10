@@ -2,20 +2,21 @@ import {
   Box,
   capitalize,
   FormControl,
-  FormControlLabel,
-  Grid, IconButton,
+  FormControlLabel, Grid,
+  IconButton, InputLabel, MenuItem,
   Modal,
   Radio,
-  RadioGroup,
+  RadioGroup, Select,
   Stack, TextField,
   Typography
 } from "@mui/material";
 import {PrimaryButton} from "../../../infrastructure/components/PrimaryButton";
 import * as PropTypes from "prop-types";
-import {Add, Remove} from "@mui/icons-material";
+import { Add, CheckBoxOutlineBlank, CheckBoxOutlined, Remove } from "@mui/icons-material";
 import {useDashboardContext} from "../context/useDashboarContext";
 import {useEffect, useMemo, useState} from "react";
 import {styled} from "@mui/material/styles";
+import {DemographicBmi, DemographicYears} from "../../../config/Consts";
 const CustomTextField = styled(TextField)({
   '&.MuiTextField-root': {
     input: {
@@ -35,12 +36,16 @@ const options = {
       max: 150,
     },
   },
-  age: {
+  height: {
     type: 'number',
     values: {
       min: 1,
-      max: 150,
+      max: 220,
     },
+  },
+  age: {
+    type: 'radio',
+    values: DemographicYears,
   },
   gender: {
     type: 'radio',
@@ -49,6 +54,24 @@ const options = {
   geo: {
     type: 'radio',
     values: ["asia", "europe", "africa", "australia", "america"]
+  },
+  bmi: {
+    type: 'radio',
+    values: DemographicBmi,
+  },
+  allergies: {
+    type: 'text',
+  },
+  comorbidities: {
+    type: 'text'
+  },
+  weightSystem: {
+    type: 'select',
+    values: ['kg', 'lbs'],
+  },
+  heightSystem: {
+    type: 'select',
+    values: ['cm', 'in'],
   }
 }
 export const DemographicModal = ({onClose, open, id}) => {
@@ -82,8 +105,10 @@ export const DemographicModal = ({onClose, open, id}) => {
           name="radio-buttons-group"
           onChange={(e, v) => setInformation(prev => ({...prev, [type]: v}))}
           value={information[type]}
+          row
         >
-          {options[type].values.map(value => <FormControlLabel value={value} control={<Radio color="info"/>}
+          {options[type].values.map(value => <FormControlLabel value={value}
+                                                               control={<Radio checkedIcon={<CheckBoxOutlined />} icon={<CheckBoxOutlineBlank />} color="info"/>}
                                                                label={capitalize(value)}
                                                                key={value}/>)}
         </RadioGroup>
@@ -108,6 +133,28 @@ export const DemographicModal = ({onClose, open, id}) => {
     </Box>
   )
 
+  const renderText = (type) => (
+    <Box>
+      <TextField sx={{display: 'flex'}} multiline rows={3} value={information[type]} onChange={e => setInformation(prev => ({...prev, [type]: e.target.value}))}/>
+    </Box>
+  )
+
+  const renderSelect = (type, label) => (
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">{label}</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={information[type]}
+          label={label}
+          onChange={e => setInformation(prev => ({...prev, [type]: e.target.value}))}
+        >
+          {options[type].values.map(value => <MenuItem value={value} key={value}>{value}</MenuItem>)}
+        </Select>
+      </FormControl>
+
+  )
+
   useEffect(() => {
     if (id) {
       setInformation(state.demographics.find(demo => demo.id === id));
@@ -115,6 +162,12 @@ export const DemographicModal = ({onClose, open, id}) => {
     }
     setInformation(initialState);
   }, [id, initialState, state.demographics]);
+
+  useEffect(() => {
+    if (information.weight && information.height) {
+      setInformation({...information, bmi: parseFloat(information.weight / (information.height / 100) ** 2).toFixed(2)});
+    }
+  }, [information.height, information.weight]);
 
   return <Modal open={open} onClose={onClose}>
     <Box sx={{
@@ -126,36 +179,58 @@ export const DemographicModal = ({onClose, open, id}) => {
       p: 4,
       boxShadow: 24,
       bgcolor: "background.paper",
+      overflow: 'scroll',
+      height: 'calc(100% - 100px)',
+      flexGrow: 1
     }}>
-      <Stack spacing={2}>
-        <Grid container spacing={2}>
-          <Grid item sm={1}>
-          </Grid>
-          <Grid item sm={6}>
-            <Box sx={{px: 2}}>
-              <Stack spacing={3}>
-                <Stack direction="row" spacing={5} sx={{alignItems: "center"}}>
-                  <Typography>AGE</Typography>
-                  {renderNumber('age')}
-                </Stack>
-                <Stack direction="row" spacing={1} sx={{alignItems: "center"}}>
-                  <Typography>WEIGHT</Typography>
-                  {renderNumber('weight')}
-                </Stack>
-                <Box>
-                  <Typography>GENDER</Typography>
-                  {renderRadio('gender')}
-                </Box>
-              </Stack>
-            </Box>
+      <Stack spacing={5}>
+        <Box>
+          <Typography variant="h6">Age Demographic</Typography>
+          {renderRadio('age')}
+        </Box>
+        <Box>
+          <Typography variant="h6">BMI {information.bmi}</Typography>
 
+          <Grid container sx={{alignItems: 'center'}}>
+            <Grid item xs={2}>
+              <Typography>Weight</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              {renderNumber('weight')}
+            </Grid>
+            <Grid item xs={3}>
+              {renderSelect('weightSystem', 'Measure')}
+            </Grid>
           </Grid>
-          <Grid item sm={1}/>
-          <Grid item sm={3}>
-            <Typography>GEO</Typography>
-            {renderRadio('geo')}
+          <Box sx={{py: 1}}/>
+          <Grid container sx={{alignItems: 'center'}}>
+            <Grid item xs={2}>
+              <Typography>Height</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              {renderNumber('height')}
+            </Grid>
+            <Grid item xs={3}>
+              {renderSelect('heightSystem', 'Measure')}
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
+        <Box>
+          <Typography variant="h6">Sex</Typography>
+          {renderRadio('gender')}
+        </Box>
+        <Box>
+          <Typography variant="h6">Geographic Location</Typography>
+          {renderRadio('geo')}
+        </Box>
+        <Box>
+          <Typography variant="h6">Allergies</Typography>
+          {renderText('allergies')}
+        </Box>
+        <Box>
+          <Typography variant="h6">Comorbidities</Typography>
+          {renderText('comorbidities')}
+        </Box>
         <Stack direction="row" spacing={2} sx={{justifyContent: "flex-end"}}>
           <PrimaryButton
             variant="outlined"

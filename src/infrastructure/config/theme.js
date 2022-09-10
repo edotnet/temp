@@ -5,15 +5,15 @@ const prepaireTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#222A47'
+      main: '#5498ef'
     },
     secondary: {
       main: '#1d1d1d',
     },
     info: {
-      dark: '#302361',
-      main: '#8070DB',
-      light: '#B0A3FF',
+      dark: '#4366BB',
+      main: '#5498ef',
+      light: '#C1DEFB',
     },
     error: {
       main: '#ff708a'
@@ -28,16 +28,21 @@ const prepaireTheme = createTheme({
     },
     h4: {
       fontSize: '2rem',
+      fontFamily: 'SF Pro Display',
+      fontWeight: 800,
     },
     h5: {
       fontSize: '2.5rem',
+      fontFamily: 'SF Pro Display',
+      fontWeight: 800,
     },
     h6: {
       fontWeight: 400,
     },
     subtitle1: {
       fontSize: 18,
-      fontWeight: 500,
+      fontWeight: 800,
+      fontFamily: 'SF Pro Display',
       color: '#1d1d1d',
     },
     body1: {
@@ -56,19 +61,28 @@ const prepaireTheme = createTheme({
       styleOverrides: {
         row: {
           "&.Mui-selected": {
-            backgroundColor: "#e3e2ff",
+            backgroundColor: "#C1DEFB",
           },
           '& .MuiCheckbox-root svg':{
             backgroundColor: 'transparent',
             borderRadius: 2,
           },
           '& .MuiCheckbox-root.Mui-checked:not(.MuiCheckbox-indeterminate) svg': {
-            backgroundColor: 'rgba(93, 103, 187, .6)',
+            backgroundColor: '#4366BB',
             fontSize: '1.4rem',
           },
           '& .MuiCheckbox-root svg path': {
             color: 'white',
           },
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          "&.MuiButton-contained": {
+            color: 'white'
+          }
         }
       }
     }

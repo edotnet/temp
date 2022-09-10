@@ -19,12 +19,12 @@ export const Endpoints = {
     calculateMaintenanceDosage: `${useApi}/drugbank/calculateMaintenanceDosage`,
   },
   naturalProducts: {
-    query: `${useApi}/natural_products/query`,
+    query: `${useApi}/natural_products/query/`,
   },
   ml: {
     drugProtein: `${Consts.API_URL}/drug-protein`,
     drugProteinOld: `${Consts.API_URL}/drug-protein-old`,
-    drugInteraction: `${useApi}/drug-interaction`,
+    drugInteraction: `${useApi}/drug-synergy`,
   },
   pdf: {
     upload: `${useApi}/xdl/upload`,
@@ -42,8 +42,14 @@ export const Endpoints = {
   musyc: {
     query: `${useApi}/3d/calculate`,
   },
+  docking: {
+    calculate: `${useApi}/docking/calculate`,
+  },
   auth: {
     login: `${Consts.API_URL}/auth/login`,
     refresh: `${Consts.API_URL}/auth/refreshToken`,
   }
 };
+
+export const DemographicYears = ["0-15 years (pediatrics)", "16-24 years (youths)", "25-64 years (adults)", "65+ years"];
+export const DemographicBmi = ["Below 18.5", "18.5-24.9", "25-29.9", "30-34.9", "35-39.9", "Above 40"];

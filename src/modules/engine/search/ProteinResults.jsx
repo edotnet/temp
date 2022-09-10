@@ -88,6 +88,11 @@ export function ProteinResults(props) {
               selectionModel={props.selectionModel}
               onCellClick={ProteinOnCellClick}
               onSelectionModelChange={props.onSelectionModelChange}
+              initialState={{
+                sorting: {
+                  sortModel: [{ field: 'metrics[\'(Search + {}) Publications\']', sort: 'desc' }],
+                },
+              }}
             />
           }
           <ButtonGroup variant="outlined" className="table-footer" aria-label="outlined primary button group">
