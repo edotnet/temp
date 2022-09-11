@@ -7,7 +7,6 @@ import {AuthContext} from "./AuthContext";
 export function AuthProvider({children}) {
   const [user, setUser] = useState();
   const [error, setError] = useState();
-  console.log('provider error', error)
   const [loading, setLoading] = useState(false);
   const [loadingInitial, setLoadingInitial] = useState(true);
   const location = useLocation();
@@ -59,7 +58,8 @@ export function AuthProvider({children}) {
         }
       }).then(res => {
         const newUser = {
-          ...user, accessToken: res.data.accessToken, refreshToken: res.data.refreshToken,
+          ...user, accessToken: res.data.accessToken,
+          refreshToken: res.data.refreshToken,
         };
         setUser(newUser);
         localStorage.setItem('user', JSON.stringify(newUser))
@@ -87,7 +87,7 @@ export function AuthProvider({children}) {
   // If we change page, reset the error state.
   useEffect(() => {
     if (error) setError(null);
-  }, [error, location.pathname]);
+  }, [location.pathname]);
 
   useEffect(() => {
     const user = localStorage.getItem('user')

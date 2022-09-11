@@ -23,14 +23,12 @@ const SignupTextField = styled(TextField)({
 export const Signup = () => {
 
   const [message, setMessage] = useState('Please enter your details');
-  const [error, setError] = useState(false);
   const loginRef = useRef();
   const successRef = useRef();
-  const {signup, loading} = useAuth();
+  const {signup, error, loading} = useAuth();
   const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
-    setError(false);
     const data = new FormData(event.currentTarget);
     if (data.get('password') !== data.get('confirm-password')) {
       setMessage('Passwords do not match, please try again.');
@@ -44,7 +42,6 @@ export const Signup = () => {
       }, 500);
     }).catch(err => {
       setMessage('Something went, please try again.');
-      setError(true);
     });
   };
 

@@ -25,14 +25,12 @@ const LoginTextField = styled(TextField)({
 export const Login = () => {
 
   const [message, setMessage] = useState('Please enter your details');
-  const [error, setError] = useState(false);
   const loginRef = useRef();
   const successRef = useRef();
-  const {login, loading} = useAuth();
+  const {login, error, loading} = useAuth();
   const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
-    setError(false);
     const data = new FormData(event.currentTarget);
     login(data.get('email'), data.get('password')).then(() => {
       loginRef.current.classList.toggle('hidden');
@@ -42,7 +40,6 @@ export const Login = () => {
       }, 500);
     }).catch(err => {
       setMessage('Wrong email or password, please try again.');
-      setError(true);
     });
   };
 
