@@ -10,7 +10,8 @@ import { LoginAppBarComponent } from '../../infrastructure/components/loginAppba
 import './login.scss'
 import { useAuth } from "../../infrastructure/authentication/useAuth";
 import { PrimaryButton } from "../../infrastructure/components/PrimaryButton";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {Grid} from "@mui/material";
 
 const LoginTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
@@ -90,21 +91,13 @@ export const Login = () => {
               <label className="loginlabel">Password</label>
               <LoginTextField error={error} margin="normal" required fullWidth name="password" type="password"
                               id="password" autoComplete="current-password" placeholder='****'/>
-              {/*
-              <Grid container>
-                <Grid item xs>
-                  <FormControlLabel className='logincheckbox' control={<Checkbox value="remember" color="primary"/>}
-                                    label="Remember me"/>
-                </Grid>
-                <Grid item>
-                  <Link href="#" className='loginforgetpass' variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-              </Grid>
-              */}
               <Box sx={{display: 'flex', justifyContent: 'center'}}>
                 <PrimaryButton type="submit" sx={{mt: 3, mb: 2, px: 5}} title={loading ? 'Login...' : 'Login'} disabled={loading}/>
+              </Box>
+              <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                <Link to="/signup" className='loginforgetpass' variant="body2">
+                  Don't have account yet? Sign Up
+                </Link>
               </Box>
             </Box>
             {/*

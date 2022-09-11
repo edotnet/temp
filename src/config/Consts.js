@@ -47,6 +47,7 @@ export const Endpoints = {
   },
   auth: {
     login: `${Consts.API_URL}/auth/login`,
+    signup: `${Consts.API_URL}/auth/register`,
     refresh: `${Consts.API_URL}/auth/refreshToken`,
   }
 };

@@ -13,6 +13,7 @@ export const dockingFetcher = (pdbid, molecule, dispatch, counter = 0) => {
       },
       body: JSON.stringify({
         pdbId: pdbid,
+        drugbankId: molecule.drugbank_id.startsWith("DB") ? molecule.drugbank_id : undefined,
         smiles: molecule.calculated_properties.SMILES,
       })
     }).then(res => res.json()).then(res => {

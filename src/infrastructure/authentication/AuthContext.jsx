@@ -71,10 +71,29 @@ export function AuthProvider({children}) {
         })
     }, []);
 
-    const requestRefresh = useCallback(() => {
-        console.log('callback refresh')
+    const signup = useCallback((name, email, password) => {
         return new Promise((resolve, reject) => {
-            console.log('promise refresh')
+            setLoading(true);
+            axios({
+                url: Endpoints.auth.signup,
+                data: { name, email, password },
+                method: 'POST'
+            })
+              .then((res) => {
+                  setUser(res.data);
+                  localStorage.setItem('user', JSON.stringify(res.data))
+                  resolve();
+              })
+              .catch((error) => {
+                  setError(error);
+                  reject();
+              })
+              .finally(() => setLoading(false));
+        })
+    }, []);
+
+    const requestRefresh = useCallback(() => {
+        return new Promise((resolve, reject) => {
             setLoading(true);
             axios({
                 url: Endpoints.auth.refresh,
@@ -83,17 +102,15 @@ export function AuthProvider({children}) {
                     auth: user.accessToken,
                 }
             }).then(res => {
-                console.log('refresh then')
                 const newUser = {
                     ...user,
-                    accessToken: res.data.accessToken
+                    accessToken: res.data.accessToken,
+                    refreshToken: res.data.refreshToken,
                 };
-                console.log('refresh', newUser)
                 setUser(newUser);
                 localStorage.setItem('user', JSON.stringify(newUser))
                 resolve();
             }).catch(err => {
-                console.log('err refresh', err)
                 reject();
             }).finally(() => setLoading(false));
         });
@@ -115,9 +132,10 @@ export function AuthProvider({children}) {
             loading,
             error,
             login,
+            signup,
             logout,
         }),
-        [user, loading, error, login, logout]
+        [user, loading, error, login, signup, logout]
     );
 
     // We only want to render the underlying app after we
