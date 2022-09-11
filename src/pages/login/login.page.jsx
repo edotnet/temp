@@ -24,13 +24,15 @@ const LoginTextField = styled(TextField)({
 })
 export const Login = () => {
 
-  let [message, setMessage] = useState('Please enter your details');
+  const [message, setMessage] = useState('Please enter your details');
+  const [error, setError] = useState(false);
   const loginRef = useRef();
   const successRef = useRef();
-  const {login, error, loading} = useAuth();
+  const {login, loading} = useAuth();
   const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
+    setError(false);
     const data = new FormData(event.currentTarget);
     login(data.get('email'), data.get('password')).then(() => {
       loginRef.current.classList.toggle('hidden');
@@ -38,14 +40,11 @@ export const Login = () => {
       setTimeout(() => {
         navigate('/engine/search', true);
       }, 500);
+    }).catch(err => {
+      setMessage('Wrong email or password, please try again.');
+      setError(true);
     });
   };
-
-  useEffect(() => {
-    if (error) {
-      setMessage('Wrong email or password, please try again.');
-    }
-  }, [error]);
 
   const styles = {
     paperContainer: {
@@ -86,10 +85,10 @@ export const Login = () => {
                         sx={{marginTop: '20px', textAlign: 'center'}}> {message} </Typography>
             <Box component="form" className="loginform" onSubmit={handleSubmit} noValidate>
               <label className='loginlabel'>Email</label>
-              <LoginTextField error={error} fullWidth margin="normal" id="email" name="email" autoComplete="email"
+              <LoginTextField error={!!error} fullWidth margin="normal" id="email" name="email" autoComplete="email"
                               autoFocus placeholder='admin@prepaire.com'/>
               <label className="loginlabel">Password</label>
-              <LoginTextField error={error} margin="normal" required fullWidth name="password" type="password"
+              <LoginTextField error={!!error} margin="normal" required fullWidth name="password" type="password"
                               id="password" autoComplete="current-password" placeholder='****'/>
               <Box sx={{display: 'flex', justifyContent: 'center'}}>
                 <PrimaryButton type="submit" sx={{mt: 3, mb: 2, px: 5}} title={loading ? 'Login...' : 'Login'} disabled={loading}/>

@@ -22,13 +22,15 @@ const SignupTextField = styled(TextField)({
 })
 export const Signup = () => {
 
-  let [message, setMessage] = useState('Please enter your details');
+  const [message, setMessage] = useState('Please enter your details');
+  const [error, setError] = useState(false);
   const loginRef = useRef();
   const successRef = useRef();
-  const {signup, error, loading} = useAuth();
+  const {signup, loading} = useAuth();
   const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
+    setError(false);
     const data = new FormData(event.currentTarget);
     if (data.get('password') !== data.get('confirm-password')) {
       setMessage('Passwords do not match, please try again.');
@@ -40,14 +42,11 @@ export const Signup = () => {
       setTimeout(() => {
         navigate('/engine/search', true);
       }, 500);
+    }).catch(err => {
+      setMessage('Something went, please try again.');
+      setError(true);
     });
   };
-
-  useEffect(() => {
-    if (error) {
-      setMessage('Something went, please try again.');
-    }
-  }, [error]);
 
   const styles = {
     paperContainer: {
@@ -78,16 +77,16 @@ export const Signup = () => {
                         sx={{marginTop: '20px', textAlign: 'center'}}> {message} </Typography>
             <Box component="form" className="loginform" onSubmit={handleSubmit} noValidate>
               <label className='loginlabel'>Email</label>
-              <SignupTextField error={error} fullWidth margin="normal" id="email" name="email" autoComplete="email"
+              <SignupTextField error={!!error} fullWidth margin="normal" id="email" name="email" autoComplete="email"
                                autoFocus placeholder='admin@prepaire.com'/>
 
               <label className="loginlabel">Password</label>
-              <SignupTextField error={error} margin="normal" required fullWidth name="password" type="password"
+              <SignupTextField error={!!error} margin="normal" required fullWidth name="password" type="password"
                                id="password" autoComplete="current-password" placeholder='****'/>
 
               <label className="loginlabel">Confirm password</label>
-              <SignupTextField error={error} margin="normal" required fullWidth name="confirm-password" type="password"
-                               id="password" autoComplete="current-password" placeholder='****'/>
+              <SignupTextField error={!!error} margin="normal" required fullWidth name="confirm-password" type="password"
+                               id="confirm-password" autoComplete="current-password" placeholder='****'/>
 
 
               <Box sx={{display: 'flex', justifyContent: 'center'}}>

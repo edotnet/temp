@@ -15,13 +15,11 @@ import {Text2xdlFeature} from "./modules/text2xdl/Text2xdl";
 import {SearchFeature} from "./modules/engine/search/search.feature";
 import {DrugSynthesisFeature} from "./modules/engine/drug-synthesis/drug-synthesis-feature";
 import {Drug2XDLFeature} from "./modules/engine/drug2xdl/Drug2xdl.feature";
-import {AuthProvider} from "./infrastructure/authentication/AuthContext";
 import { RequireAuth } from "./infrastructure/authentication/RequireAuth";
 import { Base } from "./infrastructure/authentication/Base";
 import {Signup} from "./pages/login/signup.page";
 
 export const Router = () => (
-  <AuthProvider>
     <Routes>
       <Route index element={<RequireAuth><Dashboard/></RequireAuth>}/>
       <Route exact path='/login' element={<Login/>}/>
@@ -46,5 +44,4 @@ export const Router = () => (
         <Route path="*" element={<Navigate replace to="/404"/>}/>
       </Route>
     </Routes>
-  </AuthProvider>
 );
