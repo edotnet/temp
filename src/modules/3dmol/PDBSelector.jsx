@@ -12,7 +12,7 @@ export const PDBSelector = ({options}) => {
       state.molecules.forEach(molecule => {
         promises.push(dockingFetcher(e.target.value, molecule, dispatch));
       });
-      Promise.all(promises).then((values) => {
+      Promise.all(promises).finally((values) => {
         dispatch({type: 'setDocking', payload: false})
       });
     }

@@ -13,11 +13,11 @@ export const dockingFetcher = (pdbid, molecule, dispatch, counter = 0) => {
       },
       body: JSON.stringify({
         pdbId: pdbid,
-        drugbankId: molecule.drugbank_id,
+        smiles: molecule.calculated_properties.SMILES,
       })
     }).then(res => res.json()).then(res => {
       if (!res.url) {
-        return setTimeout(() => dockingFetcher(pdbid, molecule, dispatch,counter + 1), 5000)
+        return setTimeout(() => resolve(dockingFetcher(pdbid, molecule, dispatch,counter + 1)), 10000)
       }
       dispatch({type: 'addCustomPdb', payload: {drug: molecule.name, pdb: res.url}})
       resolve();

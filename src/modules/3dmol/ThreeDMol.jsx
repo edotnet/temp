@@ -21,8 +21,8 @@ import {Loading} from "../../infrastructure/components/Loading";
 export const ThreeDMol = () => {
   const ref = useRef();
   const {state} = useDashboardContext()
-  const [selectedCustomPdb, setSelectedCustomPdb] = useState(undefined);
-  const renderPdb = (pdbId) => {
+  const [selectedCustomPdb, setSelectedCustomPdb] = useState("");
+  const renderPdb = () => {
     const element = document.getElementById('gldiv').getElementsByTagName('canvas');
     if(element.length > 0) {
       document.getElementById('gldiv').firstElementChild.remove();
@@ -56,11 +56,14 @@ export const ThreeDMol = () => {
       .then(res => {
         return res.text();
       }).then(pdb => {
+        console.log('should load')
       viewer.addModel(pdb, 'pdb');
       viewer.setStyle({cartoon:{color:'spectrum'}});
       viewer.setStyle({resn: 'UNK'},{sphere:{radius:0.5}, stick:{}});
       viewer.zoomTo({resn: 'UNK'});
       viewer.render();
+    }).catch(err => {
+      console.log(err)
     })
   }
   useEffect(() => {
@@ -72,7 +75,7 @@ export const ThreeDMol = () => {
   useEffect(() => {
     if (selectedCustomPdb) {
       if (selectedCustomPdb === state.pdbid) {
-        renderPdb(selectedCustomPdb);
+        renderPdb();
         return;
       }
       renderCustomPdb();
@@ -105,8 +108,8 @@ export const ThreeDMol = () => {
                   </>
                 }
               </Box>
-              <TextField select value={selectedCustomPdb} label="Select pdb" onChange={(e) => setSelectedCustomPdb(e.target.value)} sx={{minWidth: 150}}>
-                <MenuItem value={undefined}>{state.pdbid}</MenuItem>
+              <TextField select value={selectedCustomPdb} label="Select drug" onChange={(e) => setSelectedCustomPdb(e.target.value)} sx={{minWidth: 150}}>
+                <MenuItem value="">None</MenuItem>
                 {Object.entries(state.customPdbs).map(([key, value]) => <MenuItem key={key} value={value}>{key}</MenuItem>)}
               </TextField>
             </Box>

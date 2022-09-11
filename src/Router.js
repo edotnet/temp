@@ -22,7 +22,7 @@ import { Base } from "./infrastructure/authentication/Base";
 export const Router = () => (
   <AuthProvider>
     <Routes>
-      {/* <Route index element={<Dashboard/>}/> */}
+      <Route index element={<RequireAuth><Dashboard/></RequireAuth>}/>
       <Route exact path='/login' element={<Login/>}/>
       <Route exact path="/home" element={<HomePage/>}/>
       <Route element={<RequireAuth><Base /></RequireAuth>}>
