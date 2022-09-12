@@ -16,6 +16,7 @@ import { SectionTitle } from "./SectionTitle";
 import { TargetLiterature } from "./TargetLiterature";
 import { DrugSynthesis } from "./DrugSynthesis";
 import { useEngineContext } from "../useEngineContext";
+import {api} from "../../../infrastructure/api/instance";
 
 export const SearchFeature = () => {
   const {loading, data, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
@@ -77,7 +78,7 @@ export const SearchFeature = () => {
   const uploadSelectedProteinDrugs = useCallback(async () => {
     const url = `${Endpoints.drugbank.targets}${state.targetSelection[0]}`;
     setSecondaryLoader(true);
-    axios.get(url).then(resp => {
+    api.get(url).then(resp => {
       if (resp.data) {
         dashboardDispatch({type: 'addProtein', payload: resp.data[0]});
         uploadSelectedDrugs();
@@ -121,7 +122,7 @@ export const SearchFeature = () => {
         dispatch({type: 'setTargets', payload: targets});
       }
     }
-  }, [data, dispatch, drugs, targets]);
+  }, [data, dispatch, drugs, searchText, targets]);
 
 
   return (

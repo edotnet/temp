@@ -1,8 +1,8 @@
 import {useState, useEffect, useCallback, useMemo} from 'react';
 import {useLocation} from "react-router-dom";
-import axios from "axios";
 import {Endpoints} from "../../config/Consts";
 import {AuthContext} from "./AuthContext";
+import {api} from "../api/instance";
 
 export function AuthProvider({children}) {
   const [user, setUser] = useState();
@@ -14,7 +14,7 @@ export function AuthProvider({children}) {
   const login = useCallback((email, password) => {
     return new Promise((resolve, reject) => {
       setLoading(true);
-      axios({
+      api({
         url: Endpoints.auth.login, data: {email, password}, method: 'POST'
       })
         .then((res) => {
@@ -33,7 +33,7 @@ export function AuthProvider({children}) {
   const signup = useCallback((name, email, password) => {
     return new Promise((resolve, reject) => {
       setLoading(true);
-      axios({
+      api({
         url: Endpoints.auth.signup, data: {name, email, password}, method: 'POST'
       })
         .then((res) => {
@@ -52,7 +52,7 @@ export function AuthProvider({children}) {
   const requestRefresh = useCallback(() => {
     return new Promise((resolve, reject) => {
       setLoading(true);
-      axios({
+      api({
         url: Endpoints.auth.refresh, data: null, headers: {
           auth: user.accessToken,
         }
@@ -98,7 +98,7 @@ export function AuthProvider({children}) {
   }, []);
 
   useEffect(() => {
-    axios.interceptors.response.use((response) => {
+    api.interceptors.response.use((response) => {
       return response;
     }, async (error) => {
       if (error.response) {
