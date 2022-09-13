@@ -116,7 +116,7 @@ export const Dashboard = () => {
                 <DemographicFeature/>
               </Grid>
               <Grid item xs={6}>
-                <DrugInteraction/>
+                <DrugInteraction />
               </Grid>
               <Grid item xs={3}>
                 <PresentationModal/>

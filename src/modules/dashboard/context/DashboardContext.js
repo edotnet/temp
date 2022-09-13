@@ -138,11 +138,11 @@ const reducer = (state, action) => {
         ...demographicsResult,
       },
     }),
-    addCustomPdb: ({drug, pdb}) => ({
+    addCustomPdb: ({drug, data}) => ({
       ...state,
       customPdbs: {
         ...state.customPdbs,
-        [drug]: pdb
+        [drug]: data
       }
     }),
     removeCustomPdb: (drug) => {

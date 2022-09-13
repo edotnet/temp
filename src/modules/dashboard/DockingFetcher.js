@@ -15,7 +15,7 @@ export const dockingFetcher = (pdbid, molecule, dispatch, counter = 0) => {
       if (!res.data.url) {
         return setTimeout(() => resolve(dockingFetcher(pdbid, molecule, dispatch,counter + 1)), 10000)
       }
-      dispatch({type: 'addCustomPdb', payload: {drug: molecule.name, pdb: res.data.url}})
+      dispatch({type: 'addCustomPdb', payload: {drug: molecule.name, data: res.data}})
       resolve();
     }).catch(() => {
       reject()
