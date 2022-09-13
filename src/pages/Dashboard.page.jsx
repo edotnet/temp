@@ -59,7 +59,6 @@ export const Dashboard = () => {
   return (
     <>
       <Box>
-        <Navbar/>
         <DndProvider backend={HTML5Backend}>
           <Grid pl={5} pr={5} className="dashboarddnd">
             <Box>

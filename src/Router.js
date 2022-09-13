@@ -22,7 +22,7 @@ import {Verify} from "./pages/login/verify.page";
 
 export const Router = () => (
     <Routes>
-      <Route index element={<RequireAuth><Dashboard/></RequireAuth>}/>
+      <Route index element={<Navigate replace to={"/dashboard"} />}/>
       <Route exact path='/login' element={<Login/>}/>
       <Route exact path='/signup' element={<Signup/>}/>
       <Route exact path='/verify' element={<Verify/>}/>
