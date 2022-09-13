@@ -79,10 +79,56 @@ export function AuthProvider({children}) {
     });
   }, []);
 
+  const verify = useCallback((email, code) => {
+    return new Promise((resolve, reject) => {
+      setLoading(true);
+      api({
+        url: Endpoints.auth.verify, data: {email, code}, method: 'POST'
+      })
+        .then((res) => {
+          if (!res) {
+            const error = {response: {data: {message: 'Something went wrong'}}};
+            setError(error);
+            reject(error);
+            return;
+          }
+          resolve();
+        })
+        .catch((error) => {
+          setError(error);
+          reject(error);
+        })
+        .finally(() => setLoading(false));
+    })
+  }, []);
+
+  const resendVerify = useCallback((email) => {
+    return new Promise((resolve, reject) => {
+      setLoading(true);
+      api({
+        url: Endpoints.auth.verify, data: {email}, method: 'POST'
+      })
+        .then((res) => {
+          if (!res) {
+            const error = {response: {data: {message: 'Something went wrong'}}};
+            setError(error);
+            reject(error);
+            return;
+          }
+          resolve();
+        })
+        .catch((error) => {
+          setError(error);
+          reject(error);
+        })
+        .finally(() => setLoading(false));
+    })
+  }, []);
+
 
   const memoedValue = useMemo(() => ({
-    user, loading, error, login, signup, logout,
-  }), [user, loading, error, login, signup, logout]);
+    user, loading, error, login, signup, logout, verify, resendVerify
+  }), [user, loading, error, login, signup, logout, verify, resendVerify]);
 
   // If we change page, reset the error state.
   useEffect(() => {

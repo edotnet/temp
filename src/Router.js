@@ -18,12 +18,14 @@ import {Drug2XDLFeature} from "./modules/engine/drug2xdl/Drug2xdl.feature";
 import { RequireAuth } from "./infrastructure/authentication/RequireAuth";
 import { Base } from "./infrastructure/authentication/Base";
 import {Signup} from "./pages/login/signup.page";
+import {Verify} from "./pages/login/verify.page";
 
 export const Router = () => (
     <Routes>
       <Route index element={<RequireAuth><Dashboard/></RequireAuth>}/>
       <Route exact path='/login' element={<Login/>}/>
       <Route exact path='/signup' element={<Signup/>}/>
+      <Route exact path='/verify' element={<Verify/>}/>
       <Route exact path="/home" element={<HomePage/>}/>
       <Route element={<RequireAuth><Base /></RequireAuth>}>
         <Route path="dashboard" element={<Dashboard/>}/>

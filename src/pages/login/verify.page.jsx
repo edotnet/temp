@@ -9,9 +9,10 @@ import {LoginAppBarComponent} from '../../infrastructure/components/loginAppbar.
 import './login.scss'
 import {useAuth} from "../../infrastructure/authentication/useAuth";
 import {PrimaryButton} from "../../infrastructure/components/PrimaryButton";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Button} from "@mui/material";
 
-const SignupTextField = styled(TextField)({
+const VerifyTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
     borderRadius: 50,
     paddingLeft: 20,
@@ -20,39 +21,38 @@ const SignupTextField = styled(TextField)({
     paddingRight: 20,
   },
 })
-export const Signup = () => {
+export const Verify = () => {
 
-  const [message, setMessage] = useState('Please enter your details');
+  const [message, setMessage] = useState('Please enter your code');
   const loginRef = useRef();
   const successRef = useRef();
-  const {signup, error, loading} = useAuth();
+  const {verify, resendVerify, login, error, loading} = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    if (!data.get('name')) {
-      setMessage('Please enter your name');
+
+    if (!data.get('code')) {
+      setMessage('Please enter your code');
       return;
     }
-    if (data.get('password') !== data.get('confirm-password')) {
-      setMessage('Passwords do not match, please try again.');
-      return;
-    }
-    signup(data.get('name'), data.get('email'), data.get('password')).then(() => {
+    verify(location.state.email, data.get('code')).then(() => {
       loginRef.current.classList.toggle('hidden');
       successRef.current.classList.toggle('open')
-      setTimeout(() => {
-        navigate('/verify', {
-          state: {
-            email: data.get('email'),
-            password: data.get('password'),
-          }
-        });
-      }, 500);
+      login(location.state.email, location.state.password).then(() => {
+        navigate('/engine/search');
+      });
     }).catch(err => {
       setMessage(err.message ?? 'Something went, please try again.');
     });
   };
+
+  const resend = () => {
+    resendVerify(location.state.email).then(() => {
+      setMessage('Verification code sent, please check your email.');
+    });
+  }
 
   const styles = {
     paperContainer: {
@@ -76,45 +76,31 @@ export const Signup = () => {
           position: 'relative'
         }}>
           <Typography component="h1" variant="h4">
-            SIGNUP
+            VERIFY ACCOUNT
           </Typography>
           <div className="login-box" ref={loginRef}>
             <Typography color={error ? 'error' : 'primary'}
                         sx={{marginTop: '20px', textAlign: 'center'}}> {message} </Typography>
             <Box component="form" className="loginform" onSubmit={handleSubmit} noValidate>
-              <label className='loginlabel'>Name</label>
-              <SignupTextField error={!!error} fullWidth margin="normal" id="name" name="name" autoFocus
-                               placeholder='Your name'/>
-
-              <label className='loginlabel'>Email</label>
-              <SignupTextField error={!!error} fullWidth margin="normal" id="email" name="email" autoComplete="email"
-                               placeholder='admin@prepaire.com'/>
-
-              <label className="loginlabel">Password</label>
-              <SignupTextField error={!!error} margin="normal" required fullWidth name="password" type="password"
-                               id="password" autoComplete="current-password" placeholder='****'/>
-
-              <label className="loginlabel">Confirm password</label>
-              <SignupTextField error={!!error} margin="normal" required fullWidth name="confirm-password"
-                               type="password"
-                               id="confirm-password" autoComplete="current-password" placeholder='****'/>
-
+              <label className='loginlabel'>Code</label>
+              <VerifyTextField error={!!error} fullWidth margin="normal" id="code" name="code" autoFocus
+                               placeholder='Your code'/>
 
               <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <PrimaryButton type="submit" sx={{mt: 3, mb: 2, px: 5}} title={loading ? 'Signup...' : 'Signup'}
+                <PrimaryButton type="submit" sx={{mt: 3, mb: 2, px: 5}} title={loading ? 'Verifying...' : 'Verify'}
                                disabled={loading}/>
               </Box>
               <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <Link to="/login" className='loginforgetpass' variant="body2">
-                  Already have an account? Login
-                </Link>
+                <Button onClick={resend} className='loginforgetpass' variant="body2">
+                  Resend code
+                </Button>
               </Box>
             </Box>
           </div>
           <div className='login-success-content' ref={successRef}>
             <Box component="img" sx={{maxWidth: '80px'}}
                  src="https://res.cloudinary.com/djpepozcx/image/upload/v1651232576/success_oicvxo.png"/>
-            <p>Signup Successful</p>
+            <p>Verify Successful</p>
           </div>
         </Box>
         <Typography sx={{margin: '40px 0px 40px 0px'}} align="center">REIMAGINING DRUG DISCOVERY &
