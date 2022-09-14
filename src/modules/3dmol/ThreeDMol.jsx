@@ -119,7 +119,7 @@ export const ThreeDMol = () => {
                 data-backgroundcolor="#f5f6fc"
                 data-pdb="2nbd"
                 data-style="cartoon"/>
-            <Typography align="right" mt={2}>Affinity {parseFloat(state.customPdbs[selectedCustomPdb].affinity).toFixed(3)}</Typography>
+            {!!selectedCustomPdb && <Typography align="right" mt={2}>Affinity {parseFloat(state.customPdbs[selectedCustomPdb].affinity).toFixed(3)}</Typography>}
           </Box>
         </AccordionDetails>
       </Accordion>}
