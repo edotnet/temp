@@ -1,73 +1,70 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
-import { useDashboardContext } from "../dashboard/context/useDashboarContext";
 import $3Dmol from '3dmol';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Avatar,
-  Box,
-  CircularProgress,
-  MenuItem,
-  Select,
-  TextField
-} from "@mui/material";
-import Typography from "@mui/material/Typography";
-import D3 from '../../assets/svg/3d.svg'
-import {ExpandMore, RefreshOutlined} from "@mui/icons-material";
-import Stack from "@mui/material/Stack";
-import {Loading} from "../../infrastructure/components/Loading";
+import {ExpandMore} from '@mui/icons-material';
+import {Accordion, AccordionDetails, AccordionSummary, Box, CircularProgress, MenuItem, TextField} from '@mui/material';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import D3 from '../../assets/svg/3d.svg';
+import {useDashboardContext} from '../dashboard/context/useDashboarContext';
 
 export const ThreeDMol = () => {
   const ref = useRef();
+  const viewerRef = useRef();
   const {state} = useDashboardContext()
   const [selectedCustomPdb, setSelectedCustomPdb] = useState("");
-  const renderPdb = useCallback(() => {
+
+  const removeCanvas = () => {
     const element = document.getElementById('gldiv').getElementsByTagName('canvas');
     if(element.length > 0) {
       document.getElementById('gldiv').firstElementChild.remove();
     }
-    const viewer = $3Dmol.createViewer(
+  }
+
+  const createViewer = () => {
+    viewerRef.current = $3Dmol.createViewer(
       'gldiv', //id of div to create canvas in
       {
         backgroundColor: '#f5f6fc'
       }
     );
-    viewer.clear();
-    $3Dmol.download(`pdb:${state.pdbid}`, viewer, {format: 'pdb', colorschema: 'spectral'}, () => {
-      viewer.setStyle({cartoon:{color:'spectrum'}});
-      viewer.zoomTo();
-      viewer.render();
+  }
+
+  const renderPdb = useCallback(() => {
+    if (selectedCustomPdb !== "") {
+      return;
+    }
+    removeCanvas()
+    createViewer()
+    viewerRef.current.clear();
+    $3Dmol.download(`pdb:${state.pdbid}`, viewerRef.current, {format: 'pdb', colorschema: 'spectral'}, () => {
+      console.log('download')
+      viewerRef.current.setStyle({cartoon:{color:'spectrum'}});
+      viewerRef.current.zoomTo();
+      viewerRef.current.render();
+      console.log('should render?')
     })
-  }, [state.pdbid])
+  }, [state.pdbid, selectedCustomPdb])
 
   const renderCustomPdb = useCallback(() => {
-    const element = document.getElementById('gldiv').getElementsByTagName('canvas');
-    if(element.length > 0) {
-      document.getElementById('gldiv').firstElementChild.remove();
-    }
-    const viewer = $3Dmol.createViewer(
-      'gldiv', //id of div to create canvas in
-      {
-        backgroundColor: '#f5f6fc'
-      }
-    );
-    viewer.clear();
+    removeCanvas()
+    createViewer()
+    viewerRef.current.clear();
     fetch(state.customPdbs[selectedCustomPdb].url)
       .then(res => {
         return res.text();
       }).then(pdb => {
-      viewer.addModel(pdb, 'pdb');
-      viewer.setStyle({cartoon:{color:'spectrum'}});
-      viewer.setStyle({resn: 'UNK'},{sphere:{radius:0.5}, stick:{}});
-      viewer.zoomTo({resn: 'UNK'});
-      viewer.render();
+      viewerRef.current.addModel(pdb, 'pdb');
+      viewerRef.current.setStyle({cartoon:{color:'spectrum'}});
+      viewerRef.current.setStyle({resn: 'UNK'},{sphere:{radius:0.5}, stick:{}});
+      viewerRef.current.zoomTo({resn: 'UNK'});
+      viewerRef.current.render();
     }).catch(err => {
       console.log(err)
     })
   }, [selectedCustomPdb])
 
   useEffect(() => {
+    createViewer()
     if (state.pdbid) {
       renderPdb();
     }
@@ -82,6 +79,7 @@ export const ThreeDMol = () => {
       renderCustomPdb();
     }
   }, [renderCustomPdb, renderPdb, selectedCustomPdb, state.pdbid])
+
 
   return (
     <>
@@ -119,7 +117,7 @@ export const ThreeDMol = () => {
                 data-backgroundcolor="#f5f6fc"
                 data-pdb="2nbd"
                 data-style="cartoon"/>
-            {!!selectedCustomPdb && <Typography align="right" mt={2}>Affinity {parseFloat(state.customPdbs[selectedCustomPdb].affinity).toFixed(3)}</Typography>}
+            {!!selectedCustomPdb && <Typography align="right" mt={2}>Affinity {parseFloat(state.customPdbs[selectedCustomPdb].affinity).toFixed(3)} kcal/mol</Typography>}
           </Box>
         </AccordionDetails>
       </Accordion>}
