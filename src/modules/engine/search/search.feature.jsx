@@ -7,6 +7,7 @@ import axios from 'axios';
 import { CircularProgressComponent } from "../../../infrastructure/components/CircularProgress.component";
 import { Grid } from "@mui/material";
 import "./search.scss";
+import {dockingFetcher} from '../../dashboard/DockingFetcher';
 import { DrugProperties } from "../../dashboard/DrugProperties";
 import { DrugLiterature } from "./DrugLiterature";
 import { DrugResults } from "./DrugResults";
@@ -20,7 +21,7 @@ import {api} from "../../../infrastructure/api/instance";
 
 export const SearchFeature = () => {
   const {loading, data, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
-  const {dispatch: dashboardDispatch} = useDashboardContext();
+  const {state: dashboardState, dispatch: dashboardDispatch} = useDashboardContext();
   const {state, dispatch} = useEngineContext();
   const navigate = useNavigate();
 
@@ -70,10 +71,22 @@ export const SearchFeature = () => {
       });
       dashboardDispatch({type: 'addMolecules', payload: molecules})
       dashboardDispatch({type: 'resetInteractingMolecules', payload: null});
+      if (dashboardState.pdbid) {
+        dashboardDispatch({type: 'incrementDocking', payload: state.molecules.length})
+        state.molecules.forEach(molecule => {
+          dockingFetcher(dashboardState.pdbid, molecule, dashboardDispatch).then((res) => {
+            if (res) {
+              dashboardDispatch({type: 'decrementDocking'});
+            }
+          }).catch(err => {
+            dashboardDispatch({type: 'decrementDocking'});
+          });
+        })
+      }
       navigate("/dashboard");
       setSecondaryLoader(false);
     });
-  }, [state.drugSelection, dashboardDispatch, navigate]);
+  }, [state.drugSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
 
   const uploadSelectedProteinDrugs = useCallback(async () => {
     const url = `${Endpoints.drugbank.targets}${state.targetSelection[0]}`;

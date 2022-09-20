@@ -37,11 +37,9 @@ export const ThreeDMol = () => {
     createViewer()
     viewerRef.current.clear();
     $3Dmol.download(`pdb:${state.pdbid}`, viewerRef.current, {format: 'pdb', colorschema: 'spectral'}, () => {
-      console.log('download')
       viewerRef.current.setStyle({cartoon:{color:'spectrum'}});
       viewerRef.current.zoomTo();
       viewerRef.current.render();
-      console.log('should render?')
     })
   }, [state.pdbid, selectedCustomPdb])
 
@@ -78,7 +76,7 @@ export const ThreeDMol = () => {
       renderCustomPdb();
     }
   }, [renderCustomPdb, renderPdb, selectedCustomPdb, state.pdbid])
-
+  
 
   return (
     <>
@@ -99,7 +97,7 @@ export const ThreeDMol = () => {
           <Box sx={{mt: -4}}>
             <Box sx={{display: 'flex', justifyContent: 'space-between', pb: 1}}>
               <Box sx={{display: 'flex', alignItems: 'center'}}>
-                {state.isDocking &&
+                {state.docking > 0 &&
                   <>
                     <CircularProgress style={{width: 30, height: 30}}/>&nbsp;
                     <Typography variant="body2" fontWeight="bold">Docking...</Typography>

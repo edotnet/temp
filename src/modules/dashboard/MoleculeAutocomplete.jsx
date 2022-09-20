@@ -51,7 +51,6 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
           SMILES: molecule.SMILES,
         }
       }
-      console.log('molecule', molecule)
       onChange(molecule);
     }
   }
