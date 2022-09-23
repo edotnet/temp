@@ -5,19 +5,20 @@ export const dockingFetcher = (pdbid, molecule, dispatch) => {
   return new Promise((resolve, reject) => {
     api.post(Endpoints.docking.calculate, {
         pdbId: pdbid,
-        drugbankId: molecule.drugbank_id.startsWith("DB") ? molecule.drugbank_id : undefined,
+        drugbankId: molecule.drugbank_id && molecule.drugbank_id.startsWith("DB") ? molecule.drugbank_id : undefined,
         smiles: molecule.calculated_properties.SMILES,
+        name: molecule.name,
     }).then(res => {
       if (!res.data.url) {
         resolve(false);
         return;
       }
-      dispatch({type: 'addCustomPdb', payload: {drug: molecule.name, data: res.data}})      
+      dispatch({type: 'addCustomPdb', payload: {drug: molecule.name, data: res.data}})
       dispatch({type: 'decrementDocking'});
       resolve(true);
     }).catch(() => {
       dispatch({type: 'decrementDocking'});
-      reject()      
+      reject()
     });
   })
 }
