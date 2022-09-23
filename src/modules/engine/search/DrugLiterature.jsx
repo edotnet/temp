@@ -16,7 +16,7 @@ export function DrugLiterature(props) {
   return (
     <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel4a-content" id="panel4a-header">
-        <Typography>Drug Literature</Typography>
+        <Typography>Literature</Typography>
       </AccordionSummary>
       <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
 

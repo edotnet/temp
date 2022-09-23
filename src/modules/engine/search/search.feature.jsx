@@ -11,6 +11,7 @@ import {dockingFetcher} from '../../dashboard/DockingFetcher';
 import { DrugProperties } from "../../dashboard/DrugProperties";
 import { DrugLiterature } from "./DrugLiterature";
 import { DrugResults } from "./DrugResults";
+import {NaturalProductsResults} from './NaturalProductsResults';
 import { SearchInput } from "./SearchInput";
 import { ProteinResults } from "./ProteinResults";
 import { SectionTitle } from "./SectionTitle";
@@ -35,6 +36,12 @@ export const SearchFeature = () => {
     'pmids': _value.item_pmids,
     'metrics': _value.metrics
   })) : [], [data]);
+  const naturalProducts = useMemo(() => data && data.result && 'natural_products' in data.result ? Object.entries(data.result.natural_products).map(([_key, _value]) => ({
+    'title': _key,
+    'counter': _value.counter,
+    'pmids': _value.item_pmids,
+    'metrics': _value.metrics
+  })) : [], [data]);
   const targets = useMemo(() => data && data.result && 'targets' in data.result ? Object.entries(data.result.targets).map(([_key, _value]) => ({
     'title': _key,
     'counter': _value.counter,
@@ -51,42 +58,73 @@ export const SearchFeature = () => {
     dispatch({type: 'setSelectedDrug', payload: data});
   }, [dispatch]);
 
+  const dispatchDocking = useCallback(() => {
+    if (dashboardState.pdbid) {
+      dashboardDispatch({type: 'incrementDocking', payload: state.molecules.length});
+      state.molecules.forEach(molecule => {
+        dockingFetcher(dashboardState.pdbid, molecule, dashboardDispatch);
+      });
+    }
+  }, [dashboardState.pdbid, dashboardDispatch, state.molecules]);
+
   const uploadSelectedDrugs = useCallback(async () => {
     const promises = [];
     state.drugSelection.forEach(drug => {
-      const url = `${Endpoints.drugbank.drugs}${drug}?page=${0}`;
+      const url = `${Endpoints.drugbank.drugs}${drug}?exact=1`;
       promises.push(axios.get(url));
     });
     setSecondaryLoader(true);
-    const molecules = [];
     Promise.all(promises).then((responses) => {
+      const molecules = [];
       responses.forEach((resp, drugIndex) => {
         if (resp.data) {
-          for (let i = 0; i < resp.data.items.length; i++) {
-            if (resp.data.items[i].name.toLowerCase() === state.drugSelection[drugIndex].toLowerCase()) {
-              molecules.push(resp.data.items[i]);
+          resp.data.items.forEach((item) => {
+            if ('name' in item && state.drugSelection.map(el => el.toLowerCase()).includes(item.name.toLowerCase())) {
+              molecules.push(item);
             }
-          }
+          });
         }
       });
       dashboardDispatch({type: 'addMolecules', payload: molecules})
       dashboardDispatch({type: 'resetInteractingMolecules', payload: null});
-      if (dashboardState.pdbid) {
-        dashboardDispatch({type: 'incrementDocking', payload: state.molecules.length})
-        state.molecules.forEach(molecule => {
-          dockingFetcher(dashboardState.pdbid, molecule, dashboardDispatch).then((res) => {
-            if (res) {
-              dashboardDispatch({type: 'decrementDocking'});
-            }
-          }).catch(err => {
-            dashboardDispatch({type: 'decrementDocking'});
-          });
-        })
-      }
+      dispatchDocking();
       navigate("/dashboard");
       setSecondaryLoader(false);
     });
   }, [state.drugSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
+
+  const uploadSelectedNaturalProducts = useCallback(async () => {
+    const promises = [];
+    state.naturalProductSelection.forEach(naturalProduct => {
+      const url = `${Endpoints.naturalProducts.query}${naturalProduct}?exact=1`;
+      promises.push(axios.get(url));
+      setSecondaryLoader(true);
+      Promise.all(promises).then((responses) => {
+        const molecules = [];
+        responses.forEach((resp, drugIndex) => {
+          if (resp.data) {
+            resp.data.items.forEach((item) => {
+              if ('cn' in item && state.naturalProductSelection.map(el => el.toLowerCase()).includes(item.cn.toLowerCase())) {
+                const molecule = {
+                  name: item.cn,
+                  drugbank_id: item.UNPD_ID,
+                  calculated_properties: {
+                    SMILES: item.SMILES,
+                  }
+                }
+                molecules.push(molecule);
+              }
+            });
+          }
+        });
+        dashboardDispatch({type: 'addMolecules', payload: molecules})
+        dashboardDispatch({type: 'resetInteractingMolecules', payload: null});
+        dispatchDocking();
+        navigate("/dashboard");
+        setSecondaryLoader(false);
+      });
+    })
+  }, [state.naturalProductSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
 
   const uploadSelectedProteinDrugs = useCallback(async () => {
     const url = `${Endpoints.drugbank.targets}${state.targetSelection[0]}`;
@@ -95,6 +133,7 @@ export const SearchFeature = () => {
       if (resp.data) {
         dashboardDispatch({type: 'addProtein', payload: resp.data[0]});
         uploadSelectedDrugs();
+        uploadSelectedNaturalProducts();
       }
     });
   }, [state.targetSelection, dashboardDispatch, uploadSelectedDrugs]);
@@ -123,6 +162,7 @@ export const SearchFeature = () => {
           dispatch({type: 'setDrugSelection', payload: [defaultDrug]});
         }
         dispatch({type: 'setDrugs', payload: drugs});
+        dispatch({type: 'setNaturalProducts', payload: naturalProducts})
         if (!targets || targets.length === 0) {
           return;
         }
@@ -178,7 +218,7 @@ export const SearchFeature = () => {
 
       {
         state.drugs.length > 0 && <>
-          <SectionTitle text="Related Drugs"/>
+          <SectionTitle text="Related Remedies"/>
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <DrugResults drugs={state.drugs}
@@ -192,6 +232,17 @@ export const SearchFeature = () => {
                            }}
                            rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                            onClick={uploadSelectedDrugs}/>
+              <NaturalProductsResults naturalProducts={state.naturalProducts}
+                           onRowClick={(param) => {
+                             drugHandleClick(param.row);
+                             setClickedRow(param.row.title.toLowerCase());
+                           }}
+                           selectionModel={state.naturalProductSelection}
+                           onSelectionModelChange={(ids) => {
+                             dispatch({type: 'setNaturalProductSelection', payload: ids})
+                           }}
+                           rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
+                           onClick={uploadSelectedNaturalProducts}/>
             </Grid>
             <Grid item xs={6}>
               <DrugLiterature drug={state.selectedDrug} />
