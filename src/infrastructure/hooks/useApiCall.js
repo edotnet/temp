@@ -43,6 +43,10 @@ const reducer = (state, action) => {
   }
 }
 
+export function encodeQuery(url) {
+  return encodeURIComponent(url.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'));
+}
+
 export const useApiCall = (url, method = 'GET', body = null, autofetch = true) => {
   const controller = new AbortController();
   const [state, dispatch] = useReducer(reducer, initialState, () => {});

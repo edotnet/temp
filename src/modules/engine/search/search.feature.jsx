@@ -1,4 +1,4 @@
-import { useApiCall } from "../../../infrastructure/hooks/useApiCall";
+import {encodeQuery, useApiCall} from '../../../infrastructure/hooks/useApiCall';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDashboardContext } from "../../../modules/dashboard/context/useDashboarContext";
 import { useNavigate } from "react-router-dom";
@@ -70,7 +70,7 @@ export const SearchFeature = () => {
   const uploadSelectedDrugs = useCallback(async () => {
     const promises = [];
     state.drugSelection.forEach(drug => {
-      const url = `${Endpoints.drugbank.drugs}${drug}?exact=1`;
+      const url = `${Endpoints.drugbank.drugs}${encodeQuery(drug)}?exact=1`;
       promises.push(axios.get(url));
     });
     setSecondaryLoader(true);
@@ -96,7 +96,7 @@ export const SearchFeature = () => {
   const uploadSelectedNaturalProducts = useCallback(async () => {
     const promises = [];
     state.naturalProductSelection.forEach(naturalProduct => {
-      const url = `${Endpoints.naturalProducts.query}${naturalProduct}?exact=1`;
+      const url = `${Endpoints.naturalProducts.query}${encodeQuery(naturalProduct)}?exact=1`;
       promises.push(axios.get(url));
       setSecondaryLoader(true);
       Promise.all(promises).then((responses) => {
@@ -127,7 +127,7 @@ export const SearchFeature = () => {
   }, [state.naturalProductSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
 
   const uploadSelectedProteinDrugs = useCallback(async () => {
-    const url = `${Endpoints.drugbank.targets}${state.targetSelection[0]}`;
+    const url = `${Endpoints.drugbank.targets}${encodeQuery(state.targetSelection[0])}?exact=1`;
     setSecondaryLoader(true);
     api.get(url).then(resp => {
       if (resp.data) {

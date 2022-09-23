@@ -60,11 +60,13 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
   const options = data && 'items' in data ? data.items.filter(validItems)
     .map(item => ({
       id: item.drugbank_id,
-      label: item.name
+      label: item.name,
+      type: 'Drugs'
     })) : [];
   const naturalProductOptions = naturalProductsData && 'items' in naturalProductsData ? naturalProductsData.items.map(item => ({
     id: item.UNPD_ID,
-    label: item.cn
+    label: item.cn,
+    type: 'Natural Products'
   })) : [];
 
   return (
@@ -78,6 +80,7 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
       value=""
       clearOnBlur
       blurOnSelect
+      groupBy={(option) => option.type}
     />
   );
 }
