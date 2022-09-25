@@ -37,8 +37,6 @@ export function AuthProvider({children}) {
         url: Endpoints.auth.signup, data: {name, email, password}, method: 'POST'
       })
         .then((res) => {
-          setUser(res.data);
-          localStorage.setItem('user', JSON.stringify(res.data))
           resolve();
         })
         .catch((error) => {

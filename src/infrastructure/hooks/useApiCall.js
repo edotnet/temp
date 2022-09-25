@@ -19,7 +19,6 @@ const reducer = (state, action) => {
         error: false,
       };
     case 'FAILURE':
-      console.log('Failure');
       return {
         ...state,
         data: null,
@@ -66,7 +65,6 @@ export const useApiCall = (url, method = 'GET', body = null, autofetch = true) =
       })
         .then(res => dispatch({type: 'SUCCESS', payload: res.data}))
         .catch((...err) => {
-          console.log('catch', err)
           dispatch({type: 'FAILURE', payload: err.message})
         })
     },
