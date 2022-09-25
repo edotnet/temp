@@ -1,4 +1,4 @@
-import { useApiCall } from "../../infrastructure/hooks/useApiCall";
+import {encodeQuery, useApiCall} from '../../infrastructure/hooks/useApiCall';
 import { Autocomplete } from "../../infrastructure/components/Autocomplete";
 import { useEffect, useState } from "react";
 import { Paper, TextField, styled } from "@mui/material";
@@ -28,8 +28,8 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
 
   const executeSearch = (search) => {
     if (search.length > 3) {
-      fetch(`${url}${search}?page=0${category ? `&category=${category}`: ''}`, 'GET');
-      naturalProductsFetch(`${naturalProductsUrl}${search}?page=0`, 'GET')
+      fetch(`${url}${encodeQuery(search)}?page=0${category ? `&category=${category}`: ''}`, 'GET');
+      naturalProductsFetch(`${naturalProductsUrl}${encodeQuery(search)}?page=0`, 'GET')
     }
   }
 
