@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { Consts } from "../../config/Consts";
-axios.defaults.baseURL = Consts.BACKEND_API_URL;
+import { useAuth } from "../authentication/useAuth";
+axios.defaults.baseURL = Consts.API_URL;
 
 const initialState = {
   data: null,
@@ -18,7 +19,6 @@ const reducer = (state, action) => {
         error: false,
       };
     case 'FAILURE':
-      console.log('Failure');
       return {
         ...state,
         data: null,
@@ -42,10 +42,15 @@ const reducer = (state, action) => {
   }
 }
 
+export function encodeQuery(url) {
+  return encodeURIComponent(url.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'));
+}
+
 export const useApiCall = (url, method = 'GET', body = null, autofetch = true) => {
   const controller = new AbortController();
   const [state, dispatch] = useReducer(reducer, initialState, () => {});
-  const fetch = useCallback(
+  const {user} = useAuth();
+  const execute = useCallback(
     (url, method, body=null) => {
       dispatch({type: 'ATTEMPT'});
       axios({
@@ -53,21 +58,28 @@ export const useApiCall = (url, method = 'GET', body = null, autofetch = true) =
         url,
         data: body,
         signal: controller.signal,
+        headers: {
+          auth: user.accessToken,
+          'X-API-KEY': user.user.apiKey
+        }
       })
         .then(res => dispatch({type: 'SUCCESS', payload: res.data}))
-        .catch(err => dispatch({type: 'FAILURE', payload: err.message}))
+        .catch((...err) => {
+          dispatch({type: 'FAILURE', payload: err.message})
+        })
     },
     [url, method, body],
   );
-  const reset = () => {
+  const reset = useCallback(() => {
     dispatch({type: 'RESET'});
-  }
+  }, []);
+
   useEffect(() => {
-    if (autofetch) fetch(url, method, body);
+    if (autofetch) execute(url, method, body);
     return () => {
       controller.abort();
     }
   }, [method, url, body]);
 
-  return {...state, fetch, reset};
+  return {...state, fetch: execute, reset};
 };

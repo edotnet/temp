@@ -13,7 +13,7 @@ const initialState = {
   selectedDemographics: null,
   demographicsResult: null,
   customPdbs: {},
-  isDocking: false,
+  docking: 0,
 };
 
 const DashboardContext = createContext({state: initialState});
@@ -138,11 +138,11 @@ const reducer = (state, action) => {
         ...demographicsResult,
       },
     }),
-    addCustomPdb: ({drug, pdb}) => ({
+    addCustomPdb: ({drug, data}) => ({
       ...state,
       customPdbs: {
         ...state.customPdbs,
-        [drug]: pdb
+        [drug]: data
       }
     }),
     removeCustomPdb: (drug) => {
@@ -153,9 +153,13 @@ const reducer = (state, action) => {
         customPdbs,
       }
     },
-    setDocking: (isDocking) => ({
+    incrementDocking: (num = 1) => ({
       ...state,
-      isDocking,
+      docking: state.docking + num,
+    }),
+    decrementDocking: () => ({
+      ...state,
+      docking: state.docking - 1,
     }),
   }
   return actions[action.type](action.payload);

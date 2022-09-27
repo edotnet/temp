@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Logo from '../../assets/svg/logo.svg';
+import { PrimaryButton } from "./PrimaryButton";
 
 const theme = createTheme({
   palette: {
@@ -33,7 +34,6 @@ export const LoginAppBarComponent = () => {
   }));
 
   return (
-    <ThemeProvider theme={theme}>
       <AppBar position="static" sx={{backgroundColor: 'transparent', boxShadow: 'none', padding:'20px 0px 20px 0px'}}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -54,7 +54,7 @@ export const LoginAppBarComponent = () => {
                               <Button sx={{color: '#222a47'}} variant="text">Product</Button>
                           </Item>
                           <Item>
-                              <Button sx={{width: '200px', borderRadius: '40px' }}  color="neutral" variant="contained">Get Started</Button>
+                              <PrimaryButton sx={{width: '200px', borderRadius: '40px' }} title="Get Started" />
                           </Item>
                           */}
                       </Stack>
@@ -63,6 +63,5 @@ export const LoginAppBarComponent = () => {
           </Toolbar>
         </Container>
       </AppBar>
-    </ThemeProvider>
   );
 };

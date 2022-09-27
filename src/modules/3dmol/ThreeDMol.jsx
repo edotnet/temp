@@ -1,83 +1,82 @@
-import {useEffect, useRef, useState} from 'react';
-import { useDashboardContext } from "../dashboard/context/useDashboarContext";
 import $3Dmol from '3dmol';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Avatar,
-  Box,
-  CircularProgress,
-  MenuItem,
-  Select,
-  TextField
-} from "@mui/material";
-import Typography from "@mui/material/Typography";
-import D3 from '../../assets/svg/3d.svg'
-import {ExpandMore, RefreshOutlined} from "@mui/icons-material";
-import Stack from "@mui/material/Stack";
-import {Loading} from "../../infrastructure/components/Loading";
+import {ExpandMore} from '@mui/icons-material';
+import {Accordion, AccordionDetails, AccordionSummary, Box, CircularProgress, MenuItem, TextField} from '@mui/material';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import D3 from '../../assets/svg/3d.svg';
+import {useDashboardContext} from '../dashboard/context/useDashboarContext';
 
 export const ThreeDMol = () => {
   const ref = useRef();
+  const viewerRef = useRef();
   const {state} = useDashboardContext()
-  const [selectedCustomPdb, setSelectedCustomPdb] = useState(undefined);
-  const renderPdb = (pdbId) => {
+  const [selectedCustomPdb, setSelectedCustomPdb] = useState("");
+
+  const removeCanvas = () => {
     const element = document.getElementById('gldiv').getElementsByTagName('canvas');
     if(element.length > 0) {
       document.getElementById('gldiv').firstElementChild.remove();
     }
-    const viewer = $3Dmol.createViewer(
-      'gldiv', //id of div to create canvas in
-      {
-        backgroundColor: '#f5f6fc'
-      }
-    );
-    viewer.clear();
-    $3Dmol.download(`pdb:${state.pdbid}`, viewer, {format: 'pdb', colorschema: 'spectral'}, () => {
-      viewer.setStyle({cartoon:{color:'spectrum'}});
-      viewer.zoomTo();
-      viewer.render();
-    })
   }
-  const renderCustomPdb = () => {
-    const element = document.getElementById('gldiv').getElementsByTagName('canvas');
-    if(element.length > 0) {
-      document.getElementById('gldiv').firstElementChild.remove();
-    }
-    const viewer = $3Dmol.createViewer(
+
+  const createViewer = () => {
+    viewerRef.current = $3Dmol.createViewer(
       'gldiv', //id of div to create canvas in
       {
         backgroundColor: '#f5f6fc'
       }
     );
-    viewer.clear();
-    fetch(selectedCustomPdb)
+  }
+
+  const renderPdb = useCallback(() => {
+    if (selectedCustomPdb !== "") {
+      return;
+    }
+    removeCanvas()
+    createViewer()
+    viewerRef.current.clear();
+    $3Dmol.download(`pdb:${state.pdbid}`, viewerRef.current, {format: 'pdb', colorschema: 'spectral'}, () => {
+      viewerRef.current.setStyle({cartoon:{color:'spectrum'}});
+      viewerRef.current.zoomTo();
+      viewerRef.current.render();
+    })
+  }, [state.pdbid, selectedCustomPdb])
+
+  const renderCustomPdb = useCallback(() => {
+    removeCanvas()
+    createViewer()
+    viewerRef.current.clear();
+    fetch(state.customPdbs[selectedCustomPdb].url)
       .then(res => {
         return res.text();
       }).then(pdb => {
-      viewer.addModel(pdb, 'pdb');
-      viewer.setStyle({cartoon:{color:'spectrum'}});
-      viewer.setStyle({resn: 'UNK'},{sphere:{radius:0.5}, stick:{}});
-      viewer.zoomTo({resn: 'UNK'});
-      viewer.render();
+      viewerRef.current.addModel(pdb, 'pdb');
+      viewerRef.current.setStyle({cartoon:{color:'spectrum'}});
+      viewerRef.current.setStyle({resn: 'UNK'},{sphere:{radius:0.5}, stick:{}});
+      viewerRef.current.zoomTo({resn: 'UNK'});
+      viewerRef.current.render();
+    }).catch(err => {
+      console.log(err)
     })
-  }
+  }, [selectedCustomPdb])
+
   useEffect(() => {
     if (state.pdbid) {
       renderPdb();
     }
-  }, [state.pdbid])
+  }, [renderPdb, state.pdbid])
 
   useEffect(() => {
     if (selectedCustomPdb) {
       if (selectedCustomPdb === state.pdbid) {
-        renderPdb(selectedCustomPdb);
+        renderPdb();
         return;
       }
       renderCustomPdb();
     }
-  }, [selectedCustomPdb])
+  }, [renderCustomPdb, renderPdb, selectedCustomPdb, state.pdbid])
+  
 
   return (
     <>
@@ -98,16 +97,16 @@ export const ThreeDMol = () => {
           <Box sx={{mt: -4}}>
             <Box sx={{display: 'flex', justifyContent: 'space-between', pb: 1}}>
               <Box sx={{display: 'flex', alignItems: 'center'}}>
-                {state.isDocking &&
+                {state.docking > 0 &&
                   <>
                     <CircularProgress style={{width: 30, height: 30}}/>&nbsp;
                     <Typography variant="body2" fontWeight="bold">Docking...</Typography>
                   </>
                 }
               </Box>
-              <TextField select value={selectedCustomPdb} label="Select pdb" onChange={(e) => setSelectedCustomPdb(e.target.value)} sx={{minWidth: 150}}>
-                <MenuItem value={undefined}>{state.pdbid}</MenuItem>
-                {Object.entries(state.customPdbs).map(([key, value]) => <MenuItem key={key} value={value}>{key}</MenuItem>)}
+              <TextField select value={selectedCustomPdb} label="Select drug" onChange={(e) => setSelectedCustomPdb(e.target.value)} sx={{minWidth: 150}}>
+                <MenuItem value="">None</MenuItem>
+                {Object.entries(state.customPdbs).map(([key, value]) => <MenuItem key={key} value={key}>{key}</MenuItem>)}
               </TextField>
             </Box>
             <div ref={ref} id="gldiv" style={{height: 300, width: 400, position: 'relative'}}
@@ -115,6 +114,7 @@ export const ThreeDMol = () => {
                 data-backgroundcolor="#f5f6fc"
                 data-pdb="2nbd"
                 data-style="cartoon"/>
+            {!!selectedCustomPdb && <Typography align="right" mt={2}>Affinity: {parseFloat(state.customPdbs[selectedCustomPdb].affinity).toFixed(3)} kcal/mol</Typography>}
           </Box>
         </AccordionDetails>
       </Accordion>}

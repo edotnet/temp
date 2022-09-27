@@ -44,6 +44,17 @@ export const Endpoints = {
   },
   docking: {
     calculate: `${useApi}/docking/calculate`,
+  },
+  auth: {
+    login: `${Consts.API_URL}/auth/login`,
+    signup: `${Consts.API_URL}/auth/register`,
+    refresh: `${Consts.API_URL}/auth/refreshToken`,
+    verify: `${Consts.API_URL}/auth/verifyAccount`,
+    resendVerify: `${Consts.API_URL}/auth/resendVerificationCode`,
+  },
+  notifications: {
+    register: `${Consts.API_URL}/notifications/devices/add`,
+    list: `${Consts.API_URL}/notifications/list`
   }
 };
 
