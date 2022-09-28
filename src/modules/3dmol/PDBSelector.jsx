@@ -18,7 +18,7 @@ const StyledTooltip = styled(({ className, ...props }) => (
   },
 }));
 
-export const PDBSelector = ({options, pdbs}) => {
+export const PDBSelector = ({pdbs}) => {
   const {state, dispatch} = useDashboardContext()
   const handleChange = (e) => {
     dispatch({type: 'selectPdb', payload: e.target.value});
@@ -40,19 +40,15 @@ export const PDBSelector = ({options, pdbs}) => {
         <MenuItem value={""}>
           <em>None</em>
         </MenuItem>
-        {options.map(option => {
-          const pdb = pdbs.find(pdb => pdb.id === option);
-
-          return (
-            <StyledTooltip key={pdb.id} title={
-              <React.Fragment>
-                <b>{`${pdb?.title}`}</b><br/><u>{`${pdb?.description}`}</u>
-              </React.Fragment>
-            }>
-              <MenuItem key={option} value={option}>{option}</MenuItem>
-            </StyledTooltip>
-          );
-        })}
+        {pdbs.map(pdb => (
+          <StyledTooltip key={pdb.id} title={
+            <React.Fragment>
+              <b>{`${pdb.title}`}</b><br/><u>{`${pdb.description}`}</u>
+            </React.Fragment>
+          }>
+            <MenuItem value={pdb.id}>{pdb.id}</MenuItem>
+          </StyledTooltip>
+        ))}
       </Select>
     </FormControl>
   )
