@@ -80,7 +80,7 @@ export const Dashboard = () => {
                   <Grid item xs={12}>
                     <TargetAutocomplete onChange={_onProteinSelected} label="ADD TARGET PROTEIN"/>
                     {state.protein && <Box pt={3}>
-                      <PDBSelector options={state.protein.pdb_ids}/>
+                      <PDBSelector pdbs={state.protein.pdbs} options={state.protein.pdb_ids}/>
                     </Box>}
                   </Grid>
                   <Grid item xs={12}>

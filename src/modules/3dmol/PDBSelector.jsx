@@ -1,8 +1,24 @@
+import React from 'react';
+import { styled } from '@mui/material/styles';
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import {useDashboardContext} from "../dashboard/context/useDashboarContext";
 import {dockingFetcher} from "../dashboard/DockingFetcher";
 
-export const PDBSelector = ({options}) => {
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+
+const StyledTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
+
+export const PDBSelector = ({options, pdbs}) => {
   const {state, dispatch} = useDashboardContext()
   const handleChange = (e) => {
     dispatch({type: 'selectPdb', payload: e.target.value});
@@ -24,7 +40,19 @@ export const PDBSelector = ({options}) => {
         <MenuItem value={""}>
           <em>None</em>
         </MenuItem>
-        {options.map(option => <MenuItem key={option} value={option}>{option}</MenuItem>)}
+        {options.map(option => {
+          const pdb = pdbs.find(pdb => pdb.id === option);
+
+          return (
+            <StyledTooltip key={pdb.id} title={
+              <React.Fragment>
+                <b>{`${pdb?.title}`}</b><br/><u>{`${pdb?.description}`}</u>
+              </React.Fragment>
+            }>
+              <MenuItem key={option} value={option}>{option}</MenuItem>
+            </StyledTooltip>
+          );
+        })}
       </Select>
     </FormControl>
   )
