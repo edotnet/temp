@@ -1,10 +1,10 @@
 import {encodeQuery, useApiCall} from '../../infrastructure/hooks/useApiCall';
-import { Autocomplete } from "../../infrastructure/components/Autocomplete";
+import { TooltipedAutocomplete } from "../../infrastructure/components/TooltipedAutocomplete";
 import { useEffect, useState } from "react";
 import { Paper, TextField, styled } from "@mui/material";
 import {Endpoints} from "../../config/Consts";
 
-const PillAutocomplete = styled(Autocomplete)({
+const PillAutocomplete = styled(TooltipedAutocomplete)({
   '&.MuiAutocomplete-root': {
     borderRadius: 50,
     width: '70%',
@@ -61,12 +61,14 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
     .map(item => ({
       id: item.drugbank_id,
       label: item.name,
-      type: 'Drugs'
+      type: 'Drugs',
+      tooltip: item.clinical_description
     })) : [];
   const naturalProductOptions = naturalProductsData && 'items' in naturalProductsData ? naturalProductsData.items.map(item => ({
     id: item.UNPD_ID,
     label: item.cn,
-    type: 'Natural Products'
+    type: 'Natural Products',
+    tooltip: item.cn
   })) : [];
 
   return (
