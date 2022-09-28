@@ -99,7 +99,9 @@ export const DrugProperties = () => {
   }
 
   const renderToxicity = () => {
-    return (<Grid container>
+    const hasToxicity = state.selectedMolecule.toxicity && typeof state.selectedMolecule.toxicity === 'object';
+    
+    return hasToxicity && (<Grid container>
       {Object.keys(state.selectedMolecule.toxicity).map(key => <Grid item xs={6}>
         <Grid container>
           <Grid item xs={6}>
@@ -120,7 +122,6 @@ export const DrugProperties = () => {
     </Grid>)
   }
 
-
   return (
     <Box sx={{position: 'absolute', top: state.selectedMolecule?.coordinates?.y || '50%', left: state.selectedMolecule?.coordinates?.x || '50%'}}>
       <ModalPaper elevation={2} sx={{width: 450, marginBottom: '50px', px: 2}}>
@@ -135,11 +136,11 @@ export const DrugProperties = () => {
                 <Typography sx={{color: '#383874', fontWeight: 400, fontSize: 30}} gutterBottom
                             component="span">{state.selectedMolecule.name}
                   <Typography sx={{color: '#373767', fontSize: 30}} gutterBottom
-                            component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}</Typography>
+                            component="span">{state.selectedMolecule.calculated_properties["Molecular Formula"]?.toUpperCase()}</Typography>
                 </Typography>
               </Box>
               <CopyComponent text={`${state.selectedMolecule.name}
-                  ${state.selectedMolecule.calculated_properties["Molecular Formula"].toUpperCase()}
+                  ${state.selectedMolecule.calculated_properties["Molecular Formula"]?.toUpperCase()}
                   ${state.selectedMolecule.clinical_description}`}
               />
             </Box>
