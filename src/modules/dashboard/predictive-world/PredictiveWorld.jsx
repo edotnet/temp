@@ -45,7 +45,7 @@ export const PredictiveWorld = () => {
       line: 4,
       scale: [0.5, 1],
       title: 'Biodegradation',
-      property: 'experimental_properties.ADMET.biodegradation.probability'
+      property: 'calculated_properties.ADMET.biodegradation.probability'
     },
     caco2: {
       line: 7,
