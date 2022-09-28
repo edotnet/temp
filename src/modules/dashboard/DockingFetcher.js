@@ -1,27 +1,23 @@
 import {Endpoints} from "../../config/Consts";
+import {api} from "../../infrastructure/api/instance";
 
-export const dockingFetcher = (pdbid, molecule, dispatch, counter = 0) => {
+export const dockingFetcher = (pdbid, molecule, dispatch) => {
   return new Promise((resolve, reject) => {
-    if (counter === 10) {
-      reject();
-      return;
-    }
-    fetch(Endpoints.docking.calculate, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+    api.post(Endpoints.docking.calculate, {
         pdbId: pdbid,
-        drugbankId: molecule.drugbank_id,
-      })
-    }).then(res => res.json()).then(res => {
-      if (!res.url) {
-        return setTimeout(() => dockingFetcher(pdbid, molecule, dispatch,counter + 1), 5000)
+        drugbankId: molecule.drugbank_id && molecule.drugbank_id.startsWith("DB") ? molecule.drugbank_id : undefined,
+        smiles: molecule.calculated_properties.SMILES,
+        name: molecule.name,
+    }).then(res => {
+      if (!res.data.url) {
+        resolve(false);
+        return;
       }
-      dispatch({type: 'addCustomPdb', payload: {drug: molecule.name, pdb: res.url}})
-      resolve();
+      dispatch({type: 'addCustomPdb', payload: {drug: molecule.name, data: res.data}})
+      dispatch({type: 'decrementDocking'});
+      resolve(true);
     }).catch(() => {
+      dispatch({type: 'decrementDocking'});
       reject()
     });
   })

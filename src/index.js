@@ -1,3 +1,4 @@
+import {SnackbarProvider} from 'notistack';
 import {StrictMode} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -7,6 +8,7 @@ import theme from "./infrastructure/config/theme";
 import {HashRouter} from "react-router-dom";
 import "@fontsource/work-sans";
 import {ThemeProvider} from '@mui/material/styles';
+
 
 /*const root = createRoot(document.getElementById('root'))
 root.render(
@@ -19,12 +21,13 @@ root.render(
   </StrictMode>,
 );
  */
-
 ReactDOM.render(<StrictMode>
   <ThemeProvider theme={theme}>
+    <SnackbarProvider>
     <HashRouter>
       <App/>
     </HashRouter>
+    </SnackbarProvider>
   </ThemeProvider>
 </StrictMode>, document.getElementById('root'))
 

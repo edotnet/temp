@@ -41,10 +41,8 @@ export const Dashboard = () => {
   const _onDrugSelected = (molecule) => {
     dispatch({type: 'addMolecule', payload: molecule});
     if (state.pdbid) {
-      dispatch({type: 'setDocking', payload: true})
-      dockingFetcher(state.pdbid, molecule, dispatch).finally(() => {
-        dispatch({type: 'setDocking', payload: false})
-      });
+      dispatch({type: 'incrementDocking'})
+      dockingFetcher(state.pdbid, molecule, dispatch);
     }
   }
 
@@ -59,7 +57,6 @@ export const Dashboard = () => {
   return (
     <>
       <Box>
-        <Navbar/>
         <DndProvider backend={HTML5Backend}>
           <Grid pl={5} pr={5} className="dashboarddnd">
             <Box>
@@ -70,6 +67,7 @@ export const Dashboard = () => {
               <Grid item xs={3}>
                 <Typography variant="h4" color="secondary" gutterBottom>DRUG INTERACTION</Typography>
                 <Grid container spacing={2}>
+                  {/*
                   <Grid item xs={12}>
                     <CategoryAutocomplete
                       key="category-autocomplete"
@@ -78,6 +76,7 @@ export const Dashboard = () => {
                       variant="standard"
                     />
                   </Grid>
+                    */}
                   <Grid item xs={12}>
                     <TargetAutocomplete onChange={_onProteinSelected} label="ADD TARGET PROTEIN"/>
                     {state.protein && <Box pt={3}>
@@ -116,7 +115,7 @@ export const Dashboard = () => {
                 <DemographicFeature/>
               </Grid>
               <Grid item xs={6}>
-                <DrugInteraction/>
+                <DrugInteraction />
               </Grid>
               <Grid item xs={3}>
                 <PresentationModal/>

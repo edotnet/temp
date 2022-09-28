@@ -7,14 +7,10 @@ export const PDBSelector = ({options}) => {
   const handleChange = (e) => {
     dispatch({type: 'selectPdb', payload: e.target.value});
     if (state.molecules.length > 0) {
-      dispatch({type: 'setDocking', payload: true})
-      const promises = [];
+      dispatch({type: 'incrementDocking', payload: state.molecules.length})
       state.molecules.forEach(molecule => {
-        promises.push(dockingFetcher(e.target.value, molecule, dispatch));
-      });
-      Promise.all(promises).then((values) => {
-        dispatch({type: 'setDocking', payload: false})
-      });
+        dockingFetcher(e.target.value, molecule, dispatch);
+      })
     }
   }
   return (

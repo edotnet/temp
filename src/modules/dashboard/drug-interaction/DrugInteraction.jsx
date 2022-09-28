@@ -7,6 +7,7 @@ import {PredictiveWorld} from "../predictive-world/PredictiveWorld";
 import {DemographicYears, Endpoints} from "../../../config/Consts";
 import {InteractingDrugsTable} from "../InteractingDrugsTable";
 import axios from 'axios';
+import {api} from "../../../infrastructure/api/instance";
 
 const url = Endpoints.ml.drugInteraction;
 
@@ -80,7 +81,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
           //bmi: bmiValues[bmiLabels.findIndex(bmi => bmi === state.selectedDemographics.bmi)],
           drugs: state.interactingMolecules.map(molecule => molecule.name.toLowerCase())
         }
-        axios.post(Endpoints.drugbank.calculateMaintenanceDosage, demographicsRequest).then((res) => {
+        api.post(Endpoints.drugbank.calculateMaintenanceDosage, demographicsRequest).then((res) => {
           dispatch({
             type: 'demographicsResult',
             payload: {[state.selectedDemographics.id]: res.data}

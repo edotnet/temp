@@ -1,5 +1,4 @@
 import {Avatar, Box, Grid, LinearProgress, Typography, useTheme} from "@mui/material";
-import { useApiCall } from "../../infrastructure/hooks/useApiCall";
 import {useEffect, useMemo, useState} from "react";
 import InfoProtein from '../../assets/info-protein.png';
 import { Hr } from "../../infrastructure/components/Hr.component";
@@ -7,12 +6,13 @@ import { useDashboardContext } from "./context/useDashboarContext";
 import { GraphBackground } from "../../infrastructure/components/GraphBackground";
 import { ThreeDMol } from "../3dmol/ThreeDMol";
 import {Endpoints} from "../../config/Consts";
-import {post} from "axios";
+import {api} from "../../infrastructure/api/instance";
+
+const url = Endpoints.ml.drugProtein;
+const urlKd = Endpoints.ml.drugProteinOld;
 
 export const DTI = () => {
   const {state, dispatch} = useDashboardContext();
-  const url = Endpoints.ml.drugProtein;
-  const urlKd = Endpoints.ml.drugProteinOld;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
@@ -51,8 +51,8 @@ export const DTI = () => {
     if (smiles.length && state.protein) {
       setLoading(true);
       const promises = [
-        post(url, {smiles, protein: state.protein.amino_acid_sequence}),
-        post(urlKd, {smiles: [smilesKdString], protein: state.protein.amino_acid_sequence}),
+        api.post(url, {smiles, protein: state.protein.amino_acid_sequence}),
+        api.post(urlKd, {smiles: [smilesKdString], protein: state.protein.amino_acid_sequence}),
       ];
       Promise.all(promises).then(([pec50, kd]) => {
         const data = [];

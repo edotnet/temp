@@ -1,4 +1,4 @@
-import { useApiCall } from "../../infrastructure/hooks/useApiCall";
+import {encodeQuery, useApiCall} from '../../infrastructure/hooks/useApiCall';
 import { Autocomplete } from "../../infrastructure/components/Autocomplete";
 import { useEffect, useState } from "react";
 import { Paper, TextField, styled } from "@mui/material";
@@ -28,8 +28,8 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
 
   const executeSearch = (search) => {
     if (search.length > 3) {
-      fetch(`${url}${search}?page=0${category ? `&category=${category}`: ''}`, 'GET');
-      naturalProductsFetch(`${naturalProductsUrl}${search}?page=0`, 'GET')
+      fetch(`${url}${encodeQuery(search)}?page=0${category ? `&category=${category}`: ''}`, 'GET');
+      naturalProductsFetch(`${naturalProductsUrl}${encodeQuery(search)}?page=0`, 'GET')
     }
   }
 
@@ -51,7 +51,6 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
           SMILES: molecule.SMILES,
         }
       }
-      console.log('molecule', molecule)
       onChange(molecule);
     }
   }
@@ -61,11 +60,13 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
   const options = data && 'items' in data ? data.items.filter(validItems)
     .map(item => ({
       id: item.drugbank_id,
-      label: item.name
+      label: item.name,
+      type: 'Drugs'
     })) : [];
   const naturalProductOptions = naturalProductsData && 'items' in naturalProductsData ? naturalProductsData.items.map(item => ({
     id: item.UNPD_ID,
-    label: item.cn
+    label: item.cn,
+    type: 'Natural Products'
   })) : [];
 
   return (
@@ -79,6 +80,7 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
       value=""
       clearOnBlur
       blurOnSelect
+      groupBy={(option) => option.type}
     />
   );
 }
