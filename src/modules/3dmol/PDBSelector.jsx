@@ -41,9 +41,11 @@ export const PDBSelector = ({pdbs}) => {
           <em>None</em>
         </MenuItem>
         {pdbs.map(pdb => (
-          <StyledTooltip key={pdb.id} title={
+          <StyledTooltip key={pdb.id} placement="right" title={
             <React.Fragment>
-              <b>{`${pdb.title}`}</b><br/><u>{`${pdb.description}`}</u>
+              {pdb.title && <><b>{`${pdb.title}`}</b><br/></>}
+              {!!pdb.description ? <u>{`${pdb.description}`}</u> : null}
+              {pdb.score && <><br/><b>Score:</b> {`${parseFloat(pdb.score).toFixed(3)}`}</>}
             </React.Fragment>
           }>
             <MenuItem value={pdb.id}>{pdb.id}</MenuItem>
