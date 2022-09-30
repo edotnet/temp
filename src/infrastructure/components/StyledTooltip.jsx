@@ -13,8 +13,5 @@ export const StyledTooltip = styled(({ className, ...props }) => (
     border: '1px solid #dadde9',
     borderRadius: 10,
     backdropFilter: 'blur(28px)',
-    position: 'absolute',
-    right: 0,
-    bottom: 0
   },
 }));
