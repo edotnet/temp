@@ -6,6 +6,7 @@ import {dockingFetcher} from '../dashboard/DockingFetcher';
 export const PDBSelector = ({pdbs}) => {
   const {state, dispatch} = useDashboardContext();
   const [pdb, setPdb] = useState(null);
+  const [open, setOpen] = useState(false);
   const handleChange = (e) => {
     dispatch({type: 'selectPdb', payload: e.target.value});
     if (state.molecules.length > 0) {
@@ -23,7 +24,7 @@ export const PDBSelector = ({pdbs}) => {
   }, [pdbs]);
 
   function renderBox() {
-    if (pdb === null) {
+    if (pdb === null || !open) {
       return;
     }
     const score = parseFloat(pdb.score * 100).toFixed(0);
@@ -37,7 +38,7 @@ export const PDBSelector = ({pdbs}) => {
         backgroundColor: 'white',
         p: 2,
         borderRadius: 5,
-      }}>
+      }} onMouseEnter={event => setPdb(pdb)}>
         <Typography fontSize={12}>{`${pdb.title}`}</Typography>
         {!!pdb.description ? <Typography fontSize={10}>{`${pdb.description}`}</Typography> : null}
         <Stack direction="row" spacing={1} alignItems="center">
@@ -59,12 +60,16 @@ export const PDBSelector = ({pdbs}) => {
           labelId="pdb-labelId"
           value={state.pdbid}
           onChange={handleChange}
+          onClose={() => setOpen(false)}
+          onOpen={() => setOpen(true)}
         >
           <MenuItem value={''}>
             <em>None</em>
           </MenuItem>
           {pdbs.map(pdb => (
-            <MenuItem value={pdb.id} onMouseOver={() => setPdb(pdb)} onMouseOut={() => setPdb(null)}>{pdb.id}</MenuItem>
+            <MenuItem value={pdb.id} onMouseOver={() => setPdb(pdb)} onMouseOut={() => setPdb(null)}>
+              {pdb.id}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
