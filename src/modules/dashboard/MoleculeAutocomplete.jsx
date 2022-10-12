@@ -50,7 +50,8 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
         calculated_properties: {
           SMILES: molecule.SMILES,
           ...molecule
-        }
+        },
+        toxicity: molecule.toxicity,
       }
       onChange(molecule);
     }
