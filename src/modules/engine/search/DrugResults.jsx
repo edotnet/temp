@@ -8,22 +8,20 @@ import axios from "axios";
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
 
 const drugsColumns = [
-  { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1,
+  { field: `name`, headerName: 'Drug Name', minWidth: 150, flex: 1,
     renderCell: (params) => (
       <span className='link-btn'>{params.value}</span>
     ),
   },
   {
-    field: `metrics['(Search + {}) Publications']`,
+    field: `total_number_of_articles_found_per_item`,
     headerName: '(Search + Drug)Publications',
     minWidth: 250,
-    valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
   },
   {
-    field: `metrics['{} Publications']`,
+    field: `total_number_of_articles_found_for_search_term`,
     headerName: 'Drug Publications',
     minWidth: 120, flex: 1,
-    valueGetter: (params) => params.row.metrics['{} Publications'],
   }
 ];
 export function DrugResults(props) {
@@ -52,12 +50,12 @@ export function DrugResults(props) {
     <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
       {props.drugs.length > 0 &&
         <DataGrid
-          rows={[...props.drugs].sort((a, b) => b.metrics.ranking_score - a.metrics.ranking_score)}
+          rows={[...props.drugs].sort((a, b) => b.f_score - a.f_score)}
           columns={drugsColumns}
           pageSize={5}
           rowsPerPageOptions={[5]}
           checkboxSelection
-          getRowId={(row) => row.title.toLowerCase()}
+          getRowId={(row) => row.name.toLowerCase()}
           getRowHeight={() => 'auto'}
           onRowClick={props.onRowClick}
           disableSelectionOnClick

@@ -12,22 +12,20 @@ import { useNavigate } from "react-router-dom";
 
 const proteinColumns = [
   {
-    field: `title`, headerName: 'Target Name', minWidth: 150, flex: 1,
+    field: `name`, headerName: 'Target Name', minWidth: 150, flex: 1,
     renderCell: (params) => (
       <span className='link-btn'>{params.value}</span>
     ),
   },
   {
-    field: `metrics['(Search + {}) Publications']`,
+    field: `total_number_of_articles_found_per_item`,
     headerName: '(Search + Target)Publications',
     minWidth: 250,
-    valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
   },
   {
-    field: `metrics['{} Publications']`,
+    field: `total_number_of_articles_found_for_search_term`,
     headerName: 'Target Publications',
     minWidth: 120, flex: 1,
-    valueGetter: (params) => params.row.metrics['{} Publications'],
   },
 ];
 
@@ -82,7 +80,7 @@ export function ProteinResults(props) {
               pageSize={5}
               rowsPerPageOptions={[5]}
               checkboxSelection
-              getRowId={(row) => row.title.toLowerCase()}
+              getRowId={(row) => row.name.toLowerCase()}
               getRowHeight={props.rowHeight}
               hideFooterSelectedRowCount
               selectionModel={props.selectionModel}
@@ -90,7 +88,7 @@ export function ProteinResults(props) {
               onSelectionModelChange={props.onSelectionModelChange}
               initialState={{
                 sorting: {
-                  sortModel: [{ field: 'metrics[\'(Search + {}) Publications\']', sort: 'desc' }],
+                  sortModel: [{ field: 'total_number_of_articles_found_per_item', sort: 'desc' }],
                 },
               }}
             />

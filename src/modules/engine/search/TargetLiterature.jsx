@@ -6,7 +6,7 @@ import { useCallback } from "react";
 export function TargetLiterature(props) {
   const theme = useTheme();
   const renderItem = useCallback((row) => (
-    <li key={row.pmid}>
+    <li key={row.title}>
       <a href={row.url} target="_blank" rel="noreferrer">{row.title}</a>
     </li>
   ), []);
@@ -20,11 +20,11 @@ export function TargetLiterature(props) {
       </AccordionSummary>
       <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
         {
-          props.target.title !== "" && <p><b>Publications that contain contain the search query and <span
-            style={{color: theme.palette.primary.main}}>{props.target.title}</span></b></p>
+          props.target.name !== "" && <p><b>Publications that contain contain the search query and <span
+            style={{color: theme.palette.primary.main}}>{props.target.name}</span></b></p>
         }
         <div className="literature-list">
-          {props.target.pmids.length > 0 && <ul>{props.target.pmids.map(renderItem)}</ul>}
+          {props.target.publications.length > 0 && <ul>{props.target.publications.map(renderItem)}</ul>}
         </div>
       </AccordionDetails>
     </Accordion>

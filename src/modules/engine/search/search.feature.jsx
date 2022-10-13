@@ -30,28 +30,27 @@ export const SearchFeature = () => {
   const [clickedRow, setClickedRow] = useState('');
   const [secondaryLoader, setSecondaryLoader] = useState(false);
 
-  const drugs = useMemo(() => data && data.result && 'drugs' in data.result ? Object.entries(data.result.drugs).map(([_key, _value]) => ({
-    'title': _key,
-    'counter': _value.counter,
-    'pmids': _value.item_pmids,
-    'metrics': _value.metrics
-  })) : [], [data]);
-  const naturalProducts = useMemo(() => data && data.result && 'natural_products' in data.result ? Object.entries(data.result.natural_products).map(([_key, _value]) => ({
-    'title': _key,
-    'counter': _value.counter,
-    'pmids': _value.item_pmids,
-    'metrics': _value.metrics
-  })) : [], [data]);
-  const targets = useMemo(() => data && data.result && 'targets' in data.result ? Object.entries(data.result.targets).map(([_key, _value]) => ({
-    'title': _key,
-    'counter': _value.counter,
-    'pmids': _value.item_pmids,
-    'metrics': _value.metrics
-  })) : [], [data]);
+  const [drugs, naturalProducts, targets] = useMemo(() => {
+    const drugs = [];
+    const naturalProducts = [];
+    const targets = [];
+    if (data) {
+      data.forEach(item => {
+        if (item.type === 'drug') {
+          drugs.push(item);
+        } else if (item.type === 'natural_product') {
+          naturalProducts.push(item);
+        } else if (item.type === 'protein') {
+          targets.push(item);
+        }
+      });
+    }
+    return [drugs, naturalProducts, targets];
+  }, [data]);
 
 
   const onRun = useCallback(() => {
-    fetch(Endpoints.search.drug, 'POST', {drug: searchText, filter1: true, pmids: true});
+    fetch(Endpoints.search.drug, 'POST', {query: searchText});
   }, [searchText]);
 
   const drugHandleClick = useCallback((data) => {
@@ -142,38 +141,36 @@ export const SearchFeature = () => {
     if (selection.length > 1) {
       const selectionSet = new Set(state.targetSelection);
       const result = selection.filter((s) => !selectionSet.has(s));
-      const selectedRowData = targets.find((row) => row.title.toLowerCase() === selection[selection.length - 1].toLowerCase());
+      const selectedRowData = targets.find((row) => row.name.toLowerCase() === selection[selection.length - 1].toLowerCase());
       dispatch({type: 'setTargetSelection', payload: result});
       dispatch({type: 'setSelectedTarget', payload: selectedRowData});
     }
   }, [state.targetSelection, dispatch, targets]);
 
   useEffect(() => {
-    if (data && data.result) {
-      if (drugs.length > 0) {
-        const defaultDrug = searchText.toLowerCase();
-        const defaultDrugRow = drugs.find((row) => row.title.toLowerCase() === defaultDrug);
-        if (defaultDrugRow) {
-          setTimeout(() => {
-            dispatch({type: 'setSelectedDrug', payload: defaultDrugRow});
-            dispatch({type: 'setDrugSelection', payload: [defaultDrugRow.title.toLowerCase()]});
-          }, 100);
-        } else {
-          dispatch({type: 'setDrugSelection', payload: [defaultDrug]});
-        }
-        dispatch({type: 'setDrugs', payload: drugs});
-        dispatch({type: 'setNaturalProducts', payload: naturalProducts})
-        if (!targets || targets.length === 0) {
-          return;
-        }
-        const defaultTarget = targets[0].title.toLowerCase();
-        const defaultTargetRow = targets.find((row) => row.title.toLowerCase() === defaultTarget);
-        if (defaultTargetRow) {
-          dispatch({type: 'setSelectedTarget', payload: defaultTargetRow});
-        }
-        dispatch({type: 'setTargetSelection', payload: [defaultTarget]});
-        dispatch({type: 'setTargets', payload: targets});
+    if (data && data.length) {
+      const defaultDrug = searchText.toLowerCase();
+      const defaultDrugRow = drugs.find((row) => row.name.toLowerCase() === defaultDrug);
+      if (defaultDrugRow) {
+        setTimeout(() => {
+          dispatch({type: 'setSelectedDrug', payload: defaultDrugRow});
+          dispatch({type: 'setDrugSelection', payload: [defaultDrugRow.name.toLowerCase()]});
+        }, 100);
+      } else {
+        dispatch({type: 'setDrugSelection', payload: [defaultDrug]});
       }
+      dispatch({type: 'setDrugs', payload: drugs});
+      dispatch({type: 'setNaturalProducts', payload: naturalProducts})
+      if (!targets || targets.length === 0) {
+        return;
+      }
+      const defaultTarget = targets[0].name.toLowerCase();
+      const defaultTargetRow = targets.find((row) => row.name.toLowerCase() === defaultTarget);
+      if (defaultTargetRow) {
+        dispatch({type: 'setSelectedTarget', payload: defaultTargetRow});
+      }
+      dispatch({type: 'setTargetSelection', payload: [defaultTarget]});
+      dispatch({type: 'setTargets', payload: targets});
     }
   }, [data, dispatch, drugs, searchText, targets]);
 
@@ -224,7 +221,7 @@ export const SearchFeature = () => {
               <DrugResults drugs={state.drugs}
                            onRowClick={(param) => {
                              drugHandleClick(param.row);
-                             setClickedRow(param.row.title.toLowerCase());
+                             setClickedRow(param.row.name.toLowerCase());
                            }}
                            selectionModel={state.drugSelection}
                            onSelectionModelChange={(ids) => {
@@ -235,7 +232,7 @@ export const SearchFeature = () => {
               <NaturalProductsResults naturalProducts={state.naturalProducts}
                            onRowClick={(param) => {
                              drugHandleClick(param.row);
-                             setClickedRow(param.row.title.toLowerCase());
+                             setClickedRow(param.row.name.toLowerCase());
                            }}
                            selectionModel={state.naturalProductSelection}
                            onSelectionModelChange={(ids) => {
