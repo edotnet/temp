@@ -1,6 +1,6 @@
 import {encodeQuery, useApiCall} from '../../../infrastructure/hooks/useApiCall';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDashboardContext } from "../../../modules/dashboard/context/useDashboarContext";
+import { useDashboardContext } from '../../dashboard/context/useDashboarContext';
 import { useNavigate } from "react-router-dom";
 import { Endpoints } from "../../../config/Consts";
 import axios from 'axios';

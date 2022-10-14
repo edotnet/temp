@@ -15,12 +15,12 @@ const naturalProductsColumns = [
     ),
   },
   {
-    field: `total_number_of_articles_found_per_item`,
+    field: `articles_search_item`,
     headerName: '(Search + Drug)Publications',
     minWidth: 250,
   },
   {
-    field: `total_number_of_articles_found_for_search_term`,
+    field: `articles_item_only`,
     headerName: 'Drug Publications',
     minWidth: 120, flex: 1,
   }

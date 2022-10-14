@@ -18,12 +18,12 @@ const proteinColumns = [
     ),
   },
   {
-    field: `total_number_of_articles_found_per_item`,
+    field: `articles_search_item`,
     headerName: '(Search + Target)Publications',
     minWidth: 250,
   },
   {
-    field: `total_number_of_articles_found_for_search_term`,
+    field: `articles_item_only`,
     headerName: 'Target Publications',
     minWidth: 120, flex: 1,
   },
@@ -75,7 +75,7 @@ export function ProteinResults(props) {
           {
             props.targets.length > 0 &&
             <DataGrid
-              rows={props.targets}
+              rows={[...props.targets].sort((a, b) => b.f_score - a.f_score)}
               columns={proteinColumns}
               pageSize={5}
               rowsPerPageOptions={[5]}
@@ -86,11 +86,6 @@ export function ProteinResults(props) {
               selectionModel={props.selectionModel}
               onCellClick={ProteinOnCellClick}
               onSelectionModelChange={props.onSelectionModelChange}
-              initialState={{
-                sorting: {
-                  sortModel: [{ field: 'total_number_of_articles_found_per_item', sort: 'desc' }],
-                },
-              }}
             />
           }
           <ButtonGroup variant="outlined" className="table-footer" aria-label="outlined primary button group">
