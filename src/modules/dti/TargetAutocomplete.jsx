@@ -5,15 +5,16 @@ import {useDashboardContext} from "../dashboard/context/useDashboarContext";
 
 export const TargetAutocomplete = ({label, onChange, onEmpty}) => {
     const {state, dispatch} = useDashboardContext();
-    const url = Endpoints.drugbank.targets;
+    const url = Endpoints.proteins.name;
     let selectedProtein = null;
 
     const {loading, data, error, fetch, reset} = useApiCall(url, null, null, false);
+    console.log('targetAutocomplete', state.protein)
     if(state.protein) {
         selectedProtein = state.protein.name;
     }
     const executeSearch = (search) => {
-        fetch(`${url}${search}`, 'GET')
+        fetch(`${url}?criteria=${search}`, 'GET')
     }
 
 
@@ -21,13 +22,13 @@ export const TargetAutocomplete = ({label, onChange, onEmpty}) => {
         if (!data || typeof newValue === 'string') {
             return;
         }
-        const target = data.find(item => item.amino_acid_sequence === newValue.id);
+        const target = data.items.find(item => item.id === newValue.id);
         onChange(target);
     }
 
-    const options = data ? data
+    const options = data ? data.items
         .map(item => ({
-            id: item.amino_acid_sequence,
+            id: item.id,
             label: item.name
         })) : [];
 

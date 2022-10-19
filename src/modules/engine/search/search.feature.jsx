@@ -30,22 +30,23 @@ export const SearchFeature = () => {
   const [clickedRow, setClickedRow] = useState('');
   const [secondaryLoader, setSecondaryLoader] = useState(false);
 
-  const [drugs, naturalProducts, targets] = useMemo(() => {
-    const drugs = [];
-    const naturalProducts = [];
-    const targets = [];
+  const {drugs, naturalProducts, targets} = useMemo(() => {
+    const keys = {
+      drug: 'drugs',
+      natural_product: 'naturalProducts',
+      protein: 'targets',
+    }
+    const res = {
+      drugs: [],
+      naturalProducts: [],
+      targets: [],
+    };
     if (data) {
       data.forEach(item => {
-        if (item.type === 'drug') {
-          drugs.push(item);
-        } else if (item.type === 'natural_product') {
-          naturalProducts.push(item);
-        } else if (item.type === 'protein') {
-          targets.push(item);
-        }
+        res[keys[item.type]].push(item);
       });
     }
-    return [drugs, naturalProducts, targets];
+    return res;
   }, [data]);
 
 
@@ -126,11 +127,11 @@ export const SearchFeature = () => {
   }, [state.naturalProductSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
 
   const uploadSelectedProteinDrugs = useCallback(async () => {
-    const url = `${Endpoints.drugbank.targets}${encodeQuery(state.targetSelection[0])}?exact=1`;
+    const url = `${Endpoints.proteins.name}?criteria=${encodeQuery(state.targetSelection[0])}&exact=1`;
     setSecondaryLoader(true);
     api.get(url).then(resp => {
       if (resp.data) {
-        dashboardDispatch({type: 'addProtein', payload: resp.data[0]});
+        dashboardDispatch({type: 'addProtein', payload: resp.data.items[0]});
         uploadSelectedDrugs();
         uploadSelectedNaturalProducts();
       }

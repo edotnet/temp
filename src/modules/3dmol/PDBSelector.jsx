@@ -27,7 +27,7 @@ export const PDBSelector = ({pdbs}) => {
     if (pdb === null || !open) {
       return;
     }
-    const score = parseFloat(pdb.score * 100).toFixed(0);
+    const score = parseFloat(pdb.bitscore).toFixed(0);
     const color = score < 50 ? 'red' : score < 75 ? 'yellow' : 'green';
     return (
       <Box sx={{
@@ -43,7 +43,7 @@ export const PDBSelector = ({pdbs}) => {
         {!!pdb.description ? <Typography fontSize={10}>{`${pdb.description}`}</Typography> : null}
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography fontSize={10} fontWeight="bold">Score: </Typography>
-          <Typography fontSize={14} color={color}>{`${score}%`}</Typography>
+          <Typography fontSize={14} color={color}>{score}</Typography>
         </Stack>
         <img src={`https://cdn.rcsb.org/images/structures/${pdb.id.toLowerCase()}_assembly-1.jpeg `}
              alt={pdb.id}
@@ -67,7 +67,7 @@ export const PDBSelector = ({pdbs}) => {
             <em>None</em>
           </MenuItem>
           {pdbs.map(pdb => (
-            <MenuItem value={pdb.id} onMouseOver={() => setPdb(pdb)} onMouseOut={() => setPdb(null)}>
+            <MenuItem value={pdb.id} onMouseOver={() => setPdb(pdb)} onMouseOut={() => setPdb(null)} key={pdb.id}>
               {pdb.id}
             </MenuItem>
           ))}

@@ -55,6 +55,10 @@ export const Endpoints = {
   notifications: {
     register: `${Consts.API_URL}/notifications/devices/add`,
     list: `${Consts.API_URL}/notifications/list`
+  },
+  proteins: {
+    name: `${useApi}/proteins/names`,
+    organisms: `${useApi}/proteins/organisms`,
   }
 };
 

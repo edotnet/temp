@@ -1,10 +1,11 @@
-import {Box, Button, Grid, Modal, Typography, useTheme} from "@mui/material";
+import {Box, Button, Grid, Modal, Stack, Typography, useTheme} from '@mui/material';
 import { MoleculeAutocomplete } from "../modules/dashboard/MoleculeAutocomplete";
 import { MoleculeCard } from "../modules/dashboard/MoleculeCard";
 import { DrugProperties } from "../modules/dashboard/DrugProperties";
 import { DrugInteraction } from "../modules/dashboard/drug-interaction/DrugInteraction";
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
+import {OrganismAutocomplete} from '../modules/dashboard/OrganismAutocomplete';
 import { CategoryAutocomplete } from "../modules/drug-interaction/CategoryAutocomplete";
 import { Navbar } from "../modules/dashboard/Navbar";
 import { useDashboardContext } from "../modules/dashboard/context/useDashboarContext";
@@ -34,10 +35,6 @@ export const Dashboard = () => {
     dispatch({type: 'removeMolecule', payload: molecule})
   }
 
-  const setCategory = (category) => {
-    dispatch({type: 'setCategory', payload: category});
-  }
-
   const _onDrugSelected = (molecule) => {
     dispatch({type: 'addMolecule', payload: molecule});
     if (state.pdbid) {
@@ -48,6 +45,10 @@ export const Dashboard = () => {
 
   const _onProteinSelected = (protein) => {
     dispatch({type: 'addProtein', payload: protein})
+  }
+
+  const _onOrganismSelected = (organism) => {
+    dispatch({type: 'addOrganism', payload: organism})
   }
 
   const _onDrugToXDL = () => {
@@ -78,10 +79,11 @@ export const Dashboard = () => {
                   </Grid>
                     */}
                   <Grid item xs={12}>
-                    <TargetAutocomplete onChange={_onProteinSelected} label="ADD TARGET PROTEIN"/>
-                    {state.protein && <Box pt={3}>
-                      <PDBSelector pdbs={state.protein.pdbs} />
-                    </Box>}
+                    <Stack spacing={2}>
+                      <TargetAutocomplete onChange={_onProteinSelected} label="ADD TARGET PROTEIN"/>
+                      {state.protein && <OrganismAutocomplete onChange={_onOrganismSelected} label="ADD TARGET ORGANISM"/>}
+                      {state.organism && <PDBSelector pdbs={state.organism.pdbs.sort((a,b) => b.pident - a.pident)} />}
+                    </Stack>
                   </Grid>
                   <Grid item xs={12}>
                     <Box pt={2}>

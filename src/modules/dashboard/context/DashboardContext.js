@@ -7,6 +7,7 @@ const initialState = {
   interactingMolecules: [],
   interactingMoleculesResult: null,
   protein: null,
+  organism: null,
   category: null,
   pdbid: "",
   demographics: [],
@@ -101,6 +102,14 @@ const reducer = (state, action) => {
     removeProtein: () => ({
       ...state,
       protein: null
+    }),
+    addOrganism: (organism) => ({
+      ...state,
+      organism,
+    }),
+    removeOrganism: () => ({
+      ...state,
+      organism: null
     }),
     selectPdb: (pdbid) => ({
       ...state,

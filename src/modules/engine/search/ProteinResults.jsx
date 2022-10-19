@@ -39,10 +39,10 @@ export function ProteinResults(props) {
   const handleproteinClose = () => setOpenprotein(false);
 
   const uploadSelectedProtein = async () => {
-    const url = `${Endpoints.drugbank.targets}${props.selectionModel[0]}`;
+    const url = `${Endpoints.proteins.name}?criteria=${props.selectionModel[0]}&exact=1`;
     axios.get(url).then(resp => {
       if (resp.data) {
-        dispatch({type: 'addProtein', payload: resp.data[0]});
+        dispatch({type: 'addProtein', payload: resp.data.items[0]});
         dispatch({type: 'resetInteractingMolecules', payload: null});
         dispatch({type: 'removePdb', payload: null});
         navigate("/dashboard");
@@ -52,15 +52,11 @@ export function ProteinResults(props) {
 
   const ProteinOnCellClick = (params) => {
     if (params.field === 'title') {
-      const url = `${Endpoints.drugbank.targets}${params.value}`;
+      const url = `${Endpoints.proteins.name}?criteria=${params.value}?exact=1`;
       axios.get(url).then(resp => {
         if (resp.data) {
-          for (let i = 0; i < resp.data.length; i++) {
-            if (resp.data[i].name === params.value) {
-              setproteinModalData(resp.data[i]);
-              handleproteinOpen();
-            }
-          }
+          setproteinModalData(resp.data.items[0]);
+          handleproteinOpen();
         }
       })
     }
