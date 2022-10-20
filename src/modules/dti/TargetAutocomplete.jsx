@@ -9,7 +9,6 @@ export const TargetAutocomplete = ({label, onChange, onEmpty}) => {
     let selectedProtein = null;
 
     const {loading, data, error, fetch, reset} = useApiCall(url, null, null, false);
-    console.log('targetAutocomplete', state.protein)
     if(state.protein) {
         selectedProtein = state.protein.name;
     }

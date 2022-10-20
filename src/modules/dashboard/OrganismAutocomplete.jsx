@@ -11,7 +11,7 @@ export const OrganismAutocomplete = ({label, onChange, onEmpty}) => {
 
   const {loading, data, error, fetch, reset} = useApiCall(url, 'GET');
   if(state.organism) {
-    selectedOrganism = state.organism.name;
+    selectedOrganism = state.organism.organism.scientific;
   }
   const executeSearch = (search) => {
     fetch(`${url}&organismCriteria=${search}`, 'GET')

@@ -48,11 +48,12 @@ export const DTI = () => {
       smilesKdString += `{"id": "${smile.id}", "label": "${smile.label}"},`;
     });
     smilesKdString = smilesKdString.slice(0, -1);
-    if (smiles.length && state.protein) {
+    console.log(state.organism)
+    if (smiles.length && state.organism) {
       setLoading(true);
       const promises = [
-        api.post(url, {smiles, protein: state.protein.amino_acid_sequence}),
-        api.post(urlKd, {smiles: [smilesKdString], protein: state.protein.amino_acid_sequence}),
+        api.post(url, {smiles, protein: state.organism.sequence}),
+        api.post(urlKd, {smiles: [smilesKdString], protein: state.organism.sequence}),
       ];
       Promise.all(promises).then(([pec50, kd]) => {
         const data = [];
@@ -67,9 +68,9 @@ export const DTI = () => {
       }).catch(err => console.log('err', err))
         .finally(() => setLoading(false));
     }
-  }, [state.protein, state.molecules])
+  }, [state.organism, state.molecules])
 
-  if (!state.protein || !state.molecules.length) {
+  if (!state.organism || !state.molecules.length) {
     return null;
   }
 
