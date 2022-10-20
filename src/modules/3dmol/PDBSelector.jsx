@@ -42,7 +42,11 @@ export const PDBSelector = ({pdbs}) => {
         <Typography fontSize={12}>{`${pdb.title}`}</Typography>
         {!!pdb.description ? <Typography fontSize={10}>{`${pdb.description}`}</Typography> : null}
         <Stack direction="row" spacing={1} alignItems="center">
-          <Typography fontSize={10} fontWeight="bold">Score: </Typography>
+          <Typography fontSize={10} fontWeight="bold">Identity: </Typography>
+          <Typography fontSize={14} color={color}>{pdb.pident}%</Typography>
+        </Stack>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Typography fontSize={10} fontWeight="bold">Bit score: </Typography>
           <Typography fontSize={14} color={color}>{score}</Typography>
         </Stack>
         <img src={`https://cdn.rcsb.org/images/structures/${pdb.id.toLowerCase()}_assembly-1.jpeg `}
