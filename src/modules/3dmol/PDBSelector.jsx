@@ -18,6 +18,7 @@ export const PDBSelector = ({pdbs}) => {
   };
 
   useEffect(() => {
+    if (!pdbs.length) return;
     setTimeout(() => {
       handleChange({target: {value: pdbs[0].id}});
     }, 100);

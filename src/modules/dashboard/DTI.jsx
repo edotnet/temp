@@ -25,7 +25,7 @@ export const DTI = () => {
     top: 23,
     color: 'white',
     display: 'flex',
-    width: `calc(100% + ${value * 10}%)`
+    width: `calc(100% + ${(value-6/* 6 for style issues*/) * 10}%)`
   });
   const result = useMemo(() => {
     if (!data)
@@ -34,34 +34,27 @@ export const DTI = () => {
     return data.sort((a, b) => a.pec50 - b.pec50).map((drug) => (
       <Box key={drug.name} sx={{position: 'relative'}}>
           <Typography component="span" sx={{fontSize: 16, fontWeight: 'bold'}}>{drug.name}</Typography><br/>
-          <Typography component="span" sx={progressStyle(drug.pec50)}>{(drug.pec50 + 6).toFixed(4)}, {parseFloat(drug.kd).toFixed(2)}</Typography>
+          <Typography component="span" sx={progressStyle(drug.pec50)}>{(drug.pec50).toFixed(4)}, {parseFloat(drug.kd).toFixed(2)}</Typography>
           <div style={{height: 35}}/>
         </Box>
     ))
   }, [data])
 
   useEffect(() => {
-    const smiles = state.molecules.map(molecule => molecule.calculated_properties.SMILES);
-    const smilesKd = state.molecules.map(molecule => ({id: molecule.calculated_properties.SMILES.replaceAll('\\', '\\\\'), label: molecule.name}));
-    let smilesKdString = "";
-    smilesKd.forEach(smile => {
-      smilesKdString += `{"id": "${smile.id}", "label": "${smile.label}"},`;
-    });
-    smilesKdString = smilesKdString.slice(0, -1);
-    console.log(state.organism)
+    const smiles = state.molecules.map(molecule => molecule.calculated_properties.SMILES.replaceAll('\\', '\\\\'));
     if (smiles.length && state.organism) {
       setLoading(true);
       const promises = [
         api.post(url, {smiles, protein: state.organism.sequence}),
-        api.post(urlKd, {smiles: [smilesKdString], protein: state.organism.sequence}),
+        api.post(urlKd, {smiles, protein: state.organism.sequence}),
       ];
       Promise.all(promises).then(([pec50, kd]) => {
         const data = [];
-        kd.data.result.forEach((kdel, i) => {
+        kd.data.forEach((kdel, i) => {
           data.push({
-            name: Object.keys(kdel)[0],
-            kd: Object.values(kdel)[0],
-            pec50: pec50.data.result[i],
+            name: state.molecules[i].name,
+            kd: kdel,
+            pec50: pec50.data[i],
           })
         })
         setData(data);

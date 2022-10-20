@@ -22,8 +22,8 @@ export const Endpoints = {
     query: `${useApi}/natural_products/query-new/`,
   },
   ml: {
-    drugProtein: `${Consts.API_URL}/drug-protein`,
-    drugProteinOld: `${Consts.API_URL}/drug-protein-old`,
+    drugProtein: `${Consts.API_URL}/drug-protein-pec50`,
+    drugProteinOld: `${Consts.API_URL}/drug-protein-kd`,
     drugInteraction: `${useApi}/drug-synergy`,
   },
   pdf: {
