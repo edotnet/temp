@@ -10,7 +10,7 @@ import './PresentationModal.scss'
 
 export const PresentationModal = () => {
   const {state, dispatch} = useDashboardContext();
-  const isDTI = state.protein && state.molecules.length;
+  const isDTI = state.organism && state.molecules.length;
   const isDIFirstMolecule = state.interactingMolecules.length === 1;
   const isDI = state.interactingMolecules.length === 2;
   if (!isDI && ! isDIFirstMolecule && ! isDTI) {

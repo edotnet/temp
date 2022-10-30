@@ -1,11 +1,11 @@
-import {useApiCall} from "../../infrastructure/hooks/useApiCall";
+import {encodeQuery, useApiCall} from '../../infrastructure/hooks/useApiCall';
 import {Autocomplete} from "../../infrastructure/components/Autocomplete";
 import {Endpoints} from "../../config/Consts";
 import {useDashboardContext} from './context/useDashboarContext';
 
 export const OrganismAutocomplete = ({label, onChange, onEmpty}) => {
   const {state, dispatch} = useDashboardContext();
-  const proteinFilter = state.protein ? `?name=${state.protein.name}`: '';
+  const proteinFilter = state.protein ? `?name=${encodeQuery(state.protein.name)}`: '';
   const url = `${Endpoints.proteins.organisms}${proteinFilter}`;
   let selectedOrganism = null;
 
@@ -14,7 +14,7 @@ export const OrganismAutocomplete = ({label, onChange, onEmpty}) => {
     selectedOrganism = state.organism.organism.scientific;
   }
   const executeSearch = (search) => {
-    fetch(`${url}&organismCriteria=${search}`, 'GET')
+    fetch(`${url}&organismCriteria=${encodeQuery(search)}`, 'GET')
   }
 
 

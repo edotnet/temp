@@ -3,6 +3,7 @@ import {api} from "../../infrastructure/api/instance";
 
 export const dockingFetcher = (pdbid, molecule, dispatch) => {
   return new Promise((resolve, reject) => {
+    dispatch({type: 'addCustomPdb', payload: {drug: molecule.name}});
     api.post(Endpoints.docking.calculate, {
         pdbId: pdbid,
         drugbankId: molecule.drugbank_id && molecule.drugbank_id.startsWith("DB") ? molecule.drugbank_id : undefined,
@@ -13,11 +14,10 @@ export const dockingFetcher = (pdbid, molecule, dispatch) => {
         resolve(false);
         return;
       }
-      dispatch({type: 'addCustomPdb', payload: {drug: molecule.name, data: res.data}})
-      dispatch({type: 'decrementDocking'});
+      dispatch({type: 'addCustomPdbResponse', payload: {drug: molecule.name, data: res.data, status: 'success'}});
       resolve(true);
     }).catch(() => {
-      dispatch({type: 'decrementDocking'});
+      dispatch({type: 'addCustomPdbResponse', payload: {drug: molecule.name, data: null, status: 'error'}});
       reject()
     });
   })

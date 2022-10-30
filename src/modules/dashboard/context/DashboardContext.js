@@ -56,12 +56,17 @@ const reducer = (state, action) => {
         molecules: [...state.molecules, ...newMolecules],
       };
     },
-    removeMolecule: (molecule) => ({
-      ...state,
-      molecules: state.molecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
-      interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
-      selectedMolecule: state.selectedMolecule && state.selectedMolecule.drugbank_id === molecule.drugbank_id ? null : state.selectedMolecule,
-    }),
+    removeMolecule: (molecule) => {
+      const customPdbs = {...state.customPdbs};
+      delete customPdbs[molecule.name];
+      return ({
+        ...state,
+        molecules: state.molecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
+        interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
+        selectedMolecule: state.selectedMolecule && state.selectedMolecule.drugbank_id === molecule.drugbank_id ? null : state.selectedMolecule,
+        customPdbs,
+      })
+    },
     setCategory: (category) => ({
       ...state,
       category,
@@ -147,28 +152,27 @@ const reducer = (state, action) => {
         ...demographicsResult,
       },
     }),
-    addCustomPdb: ({drug, data}) => ({
+    addCustomPdb: ({drug}) => ({
       ...state,
       customPdbs: {
         ...state.customPdbs,
-        [drug]: data
-      }
+        [drug]: {
+          status: 'loading',
+        }
+      },
+      docking: state.docking + 1,
     }),
-    removeCustomPdb: (drug) => {
-      const customPdbs = {...state.customPdbs};
-      delete customPdbs[drug];
-      return {
-        ...state,
-        customPdbs,
-      }
-    },
-    incrementDocking: (num = 1) => ({
+    addCustomPdbResponse: ({drug, data, status}) => ({
       ...state,
-      docking: state.docking + num,
-    }),
-    decrementDocking: () => ({
-      ...state,
-      docking: state.docking - 1,
+      customPdbs: {
+        ...state.customPdbs,
+        [drug]: {
+          ...state.customPdbs[drug],
+          response: data,
+          status,
+        }
+      },
+      docking: state.docking > 0 ? state.docking - 1 : 0,
     }),
   }
   return actions[action.type](action.payload);

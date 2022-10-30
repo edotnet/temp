@@ -1,4 +1,4 @@
-import {useApiCall} from "../../infrastructure/hooks/useApiCall";
+import {encodeQuery, useApiCall} from '../../infrastructure/hooks/useApiCall';
 import {Autocomplete} from "../../infrastructure/components/Autocomplete";
 import {Endpoints} from "../../config/Consts";
 import {useDashboardContext} from "../dashboard/context/useDashboarContext";
@@ -13,7 +13,7 @@ export const TargetAutocomplete = ({label, onChange, onEmpty}) => {
         selectedProtein = state.protein.name;
     }
     const executeSearch = (search) => {
-        fetch(`${url}?criteria=${search}`, 'GET')
+        fetch(`${url}?criteria=${encodeQuery(search)}`, 'GET')
     }
 
 

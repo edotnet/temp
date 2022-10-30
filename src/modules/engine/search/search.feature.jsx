@@ -60,7 +60,6 @@ export const SearchFeature = () => {
 
   const dispatchDocking = useCallback(() => {
     if (dashboardState.pdbid) {
-      dashboardDispatch({type: 'incrementDocking', payload: state.molecules.length});
       state.molecules.forEach(molecule => {
         dockingFetcher(dashboardState.pdbid, molecule, dashboardDispatch);
       });

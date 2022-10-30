@@ -76,7 +76,7 @@ export const ThreeDMol = () => {
       renderCustomPdb();
     }
   }, [renderCustomPdb, renderPdb, selectedCustomPdb, state.pdbid])
-  
+
 
   return (
     <>
@@ -106,7 +106,11 @@ export const ThreeDMol = () => {
               </Box>
               <TextField select value={selectedCustomPdb} label="Select drug" onChange={(e) => setSelectedCustomPdb(e.target.value)} sx={{minWidth: 150}}>
                 <MenuItem value="">None</MenuItem>
-                {Object.entries(state.customPdbs).map(([key, value]) => <MenuItem key={key} value={key}>{key}</MenuItem>)}
+                {Object.entries(state.customPdbs).map(([key, value]) => (
+                  <MenuItem key={key} value={key} disabled={value.status !== 'success'} sx={{color: value.status === 'error' ? 'red' : 'inherit'}}>
+                    {key} {value.status==='loading'? <CircularProgress  size={15} sx={{ml: 1}}/> :''}
+                  </MenuItem>
+                ))}
               </TextField>
             </Box>
             <div ref={ref} id="gldiv" style={{height: 300, width: 400, position: 'relative'}}

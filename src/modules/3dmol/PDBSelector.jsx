@@ -10,7 +10,6 @@ export const PDBSelector = ({pdbs}) => {
   const handleChange = (e) => {
     dispatch({type: 'selectPdb', payload: e.target.value});
     if (state.molecules.length > 0) {
-      dispatch({type: 'incrementDocking', payload: state.molecules.length});
       state.molecules.forEach(molecule => {
         dockingFetcher(e.target.value, molecule, dispatch);
       });
