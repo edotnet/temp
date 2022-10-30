@@ -5,6 +5,7 @@ import dtiimage from "../../../assets/img/table-dti-icon.svg";
 import * as PropTypes from "prop-types";
 import { Endpoints } from "../../../config/Consts";
 import axios from "axios";
+import {encodeQuery} from '../../../infrastructure/hooks/useApiCall';
 import { ProteinModal } from "./ProteinModal";
 import { useState } from "react";
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
@@ -39,7 +40,7 @@ export function ProteinResults(props) {
   const handleproteinClose = () => setOpenprotein(false);
 
   const uploadSelectedProtein = async () => {
-    const url = `${Endpoints.proteins.name}?criteria=${props.selectionModel[0]}&exact=1`;
+    const url = `${Endpoints.proteins.name}?criteria=${encodeQuery(props.selectionModel[0])}&exact=1`;
     axios.get(url).then(resp => {
       if (resp.data) {
         dispatch({type: 'addProtein', payload: resp.data.items[0]});
@@ -52,7 +53,7 @@ export function ProteinResults(props) {
 
   const ProteinOnCellClick = (params) => {
     if (params.field === 'title') {
-      const url = `${Endpoints.proteins.name}?criteria=${params.value}?exact=1`;
+      const url = `${Endpoints.proteins.name}?criteria=${encodeQuery(params.value)}?exact=1`;
       axios.get(url).then(resp => {
         if (resp.data) {
           setproteinModalData(resp.data.items[0]);

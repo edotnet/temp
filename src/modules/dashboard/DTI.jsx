@@ -80,7 +80,7 @@ export const DTI = () => {
       </Box>
       <ThreeDMol />
       <Hr />
-      <Typography variant="subtitle1" gutterBottom sx={{mb: 2}}>Binding Interaction score (pEC50, Kd)</Typography>
+      <Typography variant="subtitle1" gutterBottom sx={{mb: 2}}>Binding Interaction score (pEC50, log(Kd [nM]))</Typography>
       {loading && <LinearProgress />}
       <GraphBackground>
         <Grid container spacing={1}>
