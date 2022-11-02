@@ -50,10 +50,6 @@ export const Dashboard = () => {
     dispatch({type: 'addOrganism', payload: organism})
   }
 
-  const _onDrugToXDL = () => {
-    navigate('/engine/drug2xdl')
-  }
-
   return (
     <>
       <Box>
@@ -96,7 +92,6 @@ export const Dashboard = () => {
                       {state.molecules.length > 0 &&
                         <>
                           <Typography style={{fontSize: 16, fontWeight: 300}}>Selected for interaction:</Typography>
-                          <PrimaryButton onClick={_onDrugToXDL} sx={{mt: -1}} title="to XDL" endIcon={<ArrowRight />}/>
                         </>}
                     </Box>
                     <Grid container spacing={4} pt={2} style={{minHeight: 150}}>
