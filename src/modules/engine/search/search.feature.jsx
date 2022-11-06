@@ -126,11 +126,18 @@ export const SearchFeature = () => {
   }, [state.naturalProductSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
 
   const uploadSelectedProteinDrugs = useCallback(async () => {
-    const url = `${Endpoints.proteins.name}?criteria=${encodeQuery(state.targetSelection[0])}&exact=1`;
+    const proteinUrl = `${Endpoints.proteins.name}?criteria=${encodeQuery(state.targetSelection[0])}&exact=1`;
+    const target = state.targets.find(target => target.name === state.targetSelection[0]);
+    const organismUrl = `${Endpoints.proteins.organisms}?organismCriteria=${encodeQuery(target.organism)}&exact=1&name=${encodeQuery(target.name)}`
+    const proteinCall = api.get(proteinUrl);
+    const organismCall = api.get(organismUrl);
     setSecondaryLoader(true);
-    api.get(url).then(resp => {
-      if (resp.data) {
-        dashboardDispatch({type: 'addProtein', payload: resp.data.items[0]});
+    Promise.all([proteinCall, organismCall]).then(([proteins, organisms]) => {
+      if (organisms.data) {
+        dashboardDispatch({type: 'addOrganism', payload: organisms.data.items[0]})
+      }
+      if (proteins.data) {
+        dashboardDispatch({type: 'addProtein', payload: proteins.data.items[0]});
         uploadSelectedDrugs();
         uploadSelectedNaturalProducts();
       }

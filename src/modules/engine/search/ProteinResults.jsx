@@ -19,9 +19,15 @@ const proteinColumns = [
     ),
   },
   {
+    field: 'organism',
+    headerName: 'Organisms',
+    minWidth: 250, flex: 1,
+  },
+  {
     field: `articles_search_item`,
     headerName: '(Search + Target)Publications',
-    minWidth: 250,
+    flex: 1,
+    minWidth: 120,
   },
   {
     field: `articles_item_only`,
@@ -41,9 +47,14 @@ export function ProteinResults(props) {
 
   const uploadSelectedProtein = async () => {
     const url = `${Endpoints.proteins.name}?criteria=${encodeQuery(props.selectionModel[0])}&exact=1`;
-    axios.get(url).then(resp => {
-      if (resp.data) {
-        dispatch({type: 'addProtein', payload: resp.data.items[0]});
+    const target = props.targets.find(target => target.name.toLowerCase() === props.selectionModel[0]);
+    const organismUrl = `${Endpoints.proteins.organisms}?organismCriteria=${encodeQuery(target.organism)}&exact=1&name=${encodeQuery(target.name)}`;
+    Promise.all([axios.get(url), axios.get(organismUrl)]).then(([proteins, organisms]) => {
+      if (proteins.data) {
+        dispatch({type: 'addProtein', payload: proteins.data.items[0]});
+        if (organisms.data) {
+          dispatch({type: 'addOrganism', payload: organisms.data.items[0]});
+        }
         dispatch({type: 'resetInteractingMolecules', payload: null});
         dispatch({type: 'removePdb', payload: null});
         navigate("/dashboard");
