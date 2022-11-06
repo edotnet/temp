@@ -5,6 +5,7 @@ import dtiimage from "../../../assets/img/table-dti-icon.svg";
 import * as PropTypes from "prop-types";
 import { Endpoints } from "../../../config/Consts";
 import axios from "axios";
+import {Score} from '../../../infrastructure/components/Score';
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
 
 const drugsColumns = [
@@ -16,12 +17,18 @@ const drugsColumns = [
   {
     field: `articles_search_item`,
     headerName: '(Search + Drug)Publications',
-    minWidth: 250,
+    minWidth: 200,
   },
   {
     field: `articles_item_only`,
     headerName: 'Drug Publications',
     minWidth: 120, flex: 1,
+  },
+  {
+    field: 'f_score',
+    headerName: 'F-Score',
+    minWidth: 120, flex: 1,
+    renderCell: (params) => (<Score score={params.value}/>)
   }
 ];
 export function DrugResults(props) {
@@ -50,7 +57,7 @@ export function DrugResults(props) {
     <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
       {props.drugs.length > 0 &&
         <DataGrid
-          rows={[...props.drugs].sort((a, b) => b.f_score - a.f_score)}
+          rows={props.drugs}
           columns={drugsColumns}
           pageSize={5}
           rowsPerPageOptions={[5]}
@@ -64,6 +71,11 @@ export function DrugResults(props) {
           onCellClick={handleOnCellClick}
           onSelectionModelChange={props.onSelectionModelChange}
           getRowClassName={props.rowClassName}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'f_score', sort: 'desc' }],
+            },
+          }}
         />
       }
       {/*onClick={uploadSelectedDrugs} for button */}
