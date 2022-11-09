@@ -18,15 +18,17 @@ const drugsColumns = [
     field: `articles_search_item`,
     headerName: '(Search + Drug)Publications',
     minWidth: 200,
+    hide: true,
   },
   {
     field: `articles_item_only`,
     headerName: 'Drug Publications',
     minWidth: 120, flex: 1,
+    hide: true,
   },
   {
     field: 'f_score',
-    headerName: 'F-Score',
+    headerName: 'Score',
     minWidth: 120, flex: 1,
     renderCell: (params) => (<Score score={params.value}/>)
   }

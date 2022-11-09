@@ -2,7 +2,7 @@ import {Box} from '@mui/material';
 
 const Circle = ({color}) => (
   <svg width="20" height="20">
-    <circle cx="8" cy="12" r="5" stroke={color} strokeWidth="1" fill={color} />
+    <circle cx="10" cy="13" r="5" stroke={color} strokeWidth="1" fill={color} />
   </svg>
 );
 
@@ -18,11 +18,11 @@ export const Score = ({score}) => {
   const level = getLevelByScore(score);
   let circles = [];
   if (level === "low") {
-    circles = [<Circle color="red" />, <Circle color="lightgray" />, <Circle color="lightgray" />];
+    circles = [<Circle color="red" key={1}/>, <Circle color="lightgray" key={2}/>, <Circle color="lightgray" key={3}/>];
   } else if (level === "medium") {
-    circles = [<Circle color="orange" />, <Circle color="orange" />, <Circle color="lightgray" />];
+    circles = [<Circle color="orange" key={1}/>, <Circle color="orange" key={2}/>, <Circle color="lightgray" key={3}/>];
   } else if (level === "high") {
-    circles = [<Circle color="green" />, <Circle color="green" />, <Circle color="green" />];
+    circles = [<Circle color="green" key={1}/>, <Circle color="green" key={2}/>, <Circle color="green" key={3}/>];
   }
 
   return (

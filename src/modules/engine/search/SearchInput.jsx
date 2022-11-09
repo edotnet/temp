@@ -2,7 +2,7 @@ import { Button, Grid, TextField } from "@mui/material";
 import * as PropTypes from "prop-types";
 
 export function SearchInput(props) {
-  return <>
+  return  <Grid container sx={{mt: 4, mb: 4}}>
     <Grid item xs={4}>
       <TextField
         fullWidth
@@ -21,10 +21,10 @@ export function SearchInput(props) {
         }}
       />
     </Grid>
-    <Grid item style={{paddingLeft: "0px"}}>
+    <Grid item>
       <Button className="searchEngin-headerbtn btn-white" variant="outlined" onClick={props.onClick}>Search</Button>
     </Grid>
-  </>;
+  </Grid>;
 }
 
 SearchInput.propTypes = {

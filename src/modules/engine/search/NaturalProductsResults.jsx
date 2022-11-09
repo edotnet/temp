@@ -6,6 +6,7 @@ import * as PropTypes from "prop-types";
 import { Endpoints } from "../../../config/Consts";
 import axios from "axios";
 import {api} from '../../../infrastructure/api/instance';
+import {Score} from '../../../infrastructure/components/Score';
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
 
 const naturalProductsColumns = [
@@ -18,11 +19,19 @@ const naturalProductsColumns = [
     field: `articles_search_item`,
     headerName: '(Search + Drug)Publications',
     minWidth: 250,
+    hide: true,
   },
   {
     field: `articles_item_only`,
     headerName: 'Drug Publications',
     minWidth: 120, flex: 1,
+    hide: true,
+  },
+  {
+    field: 'f_score',
+    headerName: 'Score',
+    minWidth: 120, flex: 1,
+    renderCell: (params) => (<Score score={params.value}/>)
   }
 ];
 export function NaturalProductsResults(props) {

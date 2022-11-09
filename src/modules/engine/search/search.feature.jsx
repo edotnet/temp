@@ -1,24 +1,25 @@
-import {encodeQuery, useApiCall} from '../../../infrastructure/hooks/useApiCall';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDashboardContext } from '../../dashboard/context/useDashboarContext';
-import { useNavigate } from "react-router-dom";
-import { Endpoints } from "../../../config/Consts";
+import {ArrowRight} from '@mui/icons-material';
+import {Box, Grid} from '@mui/material';
 import axios from 'axios';
-import { CircularProgressComponent } from "../../../infrastructure/components/CircularProgress.component";
-import { Grid } from "@mui/material";
-import "./search.scss";
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {Endpoints} from '../../../config/Consts';
+import {CircularProgressComponent} from '../../../infrastructure/components/CircularProgress.component';
+import {PrimaryButton} from '../../../infrastructure/components/PrimaryButton';
+import {encodeQuery, useApiCall} from '../../../infrastructure/hooks/useApiCall';
+import {useDashboardContext} from '../../dashboard/context/useDashboarContext';
 import {dockingFetcher} from '../../dashboard/DockingFetcher';
-import { DrugProperties } from "../../dashboard/DrugProperties";
-import { DrugLiterature } from "./DrugLiterature";
-import { DrugResults } from "./DrugResults";
+import {DrugProperties} from '../../dashboard/DrugProperties';
+import {useEngineContext} from '../useEngineContext';
+import {DrugLiterature} from './DrugLiterature';
+import {DrugResults} from './DrugResults';
+import {DrugSynthesis} from './DrugSynthesis';
 import {NaturalProductsResults} from './NaturalProductsResults';
-import { SearchInput } from "./SearchInput";
-import { ProteinResults } from "./ProteinResults";
-import { SectionTitle } from "./SectionTitle";
-import { TargetLiterature } from "./TargetLiterature";
-import { DrugSynthesis } from "./DrugSynthesis";
-import { useEngineContext } from "../useEngineContext";
-import {api} from "../../../infrastructure/api/instance";
+import {ProteinResults} from './ProteinResults';
+import './search.scss';
+import {SearchInput} from './SearchInput';
+import {SectionTitle} from './SectionTitle';
+import {TargetLiterature} from './TargetLiterature';
 
 export const SearchFeature = () => {
   const {loading, data, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
@@ -35,7 +36,7 @@ export const SearchFeature = () => {
       drug: 'drugs',
       natural_product: 'naturalProducts',
       protein: 'targets',
-    }
+    };
     const res = {
       drugs: [],
       naturalProducts: [],
@@ -48,7 +49,6 @@ export const SearchFeature = () => {
     }
     return res;
   }, [data]);
-
 
   const onRun = useCallback(() => {
     fetch(Endpoints.search.drug, 'POST', {query: searchText});
@@ -66,81 +66,95 @@ export const SearchFeature = () => {
     }
   }, [dashboardState.pdbid, dashboardDispatch, state.molecules]);
 
-  const uploadSelectedDrugs = useCallback(async () => {
-    const promises = [];
-    state.drugSelection.forEach(drug => {
-      const url = `${Endpoints.drugbank.drugs}${encodeQuery(drug)}?exact=1`;
-      promises.push(axios.get(url));
-    });
-    setSecondaryLoader(true);
-    Promise.all(promises).then((responses) => {
-      const molecules = [];
-      responses.forEach((resp, drugIndex) => {
-        if (resp.data) {
-          resp.data.items.forEach((item) => {
-            if ('name' in item && state.drugSelection.map(el => el.toLowerCase()).includes(item.name.toLowerCase())) {
-              molecules.push(item);
-            }
-          });
-        }
+  const uploadSelectedDrugs = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      const promises = [];
+      state.drugSelection.forEach(drug => {
+        const url = `${Endpoints.drugbank.drugs}${encodeQuery(drug)}?exact=1`;
+        promises.push(axios.get(url));
       });
-      dashboardDispatch({type: 'addMolecules', payload: molecules})
-      dashboardDispatch({type: 'resetInteractingMolecules', payload: null});
-      dispatchDocking();
-      navigate("/dashboard");
-      setSecondaryLoader(false);
-    });
-  }, [state.drugSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
-
-  const uploadSelectedNaturalProducts = useCallback(async () => {
-    const promises = [];
-    state.naturalProductSelection.forEach(naturalProduct => {
-      const url = `${Endpoints.naturalProducts.query}${encodeQuery(naturalProduct)}?exact=1`;
-      promises.push(axios.get(url));
       setSecondaryLoader(true);
       Promise.all(promises).then((responses) => {
         const molecules = [];
         responses.forEach((resp, drugIndex) => {
           if (resp.data) {
             resp.data.items.forEach((item) => {
-              if ('cn' in item && state.naturalProductSelection.map(el => el.toLowerCase()).includes(item.cn.toLowerCase())) {
-                const molecule = {
-                  name: item.cn,
-                  drugbank_id: item.UNPD_ID,
-                  calculated_properties: {
-                    SMILES: item.SMILES,
-                  }
-                }
-                molecules.push(molecule);
+              if ('name' in item && state.drugSelection.map(el => el.toLowerCase()).includes(item.name.toLowerCase())) {
+                molecules.push(item);
               }
             });
           }
         });
-        dashboardDispatch({type: 'addMolecules', payload: molecules})
+        dashboardDispatch({type: 'addMolecules', payload: molecules});
         dashboardDispatch({type: 'resetInteractingMolecules', payload: null});
         dispatchDocking();
-        navigate("/dashboard");
         setSecondaryLoader(false);
+        resolve();
+      }).catch(reject);
+    });
+  }, [state.drugSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
+
+  const uploadSelectedNaturalProducts = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      const promises = [];
+      state.naturalProductSelection.forEach(naturalProduct => {
+        const url = `${Endpoints.naturalProducts.query}${encodeQuery(naturalProduct)}?exact=1`;
+        promises.push(axios.get(url));
+        setSecondaryLoader(true);
+        Promise.all(promises).then((responses) => {
+          const molecules = [];
+          responses.forEach((resp, drugIndex) => {
+            if (resp.data) {
+              resp.data.items.forEach((item) => {
+                if ('cn' in item && state.naturalProductSelection.map(el => el.toLowerCase()).includes(item.cn.toLowerCase())) {
+                  const molecule = {
+                    name: item.cn,
+                    drugbank_id: item.UNPD_ID,
+                    calculated_properties: {
+                      SMILES: item.SMILES,
+                    },
+                  };
+                  molecules.push(molecule);
+                }
+              });
+            }
+          });
+          dashboardDispatch({type: 'addMolecules', payload: molecules});
+          dashboardDispatch({type: 'resetInteractingMolecules', payload: null});
+          dispatchDocking();
+          setSecondaryLoader(false);
+          resolve();
+        }).catch(reject);
       });
-    })
+    });
   }, [state.naturalProductSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
 
-  const uploadSelectedProteinDrugs = useCallback(async () => {
-    const proteinUrl = `${Endpoints.proteins.name}?criteria=${encodeQuery(state.targetSelection[0])}&exact=1`;
-    const target = state.targets.find(target => target.name === state.targetSelection[0]);
-    const organismUrl = `${Endpoints.proteins.organisms}?organismCriteria=${encodeQuery(target.organism)}&exact=1&name=${encodeQuery(target.name)}`
-    const proteinCall = api.get(proteinUrl);
-    const organismCall = api.get(organismUrl);
-    setSecondaryLoader(true);
-    Promise.all([proteinCall, organismCall]).then(([proteins, organisms]) => {
-      if (organisms.data) {
-        dashboardDispatch({type: 'addOrganism', payload: organisms.data.items[0]})
-      }
-      if (proteins.data) {
-        dashboardDispatch({type: 'addProtein', payload: proteins.data.items[0]});
-        uploadSelectedDrugs();
-        uploadSelectedNaturalProducts();
-      }
+  const uploadSelectedProtein = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      const url = `${Endpoints.proteins.name}?criteria=${encodeQuery(state.targetSelection[0])}&exact=1`;
+      const target = state.targets.find(target => target.name.toLowerCase() === state.targetSelection[0]);
+      const organismUrl = `${Endpoints.proteins.organisms}?organismCriteria=${encodeQuery(target.organism)}&exact=1&name=${encodeQuery(target.name)}`;
+      const organismCall = target.organism ? axios.get(organismUrl) : new Promise(resolve => resolve({data: null}));
+      Promise.all([axios.get(url), organismCall]).then(([proteins, organisms]) => {
+        if (proteins.data) {
+          dashboardDispatch({type: 'addProtein', payload: proteins.data.items[0]});
+          if (organisms.data) {
+            dashboardDispatch({type: 'addOrganism', payload: organisms.data.items[0]});
+          }
+          dashboardDispatch({type: 'resetInteractingMolecules', payload: null});
+          dashboardDispatch({type: 'removePdb', payload: null});
+        }
+      }).catch(reject);
+    });
+  }, [state.targetSelection, state.targets, navigate]);
+
+  const uploadSelectedProteinDrugs = useCallback(() => {
+    Promise.all([uploadSelectedProtein(),
+      uploadSelectedDrugs(),
+      uploadSelectedNaturalProducts(),
+      uploadSelectedProtein()
+    ]).then(() => {
+      navigate('/dashboard');
     });
   }, [state.targetSelection, dashboardDispatch, uploadSelectedDrugs]);
 
@@ -167,7 +181,7 @@ export const SearchFeature = () => {
         dispatch({type: 'setDrugSelection', payload: [defaultDrug]});
       }
       dispatch({type: 'setDrugs', payload: drugs});
-      dispatch({type: 'setNaturalProducts', payload: naturalProducts})
+      dispatch({type: 'setNaturalProducts', payload: naturalProducts});
       if (!targets || targets.length === 0) {
         return;
       }
@@ -181,48 +195,22 @@ export const SearchFeature = () => {
     }
   }, [data, dispatch, drugs, searchText, targets]);
 
-
   return (
     <div className="searchDefault">
-      <Grid container spacing={2} style={{marginTop: '40px', marginBottom: '40px'}}>
+      <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', width: '95%', zIndex: 10, backgroundColor: 'gray'}}>
         <SearchInput value={searchText} onChange={e => setSearchText(e.target.value)} onKeyPress={(e) => {
           if (e.key === 'Enter') {
             setSearchText(e.target.value);
-            onRun()
+            onRun();
           }
-        }} onClick={onRun}/>
-        <Grid item>
-          {/* this section is removed for demo purpose, later will add with new design.
-          */}
-          {/*{*/}
-          {/*  data && data.result ? <div>*/}
-          {/*    <Box className="selecteddata_dti" boxShadow={3}>*/}
-          {/*      <h4 className="heading">Selected data to drug interaction</h4>*/}
-          {/*      <h4 className="drugs">Drugs</h4>*/}
-          {/*      {*/}
-          {/*        selectionDrugModel.length > 0  ? selectionDrugModel.map(item => {*/}
-          {/*          return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />*/}
-          {/*        }) : ''*/}
-          {/*      }*/}
-          {/*      <h4 className="proteins">Proteins</h4>*/}
-          {/*      {*/}
-          {/*        selectionTargetModel.length > 0  ? selectionTargetModel.map(item => {*/}
-          {/*          return <Chip key={item} style={{marginLeft: '10px'}} label={item} variant="outlined" />*/}
-          {/*        }) : ''*/}
-          {/*      }*/}
-          {/*      <Button className="uploadbtn" variant="outlined" onClick={uploadTargetDrugs}>*/}
-          {/*        <img src={dtiimage} alt="image"/>*/}
-          {/*        <span className="text">Upload</span>*/}
-          {/*      </Button>*/}
-          {/*    </Box>*/}
-          {/*  </div> : ''*/}
-          {/*}*/}
-        </Grid>
-      </Grid>
-
-      {
+        }} onClick={onRun} />
+        <Box pr={5}>
+          <PrimaryButton onClick={onRun} title="Investigate" endIcon={<ArrowRight />}/>
+        </Box>
+      </Box>
+      <Box pt={10}>{
         state.drugs.length > 0 && <>
-          <SectionTitle text="Related Remedies"/>
+          <SectionTitle text="Related Remedies" />
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <DrugResults drugs={state.drugs}
@@ -232,21 +220,21 @@ export const SearchFeature = () => {
                            }}
                            selectionModel={state.drugSelection}
                            onSelectionModelChange={(ids) => {
-                             dispatch({type: 'setDrugSelection', payload: ids})
+                             dispatch({type: 'setDrugSelection', payload: ids});
                            }}
                            rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
-                           onClick={uploadSelectedDrugs}/>
+                           onClick={uploadSelectedDrugs} />
               <NaturalProductsResults naturalProducts={state.naturalProducts}
-                           onRowClick={(param) => {
-                             drugHandleClick(param.row);
-                             setClickedRow(param.row.name.toLowerCase());
-                           }}
-                           selectionModel={state.naturalProductSelection}
-                           onSelectionModelChange={(ids) => {
-                             dispatch({type: 'setNaturalProductSelection', payload: ids})
-                           }}
-                           rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
-                           onClick={uploadSelectedNaturalProducts}/>
+                                      onRowClick={(param) => {
+                                        drugHandleClick(param.row);
+                                        setClickedRow(param.row.name.toLowerCase());
+                                      }}
+                                      selectionModel={state.naturalProductSelection}
+                                      onSelectionModelChange={(ids) => {
+                                        dispatch({type: 'setNaturalProductSelection', payload: ids});
+                                      }}
+                                      rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
+                                      onClick={uploadSelectedNaturalProducts} />
             </Grid>
             <Grid item xs={6}>
               <DrugLiterature drug={state.selectedDrug} />
@@ -255,24 +243,26 @@ export const SearchFeature = () => {
         </>
       }
       {state.targets.length > 0 && <>
-          <SectionTitle text="Related Target Proteins"/>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <ProteinResults targets={state.targets}
-                              selectionModel={state.targetSelection}
-                              onSelectionModelChange={onTargetSelectionChange}
-                              onUpdateProteinAndDrug={uploadSelectedProteinDrugs}/>
-            </Grid>
-            <Grid item xs={6}>
-              <TargetLiterature target={state.selectedTarget}/>
-            </Grid>
+        <SectionTitle text="Related Target Proteins" />
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <ProteinResults targets={state.targets}
+                            selectionModel={state.targetSelection}
+                            onSelectionModelChange={onTargetSelectionChange}
+                            onUpdateProteinAndDrug={uploadSelectedProteinDrugs}
+                            onClick={uploadSelectedProtein} />
           </Grid>
-          <DrugSynthesis searchText={state.selectedDrug ? state.selectedDrug.title : searchText}/>
-        </>
+          <Grid item xs={6}>
+            <TargetLiterature target={state.selectedTarget} />
+          </Grid>
+        </Grid>
+        <DrugSynthesis searchText={state.selectedDrug ? state.selectedDrug.title : searchText} />
+      </>
       }
-      {loading && <CircularProgressComponent/>}
-      {secondaryLoader && <CircularProgressComponent/>}
-      <DrugProperties/>
+      </Box>
+      {loading && <CircularProgressComponent />}
+      {secondaryLoader && <CircularProgressComponent />}
+      <DrugProperties />
     </div>
-  )
-}
+  );
+};

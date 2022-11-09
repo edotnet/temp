@@ -1,21 +1,20 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, ButtonGroup, Typography } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { DataGrid } from "@mui/x-data-grid";
-import dtiimage from "../../../assets/img/table-dti-icon.svg";
-import * as PropTypes from "prop-types";
-import { Endpoints } from "../../../config/Consts";
-import axios from "axios";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {Accordion, AccordionDetails, AccordionSummary, Button, ButtonGroup, Typography} from '@mui/material';
+import {DataGrid} from '@mui/x-data-grid';
+import axios from 'axios';
+import * as PropTypes from 'prop-types';
+import {useState} from 'react';
+import dtiimage from '../../../assets/img/table-dti-icon.svg';
+import {Endpoints} from '../../../config/Consts';
+import {Score} from '../../../infrastructure/components/Score';
 import {encodeQuery} from '../../../infrastructure/hooks/useApiCall';
-import { ProteinModal } from "./ProteinModal";
-import { useState } from "react";
-import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
-import { useNavigate } from "react-router-dom";
+import {ProteinModal} from './ProteinModal';
 
 const proteinColumns = [
   {
     field: `name`, headerName: 'Target Name', minWidth: 150, flex: 1,
     renderCell: (params) => (
-      <span className='link-btn'>{params.value}</span>
+      <span className="link-btn">{params.value}</span>
     ),
   },
   {
@@ -28,39 +27,27 @@ const proteinColumns = [
     headerName: '(Search + Target)Publications',
     flex: 1,
     minWidth: 120,
+    hide: true,
   },
   {
     field: `articles_item_only`,
     headerName: 'Target Publications',
     minWidth: 120, flex: 1,
+    hide: true,
   },
+  {
+    field: 'f_score',
+    headerName: 'Score',
+    minWidth: 120, flex: 1,
+    renderCell: (params) => (<Score score={params.value}/>)
+  }
 ];
 
-
 export function ProteinResults(props) {
-  const {state, dispatch} = useDashboardContext();
-  const navigate = useNavigate();
   const [openprotein, setOpenprotein] = useState(false);
   const [proteinmodalData, setproteinModalData] = useState([]);
   const handleproteinOpen = () => setOpenprotein(true);
   const handleproteinClose = () => setOpenprotein(false);
-
-  const uploadSelectedProtein = async () => {
-    const url = `${Endpoints.proteins.name}?criteria=${encodeQuery(props.selectionModel[0])}&exact=1`;
-    const target = props.targets.find(target => target.name.toLowerCase() === props.selectionModel[0]);
-    const organismUrl = `${Endpoints.proteins.organisms}?organismCriteria=${encodeQuery(target.organism)}&exact=1&name=${encodeQuery(target.name)}`;
-    Promise.all([axios.get(url), axios.get(organismUrl)]).then(([proteins, organisms]) => {
-      if (proteins.data) {
-        dispatch({type: 'addProtein', payload: proteins.data.items[0]});
-        if (organisms.data) {
-          dispatch({type: 'addOrganism', payload: organisms.data.items[0]});
-        }
-        dispatch({type: 'resetInteractingMolecules', payload: null});
-        dispatch({type: 'removePdb', payload: null});
-        navigate("/dashboard");
-      }
-    });
-  }
 
   const ProteinOnCellClick = (params) => {
     if (params.field === 'title') {
@@ -70,16 +57,16 @@ export function ProteinResults(props) {
           setproteinModalData(resp.data.items[0]);
           handleproteinOpen();
         }
-      })
+      });
     }
-  }
+  };
   return (
     <>
       <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel5a-content" id="panel5a-header">
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel5a-content" id="panel5a-header">
           <Typography>Target Protein Results</Typography>
         </AccordionSummary>
-        <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
+        <AccordionDetails id="style-3" style={{height: '400px', overflowY: 'auto'}}>
           {
             props.targets.length > 0 &&
             <DataGrid
@@ -97,8 +84,8 @@ export function ProteinResults(props) {
             />
           }
           <ButtonGroup variant="outlined" className="table-footer" aria-label="outlined primary button group">
-            <Button onClick={uploadSelectedProtein} className="uploadbtn">
-              <img style={{paddingRight: "10px"}} src={dtiimage} alt="image"/>
+            <Button onClick={props.onClick} className="uploadbtn">
+              <img style={{paddingRight: '10px'}} src={dtiimage} alt="image" />
               Upload selected protein
             </Button>
             <Button variant="contained" onClick={props.onUpdateProteinAndDrug}>
@@ -107,7 +94,7 @@ export function ProteinResults(props) {
           </ButtonGroup>
         </AccordionDetails>
       </Accordion>
-      <ProteinModal open={openprotein} onClose={handleproteinClose} proteinmodalData={proteinmodalData}/>
+      <ProteinModal open={openprotein} onClose={handleproteinClose} proteinmodalData={proteinmodalData} />
     </>
   );
 }
@@ -118,5 +105,6 @@ ProteinResults.propTypes = {
   onCellClick: PropTypes.func,
   onSelectionModelChange: PropTypes.func,
   onUploadSelectedProtein: PropTypes.func,
-  onUpdateProteinAndDrug: PropTypes.func
+  onUpdateProteinAndDrug: PropTypes.func,
+  onClick: PropTypes.func,
 };
