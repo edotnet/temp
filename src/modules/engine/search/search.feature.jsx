@@ -1,5 +1,5 @@
 import {ArrowRight} from '@mui/icons-material';
-import {Box, Grid} from '@mui/material';
+import {Box, Chip, Grid, Stack} from '@mui/material';
 import axios from 'axios';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
@@ -31,7 +31,7 @@ export const SearchFeature = () => {
   const [clickedRow, setClickedRow] = useState('');
   const [secondaryLoader, setSecondaryLoader] = useState(false);
 
-  const {drugs, naturalProducts, targets} = useMemo(() => {
+  const {drugs, naturalProducts, targets, suggestions} = useMemo(() => {
     const keys = {
       drug: 'drugs',
       natural_product: 'naturalProducts',
@@ -41,17 +41,23 @@ export const SearchFeature = () => {
       drugs: [],
       naturalProducts: [],
       targets: [],
+      suggestions: [],
     };
     if (data) {
-      data.forEach(item => {
-        res[keys[item.type]].push(item);
-      });
+      if (data.results) {
+        data.results.forEach(item => {
+          res[keys[item.type]].push(item);
+        });
+      }
+      if (data.suggestions) {
+        res.suggestions = data.suggestions;
+      }
     }
     return res;
   }, [data]);
 
-  const onRun = useCallback(() => {
-    fetch(Endpoints.search.drug, 'POST', {query: searchText});
+  const onRun = useCallback((searchTerm) => {
+    fetch(Endpoints.search.drug, 'POST', {query: searchTerm ?? searchText});
   }, [searchText]);
 
   const drugHandleClick = useCallback((data) => {
@@ -92,7 +98,7 @@ export const SearchFeature = () => {
         resolve();
       }).catch(reject);
     });
-  }, [state.drugSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
+  }, [state.drugSelection, dashboardDispatch, dispatchDocking]);
 
   const uploadSelectedNaturalProducts = useCallback(() => {
     return new Promise((resolve, reject) => {
@@ -143,10 +149,11 @@ export const SearchFeature = () => {
           }
           dashboardDispatch({type: 'resetInteractingMolecules', payload: null});
           dashboardDispatch({type: 'removePdb', payload: null});
+          resolve();
         }
       }).catch(reject);
     });
-  }, [state.targetSelection, state.targets, navigate]);
+  }, [state.targetSelection, state.targets, dashboardDispatch]);
 
   const uploadSelectedProteinDrugs = useCallback(() => {
     Promise.all([uploadSelectedProtein(),
@@ -156,7 +163,31 @@ export const SearchFeature = () => {
     ]).then(() => {
       navigate('/dashboard');
     });
-  }, [state.targetSelection, dashboardDispatch, uploadSelectedDrugs]);
+  }, [uploadSelectedProtein, uploadSelectedDrugs, uploadSelectedNaturalProducts, navigate]);
+
+  const uploadDrugsAndNavigate = useCallback(
+    () => {
+      uploadSelectedDrugs().then(() => {
+        navigate('/dashboard');
+      });
+    },
+    [navigate, uploadSelectedDrugs],
+  );
+
+  const uploadNaturalProductsAndNavigate = useCallback(
+    () => {
+      uploadSelectedNaturalProducts().then(() => {
+        navigate('/dashboard');
+      });
+    },
+    [navigate, uploadSelectedNaturalProducts],
+  );
+
+  const uploadProteinAndNavigate = useCallback(() => {
+    uploadSelectedProtein().then(() => {
+      navigate('/dashboard')
+    })
+  }, [navigate, uploadSelectedProtein])
 
   const onTargetSelectionChange = useCallback((selection) => {
     if (selection.length > 1) {
@@ -169,7 +200,7 @@ export const SearchFeature = () => {
   }, [state.targetSelection, dispatch, targets]);
 
   useEffect(() => {
-    if (data && data.length) {
+    if (data && data.results && data.results.length) {
       const defaultDrug = searchText.toLowerCase();
       const defaultDrugRow = drugs.find((row) => row.name.toLowerCase() === defaultDrug);
       if (defaultDrugRow) {
@@ -197,18 +228,21 @@ export const SearchFeature = () => {
 
   return (
     <div className="searchDefault">
-      <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', width: '95%', zIndex: 10, backgroundColor: 'gray'}}>
+      <Box>
         <SearchInput value={searchText} onChange={e => setSearchText(e.target.value)} onKeyPress={(e) => {
           if (e.key === 'Enter') {
             setSearchText(e.target.value);
-            onRun();
+            onRun(e.target.value);
           }
         }} onClick={onRun} />
-        <Box pr={5}>
-          <PrimaryButton onClick={onRun} title="Investigate" endIcon={<ArrowRight />}/>
-        </Box>
+        <Stack direction="row" spacing={2}>
+          {suggestions.sort((a,b) => a.distance - b.distance).map(s => <Chip key={s.lbl} label={s.lbl} color="primary" style={{color: 'white'}} onClick={() => {
+            setSearchText(s.lbl);
+            onRun(s.lbl);
+          }} />)}
+        </Stack>
       </Box>
-      <Box pt={10}>{
+      <Box>{
         state.drugs.length > 0 && <>
           <SectionTitle text="Related Remedies" />
           <Grid container spacing={2}>
@@ -223,7 +257,7 @@ export const SearchFeature = () => {
                              dispatch({type: 'setDrugSelection', payload: ids});
                            }}
                            rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
-                           onClick={uploadSelectedDrugs} />
+                           onClick={uploadDrugsAndNavigate} />
               <NaturalProductsResults naturalProducts={state.naturalProducts}
                                       onRowClick={(param) => {
                                         drugHandleClick(param.row);
@@ -234,7 +268,7 @@ export const SearchFeature = () => {
                                         dispatch({type: 'setNaturalProductSelection', payload: ids});
                                       }}
                                       rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
-                                      onClick={uploadSelectedNaturalProducts} />
+                                      onClick={uploadNaturalProductsAndNavigate} />
             </Grid>
             <Grid item xs={6}>
               <DrugLiterature drug={state.selectedDrug} />
@@ -250,7 +284,7 @@ export const SearchFeature = () => {
                             selectionModel={state.targetSelection}
                             onSelectionModelChange={onTargetSelectionChange}
                             onUpdateProteinAndDrug={uploadSelectedProteinDrugs}
-                            onClick={uploadSelectedProtein} />
+                            onClick={uploadProteinAndNavigate} />
           </Grid>
           <Grid item xs={6}>
             <TargetLiterature target={state.selectedTarget} />

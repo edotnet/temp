@@ -22,7 +22,7 @@ export function SearchInput(props) {
       />
     </Grid>
     <Grid item>
-      <Button className="searchEngin-headerbtn btn-white" variant="outlined" onClick={props.onClick}>Search</Button>
+      <Button className="searchEngin-headerbtn btn-white" variant="outlined" onClick={() => props.onClick()}>Search</Button>
     </Grid>
   </Grid>;
 }
