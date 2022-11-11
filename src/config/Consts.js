@@ -59,8 +59,11 @@ export const Endpoints = {
   proteins: {
     name: `${useApi}/proteins/names`,
     organisms: `${useApi}/proteins/organisms`,
+    ESMFold: `${useApi}/proteins/esmatlasFold`,
   }
 };
 
 export const DemographicYears = ["0-15 years (pediatrics)", "16-24 years (youths)", "25-64 years (adults)", "65+ years"];
 export const DemographicBmi = ["Below 18.5", "18.5-24.9", "25-29.9", "30-34.9", "35-39.9", "Above 40"];
+
+export const ESM_FOLD_PDB = 'ESMFold';
