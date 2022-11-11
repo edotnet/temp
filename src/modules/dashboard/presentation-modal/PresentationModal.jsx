@@ -7,13 +7,15 @@ import { DTI } from "../DTI";
 import { Hr } from "../../../infrastructure/components/Hr.component";
 import { DrugInteractionContentFirst } from "../drug-interaction/DrugInteractionContentFirst";
 import './PresentationModal.scss'
+import {ThreeDMolFeature} from "../ThreeDMolFeature";
 
 export const PresentationModal = () => {
   const {state, dispatch} = useDashboardContext();
   const isDTI = state.organism && state.molecules.length;
   const isDIFirstMolecule = state.interactingMolecules.length === 1;
   const isDI = state.interactingMolecules.length === 2;
-  if (!isDI && ! isDIFirstMolecule && ! isDTI) {
+  const isPdb = state.pdbid && state.pdbid !== "";
+  if (!isDI && ! isDIFirstMolecule && ! isDTI && ! isPdb) {
     return null;
   }
 
@@ -30,6 +32,7 @@ export const PresentationModal = () => {
         <DrugInteractionContentFirst/>
         <DrugInteractionContent/>
         {(isDIFirstMolecule || isDI) && isDTI && <Hr block/>}
+        <ThreeDMolFeature />
         <DTI/>
       </Box>
     </Paper>

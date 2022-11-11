@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import D3 from '../../assets/svg/3d.svg';
 import {useDashboardContext} from '../dashboard/context/useDashboarContext';
+import {ESM_FOLD_PDB} from "../../config/Consts";
 
 export const ThreeDMol = () => {
   const ref = useRef();
@@ -30,7 +31,7 @@ export const ThreeDMol = () => {
   }
 
   const renderPdb = useCallback(() => {
-    if (selectedCustomPdb !== "") {
+    if (selectedCustomPdb !== "" && selectedCustomPdb !== ESM_FOLD_PDB) {
       return;
     }
     removeCanvas()
@@ -47,14 +48,16 @@ export const ThreeDMol = () => {
     removeCanvas()
     createViewer()
     viewerRef.current.clear();
-    fetch(state.customPdbs[selectedCustomPdb].url)
+    fetch(state.customPdbs[selectedCustomPdb].response.url)
       .then(res => {
         return res.text();
       }).then(pdb => {
       viewerRef.current.addModel(pdb, 'pdb');
       viewerRef.current.setStyle({cartoon:{color:'spectrum'}});
       viewerRef.current.setStyle({resn: 'UNK'},{sphere:{radius:0.5}, stick:{}});
-      viewerRef.current.zoomTo({resn: 'UNK'});
+      if (selectedCustomPdb !== ESM_FOLD_PDB) {
+        viewerRef.current.zoomTo({resn: 'UNK'});
+      }
       viewerRef.current.render();
     }).catch(err => {
       console.log(err)
@@ -62,14 +65,14 @@ export const ThreeDMol = () => {
   }, [selectedCustomPdb])
 
   useEffect(() => {
-    if (state.pdbid) {
+    if (state.pdbid && state.pdbid !== ESM_FOLD_PDB) {
       renderPdb();
     }
   }, [renderPdb, state.pdbid])
 
   useEffect(() => {
     if (selectedCustomPdb) {
-      if (selectedCustomPdb === state.pdbid) {
+      if (selectedCustomPdb === state.pdbid && state.pdbid !== ESM_FOLD_PDB) {
         renderPdb();
         return;
       }

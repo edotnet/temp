@@ -2,12 +2,31 @@ import {Box, FormControl, InputLabel, MenuItem, Select, Stack, Typography} from 
 import React, {useEffect, useState} from 'react';
 import {useDashboardContext} from '../dashboard/context/useDashboarContext';
 import {dockingFetcher} from '../dashboard/DockingFetcher';
+import {api} from "../../infrastructure/api/instance";
+import {Endpoints, ESM_FOLD_PDB} from "../../config/Consts";
 
-export const PDBSelector = ({pdbs}) => {
+export const PDBSelector = ({organism}) => {
   const {state, dispatch} = useDashboardContext();
   const [pdb, setPdb] = useState(null);
   const [open, setOpen] = useState(false);
+
+  const setESMFold = () => {
+    if (organism.sequence.length > 400) {
+      alert('Sequence too long for ESMFold');
+      return;
+    }
+    dispatch({type: 'selectPdb', payload: ESM_FOLD_PDB});
+    dispatch({type: 'addCustomPdb', payload: {drug: ESM_FOLD_PDB}});
+    api.post(Endpoints.proteins.ESMFold, {sequence: organism.sequence}).then((res) => {
+      dispatch({type: 'addCustomPdbResponse', payload: {drug: ESM_FOLD_PDB, data: res.data, status: 'success'}});
+    });
+  }
+
   const handleChange = (e) => {
+    if (e.target.value === ESM_FOLD_PDB) {
+      setESMFold();
+      return;
+    }
     dispatch({type: 'selectPdb', payload: e.target.value});
     if (state.molecules.length > 0) {
       state.molecules.forEach(molecule => {
@@ -17,11 +36,11 @@ export const PDBSelector = ({pdbs}) => {
   };
 
   useEffect(() => {
-    if (!pdbs.length) return;
+    if (!organism.pdbs.length) return;
     setTimeout(() => {
-      handleChange({target: {value: pdbs[0].id}});
+      handleChange({target: {value: organism.pdbs[0].id}});
     }, 100);
-  }, [pdbs]);
+  }, [organism.pdbs]);
 
   function renderBox() {
     if (pdb === null || !open) {
@@ -70,11 +89,14 @@ export const PDBSelector = ({pdbs}) => {
           <MenuItem value={''}>
             <em>None</em>
           </MenuItem>
-          {pdbs.map(pdb => (
+          {organism.pdbs.sort((a,b) => b.pident - a.pident).map(pdb => (
             <MenuItem value={pdb.id} onMouseOver={() => setPdb(pdb)} onMouseOut={() => setPdb(null)} key={pdb.id}>
               {pdb.id}
             </MenuItem>
           ))}
+          {!organism.pdbs.length && <MenuItem value={ESM_FOLD_PDB} key={ESM_FOLD_PDB} onMouseOver={() => setPdb(null)}>
+            (+) ESMFold
+          </MenuItem>}
         </Select>
       </FormControl>
       {renderBox()}
