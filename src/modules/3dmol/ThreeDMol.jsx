@@ -55,7 +55,9 @@ export const ThreeDMol = () => {
       viewerRef.current.addModel(pdb, 'pdb');
       viewerRef.current.setStyle({cartoon:{color:'spectrum'}});
       viewerRef.current.setStyle({resn: 'UNK'},{sphere:{radius:0.5}, stick:{}});
-      if (selectedCustomPdb !== ESM_FOLD_PDB) {
+      if (selectedCustomPdb === ESM_FOLD_PDB) {
+        viewerRef.current.zoomTo();
+      } else {
         viewerRef.current.zoomTo({resn: 'UNK'});
       }
       viewerRef.current.render();
@@ -121,7 +123,7 @@ export const ThreeDMol = () => {
                 data-backgroundcolor="#f5f6fc"
                 data-pdb="2nbd"
                 data-style="cartoon"/>
-            {!!selectedCustomPdb && <Typography align="right" mt={2}>Affinity: {parseFloat(state.customPdbs[selectedCustomPdb].affinity).toFixed(3)} kcal/mol</Typography>}
+            {!!selectedCustomPdb && selectedCustomPdb !== ESM_FOLD_PDB && <Typography align="right" mt={2}>Affinity: {parseFloat(state.customPdbs[selectedCustomPdb].affinity).toFixed(3)} kcal/mol</Typography>}
           </Box>
         </AccordionDetails>
       </Accordion>}
