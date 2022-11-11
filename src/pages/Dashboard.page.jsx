@@ -14,6 +14,7 @@ import './Dashboard.scss'
 import {useNavigate} from "react-router-dom";
 import {DemographicFeature} from "../modules/dashboard/DemographicFeature";
 import {dockingFetcher} from "../modules/dashboard/DockingFetcher";
+import HAILO from '../assets/svg/HAILO.svg'
 
 export const Dashboard = () => {
     const {state, dispatch} = useDashboardContext();
@@ -105,12 +106,11 @@ export const Dashboard = () => {
                                 <DemographicFeature/>
                             </Grid>
                             <Grid item xs={6}>
-                                <Box>
-                                    <Typography gutterBottom variant="h5" className="title" color="secondary">DRUG
-                                        INTERACTOR</Typography>
-                                    <Typography variant="h6" className="subTitle">Drop molecules here for checking
+                                <Stack spacing={2}>
+                                    <img src={HAILO} alt="HAILO" style={{width: '15%', alignSelf: 'center'}}/>
+                                    <Typography variant="subtitle1" align="center" >Drop molecules here for checking
                                         interactions </Typography>
-                                </Box>
+                                </Stack>
                                 <DrugInteraction/>
                             </Grid>
                             <Grid item xs={3}>
