@@ -50,14 +50,8 @@ export const Dashboard = () => {
             <Box>
                 <DndProvider backend={HTML5Backend}>
                     <Grid pl={5} pr={5} className="dashboarddnd">
-                        <Box>
-                            <Typography gutterBottom variant="h5" className="title" color="secondary">DRUG
-                                INTERACTOR</Typography>
-                            <Typography variant="h6" className="subTitle">Drop molecules here for checking
-                                interactions </Typography>
-                        </Box>
                         <Grid container spacing={2}>
-                            <Grid item xs={3}>
+                            <Grid item xs={3} sx={{mt: 2}}>
                                 <Typography variant="h4" color="secondary" gutterBottom>DRUG INTERACTION</Typography>
                                 <Grid container spacing={2}>
                                     {/*
@@ -111,6 +105,12 @@ export const Dashboard = () => {
                                 <DemographicFeature/>
                             </Grid>
                             <Grid item xs={6}>
+                                <Box>
+                                    <Typography gutterBottom variant="h5" className="title" color="secondary">DRUG
+                                        INTERACTOR</Typography>
+                                    <Typography variant="h6" className="subTitle">Drop molecules here for checking
+                                        interactions </Typography>
+                                </Box>
                                 <DrugInteraction/>
                             </Grid>
                             <Grid item xs={3}>

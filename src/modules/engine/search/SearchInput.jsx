@@ -10,13 +10,13 @@ export function SearchInput(props) {
         value={props.value}
         onChange={props.onChange}
         onKeyPress={props.onKeyPress}
-        variant="standard"
+        variant="outlined"
         placeholder="Search for..."
         className="searchEngine-input"
         inputProps={{
           style: {
-            height: "41px",
-            paddingLeft: "10px"
+            height: "17px",
+            paddingLeft: "10px",
           },
         }}
       />

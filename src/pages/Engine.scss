@@ -82,9 +82,12 @@
 
 .searchEngine-input {
     height: 50px;
-    padding: 10px;
-    border: solid 1px #cbcbcb !important;
     border-right: none !important;
+
+    & fieldset {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+    }
 }
 
 .btn-white {
