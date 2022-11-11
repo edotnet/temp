@@ -7,6 +7,7 @@ import { Endpoints } from "../../../config/Consts";
 import axios from "axios";
 import {Score} from '../../../infrastructure/components/Score';
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
+import {encodeQuery} from "../../../infrastructure/hooks/useApiCall";
 
 const drugsColumns = [
   { field: `name`, headerName: 'Drug Name', minWidth: 150, flex: 1,
@@ -37,8 +38,8 @@ export function DrugResults(props) {
   const {state, dispatch} = useDashboardContext();
 
   const handleOnCellClick = (params, e) => {
-    if (params.field === 'title') {
-      const url = `${Endpoints.drugbank.drugs}${params.value}?page=${0}`;
+    if (params.field === 'name') {
+      const url = `${Endpoints.drugbank.drugs}${encodeQuery(params.value)}?exact=1`;
       axios.get(url).then(resp => {
         if (resp.data) {
           const molecule = resp.data.items[0];
