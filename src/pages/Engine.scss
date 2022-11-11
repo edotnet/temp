@@ -31,6 +31,10 @@
     text-transform: none !important;
     border: solid 1px #cbcbcb !important;
     font-size: 16px !important;
+    border-left: none !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+
 }
 
 
@@ -77,9 +81,10 @@
 }
 
 .searchEngine-input {
-    background-color: #fff;
     height: 50px;
-    padding: 10px;;
+    padding: 10px;
+    border: solid 1px #cbcbcb !important;
+    border-right: none !important;
 }
 
 .btn-white {
