@@ -77,7 +77,6 @@ export const DrugProperties = () => {
   }
 
   function renderCalculatedProperties() {
-    console.log(state.selectedMolecule);
     return (state.selectedMolecule.drugbank_id.startsWith('DB') ? keys : naturalProductKeys).map(key => (
       <Fragment key={key.title}>
         <Grid item xs={6}>

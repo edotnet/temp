@@ -75,6 +75,10 @@ export const SearchFeature = () => {
   const uploadSelectedDrugs = useCallback(() => {
     return new Promise((resolve, reject) => {
       const promises = [];
+      if (!state.drugSelection.length) {
+        resolve();
+        return;
+      }
       state.drugSelection.forEach(drug => {
         const url = `${Endpoints.drugbank.drugs}${encodeQuery(drug)}?exact=1`;
         promises.push(axios.get(url));
@@ -103,6 +107,10 @@ export const SearchFeature = () => {
   const uploadSelectedNaturalProducts = useCallback(() => {
     return new Promise((resolve, reject) => {
       const promises = [];
+      if (!state.naturalProductSelection.length) {
+        resolve();
+        return;
+      }
       state.naturalProductSelection.forEach(naturalProduct => {
         const url = `${Endpoints.naturalProducts.query}${encodeQuery(naturalProduct)}?exact=1`;
         promises.push(axios.get(url));
