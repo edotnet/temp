@@ -107,7 +107,7 @@ export const Dashboard = () => {
                             </Grid>
                             <Grid item xs={6}>
                                 <Stack spacing={2}>
-                                    <img src={HAILO} alt="HAILO" style={{width: '15%', alignSelf: 'center'}}/>
+                                    <img src={HAILO} alt="HAILO" style={{width: '7em', alignSelf: 'center'}}/>
                                     <Typography variant="subtitle1" align="center" >Drop molecules here for checking
                                         interactions </Typography>
                                 </Stack>
