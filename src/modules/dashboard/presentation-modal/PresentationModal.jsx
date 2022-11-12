@@ -28,7 +28,7 @@ export const PresentationModal = () => {
       <IconButton className='iconButton' size="large" onClick={close}>
         <Close/>
       </IconButton>
-      <Box p={4} pt={15}>
+      <Box p={4} pt={17}>
         <DrugInteractionContentFirst/>
         <DrugInteractionContent/>
         {(isDIFirstMolecule || isDI) && isDTI && <Hr block/>}
