@@ -5,6 +5,9 @@ import {useDashboardContext} from "./context/useDashboarContext";
 
 export const ThreeDMolFeature = () => {
     const {state} = useDashboardContext();
+    if (!state.protein) {
+      return null;
+    }
     return (
         <>
             <Typography variant="subtitle1">Target Interaction, protein:</Typography>
