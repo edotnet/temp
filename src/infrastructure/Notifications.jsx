@@ -18,7 +18,7 @@ export const Notifications = () => {
   useApiToken();
   useEffect(() => {
     OneSignal.init({
-      appId: process.env.REACT_APP_ONESIGNAL_APPID,
+      appId: window.location.hostname === 'app.prepaire.com' ? process.env.REACT_APP_ONESIGNAL_APPID_PROD : process.env.REACT_APP_ONESIGNAL_APPID_DEV,
       safari_web_id: process.env.REACT_APP_SAFARI_WEB_ID,
     }).then(() => {
       OneSignal.showSlidedownPrompt().then(() => {

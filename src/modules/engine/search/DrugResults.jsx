@@ -1,4 +1,13 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Avatar,
+  AvatarGroup, Box,
+  Button,
+  Stack,
+  Typography,
+} from '@mui/material';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DataGrid } from "@mui/x-data-grid";
 import dtiimage from "../../../assets/img/table-dti-icon.svg";
@@ -11,8 +20,13 @@ import {encodeQuery} from "../../../infrastructure/hooks/useApiCall";
 
 const drugsColumns = [
   { field: `name`, headerName: 'Drug Name', minWidth: 150, flex: 1,
-    renderCell: (params) => (
+    renderCell: (params) => (<Box sx={{display: 'flex', justifyContent: 'space-between', width: '90%'}}>
       <span className='link-btn'>{params.value}</span>
+        <AvatarGroup max={2} sx={{alignSelf: 'flex-end'}}>
+          {params.row.source === 'cannabis' && <Avatar alt="Cannabis" sx={{bgcolor: 'green', width: 35, height: 35}}>C</Avatar>}
+          {params.row.articles_item_only === 0 && <Avatar alt="Research" sx={{bgcolor: 'brown', width: 35, height: 35, color: 'white'}}>R</Avatar>}
+        </AvatarGroup>
+      </Box>
     ),
   },
   {
@@ -32,7 +46,8 @@ const drugsColumns = [
     headerName: 'Score',
     minWidth: 120, flex: 1,
     renderCell: (params) => (<Score score={params.value}/>)
-  }
+  },
+
 ];
 export function DrugResults(props) {
   const {state, dispatch} = useDashboardContext();

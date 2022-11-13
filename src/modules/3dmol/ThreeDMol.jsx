@@ -123,7 +123,7 @@ export const ThreeDMol = () => {
                 data-backgroundcolor="#f5f6fc"
                 data-pdb="2nbd"
                 data-style="cartoon"/>
-            {!!selectedCustomPdb && selectedCustomPdb !== ESM_FOLD_PDB && <Typography align="right" mt={2}>Affinity: {parseFloat(state.customPdbs[selectedCustomPdb].affinity).toFixed(3)} kcal/mol</Typography>}
+            {!!selectedCustomPdb && selectedCustomPdb !== ESM_FOLD_PDB && <Typography align="right" mt={2}>Affinity: {parseFloat(state.customPdbs[selectedCustomPdb].response.affinity).toFixed(3)} kcal/mol</Typography>}
           </Box>
         </AccordionDetails>
       </Accordion>}
