@@ -6,6 +6,7 @@ import {CustomChip} from '../../../infrastructure/components/CustomChip';
 import {CustomWidthTooltip} from '../../../infrastructure/components/CustomWidthTooltip';
 import {PrimaryButton} from '../../../infrastructure/components/PrimaryButton';
 import {useDashboardContext} from '../context/useDashboarContext';
+import {MoleculeCard} from '../MoleculeCard';
 
 const getMaintenanceDosage = (demographicsResult, selectedDemographicsId, drugName) => {
     const demographics = demographicsResult[selectedDemographicsId];
@@ -26,16 +27,6 @@ export const DrugInteractionContent = () => {
     }
     const [drug1, drug2] = state.interactingMolecules;
 
-    const getStyles = (color) => {
-        const {hue, saturation, luminosity} = color;
-        const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.4)`;
-        return {
-            //boxShadow: `0 4px 13px 0 ${moleculeColor}`,
-            border: `solid 1px ${moleculeColor}`,
-            //borderBottomWidth: `1.5px`,
-        };
-    };
-
     if (!state.interactingMoleculesResult) {
         return (<>
                 <Typography variant="subtitle1" gutterBottom>Drug Interaction molecules</Typography>
@@ -54,18 +45,26 @@ export const DrugInteractionContent = () => {
         return <Box sx={{px: 2, pt: 1, flexGrow: 1}}>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
                 <Box sx={{pb: 1, display: 'flex', justifyContent: 'space-between', flexGrow: 1}}>
-                    <CustomWidthTooltip title={drug1.name}>
-                        <CustomChip label={drug1.name} style={getStyles(drug1.color)}/>
-                    </CustomWidthTooltip>
+                    <MoleculeCard
+                      molecule={drug1}
+                      onClick={() => {}}
+                      onDelete={() => {
+                          dispatch({type: 'removeInteractingMolecule', payload: drug1});
+                      }}
+                    />
                     {!!state.demographicsResult && <Stack direction="row" alignItems="center">
                         <Science color="info"/>
                         <Typography>{parseFloat(getMaintenanceDosage(state.demographicsResult, state.selectedDemographics.id, drug1.name)).toFixed(3)} ml/hr</Typography>
                     </Stack>}
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-                    <CustomWidthTooltip title={drug2.name}>
-                        <CustomChip label={drug2.name} style={getStyles(drug2.color)}/>
-                    </CustomWidthTooltip>
+                    <MoleculeCard
+                      molecule={drug2}
+                      onClick={() => {}}
+                      onDelete={() => {
+                          dispatch({type: 'removeInteractingMolecule', payload: drug2});
+                      }}
+                    />
                     {!!state.demographicsResult && <Stack direction="row" alignItems="center">
                         <Science color="info"/>
                         <Typography>{parseFloat(getMaintenanceDosage(state.demographicsResult, state.selectedDemographics.id, drug2.name)).toFixed(3)} ml/hr</Typography>

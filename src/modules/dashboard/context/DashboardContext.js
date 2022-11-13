@@ -93,6 +93,11 @@ const reducer = (state, action) => {
         interactingMolecules: [],
         interactingMoleculesResult: null,
       }),
+      removeInteractingMolecule: (molecule) => ({
+        ...state,
+        interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
+        interactingMoleculesResult: null,
+      }),
       setInteractingMoleculesResult: (interactingMoleculesResult) => ({
         ...state,
         interactingMoleculesResult: {

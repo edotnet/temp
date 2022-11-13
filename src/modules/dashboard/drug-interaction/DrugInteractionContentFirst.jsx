@@ -6,6 +6,7 @@ import { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import './DrugInteraction.scss';
+import {MoleculeCard} from '../MoleculeCard';
 
 const PillSelect = styled(Select)({
   'fieldset': {
@@ -21,15 +22,6 @@ export const DrugInteractionContentFirst = () => {
   }
   const [drug1] = state.interactingMolecules;
 
-  const getStyles = (color) => {
-    const {hue, saturation, luminosity} = color;
-    const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.4)`;
-    return {
-      boxShadow: `0 4px 13px 0 ${moleculeColor}`,
-      border: `solid 1px ${moleculeColor}`,
-      borderBottomWidth: `1.5px`,
-    }
-  }
   const handleChange = (e) => {
     const molecule =  state.molecules.find(molecule => molecule.drugbank_id === e.target.value);
     dispatch({type: 'addInteractingMolecule', payload: molecule});
@@ -49,9 +41,13 @@ export const DrugInteractionContentFirst = () => {
         <Box pt={1}>
           <Box sx={{display: "flex"}}>
             <Box pb={1}>
-              <CustomWidthTooltip title={drug1.name}>
-                <CustomChip label={drug1.name} style={getStyles(drug1.color)}/>
-              </CustomWidthTooltip>
+              <MoleculeCard
+                molecule={drug1}
+                onClick={() => {}}
+                onDelete={() => {
+                  dispatch({type: 'removeInteractingMolecule', payload: drug1});
+                }}
+              />
             </Box>
             <Box ml={2}>
               {/*<CustomWidthTooltip title={"+ 2nd molecule"} onClick={() => setOpen(true)}>
