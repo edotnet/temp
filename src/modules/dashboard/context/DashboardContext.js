@@ -165,7 +165,7 @@ const reducer = (state, action) => {
         return {
           ...state,
           customPdbs,
-          docking: customPdbs.map(pdb => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
+          docking: Object.entries(customPdbs).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
         };
       },
       addCustomPdbResponse: ({drug, data, status}) => {
@@ -180,7 +180,7 @@ const reducer = (state, action) => {
         return {
           ...state,
           customPdbs,
-          docking: customPdbs.map(pdb => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
+          docking: Object.entries(customPdbs).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
         };
       },
     };
