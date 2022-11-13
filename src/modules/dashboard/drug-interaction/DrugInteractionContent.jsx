@@ -30,9 +30,9 @@ export const DrugInteractionContent = () => {
         const {hue, saturation, luminosity} = color;
         const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.4)`;
         return {
-            boxShadow: `0 4px 13px 0 ${moleculeColor}`,
+            //boxShadow: `0 4px 13px 0 ${moleculeColor}`,
             border: `solid 1px ${moleculeColor}`,
-            borderBottomWidth: `1.5px`,
+            //borderBottomWidth: `1.5px`,
         };
     };
 
@@ -77,9 +77,9 @@ export const DrugInteractionContent = () => {
 
     function renderPercentage() {
         return <Paper className="btn" elevation={4} sx={{borderRadius: 50}}><Avatar
-            sx={{bgcolor: '#d0eed2', width: 100, height: 100}}>
+            sx={{bgcolor: '#5498ef', width: 100, height: 100}}>
             <Typography sx={{
-                fontSize: 30, fontWeight: 300, color: '#1d1d1d',
+                fontSize: 30, color: 'white', fontWeight: 500,
             }}>{state.interactingMoleculesResult.value}%</Typography>
         </Avatar></Paper>;
     }
