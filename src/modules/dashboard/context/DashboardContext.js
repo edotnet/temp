@@ -67,6 +67,13 @@ const reducer = (state, action) => {
           customPdbs,
         });
       },
+      cleanMolecules: () => ({
+        ...state,
+        molecules: [],
+        interactingMolecules: [],
+        selectedMolecule: null,
+        customPdbs: {},
+      }),
       setCategory: (category) => ({
         ...state,
         category,
