@@ -90,7 +90,7 @@ export const ThreeDMol = () => {
         return 0;
     }
     return parseFloat(state.customPdbs[selectedCustomPdb].response.affinity).toFixed(3)
-  }, [])
+  }, [state.customPdbs, selectedCustomPdb])
   return (
     <>
       { state.pdbid && <Accordion sx={{mt:2, backgroundColor: '#f5f6fc'}} elevation={0}>
