@@ -16,10 +16,8 @@ import {Grid} from "@mui/material";
 const LoginTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
     borderRadius: 50,
-    paddingLeft: 20,
     marginTop: 0,
     marginBottom: 16,
-    paddingRight: 20,
   },
 })
 export const Login = () => {
@@ -45,8 +43,6 @@ export const Login = () => {
 
   const styles = {
     paperContainer: {
-      backgroundImage: `url('https://res.cloudinary.com/djpepozcx/image/upload/v1650613711/background1_pbr16m.jpg`,
-      backgroundSize: 'cover',
       height: '100vh',
     }
   };
@@ -65,16 +61,16 @@ export const Login = () => {
     <div style={styles.paperContainer}>
       <LoginAppBarComponent/>
       <Container component="main" maxWidth="sm">
-        <Box sx={{
+        <Paper elevation={8} sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           backgroundColor: '#fff',
           padding: '20px 40px 20px 40px',
           borderRadius: '40px',
-          position: 'relative'
+          position: 'relative',
         }}>
-          <Typography component="h1" variant="h4">
+          <Typography component="h1" variant="h3">
             LOG IN
           </Typography>
           <div className="login-box" ref={loginRef}>
@@ -128,7 +124,7 @@ export const Login = () => {
                  src="https://res.cloudinary.com/djpepozcx/image/upload/v1651232576/success_oicvxo.png"/>
             <p>Login Successful</p>
           </div>
-        </Box>
+        </Paper>
         <Typography sx={{margin: '40px 0px 40px 0px'}} align="center">REIMAGINING DRUG DISCOVERY &
           DEVELOPMENT</Typography>
       </Container>

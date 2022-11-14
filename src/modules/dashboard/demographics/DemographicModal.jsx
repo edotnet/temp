@@ -80,6 +80,8 @@ export const DemographicModal = ({onClose, open, id}) => {
   const initialState = useMemo(() => {
     const info = {
       id: state.demographics.length + 1,
+      weightSystem: 'kg',
+      heightSystem: 'cm',
     };
     Object.keys(options).forEach(key => {
       info[key] = undefined;

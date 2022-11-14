@@ -3,7 +3,7 @@ import {ExpandMore} from '@mui/icons-material';
 import {Accordion, AccordionDetails, AccordionSummary, Box, CircularProgress, MenuItem, TextField} from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import D3 from '../../assets/svg/3d.svg';
 import {useDashboardContext} from '../dashboard/context/useDashboarContext';
 import {ESM_FOLD_PDB} from "../../config/Consts";
@@ -82,7 +82,15 @@ export const ThreeDMol = () => {
     }
   }, [renderCustomPdb, renderPdb, selectedCustomPdb, state.pdbid])
 
-
+  const affinity = useMemo(() => {
+    if (!state.customPdbs[selectedCustomPdb]) {
+      return 0;
+    }
+    if (!state.customPdbs[selectedCustomPdb].response) {
+        return 0;
+    }
+    return parseFloat(state.customPdbs[selectedCustomPdb].response.affinity).toFixed(3)
+  }, [state.customPdbs, selectedCustomPdb])
   return (
     <>
       { state.pdbid && <Accordion sx={{mt:2, backgroundColor: '#f5f6fc'}} elevation={0}>
@@ -123,7 +131,7 @@ export const ThreeDMol = () => {
                 data-backgroundcolor="#f5f6fc"
                 data-pdb="2nbd"
                 data-style="cartoon"/>
-            {!!selectedCustomPdb && selectedCustomPdb !== ESM_FOLD_PDB && <Typography align="right" mt={2}>Affinity: {parseFloat(state.customPdbs[selectedCustomPdb].affinity).toFixed(3)} kcal/mol</Typography>}
+            {!!selectedCustomPdb && selectedCustomPdb !== ESM_FOLD_PDB && <Typography align="right" mt={2}>Affinity: {affinity} kcal/mol</Typography>}
           </Box>
         </AccordionDetails>
       </Accordion>}

@@ -26,14 +26,16 @@ const prepaireTheme = createTheme({
       fontWeight: 700,
       fontSize: '2rem',
     },
+    h3: {
+      fontWeight: 700,
+    },
     h4: {
       fontSize: '2rem',
-      fontFamily: 'SF Pro Display',
       fontWeight: 800,
     },
     h5: {
       fontSize: '2.5rem',
-      fontFamily: 'SF Pro Display',
+      fontFamily: 'Arial',
       fontWeight: 800,
     },
     h6: {
@@ -42,7 +44,7 @@ const prepaireTheme = createTheme({
     subtitle1: {
       fontSize: 18,
       fontWeight: 800,
-      fontFamily: 'SF Pro Display',
+      //fontFamily: 'SF Pro Display',
       color: '#1d1d1d',
     },
     body1: {

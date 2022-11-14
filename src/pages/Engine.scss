@@ -31,6 +31,10 @@
     text-transform: none !important;
     border: solid 1px #cbcbcb !important;
     font-size: 16px !important;
+    border-left: none !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+
 }
 
 
@@ -67,19 +71,14 @@
     background-color: rgba(0, 0, 0, 0.16);
 }
 
-
-.searchEngine-heading {
-  font-size: 40px;
-  font-weight: normal;
-  color: #1d1d1d;
-  margin-bottom: 46px;
-  text-transform: uppercase;
-}
-
 .searchEngine-input {
-    background-color: #fff;
     height: 50px;
-    padding: 10px;;
+    border-right: none !important;
+
+    & fieldset {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+    }
 }
 
 .btn-white {

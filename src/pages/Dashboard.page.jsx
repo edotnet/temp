@@ -1,4 +1,4 @@
-import {Box, Grid, Stack, Typography, useTheme} from '@mui/material';
+import {Box, Grid, IconButton, Stack, Typography, useTheme} from '@mui/material';
 import {MoleculeAutocomplete} from "../modules/dashboard/MoleculeAutocomplete";
 import {MoleculeCard} from "../modules/dashboard/MoleculeCard";
 import {DrugProperties} from "../modules/dashboard/DrugProperties";
@@ -14,6 +14,8 @@ import './Dashboard.scss'
 import {useNavigate} from "react-router-dom";
 import {DemographicFeature} from "../modules/dashboard/DemographicFeature";
 import {dockingFetcher} from "../modules/dashboard/DockingFetcher";
+import HAILO from '../assets/svg/HAILO.svg'
+import {DeleteOutline, Refresh} from "@mui/icons-material";
 
 export const Dashboard = () => {
     const {state, dispatch} = useDashboardContext();
@@ -50,15 +52,9 @@ export const Dashboard = () => {
             <Box>
                 <DndProvider backend={HTML5Backend}>
                     <Grid pl={5} pr={5} className="dashboarddnd">
-                        <Box>
-                            <Typography gutterBottom variant="h5" className="title" color="secondary">DRUG
-                                INTERACTOR</Typography>
-                            <Typography variant="h6" className="subTitle">Drop molecules here for checking
-                                interactions </Typography>
-                        </Box>
                         <Grid container spacing={2}>
-                            <Grid item xs={3}>
-                                <Typography variant="h4" color="secondary" gutterBottom>DRUG INTERACTION</Typography>
+                            <Grid item xs={3} sx={{mt: 6}}>
+                                <Typography variant="h4" gutterBottom>DRUG INTERACTION</Typography>
                                 <Grid container spacing={2}>
                                     {/*
                   <Grid item xs={12}>
@@ -80,13 +76,16 @@ export const Dashboard = () => {
                                         </Stack>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Box pt={2}>
+                                        <Stack pt={2} direction="row" spacing={2}>
                                             <MoleculeAutocomplete
                                                 key="drug-autocomplete"
                                                 onChange={_onDrugSelected}
                                                 category={state.category}
                                                 label="+ Add Drug Molecule"/>
-                                        </Box>
+                                            {/*state.molecules.length > 0 && <IconButton onClick={() => dispatch({type: 'cleanMolecules'})}>
+                                                <DeleteOutline />
+                                            </IconButton>*/}
+                                        </Stack>
                                         <Box sx={{pt: 3, pl: 1, display: 'flex', justifyContent: 'space-between'}}>
                                             {state.molecules.length > 0 &&
                                                 <>
@@ -111,6 +110,11 @@ export const Dashboard = () => {
                                 <DemographicFeature/>
                             </Grid>
                             <Grid item xs={6}>
+                                <Stack spacing={2} mt={2}>
+                                    <img src={HAILO} alt="HAILO" style={{width: '7em', alignSelf: 'center'}}/>
+                                    <Typography variant="subtitle1" align="center" >Drop molecules here for checking
+                                        interactions </Typography>
+                                </Stack>
                                 <DrugInteraction/>
                             </Grid>
                             <Grid item xs={3}>

@@ -66,7 +66,7 @@ export const SearchFeature = () => {
 
   const dispatchDocking = useCallback(() => {
     if (dashboardState.pdbid) {
-      state.molecules.forEach(molecule => {
+      dashboardState.molecules.forEach(molecule => {
         dockingFetcher(dashboardState.pdbid, molecule, dashboardDispatch);
       });
     }
@@ -126,7 +126,10 @@ export const SearchFeature = () => {
                     drugbank_id: item.UNPD_ID,
                     calculated_properties: {
                       SMILES: item.SMILES,
+                      ...item,
+                      'Moleculer Formula': resp.data.items[0].mf,
                     },
+                    toxicity: item.toxicity,
                   };
                   molecules.push(molecule);
                 }

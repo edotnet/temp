@@ -45,7 +45,7 @@ export const Navbar = () => {
           <nav className="headernavlink">
             <NavLink to="/engine/search">SEARCH ENGINE</NavLink>
             <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
-            <NavLink to="/surface">SURFACE</NavLink>
+            {/*<NavLink to="/surface">SURFACE</NavLink>*/}
           </nav>
         </Grid>
         <Grid item xs={1}>

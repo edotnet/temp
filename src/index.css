@@ -12,7 +12,6 @@ body {
   font-family: 'Work Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #F5F6FB !important;
 }
 
 code {
@@ -20,3 +19,22 @@ code {
     monospace;
 }
 
+/*.btn:active {
+  transform: scale(0.98);
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}*/
+
+.special-i {
+  color: #5498ef;
+  position: relative
+}
+
+.special-i::before {
+  content: "ı";
+  position: absolute;
+  color: black;
+}
+@font-face {
+  font-family: "sf-pro-display";
+  src: url("./assets/fonts/sf-pro/SFPRODISPLAYREGULAR.OTF") format("opentype");
+}
