@@ -127,6 +127,7 @@ export const SearchFeature = () => {
                     calculated_properties: {
                       SMILES: item.SMILES,
                       ...item,
+                      'Moleculer Formula': resp.data.items[0].mf,
                     },
                     toxicity: item.toxicity,
                   };

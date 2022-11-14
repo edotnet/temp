@@ -48,7 +48,8 @@ export function NaturalProductsResults(props) {
             drugbank_id: resp.data.items[0].UNPD_ID,
             calculated_properties: {
               SMILES: resp.data.items[0].SMILES,
-              ...resp.data.items[0]
+              ...resp.data.items[0],
+              'Moleculer Formula': resp.data.items[0].mf,
             },
             toxicity: resp.data.items[0].toxicity,
             coordinates:{

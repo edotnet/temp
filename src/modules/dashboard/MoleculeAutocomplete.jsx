@@ -49,7 +49,8 @@ export const MoleculeAutocomplete = ({label, onChange, category}) => {
         drugbank_id: molecule.UNPD_ID,
         calculated_properties: {
           SMILES: molecule.SMILES,
-          ...molecule
+          ...molecule,
+          'Moleculer Formula': molecule.mf,
         },
         toxicity: molecule.toxicity,
       }

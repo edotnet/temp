@@ -133,6 +133,7 @@ export const DrugProperties = () => {
       position: 'absolute',
       top: state.selectedMolecule?.coordinates?.y || '50%',
       left: state.selectedMolecule?.coordinates?.x || '50%',
+      zIndex: 10,
     }}>
       <ModalPaper elevation={2} sx={{width: 450, marginBottom: '50px', px: 2}}>
         <IconButton sx={{position: 'absolute', top: 0, right: 0}} size="large" onClick={close}>
@@ -151,8 +152,8 @@ export const DrugProperties = () => {
               </Box>
               <Box sx={{display: 'flex', mt: -0.5}}>
                 <CopyComponent text={`${state.selectedMolecule.name}
-                  ${state.selectedMolecule.calculated_properties['Molecular Formula']?.toUpperCase()}
-                  ${state.selectedMolecule.clinical_description}`}
+                  ${state.selectedMolecule.calculated_properties['Molecular Formula']?.toUpperCase() ?? ''}
+                  ${state.selectedMolecule.clinical_description ?? ''}`}
                 />
               </Box>
             </Box>
