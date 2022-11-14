@@ -1,6 +1,6 @@
 import $3Dmol from '3dmol';
 import {Close} from '@mui/icons-material';
-import {Box, Grid, IconButton, Typography} from '@mui/material';
+import {Box, Grid, IconButton, Stack, Typography} from '@mui/material';
 import $ from 'jquery/dist/jquery.min.js';
 import {Fragment} from 'react';
 import {CopyComponent} from '../../infrastructure/components/Copy.component';
@@ -142,14 +142,14 @@ export const DrugProperties = () => {
           <Box>
             <Typography variant="subtitle1"> Drug Properties </Typography>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-              <Box sx={{justifyContent: 'space-between', display: 'flex',flexDirection: 'row'}}>
-                <Typography sx={{color: '#383874', fontWeight: 400, fontSize: 25, overflowWrap: 'anywhere'}} gutterBottom
+              <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+                <Typography sx={{color: '#383874', fontWeight: 400, fontSize: 25}} gutterBottom
                             component="span">{state.selectedMolecule.name}
-                  <Typography sx={{color: '#373767', fontSize: 30}} gutterBottom
-                              component="span">{state.selectedMolecule.calculated_properties['Molecular Formula']?.toUpperCase() ?? state.selectedMolecule.calculated_properties['mf']?.toUpperCase()}</Typography>
                 </Typography>
+                <Typography sx={{color: '#373767', fontSize: 25}} gutterBottom
+                            component="span">{state.selectedMolecule.calculated_properties['Molecular Formula']?.toUpperCase() ?? state.selectedMolecule.calculated_properties['mf']?.toUpperCase()}</Typography>
               </Box>
-              <Box sx={{alignContent: 'center', display: 'flex'}}>
+              <Box sx={{display: 'flex', mt: -0.5}}>
                 <CopyComponent text={`${state.selectedMolecule.name}
                   ${state.selectedMolecule.calculated_properties['Molecular Formula']?.toUpperCase()}
                   ${state.selectedMolecule.clinical_description}`}

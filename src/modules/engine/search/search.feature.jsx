@@ -126,7 +126,9 @@ export const SearchFeature = () => {
                     drugbank_id: item.UNPD_ID,
                     calculated_properties: {
                       SMILES: item.SMILES,
+                      ...item,
                     },
+                    toxicity: item.toxicity,
                   };
                   molecules.push(molecule);
                 }

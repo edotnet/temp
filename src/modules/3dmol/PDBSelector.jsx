@@ -94,9 +94,9 @@ export const PDBSelector = ({organism}) => {
               {pdb.id}
             </MenuItem>
           ))}
-          <MenuItem value={ESM_FOLD_PDB} key={ESM_FOLD_PDB} onMouseOver={() => setPdb(null)}>
+          {!!organism && !!organism.sequence && organism.sequence.length <= 400 && <MenuItem value={ESM_FOLD_PDB} key={ESM_FOLD_PDB} onMouseOver={() => setPdb(null)}>
             (+) ESMFold
-          </MenuItem>
+          </MenuItem>}
         </Select>
       </FormControl>
       {renderBox()}

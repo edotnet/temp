@@ -7,6 +7,7 @@ import { Endpoints } from "../../../config/Consts";
 import axios from "axios";
 import {api} from '../../../infrastructure/api/instance';
 import {Score} from '../../../infrastructure/components/Score';
+import {encodeQuery} from '../../../infrastructure/hooks/useApiCall';
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
 
 const naturalProductsColumns = [
@@ -38,15 +39,23 @@ export function NaturalProductsResults(props) {
   const {state, dispatch} = useDashboardContext();
 
   const handleOnCellClick = (params, e) => {
-    if (params.field === 'title') {
-      const url = `${Endpoints.drugbank.naturalProducts}${params.value}?page=${0}`;
+    if (params.field === 'name') {
+      const url = `${Endpoints.naturalProducts.query}${encodeQuery(params.value)}?page=${0}`;
       api.get(url).then(resp => {
         if (resp.data) {
-          const molecule = resp.data.items[0];
-          molecule.coordinates = {
-            x: e.clientX,
-            y: e.clientY,
-          }
+          const molecule = {
+            name: resp.data.items[0].cn,
+            drugbank_id: resp.data.items[0].UNPD_ID,
+            calculated_properties: {
+              SMILES: resp.data.items[0].SMILES,
+              ...resp.data.items[0]
+            },
+            toxicity: resp.data.items[0].toxicity,
+            coordinates:{
+              x: e.clientX,
+              y: e.clientY,
+            }
+          };
           dispatch({type: 'selectMolecule', payload: molecule});
         }
       });
