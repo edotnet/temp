@@ -1,4 +1,4 @@
-import {Box, Grid, Stack, Typography, useTheme} from '@mui/material';
+import {Box, Grid, IconButton, Stack, Typography, useTheme} from '@mui/material';
 import {MoleculeAutocomplete} from "../modules/dashboard/MoleculeAutocomplete";
 import {MoleculeCard} from "../modules/dashboard/MoleculeCard";
 import {DrugProperties} from "../modules/dashboard/DrugProperties";
@@ -15,6 +15,7 @@ import {useNavigate} from "react-router-dom";
 import {DemographicFeature} from "../modules/dashboard/DemographicFeature";
 import {dockingFetcher} from "../modules/dashboard/DockingFetcher";
 import HAILO from '../assets/svg/HAILO.svg'
+import {DeleteOutline, Refresh} from "@mui/icons-material";
 
 export const Dashboard = () => {
     const {state, dispatch} = useDashboardContext();
@@ -75,13 +76,16 @@ export const Dashboard = () => {
                                         </Stack>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <Box pt={2}>
+                                        <Stack pt={2} direction="row" spacing={2}>
                                             <MoleculeAutocomplete
                                                 key="drug-autocomplete"
                                                 onChange={_onDrugSelected}
                                                 category={state.category}
                                                 label="+ Add Drug Molecule"/>
-                                        </Box>
+                                            {/*state.molecules.length > 0 && <IconButton onClick={() => dispatch({type: 'cleanMolecules'})}>
+                                                <DeleteOutline />
+                                            </IconButton>*/}
+                                        </Stack>
                                         <Box sx={{pt: 3, pl: 1, display: 'flex', justifyContent: 'space-between'}}>
                                             {state.molecules.length > 0 &&
                                                 <>
