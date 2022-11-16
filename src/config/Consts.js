@@ -37,7 +37,7 @@ export const Endpoints = {
   },
   search: {
     pdf : `${useApi}/xdl/search`,
-    drug: `${useApi}/drug-search-new`,
+    drug: `${useApi}/drug-search`,
   },
   musyc: {
     query: `${useApi}/3d/calculate`,

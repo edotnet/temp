@@ -227,6 +227,12 @@ export const SearchFeature = () => {
       if (!targets || targets.length === 0) {
         return;
       }
+      if (targets && targets.length === 0) {
+        dispatch({type: 'setTargets', payload: targets});
+        dispatch({type: 'setTargetSelection', payload: []});
+        dispatch({type: 'setSelectedTarget', payload: null});
+        return;
+      }
       const defaultTarget = targets[0].name.toLowerCase();
       const defaultTargetRow = targets.find((row) => row.name.toLowerCase() === defaultTarget);
       if (defaultTargetRow) {
@@ -234,6 +240,9 @@ export const SearchFeature = () => {
       }
       dispatch({type: 'setTargetSelection', payload: [defaultTarget]});
       dispatch({type: 'setTargets', payload: targets});
+    }
+    if (data && data.results && data.results.length === 0) {
+      dispatch({type: 'clean'})
     }
   }, [data, dispatch, drugs, searchText, targets]);
 

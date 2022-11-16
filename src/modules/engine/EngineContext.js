@@ -23,6 +23,7 @@ const reducer = (state, action) => {
     setTargetSelection: (targetSelection) => ({...state, targetSelection}),
     setDrugSelection: (drugSelection) => ({...state, drugSelection}),
     setNaturalProductSelection: (naturalProductSelection) => ({...state, naturalProductSelection}),
+    clean: () => initialState,
   };
   if (!(action.type in actions)) {
     return state;

@@ -1,4 +1,13 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Typography,
+} from '@mui/material';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DataGrid } from "@mui/x-data-grid";
 import dtiimage from "../../../assets/img/table-dti-icon.svg";
@@ -12,8 +21,13 @@ import { useDashboardContext } from "../../dashboard/context/useDashboarContext"
 
 const naturalProductsColumns = [
   { field: `name`, headerName: 'Drug Name', minWidth: 150, flex: 1,
-    renderCell: (params) => (
-      <span className='link-btn'>{params.value}</span>
+    renderCell: (params) => (<Box sx={{display: 'flex', justifyContent: 'space-between', width: '90%'}}>
+        <span className='link-btn'>{params.value}</span>
+        <AvatarGroup max={2} sx={{alignSelf: 'flex-end'}}>
+          {params.row.source === 'cannabis' && <Avatar alt="Cannabis" sx={{bgcolor: 'green', width: 35, height: 35}}>C</Avatar>}
+          {params.row.articles_item_only === 0 && <Avatar alt="Research" sx={{bgcolor: 'brown', width: 35, height: 35, color: 'white'}}>R</Avatar>}
+        </AvatarGroup>
+      </Box>
     ),
   },
   {
@@ -40,7 +54,7 @@ export function NaturalProductsResults(props) {
 
   const handleOnCellClick = (params, e) => {
     if (params.field === 'name') {
-      const url = `${Endpoints.naturalProducts.query}${encodeQuery(params.value)}?page=${0}`;
+      const url = `${Endpoints.naturalProducts.query}${encodeQuery(params.value)}?exact=1`;
       api.get(url).then(resp => {
         if (resp.data) {
           const molecule = {
