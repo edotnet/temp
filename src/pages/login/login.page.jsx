@@ -1,57 +1,48 @@
 import * as React from 'react';
-import { useRef, useState } from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
+import { useEffect, useRef, useState } from 'react';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { LoginAppBarComponent } from '../../infrastructure/components/loginAppbar.component';
-import { useNavigate } from "react-router-dom";
 import './login.scss'
+import { useAuth } from "../../infrastructure/authentication/useAuth";
+import { PrimaryButton } from "../../infrastructure/components/PrimaryButton";
+import {Link, useNavigate} from "react-router-dom";
+import {Grid} from "@mui/material";
 
 const LoginTextField = styled(TextField)({
   '& .MuiOutlinedInput-root': {
     borderRadius: 50,
-    paddingLeft: 20,
     marginTop: 0,
     marginBottom: 16,
-    paddingRight: 20,
   },
 })
 export const Login = () => {
 
-  let [message, setMessage] = useState('Please enter your details');
-  let [error, setError] = useState(false);
-  const navigate = useNavigate();
+  const [message, setMessage] = useState('Please enter your details');
   const loginRef = useRef();
   const successRef = useRef();
+  const {login, error, loading} = useAuth();
+  const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    if (data.get('email') === 'admin@prepaire.com' && data.get('password') === 'admin') {
+    login(data.get('email'), data.get('password')).then(() => {
       loginRef.current.classList.toggle('hidden');
       successRef.current.classList.toggle('open')
       setTimeout(() => {
         navigate('/engine/search', true);
-      }, 1000);
-    } else {
+      }, 500);
+    }).catch(err => {
       setMessage('Wrong email or password, please try again.');
-      setError(true);
-    }
+    });
   };
 
   const styles = {
     paperContainer: {
-      backgroundImage: `url('https://res.cloudinary.com/djpepozcx/image/upload/v1650613711/background1_pbr16m.jpg`,
-      backgroundSize: 'cover',
       height: '100vh',
     }
   };
@@ -70,16 +61,14 @@ export const Login = () => {
     <div style={styles.paperContainer}>
       <LoginAppBarComponent/>
       <Container component="main" maxWidth="sm">
-        <CssBaseline/>
-        <Box sx={{
+        <Paper elevation={8} sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           backgroundColor: '#fff',
           padding: '20px 40px 20px 40px',
           borderRadius: '40px',
-          height: '615px',
-          position: 'relative'
+          position: 'relative',
         }}>
           <Typography component="h1" variant="h3">
             LOG IN
@@ -89,26 +78,22 @@ export const Login = () => {
                         sx={{marginTop: '20px', textAlign: 'center'}}> {message} </Typography>
             <Box component="form" className="loginform" onSubmit={handleSubmit} noValidate>
               <label className='loginlabel'>Email</label>
-              <LoginTextField error={error} fullWidth margin="normal" id="email" name="email" autoComplete="email"
+              <LoginTextField error={!!error} fullWidth margin="normal" id="email" name="email" autoComplete="email"
                               autoFocus placeholder='admin@prepaire.com'/>
               <label className="loginlabel">Password</label>
-              <LoginTextField error={error} margin="normal" required fullWidth name="password" type="password"
+              <LoginTextField error={!!error} margin="normal" required fullWidth name="password" type="password"
                               id="password" autoComplete="current-password" placeholder='****'/>
-              <Grid container>
-                <Grid item xs>
-                  <FormControlLabel className='logincheckbox' control={<Checkbox value="remember" color="primary"/>}
-                                    label="Remember me"/>
-                </Grid>
-                <Grid item>
-                  <Link href="#" className='loginforgetpass' variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-              </Grid>
-              <Button className="submitbtn" type="submit" variant="contained" sx={{mt: 3, mb: 2}}> LOG IN </Button>
+              <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                <PrimaryButton type="submit" sx={{mt: 3, mb: 2, px: 5}} title={loading ? 'Login...' : 'Login'} disabled={loading}/>
+              </Box>
+              <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                <Link to="/signup" className='loginforgetpass' variant="body2">
+                  Don't have account yet? Sign Up
+                </Link>
+              </Box>
             </Box>
-            <Typography sx={{color: '#767373', marginTop: '20px', marginBottom: '20px', textAlign: 'center'}}>Log in
-              with</Typography>
+            {/*
+            <Typography sx={{color: '#767373', marginTop: '20px', marginBottom: '20px', textAlign: 'center'}}>Log in with</Typography>
             <Stack spacing={6} direction="row" justifyContent="center">
               <Item>
                 <a href='..#' className='social-content'>
@@ -132,13 +117,14 @@ export const Login = () => {
                 </a>
               </Item>
             </Stack>
+            */}
           </div>
           <div className='login-success-content' ref={successRef}>
             <Box component="img" sx={{maxWidth: '80px'}}
                  src="https://res.cloudinary.com/djpepozcx/image/upload/v1651232576/success_oicvxo.png"/>
             <p>Login Successful</p>
           </div>
-        </Box>
+        </Paper>
         <Typography sx={{margin: '40px 0px 40px 0px'}} align="center">REIMAGINING DRUG DISCOVERY &
           DEVELOPMENT</Typography>
       </Container>

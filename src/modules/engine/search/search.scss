@@ -42,6 +42,7 @@
 .link-btn{
   cursor: pointer;
   text-decoration: underline;
+  align-self: center;
 
   &:hover{
     color: #3352c1;
@@ -99,6 +100,3 @@
   }
 }
 
-.uploadbtn {
-  background-color: #e3e2ff !important;
-}

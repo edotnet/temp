@@ -1,5 +1,6 @@
 import {Box, Button, MenuItem, Select, TextField, Typography} from "@mui/material";
 import {useRef, useState} from "react";
+import {CircularProgressComponent} from '../../infrastructure/components/CircularProgress.component';
 import {useApiCall} from "../../infrastructure/hooks/useApiCall";
 import Grid from '@mui/material/Grid';
 import beautify from "xml-beautifier";
@@ -41,6 +42,44 @@ export const Text2xdlFeature = () => {
     return xml;
   }
 
+  function renderResult() {
+    if (loading) {
+      return <CircularProgressComponent />;
+    }
+    if (error || (data === "")) {
+      return <div className="center">There is some issue translating, we're sorry</div>;
+    }
+    if (!data || !data.result) {
+      return null;
+    }
+
+    return <>
+      <h4 className="heading">Drug Synthesis Translated to XDL Code</h4>
+      <Grid container spacing={2}>
+        <Grid item xs={6} sx={{position: 'relative'}}>
+          <h4>Synthesis Process</h4>
+          <Box sx={{position: 'absolute', right: 10, top: 30}}>
+            <CopyComponent text={data.result.text} />
+          </Box>
+          <div className="process" id="style-2">
+            {data && data.result ? NewlineText(data.result.text) : ''}
+          </div>
+        </Grid>
+        <Grid item xs={6} sx={{position: 'relative'}}>
+          <h4>Synthesis XDL</h4>
+          <Box sx={{position: 'absolute', right: 10, top: 30}}>
+            <CopyComponent text={prettyformat(data.result.xml)} />
+          </Box>
+          <div className="synthesis" id="style-2">
+                      <pre>
+                        {data && data.result ? prettyformat(data.result.xml) : ''}
+                      </pre>
+          </div>
+        </Grid>
+      </Grid>
+    </>;
+  }
+
   return (
     <div className="searchEngine-xdl">
       <h2>Upload Text2XDL</h2>
@@ -69,38 +108,10 @@ export const Text2xdlFeature = () => {
             </div>
           </div>
         </Grid>
-        <Grid item xs={8}>
-          {
-            data && data.result ?
-              <div className="result" id="style-2">
-                <h4 className="heading">Drug Synthesis Translated to XDL Code</h4>
-                <Grid container spacing={2}>
-                  <Grid item xs={6} sx={{position: 'relative'}}>
-                    <h4>Synthesis Process</h4>
-                    <Box sx={{position: 'absolute', right: 10, top: 30}}>
-                      <CopyComponent text={data.result.text} />
-                    </Box>
-                    <div className="process" id="style-2">
-                      {data && data.result ? NewlineText(data.result.text) : ''}
-                    </div>
-                  </Grid>
-                  <Grid item xs={6} sx={{position: 'relative'}}>
-                    <h4>Synthesis XDL</h4>
-                    <Box sx={{position: 'absolute', right: 10, top: 30}}>
-                      <CopyComponent text={prettyformat(data.result.xml)} />
-                    </Box>
-                    <div className="synthesis" id="style-2">
-                      <pre>
-                        {data && data.result ? prettyformat(data.result.xml) : ''}
-                      </pre>
-                    </div>
-                  </Grid>
-                </Grid>
-              </div> : Loadingresult === true ? <div className="result">
-                <div style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}><Box>
-                  <CircularProgress/><h4>Loading...</h4></Box></div>
-              </div> : ''
-          }
+        <Grid item xs={8} style={{position: 'relative'}}>
+          <div className="result" id="style-2">
+            {renderResult()}
+          </div>
         </Grid>
       </Grid>
     </div>

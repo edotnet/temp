@@ -1,47 +1,44 @@
-import {useApiCall} from "../../infrastructure/hooks/useApiCall";
-import {Autocomplete} from "../../infrastructure/components/Autocomplete";
-import {Endpoints} from "../../config/Consts";
-import {useDashboardContext} from "../dashboard/context/useDashboarContext";
+import {memo} from 'react';
+import {Endpoints} from '../../config/Consts';
+import {Autocomplete} from '../../infrastructure/components/Autocomplete';
+import {encodeQuery, useApiCall} from '../../infrastructure/hooks/useApiCall';
+import {useDashboardContext} from '../dashboard/context/useDashboarContext';
 
-export const TargetAutocomplete = ({label, onChange, onEmpty}) => {
-    const {state, dispatch} = useDashboardContext();
-    const url = Endpoints.drugbank.targets;
-    let selectedProtein = null;
+const TargetAutocompleteComponent = ({label, onChange, onEmpty}) => {
+  const {state} = useDashboardContext();
+  const url = Endpoints.proteins.name;
+  const {loading, data, fetch} = useApiCall(url, null, null, false);
 
-    const {loading, data, error, fetch, reset} = useApiCall(url, null, null, false);
-    if(state.protein) {
-        selectedProtein = state.protein.name;
+  const executeSearch = (search) => {
+    fetch(`${url}?criteria=${encodeQuery(search)}`, 'GET');
+  };
+
+  const _onChange = (newValue) => {
+    if (!data || typeof newValue === 'string') {
+      return;
     }
-    const executeSearch = (search) => {
-        fetch(`${url}${search}`, 'GET')
-    }
+    const target = data.items.find(item => item.id === newValue.id);
+    onChange(target);
+  };
 
+  const options = data ? data.items
+    .map(item => ({
+      id: item.id,
+      label: item.name,
+    })) : [];
 
-    const _onChange = (newValue) => {
-        if (!data || typeof newValue === 'string') {
-            return;
-        }
-        const target = data.find(item => item.amino_acid_sequence === newValue.id);
-        onChange(target);
-    }
-
-    const options = data ? data
-        .map(item => ({
-            id: item.amino_acid_sequence,
-            label: item.name
-        })) : [];
-
-    return (
-        <Autocomplete
-            key={'target-autocomplete'}
-            onChange={_onChange}
-            onInputChange={newValue => executeSearch(newValue)}
-            onEmpty={onEmpty}
-            options={options}
-            loading={loading}
-            label={label}
-            value={selectedProtein}
-            variant="standard"
-        />
-    );
-}
+  return (
+    <Autocomplete
+      key={'target-autocomplete'}
+      onChange={_onChange}
+      onInputChange={newValue => executeSearch(newValue)}
+      onEmpty={onEmpty}
+      options={options}
+      loading={loading}
+      label={label}
+      value={state.protein?.name || null}
+      variant="standard"
+    />
+  );
+};
+export const TargetAutocomplete = memo(TargetAutocompleteComponent);

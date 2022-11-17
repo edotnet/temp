@@ -1,37 +1,60 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Avatar,
+  AvatarGroup, Box,
+  Button,
+  Stack,
+  Typography,
+} from '@mui/material';
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DataGrid } from "@mui/x-data-grid";
 import dtiimage from "../../../assets/img/table-dti-icon.svg";
 import * as PropTypes from "prop-types";
 import { Endpoints } from "../../../config/Consts";
 import axios from "axios";
+import {Score} from '../../../infrastructure/components/Score';
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
+import {encodeQuery} from "../../../infrastructure/hooks/useApiCall";
 
 const drugsColumns = [
-  { field: `title`, headerName: 'Drug Name', minWidth: 150, flex: 1,
-    renderCell: (params) => (
+  { field: `name`, headerName: 'Drug Name', minWidth: 150, flex: 1,
+    renderCell: (params) => (<Box sx={{display: 'flex', justifyContent: 'space-between', width: '90%'}}>
       <span className='link-btn'>{params.value}</span>
+        <AvatarGroup max={2} sx={{alignSelf: 'flex-end'}}>
+          {params.row.source === 'cannabis' && <Avatar alt="Cannabis" sx={{bgcolor: 'green', width: 35, height: 35}}>C</Avatar>}
+          {params.row.articles_item_only === 0 && <Avatar alt="Research" sx={{bgcolor: 'brown', width: 35, height: 35, color: 'white'}}>R</Avatar>}
+        </AvatarGroup>
+      </Box>
     ),
   },
   {
-    field: `metrics['(Search + {}) Publications']`,
+    field: `articles_search_item`,
     headerName: '(Search + Drug)Publications',
-    minWidth: 250,
-    valueGetter: (params) => params.row.metrics['(Search + {}) Publications'],
+    minWidth: 200,
+    hide: true,
   },
   {
-    field: `metrics['{} Publications']`,
+    field: `articles_item_only`,
     headerName: 'Drug Publications',
     minWidth: 120, flex: 1,
-    valueGetter: (params) => params.row.metrics['{} Publications'],
-  }
+    hide: true,
+  },
+  {
+    field: 'f_score',
+    headerName: 'Score',
+    minWidth: 120, flex: 1,
+    renderCell: (params) => (<Score score={params.value}/>)
+  },
+
 ];
 export function DrugResults(props) {
   const {state, dispatch} = useDashboardContext();
 
   const handleOnCellClick = (params, e) => {
-    if (params.field === 'title') {
-      const url = `${Endpoints.drugbank.drugs}${params.value}?page=${0}`;
+    if (params.field === 'name') {
+      const url = `${Endpoints.drugbank.drugs}${encodeQuery(params.value)}?exact=1`;
       axios.get(url).then(resp => {
         if (resp.data) {
           const molecule = resp.data.items[0];
@@ -57,7 +80,7 @@ export function DrugResults(props) {
           pageSize={5}
           rowsPerPageOptions={[5]}
           checkboxSelection
-          getRowId={(row) => row.title.toLowerCase()}
+          getRowId={(row) => row.name.toLowerCase()}
           getRowHeight={() => 'auto'}
           onRowClick={props.onRowClick}
           disableSelectionOnClick
@@ -66,6 +89,11 @@ export function DrugResults(props) {
           onCellClick={handleOnCellClick}
           onSelectionModelChange={props.onSelectionModelChange}
           getRowClassName={props.rowClassName}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'f_score', sort: 'desc' }],
+            },
+          }}
         />
       }
       {/*onClick={uploadSelectedDrugs} for button */}

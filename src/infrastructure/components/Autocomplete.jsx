@@ -1,6 +1,6 @@
 import { Autocomplete as MAutocomplete, CircularProgress, TextField } from "@mui/material";
 
-export const Autocomplete = ({onChange, onEmpty, onInputChange, label, options, loading, ...rest}) => {
+export const Autocomplete = ({onChange, onEmpty, onInputChange, label, options, loading, renderOption, ...rest}) => {
 
   const _onChange = (event, newValue) => {
     if (!newValue) {
@@ -29,6 +29,7 @@ export const Autocomplete = ({onChange, onEmpty, onInputChange, label, options, 
       onChange={_onChange}
       onInputChange={_onInputChange}
       loading={loading}
+      renderOption={renderOption}
       renderInput={(params) => (
         <TextField
           {...params}

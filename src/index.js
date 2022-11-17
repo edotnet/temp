@@ -1,13 +1,14 @@
-import { StrictMode } from 'react';
+import {SnackbarProvider} from 'notistack';
+import {StrictMode} from 'react';
 import ReactDOM from 'react-dom';
-import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import theme from "./infrastructure/config/theme";
-import { BrowserRouter } from "react-router-dom";
+import {HashRouter} from "react-router-dom";
 import "@fontsource/work-sans";
-import { ThemeProvider } from '@mui/material/styles';
+import {ThemeProvider} from '@mui/material/styles';
+
 
 /*const root = createRoot(document.getElementById('root'))
 root.render(
@@ -20,12 +21,13 @@ root.render(
   </StrictMode>,
 );
  */
-
-ReactDOM.render( <StrictMode>
+ReactDOM.render(<StrictMode>
   <ThemeProvider theme={theme}>
-    <BrowserRouter>
+    <SnackbarProvider>
+    <HashRouter>
       <App/>
-    </BrowserRouter>
+    </HashRouter>
+    </SnackbarProvider>
   </ThemeProvider>
 </StrictMode>, document.getElementById('root'))
 

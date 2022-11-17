@@ -1,16 +1,16 @@
 import {DashboardLayout} from "../infrastructure/layouts/Dashboard.layout";
-import {Container} from '@mui/material';
+import {Container, Typography} from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {NavLink, Outlet } from "react-router-dom";
 import './Engine.scss';
 import { useDashboardContext } from "../modules/dashboard/context/useDashboarContext";
+import { EngineContextProvider } from "../modules/engine/EngineContext";
 
 export const Engine = () => {
-  const {state} = useDashboardContext();
   return (
     <DashboardLayout style={{height: '100%'}}>
       <Container maxWidth="xl">
-        <h1 className="searchEngine-heading">Search Engine</h1>
+        <Typography variant="h4" mb={6} mt={4} sx={{textTransform: 'uppercase'}}>Search Engine</Typography>
         <Grid container spacing={2}>
           <Grid item>
             <nav className="searchnavlink">
