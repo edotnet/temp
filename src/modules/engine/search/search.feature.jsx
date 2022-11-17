@@ -215,8 +215,9 @@ export const SearchFeature = () => {
   }, [state.targetSelection, dispatch, targets]);
 
   const SelectOne = () => (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', pl: '16px' }}>
-      <WestIcon color='disabled' /><Typography color='GrayText'>Select One</Typography>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, pl: 2 }}>
+      <WestIcon color='disabled' />
+      <Typography color='GrayText'>Select One</Typography>
     </Box>
   )
 
@@ -266,7 +267,7 @@ export const SearchFeature = () => {
           }
         }} onClick={onRun} />
         <Stack direction="row" spacing={2}>
-          {[...suggestionsData, suggestionsData.length ? <SelectOne /> : null]}
+          {[...suggestionsData, suggestionsData.length > 0 && <SelectOne />]}
         </Stack>
       </Box>
       <Box>{
