@@ -55,8 +55,8 @@ export const SearchFeature = () => {
   }, [data]);
 
   const isNotFound = useMemo(
-    () => !state.drugs.length && !state.targets.length && loading === false,
-    [loading, state.drugs.length, state.targets.length]
+    () => !state.drugs.length && !state.targets.length && !state.naturalProducts.length && loading === false,
+    [loading, state.drugs.length, state.targets.length, state.naturalProducts.length]
   )
 
   const notFoundValue = useMemo(() => (isNotFound ? searchText : ''), [isNotFound])
