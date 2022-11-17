@@ -1,25 +1,24 @@
-import {ArrowRight} from '@mui/icons-material';
-import {Box, Chip, Grid, Stack} from '@mui/material';
+import WestIcon from '@mui/icons-material/West';
+import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import axios from 'axios';
-import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {Endpoints} from '../../../config/Consts';
-import {CircularProgressComponent} from '../../../infrastructure/components/CircularProgress.component';
-import {PrimaryButton} from '../../../infrastructure/components/PrimaryButton';
-import {encodeQuery, useApiCall} from '../../../infrastructure/hooks/useApiCall';
-import {useDashboardContext} from '../../dashboard/context/useDashboarContext';
-import {dockingFetcher} from '../../dashboard/DockingFetcher';
-import {DrugProperties} from '../../dashboard/DrugProperties';
-import {useEngineContext} from '../useEngineContext';
-import {DrugLiterature} from './DrugLiterature';
-import {DrugResults} from './DrugResults';
-import {DrugSynthesis} from './DrugSynthesis';
-import {NaturalProductsResults} from './NaturalProductsResults';
-import {ProteinResults} from './ProteinResults';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Endpoints } from '../../../config/Consts';
+import { CircularProgressComponent } from '../../../infrastructure/components/CircularProgress.component';
+import { encodeQuery, useApiCall } from '../../../infrastructure/hooks/useApiCall';
+import { useDashboardContext } from '../../dashboard/context/useDashboarContext';
+import { dockingFetcher } from '../../dashboard/DockingFetcher';
+import { DrugProperties } from '../../dashboard/DrugProperties';
+import { useEngineContext } from '../useEngineContext';
+import { DrugLiterature } from './DrugLiterature';
+import { DrugResults } from './DrugResults';
+import { DrugSynthesis } from './DrugSynthesis';
+import { NaturalProductsResults } from './NaturalProductsResults';
+import { ProteinResults } from './ProteinResults';
 import './search.scss';
-import {SearchInput} from './SearchInput';
-import {SectionTitle} from './SectionTitle';
-import {TargetLiterature} from './TargetLiterature';
+import { SearchInput } from './SearchInput';
+import { SectionTitle } from './SectionTitle';
+import { TargetLiterature } from './TargetLiterature';
 
 export const SearchFeature = () => {
   const {loading, data, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
@@ -59,6 +58,11 @@ export const SearchFeature = () => {
   const onRun = useCallback((searchTerm) => {
     fetch(Endpoints.search.drug, 'POST', {query: searchTerm ?? searchText});
   }, [searchText]);
+
+  const suggestionsData = useMemo(() => suggestions.sort((a,b) => a.distance - b.distance).map(s => <Chip key={s.lbl} label={s.lbl} color="primary" style={{color: 'white'}} onClick={() => {
+    setSearchText(s.lbl);
+    onRun(s.lbl);
+  }} />), [onRun, suggestions])
 
   const drugHandleClick = useCallback((data) => {
     dispatch({type: 'setSelectedDrug', payload: data});
@@ -210,6 +214,12 @@ export const SearchFeature = () => {
     }
   }, [state.targetSelection, dispatch, targets]);
 
+  const SelectOne = () => (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', pl: '16px' }}>
+      <WestIcon color='disabled' /><Typography color='GrayText'>Select One</Typography>
+    </Box>
+  )
+
   useEffect(() => {
     if (data && data.results && data.results.length) {
       const defaultDrug = searchText.toLowerCase();
@@ -256,10 +266,7 @@ export const SearchFeature = () => {
           }
         }} onClick={onRun} />
         <Stack direction="row" spacing={2}>
-          {suggestions.sort((a,b) => a.distance - b.distance).map(s => <Chip key={s.lbl} label={s.lbl} color="primary" style={{color: 'white'}} onClick={() => {
-            setSearchText(s.lbl);
-            onRun(s.lbl);
-          }} />)}
+          {[...suggestionsData, suggestionsData.length ? <SelectOne /> : null]}
         </Stack>
       </Box>
       <Box>{
