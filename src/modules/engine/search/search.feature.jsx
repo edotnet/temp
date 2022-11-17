@@ -1,25 +1,23 @@
-import {ArrowRight} from '@mui/icons-material';
-import {Box, Chip, Grid, Stack} from '@mui/material';
+import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import axios from 'axios';
-import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {Endpoints} from '../../../config/Consts';
-import {CircularProgressComponent} from '../../../infrastructure/components/CircularProgress.component';
-import {PrimaryButton} from '../../../infrastructure/components/PrimaryButton';
-import {encodeQuery, useApiCall} from '../../../infrastructure/hooks/useApiCall';
-import {useDashboardContext} from '../../dashboard/context/useDashboarContext';
-import {dockingFetcher} from '../../dashboard/DockingFetcher';
-import {DrugProperties} from '../../dashboard/DrugProperties';
-import {useEngineContext} from '../useEngineContext';
-import {DrugLiterature} from './DrugLiterature';
-import {DrugResults} from './DrugResults';
-import {DrugSynthesis} from './DrugSynthesis';
-import {NaturalProductsResults} from './NaturalProductsResults';
-import {ProteinResults} from './ProteinResults';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Endpoints } from '../../../config/Consts';
+import { CircularProgressComponent } from '../../../infrastructure/components/CircularProgress.component';
+import { encodeQuery, useApiCall } from '../../../infrastructure/hooks/useApiCall';
+import { useDashboardContext } from '../../dashboard/context/useDashboarContext';
+import { dockingFetcher } from '../../dashboard/DockingFetcher';
+import { DrugProperties } from '../../dashboard/DrugProperties';
+import { useEngineContext } from '../useEngineContext';
+import { DrugLiterature } from './DrugLiterature';
+import { DrugResults } from './DrugResults';
+import { DrugSynthesis } from './DrugSynthesis';
+import { NaturalProductsResults } from './NaturalProductsResults';
+import { ProteinResults } from './ProteinResults';
 import './search.scss';
-import {SearchInput} from './SearchInput';
-import {SectionTitle} from './SectionTitle';
-import {TargetLiterature} from './TargetLiterature';
+import { SearchInput } from './SearchInput';
+import { SectionTitle } from './SectionTitle';
+import { TargetLiterature } from './TargetLiterature';
 
 export const SearchFeature = () => {
   const {loading, data, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
@@ -55,6 +53,13 @@ export const SearchFeature = () => {
     }
     return res;
   }, [data]);
+
+  const isNotFound = useMemo(
+    () => !state.drugs.length && !state.targets.length && !state.naturalProducts.length && loading === false,
+    [loading, state.drugs.length, state.targets.length, state.naturalProducts.length]
+  )
+
+  const notFoundValue = useMemo(() => (isNotFound ? searchText : ''), [isNotFound])
 
   const onRun = useCallback((searchTerm) => {
     fetch(Endpoints.search.drug, 'POST', {query: searchTerm ?? searchText});
@@ -313,6 +318,9 @@ export const SearchFeature = () => {
         <DrugSynthesis searchText={state.selectedDrug ? state.selectedDrug.title : searchText} />
       </>
       }
+      {isNotFound && (
+        <Typography variant='subtitle1'>{`No results found for “${notFoundValue}”.`}</Typography>
+      )}
       </Box>
       {loading && <CircularProgressComponent />}
       {secondaryLoader && <CircularProgressComponent />}
