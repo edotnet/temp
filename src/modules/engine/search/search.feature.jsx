@@ -55,13 +55,11 @@ export const SearchFeature = () => {
   }, [data]);
 
   const isNotFound = useMemo(
-    () => !state.drugs.length && loading === false,
-    [loading, state.drugs.length]
+    () => !state.drugs.length && !state.targets.length && loading === false,
+    [loading, state.drugs.length, state.targets.length]
   )
 
   const notFoundValue = useMemo(() => (isNotFound ? searchText : ''), [isNotFound])
-
-  
 
   const onRun = useCallback((searchTerm) => {
     fetch(Endpoints.search.drug, 'POST', {query: searchTerm ?? searchText});
