@@ -1,4 +1,3 @@
-import WestIcon from '@mui/icons-material/West';
 import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import axios from 'axios';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -55,14 +54,18 @@ export const SearchFeature = () => {
     return res;
   }, [data]);
 
+  const isNotFound = useMemo(
+    () => !state.drugs.length && !state.targets.length && !state.naturalProducts.length && loading === false,
+    [loading, state.drugs.length, state.targets.length, state.naturalProducts.length]
+  )
+
+  const notFoundValue = useMemo(() => (isNotFound ? searchText : ''), [isNotFound])
+
   const onRun = useCallback((searchTerm) => {
     fetch(Endpoints.search.drug, 'POST', {query: searchTerm ?? searchText});
   }, [searchText]);
 
-  const suggestionsData = useMemo(() => suggestions.sort((a,b) => a.distance - b.distance).map(s => <Chip key={s.lbl} label={s.lbl} color="primary" style={{color: 'white'}} onClick={() => {
-    setSearchText(s.lbl);
-    onRun(s.lbl);
-  }} />), [onRun, suggestions])
+  const sortedSuggestions = useMemo(() => suggestions.sort((a,b) => a.distance - b.distance), [suggestions])
 
   const drugHandleClick = useCallback((data) => {
     dispatch({type: 'setSelectedDrug', payload: data});
@@ -214,13 +217,6 @@ export const SearchFeature = () => {
     }
   }, [state.targetSelection, dispatch, targets]);
 
-  const SelectOne = () => (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, pl: 2 }}>
-      <WestIcon color='disabled' />
-      <Typography color='GrayText'>Select One</Typography>
-    </Box>
-  )
-
   useEffect(() => {
     if (data && data.results && data.results.length) {
       const defaultDrug = searchText.toLowerCase();
@@ -266,9 +262,17 @@ export const SearchFeature = () => {
             onRun(e.target.value);
           }
         }} onClick={onRun} />
-        <Stack direction="row" spacing={2}>
-          {[...suggestionsData, suggestionsData.length > 0 && <SelectOne />]}
-        </Stack>
+        {sortedSuggestions.length > 0 &&
+          <>
+            <SectionTitle text="Suggestions for better results:" />
+            <Stack direction="row" spacing={2}>
+              {sortedSuggestions.map(s => <Chip key={s.lbl} label={s.lbl} color="primary" style={{color: 'white'}} onClick={() => {
+                setSearchText(s.lbl);
+                onRun(s.lbl);
+              }} />)}
+            </Stack>
+          </>
+        }  
       </Box>
       <Box>{
         state.drugs.length > 0 && <>
@@ -321,6 +325,9 @@ export const SearchFeature = () => {
         <DrugSynthesis searchText={state.selectedDrug ? state.selectedDrug.title : searchText} />
       </>
       }
+      {isNotFound && (
+        <Typography variant='subtitle1'>{`No results found for “${notFoundValue}”.`}</Typography>
+      )}
       </Box>
       {loading && <CircularProgressComponent />}
       {secondaryLoader && <CircularProgressComponent />}

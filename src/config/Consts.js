@@ -7,6 +7,8 @@ const isApi = !window.location.search.includes("isApi=true");
 const useApi = isApi ?
     Consts.API_URL : Consts.BACKEND_API_URL;
 
+const isProd = window.location.hostname === "app.prepaire.com";
+
 export const Endpoints = {
   drugbank: {
     drugbank: `${useApi}/drugbank/`,
@@ -37,7 +39,7 @@ export const Endpoints = {
   },
   search: {
     pdf : `${useApi}/xdl/search`,
-    drug: `${useApi}/drug-search`,
+    drug: `${useApi}/drug-search${isProd ? "" : "-new"}`,
   },
   musyc: {
     query: `${useApi}/3d/calculate`,
