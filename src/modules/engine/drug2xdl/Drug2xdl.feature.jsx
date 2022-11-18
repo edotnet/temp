@@ -1,7 +1,7 @@
-import { DrugSynthesis } from "../search/DrugSynthesis";
+import { MenuItem, TextField } from "@mui/material";
 import { useState } from "react";
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
-import { MenuItem, TextField } from "@mui/material";
+import { DrugSynthesis } from "../search/DrugSynthesis";
 
 export const Drug2XDLFeature = () => {
   const [molecule, setMolecule] = useState('');
@@ -14,7 +14,7 @@ export const Drug2XDLFeature = () => {
         value={molecule}
         onChange={e => setMolecule(e.target.value)}
         label="Select a drug" >
-        {state.molecules.map(interactingMolecule => (
+        {state.interactingMolecules.map(interactingMolecule => (
           <MenuItem key={interactingMolecule.name} value={interactingMolecule.name}>
             {interactingMolecule.name}
           </MenuItem>
