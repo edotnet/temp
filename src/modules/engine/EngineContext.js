@@ -24,6 +24,7 @@ const reducer = (state, action) => {
     setDrugSelection: (drugSelection) => ({...state, drugSelection}),
     setNaturalProductSelection: (naturalProductSelection) => ({...state, naturalProductSelection}),
     clean: () => initialState,
+    restore: (state) => state,
   };
   if (!(action.type in actions)) {
     return state;

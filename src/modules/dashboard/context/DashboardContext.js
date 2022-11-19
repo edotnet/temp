@@ -35,165 +35,166 @@ const adaptMolecule = (molecule) => {
 };
 const reducer = (state, action) => {
   const actions = {
-      addMolecule: (molecule) => {
-        if (state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)) {
-          return state;
-        }
+    addMolecule: (molecule) => {
+      if (state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)) {
+        return state;
+      }
+      molecule.color = colorful_language(molecule.name, 0.25);
+      return {
+        ...state,
+        molecules: [...state.molecules, molecule],
+      };
+    },
+    addMolecules: (molecules) => {
+      const newMolecules = molecules.map(molecule => {
         molecule.color = colorful_language(molecule.name, 0.25);
-        return {
-          ...state,
-          molecules: [...state.molecules, molecule],
-        };
-      },
-      addMolecules: (molecules) => {
-        const newMolecules = molecules.map(molecule => {
-          molecule.color = colorful_language(molecule.name, 0.25);
-          return molecule;
-        }).filter(molecule => !state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id));
+        return molecule;
+      }).filter(molecule => !state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id));
 
-        return {
-          ...state,
-          molecules: [...state.molecules, ...newMolecules],
-        };
-      },
-      removeMolecule: (molecule) => {
-        const customPdbs = {...state.customPdbs};
-        delete customPdbs[molecule.name];
-        return ({
-          ...state,
-          molecules: state.molecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
-          interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
-          selectedMolecule: state.selectedMolecule && state.selectedMolecule.drugbank_id === molecule.drugbank_id ? null : state.selectedMolecule,
-          customPdbs,
-        });
-      },
-      cleanMolecules: () => ({
+      return {
         ...state,
-        molecules: [],
-        interactingMolecules: [],
-        selectedMolecule: null,
-        customPdbs: {},
-      }),
-      setCategory: (category) => ({
+        molecules: [...state.molecules, ...newMolecules],
+      };
+    },
+    removeMolecule: (molecule) => {
+      const customPdbs = {...state.customPdbs};
+      delete customPdbs[molecule.name];
+      return ({
         ...state,
-        category,
-      }),
-      selectMolecule: (molecule) => ({
-        ...state,
-        selectedMolecule: adaptMolecule(molecule),
-      }),
-      unselectMolecule: () => ({
-        ...state,
-        selectedMolecule: null,
-      }),
-      addInteractingMolecule: (molecule) => (
-        state.interactingMolecules.length === 2 ||
-        state.interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id) ?
-          {...state} :
-          {
-            ...state,
-            interactingMolecules: [...state.interactingMolecules, molecule],
-          }
-      ),
-      resetInteractingMolecules: () => ({
-        ...state,
-        interactingMolecules: [],
-        interactingMoleculesResult: null,
-      }),
-      removeInteractingMolecule: (molecule) => ({
-        ...state,
+        molecules: state.molecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
         interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
-        interactingMoleculesResult: null,
-      }),
-      setInteractingMoleculesResult: (interactingMoleculesResult) => ({
-        ...state,
-        interactingMoleculesResult: {
-          ...interactingMoleculesResult,
-          value: interactingMoleculesResult.value.toFixed(1),
-        },
-      }),
-      addProtein: (protein) => ({
-        ...state,
-        protein,
-      }),
-      removeProtein: () => ({
-        ...state,
-        protein: null,
-      }),
-      addOrganism: (organism) => ({
-        ...state,
-        organism,
-      }),
-      removeOrganism: () => ({
-        ...state,
-        organism: null,
-      }),
-      selectPdb: (pdbid) => ({
-        ...state,
-        pdbid,
-      }),
-      removePdb: () => ({
-        ...state,
-        pdbid: '',
-      }),
-      addDemographics: (demographics) => {
-        const newDemographics = [...state.demographics];
-        const found = newDemographics.findIndex(d => d.id === demographics.id);
-        if (found !== -1) {
-          newDemographics[found] = demographics;
-        } else {
-          newDemographics.push(demographics);
+        selectedMolecule: state.selectedMolecule && state.selectedMolecule.drugbank_id === molecule.drugbank_id ? null : state.selectedMolecule,
+        customPdbs,
+      });
+    },
+    cleanMolecules: () => ({
+      ...state,
+      molecules: [],
+      interactingMolecules: [],
+      selectedMolecule: null,
+      customPdbs: {},
+    }),
+    setCategory: (category) => ({
+      ...state,
+      category,
+    }),
+    selectMolecule: (molecule) => ({
+      ...state,
+      selectedMolecule: adaptMolecule(molecule),
+    }),
+    unselectMolecule: () => ({
+      ...state,
+      selectedMolecule: null,
+    }),
+    addInteractingMolecule: (molecule) => (
+      state.interactingMolecules.length === 2 ||
+      state.interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id) ?
+        {...state} :
+        {
+          ...state,
+          interactingMolecules: [...state.interactingMolecules, molecule],
         }
-        return {
-          ...state,
-          demographics: newDemographics,
-        };
+    ),
+    resetInteractingMolecules: () => ({
+      ...state,
+      interactingMolecules: [],
+      interactingMoleculesResult: null,
+    }),
+    removeInteractingMolecule: (molecule) => ({
+      ...state,
+      interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
+      interactingMoleculesResult: null,
+    }),
+    setInteractingMoleculesResult: (interactingMoleculesResult) => ({
+      ...state,
+      interactingMoleculesResult: {
+        ...interactingMoleculesResult,
+        value: interactingMoleculesResult.value.toFixed(1),
       },
-      removeDemographics: (demographics) => ({
+    }),
+    addProtein: (protein) => ({
+      ...state,
+      protein,
+    }),
+    removeProtein: () => ({
+      ...state,
+      protein: null,
+    }),
+    addOrganism: (organism) => ({
+      ...state,
+      organism,
+    }),
+    removeOrganism: () => ({
+      ...state,
+      organism: null,
+    }),
+    selectPdb: (pdbid) => ({
+      ...state,
+      pdbid,
+    }),
+    removePdb: () => ({
+      ...state,
+      pdbid: '',
+    }),
+    addDemographics: (demographics) => {
+      const newDemographics = [...state.demographics];
+      const found = newDemographics.findIndex(d => d.id === demographics.id);
+      if (found !== -1) {
+        newDemographics[found] = demographics;
+      } else {
+        newDemographics.push(demographics);
+      }
+      return {
         ...state,
-        demographics: state.demographics.filter(demo => demo.id !== demographics.id),
-      }),
-      selectDemographics: (demographics) => ({
+        demographics: newDemographics,
+      };
+    },
+    removeDemographics: (demographics) => ({
+      ...state,
+      demographics: state.demographics.filter(demo => demo.id !== demographics.id),
+    }),
+    selectDemographics: (demographics) => ({
+      ...state,
+      selectedDemographics: demographics,
+    }),
+    demographicsResult: (demographicsResult) => ({
+      ...state,
+      demographicsResult: {
+        ...state.demographicsResult,
+        ...demographicsResult,
+      },
+    }),
+    addCustomPdb: ({drug}) => {
+      const customPdbs = {...state.customPdbs};
+      customPdbs[drug] = {
+        status: 'loading',
+      };
+      return {
         ...state,
-        selectedDemographics: demographics,
-      }),
-      demographicsResult: (demographicsResult) => ({
-        ...state,
-        demographicsResult: {
-          ...state.demographicsResult,
-          ...demographicsResult,
+        customPdbs,
+        docking: Object.entries(customPdbs).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
+      };
+    },
+    addCustomPdbResponse: ({drug, data, status}) => {
+      const customPdbs = {
+        ...state.customPdbs,
+        [drug]: {
+          ...state.customPdbs[drug],
+          response: data,
+          status,
         },
-      }),
-      addCustomPdb: ({drug}) => {
-        const customPdbs = {...state.customPdbs};
-        customPdbs[drug] = {
-          status: 'loading',
-        };
-        return {
-          ...state,
-          customPdbs,
-          docking: Object.entries(customPdbs).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
-        };
-      },
-      addCustomPdbResponse: ({drug, data, status}) => {
-        const customPdbs = {
-          ...state.customPdbs,
-          [drug]: {
-            ...state.customPdbs[drug],
-            response: data,
-            status,
-          },
-        };
-        return {
-          ...state,
-          customPdbs,
-          docking: Object.entries(customPdbs).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
-        };
-      },
-    };
-return actions[action.type](action.payload);
-}
-
+      };
+      return {
+        ...state,
+        customPdbs,
+        docking: Object.entries(customPdbs).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
+      };
+    },
+    clean: () => initialState,
+    restore: (state) => state,
+  };
+  return actions[action.type](action.payload);
+};
 
 const DashboardContextProvider = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initialState);

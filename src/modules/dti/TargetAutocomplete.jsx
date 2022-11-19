@@ -36,7 +36,7 @@ const TargetAutocompleteComponent = ({label, onChange, onEmpty}) => {
       options={options}
       loading={loading}
       label={label}
-      value={state.protein?.name || null}
+      value={state.protein?.name || undefined}
       variant="standard"
     />
   );
