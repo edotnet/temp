@@ -65,6 +65,8 @@ export const SearchFeature = () => {
     fetch(Endpoints.search.drug, 'POST', {query: searchTerm ?? searchText});
   }, [searchText]);
 
+  const sortedSuggestions = useMemo(() => suggestions.sort((a,b) => a.distance - b.distance), [suggestions])
+
   const drugHandleClick = useCallback((data) => {
     dispatch({type: 'setSelectedDrug', payload: data});
   }, [dispatch]);
@@ -260,12 +262,17 @@ export const SearchFeature = () => {
             onRun(e.target.value);
           }
         }} onClick={onRun} />
-        <Stack direction="row" spacing={2}>
-          {suggestions.sort((a,b) => a.distance - b.distance).map(s => <Chip key={s.lbl} label={s.lbl} color="primary" style={{color: 'white'}} onClick={() => {
-            setSearchText(s.lbl);
-            onRun(s.lbl);
-          }} />)}
-        </Stack>
+        {sortedSuggestions.length > 0 &&
+          <>
+            <SectionTitle text="Suggestions for better results:" />
+            <Stack direction="row" spacing={2}>
+              {sortedSuggestions.map(s => <Chip key={s.lbl} label={s.lbl} color="primary" style={{color: 'white'}} onClick={() => {
+                setSearchText(s.lbl);
+                onRun(s.lbl);
+              }} />)}
+            </Stack>
+          </>
+        }  
       </Box>
       <Box>{
         state.drugs.length > 0 && <>
