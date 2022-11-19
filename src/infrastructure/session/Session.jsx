@@ -60,7 +60,7 @@ export const Session = () => {
         api.get(Endpoints.session.get(sessionId)).then((res) => {
             const {data} = res;
             dashboardDispatch({type: 'restore', payload: data.data.dashboard});
-            engineDispatch({type: 'populate', payload: data.data.engine});
+            engineDispatch({type: 'restore', payload: data.data.engine});
         }).finally(() => setLoading(false));
     };
     const clean = () => {
