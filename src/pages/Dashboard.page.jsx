@@ -55,9 +55,6 @@ export const Dashboard = () => {
                     <Grid pl={5} pr={5} className="dashboarddnd">
                         <Grid container spacing={2}>
                             <Grid item xs={3} sx={{mt: 2}}>
-                                <Box mb={2}>
-                                    <Session />
-                                </Box>
                                 <Typography variant="h4" gutterBottom>DRUG INTERACTION</Typography>
                                 <Grid container spacing={2}>
                                     {/*
