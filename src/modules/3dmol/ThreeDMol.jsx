@@ -66,9 +66,33 @@ export const ThreeDMol = () => {
     })
   }, [selectedCustomPdb])
 
+  const renderFold = useCallback(() => {
+    if (!state.esmfold) {
+      return;
+    }
+    removeCanvas()
+    createViewer()
+    viewerRef.current.clear();
+    fetch(state.esmfold.url)
+      .then(res => {
+        return res.text();
+      }).then(pdb => {
+      viewerRef.current.addModel(pdb, 'pdb');
+      viewerRef.current.setStyle({cartoon:{color:'spectrum'}});
+      viewerRef.current.setStyle({resn: 'UNK'},{sphere:{radius:0.5}, stick:{}});
+      viewerRef.current.zoomTo();
+      viewerRef.current.render();
+    }).catch(err => {
+      console.log(err)
+    })
+  }, [state.esmfold]);
+
   useEffect(() => {
     if (state.pdbid && state.pdbid !== ESM_FOLD_PDB) {
       renderPdb();
+    }
+    if (state.pdbid === ESM_FOLD_PDB) {
+      renderFold();
     }
   }, [renderPdb, state.pdbid])
 

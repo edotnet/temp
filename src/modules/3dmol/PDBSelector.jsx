@@ -44,7 +44,7 @@ export const PDBSelector = ({organism}) => {
     dispatch({type: 'selectPdb', payload: e.target.value});
     if (state.molecules.length > 0) {
       state.molecules.forEach(molecule => {
-        dockingFetcher(e.target.value, molecule, dispatch);
+        dockingFetcher(e.target.value, molecule, dispatch, state.esmfold.pdbPath, e.target.value);
       });
     }
   };
