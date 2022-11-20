@@ -9,7 +9,6 @@ export const PDBSelector = ({organism}) => {
   const {state, dispatch} = useDashboardContext();
   const [pdb, setPdb] = useState(null);
   const [open, setOpen] = useState(false);
-  const [esmfold, setEsmfold] = useState(null);
 
   const setESMFold = () => {
     if (organism.sequence.length > 400) {
@@ -17,10 +16,15 @@ export const PDBSelector = ({organism}) => {
       return;
     }
     dispatch({type: 'selectPdb', payload: ESM_FOLD_PDB});
-    dispatch({type: 'addMoleculeDocking', payload: {drug: ESM_FOLD_PDB}});
-    api.post(Endpoints.proteins.ESMFold, {sequence: organism.sequence}).then((res) => {
-      dispatch({type: 'addMoleculeDockingResponse', payload: {drug: ESM_FOLD_PDB, data: res.data, status: 'success'}});
-    });
+    if (!state.esmfold) {
+      loadESMFold();
+      return;
+    }
+    if (state.molecules.length > 0) {
+      state.molecules.forEach(molecule => {
+        dockingFetcher(null, molecule, dispatch, state.esmfold.pdbPath, ESM_FOLD_PDB);
+      });
+    }
   }
 
   const loadESMFold = () => {
@@ -28,7 +32,7 @@ export const PDBSelector = ({organism}) => {
       return;
     }
     api.post(Endpoints.proteins.ESMFold, {sequence: organism.sequence}).then((res) => {
-      setEsmfold(res.data);
+      dispatch({type: 'setEsmfold', payload: res.data});
     });
   }
 
@@ -111,7 +115,7 @@ export const PDBSelector = ({organism}) => {
             </MenuItem>
           ))}
           {!!organism && !!organism.sequence && organism.sequence.length <= 400 && <MenuItem value={ESM_FOLD_PDB} key={ESM_FOLD_PDB} onMouseOver={() => setPdb(null)}>
-            {!esmfold && '(+)'} ESMFold
+            {!state.esmfold && '(+)'} ESMFold
           </MenuItem>}
         </Select>
       </FormControl>

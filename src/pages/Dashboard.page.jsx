@@ -35,7 +35,7 @@ export const Dashboard = () => {
     const _onDrugSelected = (molecule) => {
         dispatch({type: 'addMolecule', payload: molecule});
         if (state.pdbid) {
-            dockingFetcher(state.pdbid, molecule, dispatch);
+            dockingFetcher(state.pdbid, molecule, dispatch, state.esmfold?.pdbPath, state.esmfold?.pdbId);
         }
     }
 

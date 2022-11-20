@@ -15,6 +15,7 @@ const initialState = {
   demographicsResult: null,
   moleculeDocking: {},
   docking: 0,
+  esmfold: null,
 };
 
 const DashboardContext = createContext({state: initialState});
@@ -190,6 +191,10 @@ const reducer = (state, action) => {
           docking: Object.entries(moleculeDocking).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
         };
       },
+      setEsmfold: (esmfold) => ({
+        ...state,
+        esmfold,
+      }),
     };
 return actions[action.type](action.payload);
 }
