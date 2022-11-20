@@ -319,7 +319,11 @@ export const SearchFeature = () => {
       </>
       }
       {isNotFound && (
-        <Typography variant='subtitle1'>{`No results found for “${notFoundValue}”.`}</Typography>
+        <Stack spacing={4} sx={{display: 'flex', justifyContent: 'center', alignContent: 'center', alignItems: 'center', boxShadow: '0px 4px 13px 0px rgba(133, 153, 170, 0.5)', flexDirection: 'column', padding: 5, borderRadius: 2}}>
+          <Typography variant='subtitle1' color="gray">{`No results found for “${notFoundValue}”.`}</Typography>
+          <Typography variant='subtitle1' color="gray">Please try another search.</Typography>
+          <Typography variant='subtitle1' color="gray">Examples: Covid-19, marburg, monkeypox</Typography>
+        </Stack>
       )}
       </Box>
       {loading && <CircularProgressComponent />}
