@@ -10,7 +10,7 @@ import {useAuth} from './authentication/useAuth';
 
 
 export const Notifications = () => {
-  const {dispatch} = useDashboardContext();
+  const {state, dispatch} = useDashboardContext();
   const { enqueueSnackbar } = useSnackbar();
   const {user} = useAuth();
   const [init, setInit] = useState(false);
@@ -50,11 +50,19 @@ export const Notifications = () => {
                 calculated_properties: {
                   SMILES: event.data.smiles
                 }
-              }, dispatch);
+              }, dispatch, event.data.pdbPath, event.data.pdbId);
               break;
             case 'DOCKING_FAIL':
               enqueueSnackbar('Docking failed', {variant: 'error'});
-              dispatch({type: 'addCustomPdbResponse', payload: {drug: event.data.name, data: null, status: 'error'}});
+              dispatch({type: 'addMoleculeDockingResponse', payload: {drug: event.data.name, data: null, status: 'error'}});
+              break;
+            case 'ALPHAFOLD':
+              api.post(Endpoints.proteins.AlphaFold, {id: event.data.id}).then((res) => {
+                dispatch({type: 'setAlphafold', payload: {...res.data, status: 'success'}});
+              });
+              break;
+            case 'ALPHAFOLD_FAIL':
+              dispatch({type: 'setAlphafold', payload: {status: 'failed'}});
               break;
             default:
               break;

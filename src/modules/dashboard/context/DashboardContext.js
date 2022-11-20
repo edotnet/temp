@@ -13,8 +13,10 @@ const initialState = {
   demographics: [],
   selectedDemographics: null,
   demographicsResult: null,
-  customPdbs: {},
+  moleculeDocking: {},
   docking: 0,
+  esmfold: null,
+  alphafold: null
 };
 
 const DashboardContext = createContext({state: initialState});
@@ -35,21 +37,21 @@ const adaptMolecule = (molecule) => {
 };
 const reducer = (state, action) => {
   const actions = {
-      addMolecule: (molecule) => {
-        if (state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)) {
-          return state;
-        }
+    addMolecule: (molecule) => {
+      if (state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)) {
+        return state;
+      }
+      molecule.color = colorful_language(molecule.name, 0.25);
+      return {
+        ...state,
+        molecules: [...state.molecules, molecule],
+      };
+    },
+    addMolecules: (molecules) => {
+      const newMolecules = molecules.map(molecule => {
         molecule.color = colorful_language(molecule.name, 0.25);
-        return {
-          ...state,
-          molecules: [...state.molecules, molecule],
-        };
-      },
-      addMolecules: (molecules) => {
-        const newMolecules = molecules.map(molecule => {
-          molecule.color = colorful_language(molecule.name, 0.25);
-          return molecule;
-        }).filter(molecule => !state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id));
+        return molecule;
+      }).filter(molecule => !state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id));
 
         return {
           ...state,
@@ -164,32 +166,42 @@ const reducer = (state, action) => {
           ...demographicsResult,
         },
       }),
-      addCustomPdb: ({drug}) => {
-        const customPdbs = {...state.customPdbs};
-        customPdbs[drug] = {
-          status: 'loading',
-        };
-        return {
-          ...state,
-          customPdbs,
-          docking: Object.entries(customPdbs).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
-        };
-      },
-      addCustomPdbResponse: ({drug, data, status}) => {
-        const customPdbs = {
-          ...state.customPdbs,
-          [drug]: {
-            ...state.customPdbs[drug],
-            response: data,
-            status,
-          },
-        };
-        return {
-          ...state,
-          customPdbs,
-          docking: Object.entries(customPdbs).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
-        };
-      },
+    addMoleculeDocking: ({drug}) => {
+      const moleculeDocking = {...state.moleculeDocking};
+      moleculeDocking[drug] = {
+        status: 'loading',
+      };
+      return {
+        ...state,
+        moleculeDocking,
+        docking: Object.entries(moleculeDocking).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
+      };
+    },
+    addMoleculeDockingResponse: ({drug, data, status}) => {
+      const moleculeDocking = {
+        ...state.moleculeDocking,
+        [drug]: {
+          ...state.moleculeDocking[drug],
+          response: data,
+          status,
+        },
+      };
+      return {
+        ...state,
+        moleculeDocking,
+        docking: Object.entries(moleculeDocking).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
+      };
+    },
+    setEsmfold: (esmfold) => ({
+      ...state,
+      esmfold,
+    }),
+    setAlphafold: (alphafold) => ({
+      ...state,
+      alphafold,
+    }),
+    clean: () => initialState,
+    restore: (state) => state,
     };
 return actions[action.type](action.payload);
 }

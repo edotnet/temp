@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import D3 from '../../assets/svg/3d.svg';
 import {useDashboardContext} from '../dashboard/context/useDashboarContext';
-import {ESM_FOLD_PDB} from "../../config/Consts";
+import {ALPHA_FOLD_PDB, ESM_FOLD_PDB} from '../../config/Consts';
 
 export const ThreeDMol = () => {
   const ref = useRef();
@@ -48,7 +48,7 @@ export const ThreeDMol = () => {
     removeCanvas()
     createViewer()
     viewerRef.current.clear();
-    fetch(state.customPdbs[selectedCustomPdb].response.url)
+    fetch(state.moleculeDocking[selectedCustomPdb].response.url)
       .then(res => {
         return res.text();
       }).then(pdb => {
@@ -66,9 +66,38 @@ export const ThreeDMol = () => {
     })
   }, [selectedCustomPdb])
 
+  const renderFold = useCallback((fold) => {
+    if (!state[fold]) {
+      return;
+    }
+    removeCanvas()
+    createViewer()
+    viewerRef.current.clear();
+    fetch(state[fold].url)
+      .then(res => {
+        return res.text();
+      }).then(pdb => {
+      viewerRef.current.addModel(pdb, 'pdb');
+      viewerRef.current.setStyle({cartoon:{color:'spectrum'}});
+      viewerRef.current.setStyle({resn: 'UNK'},{sphere:{radius:0.5}, stick:{}});
+      viewerRef.current.zoomTo();
+      viewerRef.current.render();
+    }).catch(err => {
+      console.log(err)
+    })
+  }, [state.esmfold, state.alphafold]);
+
   useEffect(() => {
-    if (state.pdbid && state.pdbid !== ESM_FOLD_PDB) {
+    if (state.pdbid && state.pdbid !== ESM_FOLD_PDB && state.pdbid !== ALPHA_FOLD_PDB) {
       renderPdb();
+    }
+    if (state.pdbid === ESM_FOLD_PDB) {
+      renderFold('esmfold');
+    }
+    if (state.pdbid === ALPHA_FOLD_PDB) {
+      if (state.alphafold && state.alphafold.url) {
+        renderFold('alphafold');
+      }
     }
   }, [renderPdb, state.pdbid])
 
@@ -83,14 +112,14 @@ export const ThreeDMol = () => {
   }, [renderCustomPdb, renderPdb, selectedCustomPdb, state.pdbid])
 
   const affinity = useMemo(() => {
-    if (!state.customPdbs[selectedCustomPdb]) {
+    if (!state.moleculeDocking[selectedCustomPdb]) {
       return 0;
     }
-    if (!state.customPdbs[selectedCustomPdb].response) {
+    if (!state.moleculeDocking[selectedCustomPdb].response) {
         return 0;
     }
-    return parseFloat(state.customPdbs[selectedCustomPdb].response.affinity).toFixed(3)
-  }, [state.customPdbs, selectedCustomPdb])
+    return parseFloat(state.moleculeDocking[selectedCustomPdb].response.affinity).toFixed(3)
+  }, [state.moleculeDocking, selectedCustomPdb])
   return (
     <>
       { state.pdbid && <Accordion sx={{mt:2, backgroundColor: '#f5f6fc'}} elevation={0}>
@@ -119,7 +148,7 @@ export const ThreeDMol = () => {
               </Box>
               <TextField select value={selectedCustomPdb} label="Select drug" onChange={(e) => setSelectedCustomPdb(e.target.value)} sx={{minWidth: 150}}>
                 <MenuItem value="">None</MenuItem>
-                {Object.entries(state.customPdbs).map(([key, value]) => (
+                {Object.entries(state.moleculeDocking).map(([key, value]) => (
                   <MenuItem key={key} value={key} disabled={value.status !== 'success'} sx={{color: value.status === 'error' ? 'red' : 'inherit'}}>
                     {key} {value.status==='loading'? <CircularProgress  size={15} sx={{ml: 1}}/> :''}
                   </MenuItem>

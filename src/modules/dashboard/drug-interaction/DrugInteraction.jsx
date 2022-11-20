@@ -6,7 +6,6 @@ import {useDashboardContext} from "../context/useDashboarContext";
 import {PredictiveWorld} from "../predictive-world/PredictiveWorld";
 import {DemographicYears, Endpoints} from "../../../config/Consts";
 import {InteractingDrugsTable} from "../InteractingDrugsTable";
-import axios from 'axios';
 import {api} from "../../../infrastructure/api/instance";
 
 const url = Endpoints.ml.drugInteraction;

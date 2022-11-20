@@ -74,7 +74,7 @@ export const SearchFeature = () => {
   const dispatchDocking = useCallback(() => {
     if (dashboardState.pdbid) {
       dashboardState.molecules.forEach(molecule => {
-        dockingFetcher(dashboardState.pdbid, molecule, dashboardDispatch);
+        dockingFetcher(dashboardState.pdbid, molecule, dashboardDispatch, dashboardState.esmfold?.pdbPath, dashboardState.esmfold?.pdbId);
       });
     }
   }, [dashboardState.pdbid, dashboardDispatch, state.molecules]);
@@ -272,7 +272,7 @@ export const SearchFeature = () => {
               }} />)}
             </Stack>
           </>
-        }  
+        }
       </Box>
       <Box>{
         state.drugs.length > 0 && <>

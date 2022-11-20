@@ -27,6 +27,7 @@ export const Endpoints = {
     drugProtein: `${Consts.API_URL}/drug-protein-pec50`,
     drugProteinOld: `${Consts.API_URL}/drug-protein-kd`,
     drugInteraction: `${useApi}/drug-synergy`,
+    drugInteractionOld: `${useApi}/drug-interaction`,
   },
   pdf: {
     upload: `${useApi}/xdl/upload`,
@@ -45,7 +46,7 @@ export const Endpoints = {
     query: `${useApi}/3d/calculate`,
   },
   docking: {
-    calculate: `${useApi}/docking/calculate`,
+    calculate: isProd ? `${useApi}/docking/calculate` : `${useApi}/test/calculate`,
   },
   auth: {
     login: `${Consts.API_URL}/auth/login`,
@@ -62,6 +63,14 @@ export const Endpoints = {
     name: `${useApi}/proteins/names`,
     organisms: `${useApi}/proteins/organisms`,
     ESMFold: `${useApi}/proteins/esmatlasFold`,
+    AlphaFold: `${useApi}/alphafold/calculate`,
+  },
+  session: {
+    list: `${Consts.API_URL}/session`,
+    create: `${Consts.API_URL}/session`,
+    delete: id =>`${Consts.API_URL}/session/${id}`,
+    update: id => `${Consts.API_URL}/session/${id}`,
+    get: id => `${Consts.API_URL}/session/${id}`,
   }
 };
 
@@ -69,3 +78,4 @@ export const DemographicYears = ["0-15 years (pediatrics)", "16-24 years (youths
 export const DemographicBmi = ["Below 18.5", "18.5-24.9", "25-29.9", "30-34.9", "35-39.9", "Above 40"];
 
 export const ESM_FOLD_PDB = 'ESMFold';
+export const ALPHA_FOLD_PDB = 'AlphaFold';

@@ -1,13 +1,12 @@
-import { Card } from "../../infrastructure/components/Card";
-import { Grid } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useApiCall } from "../../infrastructure/hooks/useApiCall";
-import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
-import { DataGrid } from "@mui/x-data-grid";
-import { darken, lighten } from '@mui/material/styles';
-import { SmileSearcher } from "./SmileSearcher.component";
-import {Endpoints} from "../../config/Consts";
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import {darken, lighten} from '@mui/material/styles';
+import {DataGrid} from '@mui/x-data-grid';
+import {useEffect, useState} from 'react';
+import {Endpoints} from '../../config/Consts';
+import {Card} from '../../infrastructure/components/Card';
+import {useApiCall} from '../../infrastructure/hooks/useApiCall';
+import {useDashboardContext} from '../dashboard/context/useDashboarContext';
 
 const getBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
@@ -15,12 +14,10 @@ const getBackgroundColor = (color, mode) =>
 const getHoverBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
 
-export const DrugInteraction = () => {
-  const [smile1, setSmile1] = useState(null)
-  const [smile2, setSmile2] = useState(null)
-
-  const [errorMessage, setErrorMessage] = useState("")
-  const url = Endpoints.ml.drugInteraction;
+export const DrugInteractionFeature = () => {
+  const {state, dispatch} = useDashboardContext();
+  const [errorMessage, setErrorMessage] = useState('');
+  const url = Endpoints.ml.drugInteractionOld;
   const {loading, data, error, fetch} = useApiCall(url, 'POST', null, false);
   const customClasses = {
     '& .probability--Positive': {
@@ -32,44 +29,50 @@ export const DrugInteraction = () => {
       },
     },
     '& .row .MuiDataGrid-cellContent': {
-      whiteSpace: "normal",
-      wordWrap: "break-word",
-    }
-  }
+      whiteSpace: 'normal',
+      wordWrap: 'break-word',
+    },
+  };
   const columns = [
     {
       field: 'label',
       headerName: 'Interaction',
-      flex: 1
+      flex: 1,
+      valueGetter: (params) => {
+        const {row} = params;
+        return row.label.replace('#Drug1', state.interactingMolecules[0].name).replace('#Drug2', state.interactingMolecules[1].name);
+      }
     },
     {
       field: 'value',
       headerName: 'Value',
-      width: 100
+      width: 100,
     },
-  ]
+  ];
+
   useEffect(() => {
-    if (smile1 && smile2) {
-      fetch(url, 'POST', {smile1, smile2})
+    if (state.interactingMolecules.length !== 2) {
+      return;
     }
-  }, [smile1, smile2])
+    try {
+      const smile1 = state.interactingMolecules[0].calculated_properties.SMILES;
+      const smile2 = state.interactingMolecules[1].calculated_properties.SMILES;
+      fetch(url, 'POST', {smile1, smile2});
+    } catch (e) {
+      console.log('[DRUG-INTERACTION] Wrong smiles');
+    }
+  }, [fetch, state.interactingMolecules]);
+
   return (
     <Container>
-      <Card>
         <Box p={4}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <SmileSearcher onChange={setSmile1}/>
-            </Grid>
-            <Grid item xs={6}>
-              <SmileSearcher onChange={setSmile2}/>
-            </Grid>
-          </Grid>
           {errorMessage.length > 0 && <div>{errorMessage}</div>}
           {data && <Box pt={2} sx={customClasses}>
             <DataGrid
               autoHeight
-              rows={[...data.sort((a, b) => b.value - a.value)]}
+              pageSize={5}
+              rows={[...data.result.filter(i => i.label !== 'None' && i.label !== 'The therapeutic efficacy of #Drug2 can be increased when used in combination with #Drug1.').sort((a, b) => b.value - a.value)]}
+              pagination
               columns={columns}
               disableSelectionClick
               getRowId={row => row.label}
@@ -79,7 +82,6 @@ export const DrugInteraction = () => {
             />
           </Box>}
         </Box>
-      </Card>
     </Container>
   );
-}
+};
