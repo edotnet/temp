@@ -49,12 +49,13 @@ export const PDBSelector = ({organism}) => {
     }
   };
 
+  /* Preselect first, disabled for now
   useEffect(() => {
     if (!organism.pdbs.length) return;
     setTimeout(() => {
       handleChange({target: {value: organism.pdbs[0].id}});
     }, 100);
-  }, [organism.pdbs]);
+  }, [organism.pdbs]);*/
 
   useEffect(() => {
     if (!!organism && !!organism.sequence && organism.sequence.length <= 400) {
