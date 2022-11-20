@@ -56,6 +56,14 @@ export const Notifications = () => {
               enqueueSnackbar('Docking failed', {variant: 'error'});
               dispatch({type: 'addMoleculeDockingResponse', payload: {drug: event.data.name, data: null, status: 'error'}});
               break;
+            case 'ALPHAFOLD':
+              api.post(Endpoints.proteins.AlphaFold, {id: event.data.id}).then((res) => {
+                dispatch({type: 'setAlphafold', payload: {...res.data, status: 'success'}});
+              });
+              break;
+            case 'ALPHAFOLD_FAIL':
+              dispatch({type: 'setAlphafold', payload: {status: 'failed'}});
+              break;
             default:
               break;
           }

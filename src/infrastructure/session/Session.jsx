@@ -81,7 +81,8 @@ export const Session = () => {
         setLoading(true);
         const request = {
             title, description, data: {
-                dashboard: dashboardState, engine: engineState
+                dashboard: dashboardState,
+                engine: engineState
             }
         };
         let call;

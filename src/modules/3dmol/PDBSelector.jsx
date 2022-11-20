@@ -1,17 +1,18 @@
-import {Box, FormControl, InputLabel, MenuItem, Select, Stack, Typography} from '@mui/material';
+import {Box, CircularProgress, FormControl, InputLabel, MenuItem, Select, Stack, Typography} from '@mui/material';
 import React, {useEffect, useState} from 'react';
 import {useDashboardContext} from '../dashboard/context/useDashboarContext';
 import {dockingFetcher} from '../dashboard/DockingFetcher';
 import {api} from "../../infrastructure/api/instance";
-import {Endpoints, ESM_FOLD_PDB} from "../../config/Consts";
+import {ALPHA_FOLD_PDB, Endpoints, ESM_FOLD_PDB} from '../../config/Consts';
 
-export const PDBSelector = ({organism}) => {
+export const PDBSelector = ({}) => {
   const {state, dispatch} = useDashboardContext();
   const [pdb, setPdb] = useState(null);
   const [open, setOpen] = useState(false);
+  const [alphafoldLoading, setAlphafoldLoading] = useState(false);
 
   const setESMFold = () => {
-    if (organism.sequence.length > 400) {
+    if (state.organism.sequence.length > 400) {
       alert('Sequence too long for ESMFold');
       return;
     }
@@ -28,17 +29,34 @@ export const PDBSelector = ({organism}) => {
   }
 
   const loadESMFold = () => {
-    if (organism.sequence.length > 400) {
+    if (state.organism.sequence.length > 400) {
       return;
     }
-    api.post(Endpoints.proteins.ESMFold, {sequence: organism.sequence}).then((res) => {
+    api.post(Endpoints.proteins.ESMFold, {sequence: state.organism.sequence}).then((res) => {
       dispatch({type: 'setEsmfold', payload: res.data});
+    });
+  }
+
+  const setAlphaFold = () => {
+    setAlphafoldLoading(true);
+    dispatch({type: 'selectPdb', payload: ALPHA_FOLD_PDB});
+    api.post(Endpoints.proteins.AlphaFold, {sequence: state.organism.sequence, name: state.protein.name}).then((res) => {
+      let status = 'loading';
+      if (res.data.url) {
+        setAlphafoldLoading(false);
+        status = 'success';
+      }
+      dispatch({type: 'setAlphafold', payload: {...res.data, status}});
     });
   }
 
   const handleChange = (e) => {
     if (e.target.value === ESM_FOLD_PDB) {
       setESMFold();
+      return;
+    }
+    if (e.target.value === ALPHA_FOLD_PDB) {
+      setAlphaFold();
       return;
     }
     dispatch({type: 'selectPdb', payload: e.target.value});
@@ -51,17 +69,17 @@ export const PDBSelector = ({organism}) => {
 
   /* Preselect first, disabled for now
   useEffect(() => {
-    if (!organism.pdbs.length) return;
+    if (!state.organism.pdbs.length) return;
     setTimeout(() => {
-      handleChange({target: {value: organism.pdbs[0].id}});
+      handleChange({target: {value: state.organism.pdbs[0].id}});
     }, 100);
-  }, [organism.pdbs]);*/
+  }, [state.organism.pdbs]);*/
 
   useEffect(() => {
-    if (!!organism && !!organism.sequence && organism.sequence.length <= 400) {
+    if (!!state.organism && !!state.organism.sequence && state.organism.sequence.length <= 400) {
       loadESMFold();
     }
-  }, [organism.sequence]);
+  }, [state.organism.sequence]);
 
   function renderBox() {
     if (pdb === null || !open) {
@@ -79,19 +97,33 @@ export const PDBSelector = ({organism}) => {
         p: 2,
         borderRadius: 5,
       }} onMouseEnter={event => setPdb(pdb)}>
-        <Typography fontSize={12}>{`${pdb.title}`}</Typography>
-        {!!pdb.description ? <Typography fontSize={10}>{`${pdb.description}`}</Typography> : null}
-        <Stack direction="row" spacing={1} alignItems="center">
+        {'bitscore' in pdb ?(<><Typography fontSize={12}>{`${pdb.title}`}</Typography>
+          {!!pdb.description ? <Typography fontSize={10}>{`${pdb.description}`}</Typography> : null}
+          <Stack direction="row" spacing={1} alignItems="center">
           <Typography fontSize={10} fontWeight="bold">Identity: </Typography>
           <Typography fontSize={14} color={color}>{pdb.pident}%</Typography>
-        </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
+          </Stack>
+          <Stack direction="row" spacing={1} alignItems="center">
           <Typography fontSize={10} fontWeight="bold">Bit score: </Typography>
           <Typography fontSize={14} color={color}>{score}</Typography>
-        </Stack>
-        <img src={`https://cdn.rcsb.org/images/structures/${pdb.id.toLowerCase()}_assembly-1.jpeg `}
-             alt={pdb.id}
-             style={{width: 200, height: 200}} />
+          </Stack>
+          <img src={`https://cdn.rcsb.org/images/structures/${pdb.id.toLowerCase()}_assembly-1.jpeg `}
+          alt={pdb.id}
+          style={{width: 200, height: 200}} /></>):
+          (<>
+            {pdb.id === ESM_FOLD_PDB && <>
+              <Typography fontSize={16}>ESMF</Typography>
+              <Typography fontSize={14}>Fast (aprox 1 sec)</Typography>
+              <Typography fontSize={14}>Poor accuracy</Typography>
+              <Typography fontSize={14}>Size up to 400</Typography>
+              </>}
+            {pdb.id === ALPHA_FOLD_PDB && <>
+              <Typography fontSize={16}>AlphaFold</Typography>
+              <Typography fontSize={14}>Slow (20min to 1h)</Typography>
+              <Typography fontSize={14}>High accuracy</Typography>
+              <Typography fontSize={14}>Work regardless of the size</Typography>
+              </>}
+          </>)}
       </Box>
     );
   }
@@ -110,14 +142,17 @@ export const PDBSelector = ({organism}) => {
           <MenuItem value={''}>
             <em>None</em>
           </MenuItem>
-          {organism.pdbs.sort((a,b) => b.pident - a.pident).map(pdb => (
+          {state.organism.pdbs.sort((a,b) => b.pident - a.pident).map(pdb => (
             <MenuItem value={pdb.id} onMouseOver={() => setPdb(pdb)} onMouseOut={() => setPdb(null)} key={pdb.id}>
               {pdb.id}
             </MenuItem>
           ))}
-          {!!organism && !!organism.sequence && organism.sequence.length <= 400 && <MenuItem value={ESM_FOLD_PDB} key={ESM_FOLD_PDB} onMouseOver={() => setPdb(null)}>
+          {!!state.organism && !!state.organism.sequence && state.organism.sequence.length <= 400 && <MenuItem value={ESM_FOLD_PDB} key={ESM_FOLD_PDB} onMouseOver={() => setPdb({id: ESM_FOLD_PDB})} onMouseOut={() => setPdb(null)}>
             {!state.esmfold && '(+)'} ESMFold
           </MenuItem>}
+          <MenuItem value={ALPHA_FOLD_PDB} key={ALPHA_FOLD_PDB} onMouseOver={() => setPdb({id: ALPHA_FOLD_PDB})} onMouseOut={() => setPdb(null)} >
+            {alphafoldLoading ? <CircularProgress style={{height: 15, width: 15, marginRight: 10}}/> : '(+)'} AlphaFold
+          </MenuItem>
         </Select>
       </FormControl>
       {renderBox()}

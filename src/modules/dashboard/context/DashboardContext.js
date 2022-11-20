@@ -16,6 +16,7 @@ const initialState = {
   moleculeDocking: {},
   docking: 0,
   esmfold: null,
+  alphafold: null
 };
 
 const DashboardContext = createContext({state: initialState});
@@ -194,6 +195,10 @@ const reducer = (state, action) => {
     setEsmfold: (esmfold) => ({
       ...state,
       esmfold,
+    }),
+    setAlphafold: (alphafold) => ({
+      ...state,
+      alphafold,
     }),
     clean: () => initialState,
     restore: (state) => state,

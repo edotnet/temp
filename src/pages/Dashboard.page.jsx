@@ -73,7 +73,7 @@ export const Dashboard = () => {
                                                                 label="ADD TARGET PROTEIN"/>
                                             {state.protein && <OrganismAutocomplete onChange={_onOrganismSelected}
                                                                                     label="ADD TARGET ORGANISM"/>}
-                                            {state.organism && <PDBSelector organism={state.organism}/>}
+                                            {state.organism && <PDBSelector />}
                                         </Stack>
                                     </Grid>
                                     <Grid item xs={12}>

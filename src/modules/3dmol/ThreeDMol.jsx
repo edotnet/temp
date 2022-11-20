@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import D3 from '../../assets/svg/3d.svg';
 import {useDashboardContext} from '../dashboard/context/useDashboarContext';
-import {ESM_FOLD_PDB} from "../../config/Consts";
+import {ALPHA_FOLD_PDB, ESM_FOLD_PDB} from '../../config/Consts';
 
 export const ThreeDMol = () => {
   const ref = useRef();
@@ -66,14 +66,14 @@ export const ThreeDMol = () => {
     })
   }, [selectedCustomPdb])
 
-  const renderFold = useCallback(() => {
-    if (!state.esmfold) {
+  const renderFold = useCallback((fold) => {
+    if (!state[fold]) {
       return;
     }
     removeCanvas()
     createViewer()
     viewerRef.current.clear();
-    fetch(state.esmfold.url)
+    fetch(state[fold].url)
       .then(res => {
         return res.text();
       }).then(pdb => {
@@ -85,14 +85,19 @@ export const ThreeDMol = () => {
     }).catch(err => {
       console.log(err)
     })
-  }, [state.esmfold]);
+  }, [state.esmfold, state.alphafold]);
 
   useEffect(() => {
-    if (state.pdbid && state.pdbid !== ESM_FOLD_PDB) {
+    if (state.pdbid && state.pdbid !== ESM_FOLD_PDB && state.pdbid !== ALPHA_FOLD_PDB) {
       renderPdb();
     }
     if (state.pdbid === ESM_FOLD_PDB) {
-      renderFold();
+      renderFold('esmfold');
+    }
+    if (state.pdbid === ALPHA_FOLD_PDB) {
+      if (state.alphafold && state.alphafold.url) {
+        renderFold('alphafold');
+      }
     }
   }, [renderPdb, state.pdbid])
 
