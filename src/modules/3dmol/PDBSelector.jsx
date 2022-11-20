@@ -9,6 +9,7 @@ export const PDBSelector = ({organism}) => {
   const {state, dispatch} = useDashboardContext();
   const [pdb, setPdb] = useState(null);
   const [open, setOpen] = useState(false);
+  const [esmfold, setEsmfold] = useState(null);
 
   const setESMFold = () => {
     if (organism.sequence.length > 400) {
@@ -16,9 +17,18 @@ export const PDBSelector = ({organism}) => {
       return;
     }
     dispatch({type: 'selectPdb', payload: ESM_FOLD_PDB});
-    dispatch({type: 'addCustomPdb', payload: {drug: ESM_FOLD_PDB}});
+    dispatch({type: 'addMoleculeDocking', payload: {drug: ESM_FOLD_PDB}});
     api.post(Endpoints.proteins.ESMFold, {sequence: organism.sequence}).then((res) => {
-      dispatch({type: 'addCustomPdbResponse', payload: {drug: ESM_FOLD_PDB, data: res.data, status: 'success'}});
+      dispatch({type: 'addMoleculeDockingResponse', payload: {drug: ESM_FOLD_PDB, data: res.data, status: 'success'}});
+    });
+  }
+
+  const loadESMFold = () => {
+    if (organism.sequence.length > 400) {
+      return;
+    }
+    api.post(Endpoints.proteins.ESMFold, {sequence: organism.sequence}).then((res) => {
+      setEsmfold(res.data);
     });
   }
 
@@ -41,6 +51,12 @@ export const PDBSelector = ({organism}) => {
       handleChange({target: {value: organism.pdbs[0].id}});
     }, 100);
   }, [organism.pdbs]);
+
+  useEffect(() => {
+    if (!!organism && !!organism.sequence && organism.sequence.length <= 400) {
+      loadESMFold();
+    }
+  }, [organism.sequence]);
 
   function renderBox() {
     if (pdb === null || !open) {
@@ -95,7 +111,7 @@ export const PDBSelector = ({organism}) => {
             </MenuItem>
           ))}
           {!!organism && !!organism.sequence && organism.sequence.length <= 400 && <MenuItem value={ESM_FOLD_PDB} key={ESM_FOLD_PDB} onMouseOver={() => setPdb(null)}>
-            (+) ESMFold
+            {!esmfold && '(+)'} ESMFold
           </MenuItem>}
         </Select>
       </FormControl>

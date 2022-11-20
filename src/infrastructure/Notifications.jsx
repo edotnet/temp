@@ -54,7 +54,7 @@ export const Notifications = () => {
               break;
             case 'DOCKING_FAIL':
               enqueueSnackbar('Docking failed', {variant: 'error'});
-              dispatch({type: 'addCustomPdbResponse', payload: {drug: event.data.name, data: null, status: 'error'}});
+              dispatch({type: 'addMoleculeDockingResponse', payload: {drug: event.data.name, data: null, status: 'error'}});
               break;
             default:
               break;

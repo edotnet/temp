@@ -45,7 +45,7 @@ export const Endpoints = {
     query: `${useApi}/3d/calculate`,
   },
   docking: {
-    calculate: `${useApi}/docking/calculate`,
+    calculate: isProd ? `${useApi}/docking/calculate` : `${useApi}/test/calculate`,
   },
   auth: {
     login: `${Consts.API_URL}/auth/login`,

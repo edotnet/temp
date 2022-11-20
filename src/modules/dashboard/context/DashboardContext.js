@@ -13,7 +13,7 @@ const initialState = {
   demographics: [],
   selectedDemographics: null,
   demographicsResult: null,
-  customPdbs: {},
+  moleculeDocking: {},
   docking: 0,
 };
 
@@ -164,30 +164,30 @@ const reducer = (state, action) => {
           ...demographicsResult,
         },
       }),
-      addCustomPdb: ({drug}) => {
-        const customPdbs = {...state.customPdbs};
-        customPdbs[drug] = {
+      addMoleculeDocking: ({drug}) => {
+        const moleculeDocking = {...state.moleculeDocking};
+        moleculeDocking[drug] = {
           status: 'loading',
         };
         return {
           ...state,
-          customPdbs,
-          docking: Object.entries(customPdbs).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
+          moleculeDocking,
+          docking: Object.entries(moleculeDocking).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
         };
       },
-      addCustomPdbResponse: ({drug, data, status}) => {
-        const customPdbs = {
-          ...state.customPdbs,
+      addMoleculeDockingResponse: ({drug, data, status}) => {
+        const moleculeDocking = {
+          ...state.moleculeDocking,
           [drug]: {
-            ...state.customPdbs[drug],
+            ...state.moleculeDocking[drug],
             response: data,
             status,
           },
         };
         return {
           ...state,
-          customPdbs,
-          docking: Object.entries(customPdbs).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
+          moleculeDocking,
+          docking: Object.entries(moleculeDocking).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
         };
       },
     };

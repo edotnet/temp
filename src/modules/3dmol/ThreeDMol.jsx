@@ -48,7 +48,7 @@ export const ThreeDMol = () => {
     removeCanvas()
     createViewer()
     viewerRef.current.clear();
-    fetch(state.customPdbs[selectedCustomPdb].response.url)
+    fetch(state.moleculeDocking[selectedCustomPdb].response.url)
       .then(res => {
         return res.text();
       }).then(pdb => {
@@ -83,14 +83,14 @@ export const ThreeDMol = () => {
   }, [renderCustomPdb, renderPdb, selectedCustomPdb, state.pdbid])
 
   const affinity = useMemo(() => {
-    if (!state.customPdbs[selectedCustomPdb]) {
+    if (!state.moleculeDocking[selectedCustomPdb]) {
       return 0;
     }
-    if (!state.customPdbs[selectedCustomPdb].response) {
+    if (!state.moleculeDocking[selectedCustomPdb].response) {
         return 0;
     }
-    return parseFloat(state.customPdbs[selectedCustomPdb].response.affinity).toFixed(3)
-  }, [state.customPdbs, selectedCustomPdb])
+    return parseFloat(state.moleculeDocking[selectedCustomPdb].response.affinity).toFixed(3)
+  }, [state.moleculeDocking, selectedCustomPdb])
   return (
     <>
       { state.pdbid && <Accordion sx={{mt:2, backgroundColor: '#f5f6fc'}} elevation={0}>
@@ -119,7 +119,7 @@ export const ThreeDMol = () => {
               </Box>
               <TextField select value={selectedCustomPdb} label="Select drug" onChange={(e) => setSelectedCustomPdb(e.target.value)} sx={{minWidth: 150}}>
                 <MenuItem value="">None</MenuItem>
-                {Object.entries(state.customPdbs).map(([key, value]) => (
+                {Object.entries(state.moleculeDocking).map(([key, value]) => (
                   <MenuItem key={key} value={key} disabled={value.status !== 'success'} sx={{color: value.status === 'error' ? 'red' : 'inherit'}}>
                     {key} {value.status==='loading'? <CircularProgress  size={15} sx={{ml: 1}}/> :''}
                   </MenuItem>
