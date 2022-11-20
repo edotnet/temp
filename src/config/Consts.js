@@ -27,6 +27,7 @@ export const Endpoints = {
     drugProtein: `${Consts.API_URL}/drug-protein-pec50`,
     drugProteinOld: `${Consts.API_URL}/drug-protein-kd`,
     drugInteraction: `${useApi}/drug-synergy`,
+    drugInteractionOld: `${useApi}/drug-interaction`,
   },
   pdf: {
     upload: `${useApi}/xdl/upload`,

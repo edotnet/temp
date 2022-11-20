@@ -84,9 +84,11 @@ export const Session = () => {
                 dashboard: dashboardState, engine: engineState
             }
         };
-        let call = api.post(Endpoints.session.create, request);
+        let call;
         if (currentSession && ! forceNew) {
             call = api.put(Endpoints.session.update(currentSession), request);
+        } else {
+            call = api.post(Endpoints.session.create, request);
         }
         call.then((res) => {
             setTitle('');
