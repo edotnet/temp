@@ -5,6 +5,7 @@ import {NavLink} from 'react-router-dom';
 import Logo from '../../assets/svg/logo.svg';
 import './NavBar.scss';
 import {useAuth} from '../../infrastructure/authentication/useAuth';
+import {Session} from "../../infrastructure/session/Session";
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
@@ -41,15 +42,18 @@ export const Navbar = () => {
           <Box component="img" alt="logo" className="logoresponsive"
                src={Logo} />
         </Grid>
-        <Grid item xs={10} style={{paddingTop: '25px'}}>
+        <Grid item xs={4} style={{paddingTop: '25px'}}>
           <nav className="headernavlink">
             <NavLink to="/engine/search">SEARCH ENGINE</NavLink>
             <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
             {/*<NavLink to="/surface">SURFACE</NavLink>*/}
           </nav>
         </Grid>
-        <Grid item xs={1}>
-          <Box sx={{flexGrow: 0}}>
+        <Grid item xs={2} sx={{display: 'flex', justifyContent: 'center', alignContent: 'center'}}>
+          <Session />
+        </Grid>
+        <Grid item xs={5}>
+          <Box sx={{flexGrow: 0, justifyContent: 'flex-end', display: 'flex', pr: 3}}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
                 <Avatar alt={user.user.name} src={user.user.image} />

@@ -1,4 +1,5 @@
-import {Box, Grid, IconButton, Stack, Typography, useTheme} from '@mui/material';
+import {Box, Fab, Grid, IconButton, Portal, Stack, Typography, useTheme} from '@mui/material';
+import {Session} from '../infrastructure/session/Session';
 import {MoleculeAutocomplete} from "../modules/dashboard/MoleculeAutocomplete";
 import {MoleculeCard} from "../modules/dashboard/MoleculeCard";
 import {DrugProperties} from "../modules/dashboard/DrugProperties";
@@ -15,7 +16,7 @@ import {useNavigate} from "react-router-dom";
 import {DemographicFeature} from "../modules/dashboard/DemographicFeature";
 import {dockingFetcher} from "../modules/dashboard/DockingFetcher";
 import HAILO from '../assets/svg/HAILO.svg'
-import {DeleteOutline, Refresh} from "@mui/icons-material";
+import {DeleteOutline, Navigation, Refresh} from '@mui/icons-material';
 
 export const Dashboard = () => {
     const {state, dispatch} = useDashboardContext();
@@ -53,7 +54,7 @@ export const Dashboard = () => {
                 <DndProvider backend={HTML5Backend}>
                     <Grid pl={5} pr={5} className="dashboarddnd">
                         <Grid container spacing={2}>
-                            <Grid item xs={3} sx={{mt: 6}}>
+                            <Grid item xs={3} sx={{mt: 2}}>
                                 <Typography variant="h4" gutterBottom>DRUG INTERACTION</Typography>
                                 <Grid container spacing={2}>
                                     {/*

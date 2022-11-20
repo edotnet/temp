@@ -36,21 +36,21 @@ const adaptMolecule = (molecule) => {
 };
 const reducer = (state, action) => {
   const actions = {
-      addMolecule: (molecule) => {
-        if (state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)) {
-          return state;
-        }
+    addMolecule: (molecule) => {
+      if (state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id)) {
+        return state;
+      }
+      molecule.color = colorful_language(molecule.name, 0.25);
+      return {
+        ...state,
+        molecules: [...state.molecules, molecule],
+      };
+    },
+    addMolecules: (molecules) => {
+      const newMolecules = molecules.map(molecule => {
         molecule.color = colorful_language(molecule.name, 0.25);
-        return {
-          ...state,
-          molecules: [...state.molecules, molecule],
-        };
-      },
-      addMolecules: (molecules) => {
-        const newMolecules = molecules.map(molecule => {
-          molecule.color = colorful_language(molecule.name, 0.25);
-          return molecule;
-        }).filter(molecule => !state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id));
+        return molecule;
+      }).filter(molecule => !state.molecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id));
 
         return {
           ...state,
@@ -165,36 +165,38 @@ const reducer = (state, action) => {
           ...demographicsResult,
         },
       }),
-      addMoleculeDocking: ({drug}) => {
-        const moleculeDocking = {...state.moleculeDocking};
-        moleculeDocking[drug] = {
-          status: 'loading',
-        };
-        return {
-          ...state,
-          moleculeDocking,
-          docking: Object.entries(moleculeDocking).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
-        };
-      },
-      addMoleculeDockingResponse: ({drug, data, status}) => {
-        const moleculeDocking = {
-          ...state.moleculeDocking,
-          [drug]: {
-            ...state.moleculeDocking[drug],
-            response: data,
-            status,
-          },
-        };
-        return {
-          ...state,
-          moleculeDocking,
-          docking: Object.entries(moleculeDocking).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
-        };
-      },
-      setEsmfold: (esmfold) => ({
+    addMoleculeDocking: ({drug}) => {
+      const moleculeDocking = {...state.moleculeDocking};
+      moleculeDocking[drug] = {
+        status: 'loading',
+      };
+      return {
         ...state,
-        esmfold,
-      }),
+        moleculeDocking,
+        docking: Object.entries(moleculeDocking).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
+      };
+    },
+    addMoleculeDockingResponse: ({drug, data, status}) => {
+      const moleculeDocking = {
+        ...state.moleculeDocking,
+        [drug]: {
+          ...state.moleculeDocking[drug],
+          response: data,
+          status,
+        },
+      };
+      return {
+        ...state,
+        moleculeDocking,
+        docking: Object.entries(moleculeDocking).map(([id, pdb]) => pdb.status === 'loading' ? 1 : 0).reduce((a, b) => a + b, 0),
+      };
+    },
+    setEsmfold: (esmfold) => ({
+      ...state,
+      esmfold,
+    }),
+    clean: () => initialState,
+    restore: (state) => state,
     };
 return actions[action.type](action.payload);
 }

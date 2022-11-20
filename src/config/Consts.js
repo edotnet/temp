@@ -62,6 +62,13 @@ export const Endpoints = {
     name: `${useApi}/proteins/names`,
     organisms: `${useApi}/proteins/organisms`,
     ESMFold: `${useApi}/proteins/esmatlasFold`,
+  },
+  session: {
+    list: `${Consts.API_URL}/session`,
+    create: `${Consts.API_URL}/session`,
+    delete: id =>`${Consts.API_URL}/session/${id}`,
+    update: id => `${Consts.API_URL}/session/${id}`,
+    get: id => `${Consts.API_URL}/session/${id}`,
   }
 };
 
