@@ -38,6 +38,10 @@ export const DrugInteractionFeature = () => {
       field: 'label',
       headerName: 'Interaction',
       flex: 1,
+      valueGetter: (params) => {
+        const {row} = params;
+        return row.label.replace('#Drug1', state.interactingMolecules[0].name).replace('#Drug2', state.interactingMolecules[1].name);
+      }
     },
     {
       field: 'value',
@@ -67,7 +71,7 @@ export const DrugInteractionFeature = () => {
             <DataGrid
               autoHeight
               pageSize={5}
-              rows={[...data.result.sort((a, b) => b.value - a.value)]}
+              rows={[...data.result.filter(i => i.label !== 'None' && i.label !== 'The therapeutic efficacy of #Drug2 can be increased when used in combination with #Drug1.').sort((a, b) => b.value - a.value)]}
               pagination
               columns={columns}
               disableSelectionClick
