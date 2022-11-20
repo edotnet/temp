@@ -188,8 +188,8 @@ export const Session = () => {
                 <Stack p={2} spacing={2}>
                     <TextField label="Title" value={title} onChange={e => setTitle(e.target.value)}
                                variant="standard"/>
-                    <TextField label="Description" value={title} onChange={e => setDescription(e.target.value)}
-                               variant="standard" multiline rows={3}/>
+                    <TextField label="Description" onChange={e => setDescription(e.target.value)}
+                               variant="standard" multiline rows={3} value={description}/>
                     <Button onClick={save} variant="outlined" endIcon={<Check/>}>Save</Button>
                 </Stack>
             </ModalPaper>

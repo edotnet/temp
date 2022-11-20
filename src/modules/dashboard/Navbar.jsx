@@ -42,20 +42,18 @@ export const Navbar = () => {
           <Box component="img" alt="logo" className="logoresponsive"
                src={Logo} />
         </Grid>
-        <Grid item xs={3} style={{paddingTop: '25px'}}>
+        <Grid item xs={4} style={{paddingTop: '25px'}}>
           <nav className="headernavlink">
             <NavLink to="/engine/search">SEARCH ENGINE</NavLink>
             <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
             {/*<NavLink to="/surface">SURFACE</NavLink>*/}
           </nav>
         </Grid>
-        <Grid item xs={1} />
-        <Grid item xs={3} ml={8}>
+        <Grid item xs={2} sx={{display: 'flex', justifyContent: 'center', alignContent: 'center'}}>
           <Session />
         </Grid>
-        <Box sx={{flexGrow: 1}} />
-        <Grid item xs={1}>
-          <Box sx={{flexGrow: 0}}>
+        <Grid item xs={5}>
+          <Box sx={{flexGrow: 0, justifyContent: 'flex-end', display: 'flex', pr: 3}}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
                 <Avatar alt={user.user.name} src={user.user.image} />
