@@ -1,3 +1,4 @@
+import { Add, CheckBoxOutlineBlank, CheckBoxOutlined, Remove } from "@mui/icons-material";
 import {
   Box,
   capitalize,
@@ -10,13 +11,14 @@ import {
   Stack, TextField,
   Typography
 } from "@mui/material";
-import {PrimaryButton} from "../../../infrastructure/components/PrimaryButton";
+import { styled } from "@mui/material/styles";
 import * as PropTypes from "prop-types";
-import { Add, CheckBoxOutlineBlank, CheckBoxOutlined, Remove } from "@mui/icons-material";
-import {useDashboardContext} from "../context/useDashboarContext";
-import {useEffect, useMemo, useState} from "react";
-import {styled} from "@mui/material/styles";
-import {DemographicBmi, DemographicYears} from "../../../config/Consts";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { DemographicBmi, DemographicYears, Endpoints } from "../../../config/Consts";
+import { PrimaryButton } from "../../../infrastructure/components/PrimaryButton";
+import { useApiCall } from "../../../infrastructure/hooks/useApiCall";
+import { SearchInput } from "../../engine/search/SearchInput";
+import { useDashboardContext } from "../context/useDashboarContext";
 const CustomTextField = styled(TextField)({
   '&.MuiTextField-root': {
     input: {
@@ -76,6 +78,7 @@ const options = {
 }
 export const DemographicModal = ({onClose, open, id}) => {
   const {state, dispatch} = useDashboardContext();
+  const {loading, data, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
 
   const initialState = useMemo(() => {
     const info = {
@@ -91,15 +94,26 @@ export const DemographicModal = ({onClose, open, id}) => {
     }
   }, [state.demographics]);
   const [information, setInformation] = useState(() => initialState);
+  const [searchInputValue, setSearchInputValue] = useState('')
 
   const isValid = useMemo(() => {
     return Object.keys(information).every(key => information[key] !== null);
   }, [information]);
 
+  useMemo(()=>{
+    if (data) {
+      console.log(data)
+    }
+  }, [data])
+
   const onSubmit = () => {
     dispatch({type: 'addDemographics', payload: information});
     onClose();
   }
+
+  const onRun = useCallback((searchTerm) => {
+    fetch(Endpoints.search.drug, 'POST', {query: searchTerm ?? searchInputValue});
+  }, [searchInputValue]);
 
   const renderRadio = (type) => {
     return (
@@ -233,6 +247,14 @@ export const DemographicModal = ({onClose, open, id}) => {
         </Box>
         <Box>
           <Typography variant="h6">Comorbidities</Typography>
+          <SearchInput placeholder='Search Comorbidities' value={searchInputValue} onChange={e => setSearchInputValue(e.target.value)} onClick={() => {
+            console.log(searchInputValue)
+            onRun()
+          }} onKeyPress={e => {
+            if (e.key === 'Enter') {
+              console.log(searchInputValue)
+            }
+          }} />
           {renderText('comorbidities')}
         </Box>
         <Stack direction="row" spacing={2} sx={{justifyContent: "flex-end"}}>

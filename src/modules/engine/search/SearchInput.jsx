@@ -11,7 +11,7 @@ export function SearchInput(props) {
         onChange={props.onChange}
         onKeyPress={props.onKeyPress}
         variant="outlined"
-        placeholder="Search for..."
+        placeholder={props.placeholder || "Search for..."}
         className="searchEngine-input"
         inputProps={{
           style: {
@@ -31,5 +31,6 @@ SearchInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   onKeyPress: PropTypes.func,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  placeholder: PropTypes.string
 };
