@@ -1,4 +1,4 @@
-import {ArrowDropDown, Check, Delete, DeleteOutline, Save} from '@mui/icons-material';
+import { ArrowDropDown, Check, Delete } from '@mui/icons-material';
 import {
     Box,
     Button,
@@ -15,19 +15,19 @@ import {
     Portal,
     Stack,
     TextField,
-    Typography,
+    Typography
 } from '@mui/material';
-import {useSnackbar} from 'notistack';
-import {useState} from 'react';
-import {Endpoints} from '../../config/Consts';
-import {useDashboardContext} from '../../modules/dashboard/context/useDashboarContext';
-import {useEngineContext} from '../../modules/engine/useEngineContext';
-import {api} from '../api/instance';
-import {ModalPaper} from '../components/ModalPaper';
-import {useApiCall} from '../hooks/useApiCall';
-import {DateTime} from "luxon";
-import {hexToRgba} from "../utils";
+import { DateTime } from "luxon";
+import { useSnackbar } from 'notistack';
+import { useState } from 'react';
+import { Endpoints } from '../../config/Consts';
+import { useDashboardContext } from '../../modules/dashboard/context/useDashboarContext';
+import { useEngineContext } from '../../modules/engine/useEngineContext';
+import { api } from '../api/instance';
+import { ModalPaper } from '../components/ModalPaper';
 import theme from "../config/theme";
+import { useApiCall } from '../hooks/useApiCall';
+import { hexToRgba } from "../utils";
 
 export const Session = () => {
     const {state: dashboardState, dispatch: dashboardDispatch} = useDashboardContext();
@@ -120,83 +120,86 @@ export const Session = () => {
             enqueueSnackbar('Session not deleted', {variant: 'error'});
         });
     }
-    return (<>
+
+    const drawer = () => (
         <Drawer open={historyOpen} anchor="right" onClose={close}>
-            <Typography variant="h6" sx={{p: 2}}>History</Typography>
+            <Typography variant="h6" sx={{ p: 2 }}>History</Typography>
             <Divider/>
             <List spacing={2} sx={{minWidth: 300}}>
-                {data && data.items && data.items.map((item) => (<ListItem onClick={onSelect(item.id)} key={item.id}
-                                                                           secondaryAction={
-                                                                               <IconButton edge="end" aria-label="delete" onClick={onDelete(item.id)}>
-                                                                                   <Delete />
-                                                                               </IconButton>
-                                                                           }
-                                                                           sx={{
-                                                                               pl: 2,
-                                                                               pr: 2,
-                                                                               cursor: 'pointer',
-                                                                               '&:hover': {backgroundColor: hexToRgba(theme.palette.primary.main, 0.1)}
-                                                                           }}>
-                    <ListItemText primary={item.title}
-                                  secondary={item.description || DateTime.fromISO(item.createdAt).toFormat('D H:mm')}
-                    />
-                </ListItem>))}
+                {data && data.items && data.items.map(item => listItem(item))}
             </List>
         </Drawer>
-        <Stack spacing={2} direction="row">
-            <Box sx={{display: 'flex', alignItems: 'center'}}><Typography>
-                {currentSession && data ? data.items.find(i => i.id === currentSession)?.title : 'Not saved...'}</Typography></Box>
-            <IconButton onClick={handleOpenMenu}>
-                <ArrowDropDown/>
-            </IconButton>
-            <Menu open={menuOpen} onClose={handleCloseMenu} anchorEl={anchorEl}>
-                <MenuItem onClick={() => {
-                    handleCloseMenu()
-                    setHistoryOpen(true);
-                }}>
-                    <ListItemText>
-                        History
-                    </ListItemText>
-                </MenuItem>
-                <MenuItem onClick={() => {
-                    clean();
-                    handleCloseMenu()
-                }}>
-                    <ListItemText>
-                        Clean
-                    </ListItemText>
-                </MenuItem>
-                <MenuItem onClick={(e) => {
-                    handleCloseMenu()
-                    onSave(e);
-                }}>
-                    <ListItemText>
-                        Save
-                    </ListItemText>
-                </MenuItem>
-                <MenuItem onClick={(e) => {
-                    handleCloseMenu()
-                    onSaveAs(e);
-                }}>
-                    <ListItemText>
-                        Save as...
-                    </ListItemText>
-                </MenuItem>
-            </Menu>
-        </Stack>
-        {openSaveDialog && <ClickAwayListener onClickAway={() => setOpenSaveDialog(false)}>
+    )
+
+    const listItem = (item) => (
+        <ListItem 
+            onClick={onSelect(item.id)} key={item.id}
+            secondaryAction={
+                <IconButton edge="end" aria-label="delete" onClick={onDelete(item.id)}>
+                    <Delete />
+                </IconButton>
+            }
+            sx={{
+                pl: 2,
+                pr: 2,
+                cursor: 'pointer',
+                '&:hover': {backgroundColor: hexToRgba(theme.palette.primary.main, 0.1)}
+            }}>
+            <ListItemText primary={item.title} secondary={item.description || DateTime.fromISO(item.createdAt).toFormat('D H:mm')} />
+        </ListItem>
+    )
+
+    const saveDialog = () => (
+        <ClickAwayListener onClickAway={() => setOpenSaveDialog(false)}>
             <ModalPaper elevation={2} sx={{
                 position: 'absolute', top: '50%', left: '50%', zIndex: 10,
             }}>
                 <Stack p={2} spacing={2}>
-                    <TextField label="Title" value={title} onChange={e => setTitle(e.target.value)}
-                               variant="standard"/>
-                    <TextField label="Description" onChange={e => setDescription(e.target.value)}
-                               variant="standard" multiline rows={3} value={description}/>
+                    <TextField label="Title" value={title} onChange={e => setTitle(e.target.value)} variant="standard" />
+                    <TextField label="Description" onChange={e => setDescription(e.target.value)} 
+                        variant="standard" multiline rows={3} value={description} />
                     <Button onClick={save} variant="outlined" endIcon={<Check/>}>Save</Button>
                 </Stack>
             </ModalPaper>
-        </ClickAwayListener>}
+        </ClickAwayListener>
+    )
+
+    const menuItem = (itemText, onClick) => (
+        <MenuItem onClick={onClick}>
+            <ListItemText> {itemText}</ListItemText>
+        </MenuItem>
+    )
+
+    return (<>
+        {drawer()}
+        <Stack spacing={2} direction="row">
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography>{currentSession && data ? data.items.find(i => i.id === currentSession)?.title : 'Not saved...'}</Typography>
+            </Box>
+            <IconButton onClick={handleOpenMenu}>
+                <ArrowDropDown/>
+            </IconButton>
+            <Menu open={menuOpen} onClose={handleCloseMenu} anchorEl={anchorEl} transformOrigin={{ 
+                horizontal: 'right', vertical: 'top' }} anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+                {menuItem('History', () => {
+                    handleCloseMenu()
+                    setHistoryOpen(true)
+                })}
+                {menuItem('Clean', () => {
+                    clean()
+                    handleCloseMenu()
+                })}
+                {menuItem('Save', e => {
+                    handleCloseMenu()
+                    onSave(e)
+                })}
+                {menuItem('Save as...', e => {
+                    handleCloseMenu()
+                    onSaveAs(e)
+                })}
+            </Menu>
+        </Stack>
+        {openSaveDialog && saveDialog()}
         <Portal>
             {loading && <LinearProgress sx={{position: 'absolute', top: 80, width: '100vw'}}/>}
         </Portal>
