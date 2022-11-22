@@ -1,4 +1,4 @@
-import {memo} from 'react';
+import {memo, useMemo} from 'react';
 import {Endpoints} from '../../config/Consts';
 import {Autocomplete} from '../../infrastructure/components/Autocomplete';
 import {encodeQuery, useApiCall} from '../../infrastructure/hooks/useApiCall';
@@ -26,17 +26,16 @@ const TargetAutocompleteComponent = ({label, onChange, onEmpty}) => {
       id: item.id,
       label: item.name,
     })) : [];
-
   return (
     <Autocomplete
-      key={'target-autocomplete'}
+      key={'target-autocomplete'+state.protein?.id}
       onChange={_onChange}
       onInputChange={newValue => executeSearch(newValue)}
       onEmpty={onEmpty}
       options={options}
       loading={loading}
       label={label}
-      value={state.protein?.name || undefined}
+      value={state.protein?.name}
       variant="standard"
     />
   );
