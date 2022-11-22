@@ -30,9 +30,10 @@ import { useApiCall } from '../hooks/useApiCall';
 import { hexToRgba } from "../utils";
 
 export const Session = () => {
+    const sessionListRequest = `${Endpoints.session.list}?pageNumber=0&pageSize=20`
     const {state: dashboardState, dispatch: dashboardDispatch} = useDashboardContext();
     const {state: engineState, dispatch: engineDispatch} = useEngineContext();
-    const {data, error, fetch} = useApiCall(Endpoints.session.list, 'GET');
+    const {data, error, fetch} = useApiCall(sessionListRequest, 'GET');
     const [currentSession, setCurrentSession] = useState('');
     const [openSaveDialog, setOpenSaveDialog] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -70,6 +71,10 @@ export const Session = () => {
     }
     const onSave = (e) => {
         setOpenSaveDialog(true);
+        setForceNew(false);
+        const currentSessionData = data.items.find(session => session.id === currentSession);
+        setTitle(currentSessionData.title);
+        setDescription(currentSessionData.description);
     }
     const onSaveAs = (e) => {
         setOpenSaveDialog(true);
@@ -93,9 +98,10 @@ export const Session = () => {
         }
         call.then((res) => {
             setTitle('');
+            setDescription('');
             setOpenSaveDialog(false);
             setCurrentSession(res.data.id);
-            fetch(Endpoints.session.list, 'GET');
+            fetch(sessionListRequest, 'GET');
             enqueueSnackbar('Session saved', {variant: 'success'});
         }).catch((e) => {
             enqueueSnackbar('Session not saved', {variant: 'error'});
@@ -115,7 +121,7 @@ export const Session = () => {
         e.stopPropagation();
         api.delete(Endpoints.session.delete(sessionId)).then(() => {
             enqueueSnackbar('Session deleted', {variant: 'success'});
-            fetch(Endpoints.session.list, 'GET');
+            fetch(sessionListRequest, 'GET');
         }).catch((e) => {
             enqueueSnackbar('Session not deleted', {variant: 'error'});
         });
@@ -152,7 +158,7 @@ export const Session = () => {
     const saveDialog = () => (
         <ClickAwayListener onClickAway={() => setOpenSaveDialog(false)}>
             <ModalPaper elevation={2} sx={{
-                position: 'absolute', top: '50%', left: '50%', zIndex: 10,
+                position: 'absolute', top: '100%', right: '75%', zIndex: 10, width: 230
             }}>
                 <Stack p={2} spacing={2}>
                     <TextField label="Title" value={title} onChange={e => setTitle(e.target.value)} variant="standard" />
@@ -164,13 +170,13 @@ export const Session = () => {
         </ClickAwayListener>
     )
 
-    const menuItem = (itemText, onClick) => (
-        <MenuItem onClick={onClick}>
-            <ListItemText> {itemText}</ListItemText>
+    const menuItem = (itemText, onClick, disabled = false) => (
+        <MenuItem disabled={disabled} onClick={onClick}>
+            <ListItemText>{itemText}</ListItemText>
         </MenuItem>
     )
 
-    return (<>
+    return (<Box position='relative'>
         {drawer()}
         <Stack spacing={2} direction="row">
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -185,14 +191,14 @@ export const Session = () => {
                     handleCloseMenu()
                     setHistoryOpen(true)
                 })}
-                {menuItem('Clean', () => {
+                {menuItem('Refresh', () => {
                     clean()
                     handleCloseMenu()
                 })}
                 {menuItem('Save', e => {
                     handleCloseMenu()
                     onSave(e)
-                })}
+                }, !currentSession)}
                 {menuItem('Save as...', e => {
                     handleCloseMenu()
                     onSaveAs(e)
@@ -203,5 +209,5 @@ export const Session = () => {
         <Portal>
             {loading && <LinearProgress sx={{position: 'absolute', top: 80, width: '100vw'}}/>}
         </Portal>
-    </>);
+    </Box>);
 }
