@@ -71,6 +71,10 @@ export const Endpoints = {
     delete: id =>`${Consts.API_URL}/session/${id}`,
     update: id => `${Consts.API_URL}/session/${id}`,
     get: id => `${Consts.API_URL}/session/${id}`,
+  },
+  genephenotype: {
+    search: `${useApi}/genephenotype/search`,
+    genes: `${useApi}/genephenotype/genes`
   }
 };
 

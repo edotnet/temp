@@ -1,8 +1,8 @@
 import { Add, CheckBoxOutlineBlank, CheckBoxOutlined, Remove } from "@mui/icons-material";
 import {
+  Autocomplete,
   Box,
-  capitalize,
-  FormControl,
+  capitalize, Chip, FormControl,
   FormControlLabel, Grid,
   IconButton, InputLabel, MenuItem,
   Modal,
@@ -17,7 +17,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { DemographicBmi, DemographicYears, Endpoints } from "../../../config/Consts";
 import { PrimaryButton } from "../../../infrastructure/components/PrimaryButton";
 import { useApiCall } from "../../../infrastructure/hooks/useApiCall";
-import { SearchInput } from "../../engine/search/SearchInput";
 import { useDashboardContext } from "../context/useDashboarContext";
 const CustomTextField = styled(TextField)({
   '&.MuiTextField-root': {
@@ -30,6 +29,11 @@ const CustomTextField = styled(TextField)({
     borderRadius: 20,
   }
 });
+const ComorbiditiesField = styled(TextField)({
+  '.MuiOutlinedInput-root': {
+    alignItems: 'flex-start',
+  }
+})
 const options = {
   weight: {
     type: 'number',
@@ -78,7 +82,7 @@ const options = {
 }
 export const DemographicModal = ({onClose, open, id}) => {
   const {state, dispatch} = useDashboardContext();
-  const {loading, data, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
+  const {loading, data, fetch} = useApiCall(Endpoints.genephenotype.search, 'POST', null, false);
 
   const initialState = useMemo(() => {
     const info = {
@@ -112,7 +116,7 @@ export const DemographicModal = ({onClose, open, id}) => {
   }
 
   const onRun = useCallback((searchTerm) => {
-    fetch(Endpoints.search.drug, 'POST', {query: searchTerm ?? searchInputValue});
+    fetch(Endpoints.genephenotype.search, 'POST', { query: searchTerm });
   }, [searchInputValue]);
 
   const renderRadio = (type) => {
@@ -153,7 +157,21 @@ export const DemographicModal = ({onClose, open, id}) => {
 
   const renderText = (type) => (
     <Box>
-      <TextField sx={{display: 'flex'}} multiline rows={3} value={information[type]} onChange={e => setInformation(prev => ({...prev, [type]: e.target.value}))}/>
+      <TextField sx={{display: 'flex'}} multiline rows={3} value={information[type]} onChange={e => {
+        setInformation(prev => ({...prev, [type]: e.target.value}))
+      }} />
+    </Box>
+  )
+
+  const renderComorbiditiesText = (params = {}) => (
+    <Box>
+      <ComorbiditiesField sx={{display: 'flex'}} multiline rows={3} value={information.comorbidities} onChange={e => {
+        setInformation(prev => ({...prev, comorbidities: e.target.value}))
+        console.log('COMORBIDITIES =====>>>> ', e.target.value)
+        if (e.target.value.length > 3) {
+          onRun(e.target.value)
+        }
+      }}  {...params} />
     </Box>
   )
 
@@ -170,7 +188,6 @@ export const DemographicModal = ({onClose, open, id}) => {
           {options[type].values.map(value => <MenuItem value={value} key={value}>{value}</MenuItem>)}
         </Select>
       </FormControl>
-
   )
 
   useEffect(() => {
@@ -247,15 +264,31 @@ export const DemographicModal = ({onClose, open, id}) => {
         </Box>
         <Box>
           <Typography variant="h6">Comorbidities</Typography>
-          <SearchInput placeholder='Search Comorbidities' value={searchInputValue} onChange={e => setSearchInputValue(e.target.value)} onClick={() => {
-            console.log(searchInputValue)
-            onRun()
-          }} onKeyPress={e => {
-            if (e.key === 'Enter') {
-              console.log(searchInputValue)
+          <Box>
+          <Autocomplete
+            multiple
+            id="tags-filled"
+            options={information.comorbidities?.length > 3 && data ? data : []}
+            freeSolo
+            loading={loading}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+              ))
             }
-          }} />
-          {renderText('comorbidities')}
+            renderInput={(params) => (
+              renderComorbiditiesText(params)
+            )}
+          />
+            {/* <SearchInput placeholder='Search Comorbidities' value={searchInputValue} onChange={e => setSearchInputValue(e.target.value)} onClick={() => {
+              console.log(searchInputValue)
+              onRun()
+            }} onKeyPress={e => {
+              if (e.key === 'Enter') {
+                console.log(searchInputValue)
+              }
+            }} /> */}
+          </Box>
         </Box>
         <Stack direction="row" spacing={2} sx={{justifyContent: "flex-end"}}>
           <PrimaryButton

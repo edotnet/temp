@@ -1,11 +1,11 @@
-import {Avatar, Box, Grid, IconButton, Menu, MenuItem, Tooltip, Typography} from '@mui/material';
-import {useState} from 'react';
+import { Avatar, Box, Grid, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import { useState } from 'react';
 // import moleculeimg from "../../assets/img/group-11.png";
-import {NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import Logo from '../../assets/svg/logo.svg';
+import { useAuth } from '../../infrastructure/authentication/useAuth';
+import { Session } from "../../infrastructure/session/Session";
 import './NavBar.scss';
-import {useAuth} from '../../infrastructure/authentication/useAuth';
-import {Session} from "../../infrastructure/session/Session";
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
@@ -37,22 +37,22 @@ export const Navbar = () => {
       <Box component="img" alt="image" className="moleculeimg" src={moleculeimg}/>
     </Box> */}
     <Box className="dashboardheader">
-      <Grid container spacing={2}>
+      <Grid container spacing={2} wrap={'nowrap'}>
         <Grid item xs={1} className="logoWrapper">
           <Box component="img" alt="logo" className="logoresponsive"
                src={Logo} />
         </Grid>
-        <Grid item xs={4} style={{paddingTop: '25px'}}>
+        <Grid item xs={7} style={{paddingTop: '25px'}}>
           <nav className="headernavlink">
             <NavLink to="/engine/search">SEARCH ENGINE</NavLink>
             <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
             {/*<NavLink to="/surface">SURFACE</NavLink>*/}
           </nav>
         </Grid>
-        <Grid item xs={2} sx={{display: 'flex', justifyContent: 'center', alignContent: 'center'}}>
+        <Grid flexGrow={1} item sx={{display: 'flex', justifyContent: 'right', alignContent: 'center'}}>
           <Session />
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <Box sx={{flexGrow: 0, justifyContent: 'flex-end', display: 'flex', pr: 3}}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
