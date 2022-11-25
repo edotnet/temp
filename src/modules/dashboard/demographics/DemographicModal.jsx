@@ -59,17 +59,15 @@ const options = {
   },
   geo: {
     type: 'radio',
-    values: ["asia", "europe", "africa", "australia", "america"]
+    values: ["asia", "europe", "africa", "oceania", "carribbean", "russia", "c. America", "n. America", "s. America"]
+  },
+  ethnicities: {
+    type: 'radio',
+    values: ["White", "Latino", "Asian", "African American", "American Indian", "Alaska Native", "Native Hawaiian", "Pacific Islander"]
   },
   bmi: {
     type: 'radio',
     values: DemographicBmi,
-  },
-  allergies: {
-    type: 'text',
-  },
-  comorbidities: {
-    type: 'text'
   },
   weightSystem: {
     type: 'select',
@@ -98,26 +96,20 @@ export const DemographicModal = ({onClose, open, id}) => {
     }
   }, [state.demographics]);
   const [information, setInformation] = useState(() => initialState);
-  const [searchInputValue, setSearchInputValue] = useState('')
+  const [comorbiditiesInputValue, setComorbiditiesInputValue] = useState('')
 
   const isValid = useMemo(() => {
     return Object.keys(information).every(key => information[key] !== null);
   }, [information]);
-
-  useMemo(()=>{
-    if (data) {
-      console.log(data)
-    }
-  }, [data])
 
   const onSubmit = () => {
     dispatch({type: 'addDemographics', payload: information});
     onClose();
   }
 
-  const onRun = useCallback((searchTerm) => {
-    fetch(Endpoints.genephenotype.search, 'POST', { query: searchTerm });
-  }, [searchInputValue]);
+  const onRun = useCallback(searchTerm => {
+    fetch(Endpoints.genephenotype.s, 'POST', { query: searchTerm });
+  }, [comorbiditiesInputValue]);
 
   const renderRadio = (type) => {
     return (
@@ -129,10 +121,13 @@ export const DemographicModal = ({onClose, open, id}) => {
           value={information[type]}
           row
         >
-          {options[type].values.map(value => <FormControlLabel value={value}
-                                                               control={<Radio checkedIcon={<CheckBoxOutlined />} icon={<CheckBoxOutlineBlank />} color="info"/>}
-                                                               label={capitalize(value)}
-                                                               key={value}/>)}
+          {options[type].values.map(value => <FormControlLabel 
+            value={value}
+            control={<Radio checkedIcon={<CheckBoxOutlined />} icon={<CheckBoxOutlineBlank />} 
+            sx={(type === 'geo' || type === 'ethnicities') ? { pr: 0.7 } : {}} color="info" />}
+            label={capitalize(value)}
+            key={value} 
+          />)}
         </RadioGroup>
       </FormControl>
     )
@@ -155,26 +150,6 @@ export const DemographicModal = ({onClose, open, id}) => {
     </Box>
   )
 
-  const renderText = (type) => (
-    <Box>
-      <TextField sx={{display: 'flex'}} multiline rows={3} value={information[type]} onChange={e => {
-        setInformation(prev => ({...prev, [type]: e.target.value}))
-      }} />
-    </Box>
-  )
-
-  const renderComorbiditiesText = (params = {}) => (
-    <Box>
-      <ComorbiditiesField sx={{display: 'flex'}} multiline rows={3} value={information.comorbidities} onChange={e => {
-        setInformation(prev => ({...prev, comorbidities: e.target.value}))
-        console.log('COMORBIDITIES =====>>>> ', e.target.value)
-        if (e.target.value.length > 3) {
-          onRun(e.target.value)
-        }
-      }}  {...params} />
-    </Box>
-  )
-
   const renderSelect = (type, label) => (
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">{label}</InputLabel>
@@ -188,6 +163,40 @@ export const DemographicModal = ({onClose, open, id}) => {
           {options[type].values.map(value => <MenuItem value={value} key={value}>{value}</MenuItem>)}
         </Select>
       </FormControl>
+  )
+
+  const comorbiditiesAutoComplete = () => (
+    <Autocomplete
+      multiple
+      options={comorbiditiesInputValue.length > 3 && data ? data : []}
+      freeSolo
+      value={information.comorbidities || []}
+      onChange={(_, v) => {
+        setInformation(prev => ({...prev, comorbidities: v}))
+      }}
+      loading={loading}
+      renderTags={(value, getTagProps) => {
+        return value.map((option, index) => (
+          <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+        ))
+        }
+      }
+      renderInput={params => (
+        <ComorbiditiesField 
+          sx={{display: 'flex'}} 
+          multiline 
+          value={comorbiditiesInputValue} 
+          onChange={e => {
+            if (e.target.value.length > 3) {
+              onRun(e.target.value)
+            };
+            setComorbiditiesInputValue(e.target.value)
+          }} 
+          rows={3} 
+          {...params} 
+        />
+      )}
+    />
   )
 
   useEffect(() => {
@@ -225,7 +234,6 @@ export const DemographicModal = ({onClose, open, id}) => {
         </Box>
         <Box>
           <Typography variant="h6">BMI {information.bmi}</Typography>
-
           <Grid container sx={{alignItems: 'center'}}>
             <Grid item xs={2}>
               <Typography>Weight</Typography>
@@ -259,36 +267,11 @@ export const DemographicModal = ({onClose, open, id}) => {
           {renderRadio('geo')}
         </Box>
         <Box>
-          <Typography variant="h6">Allergies</Typography>
-          {renderText('allergies')}
+          <Typography variant="h6">Ethnicities</Typography>
+          {renderRadio('ethnicities')}
         </Box>
         <Box>
-          <Typography variant="h6">Comorbidities</Typography>
-          <Box>
-          <Autocomplete
-            multiple
-            id="tags-filled"
-            options={information.comorbidities?.length > 3 && data ? data : []}
-            freeSolo
-            loading={loading}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-              ))
-            }
-            renderInput={(params) => (
-              renderComorbiditiesText(params)
-            )}
-          />
-            {/* <SearchInput placeholder='Search Comorbidities' value={searchInputValue} onChange={e => setSearchInputValue(e.target.value)} onClick={() => {
-              console.log(searchInputValue)
-              onRun()
-            }} onKeyPress={e => {
-              if (e.key === 'Enter') {
-                console.log(searchInputValue)
-              }
-            }} /> */}
-          </Box>
+          {comorbiditiesAutoComplete()}
         </Box>
         <Stack direction="row" spacing={2} sx={{justifyContent: "flex-end"}}>
           <PrimaryButton
