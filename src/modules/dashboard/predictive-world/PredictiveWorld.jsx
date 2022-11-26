@@ -5,6 +5,7 @@ import { useDashboardContext } from "../context/useDashboarContext";
 import { fetchFromObject } from "../../../infrastructure/utils";
 import { InteractingDrugsTable } from "../InteractingDrugsTable";
 import {Stack, Typography, useTheme} from "@mui/material";
+import Orb from '../../../assets/orb.mp4';
 
 export const PredictiveWorld = () => {
   const {state} = useDashboardContext()
@@ -315,7 +316,7 @@ export const PredictiveWorld = () => {
       <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}} onMouseMove={handleMouseMove}/>
       <canvas ref={tooltipCanvas} style={{position: 'absolute', height: 50, width: 100, zIndex: 10}}/>
       {renderCenter()}
-      <Fullorb/>
+      <video src={Orb} autoPlay width="50%" loop style={{transform: 'scale(2.5)', zIndex: -1}}/>
     </>
   );
 }
