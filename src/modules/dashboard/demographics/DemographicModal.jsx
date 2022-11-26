@@ -1,8 +1,11 @@
-import { Add, CheckBoxOutlineBlank, CheckBoxOutlined, Remove } from "@mui/icons-material";
+import { Add, CheckBoxOutlineBlank, CheckBoxOutlined, ExpandMore, Remove } from "@mui/icons-material";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Autocomplete,
   Box,
-  capitalize, Chip, FormControl,
+  capitalize, Chip, CircularProgress, FormControl,
   FormControlLabel, Grid,
   IconButton, InputLabel, MenuItem,
   Modal,
@@ -13,11 +16,13 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import * as PropTypes from "prop-types";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DemographicBmi, DemographicYears, Endpoints } from "../../../config/Consts";
+import { api } from "../../../infrastructure/api/instance";
 import { PrimaryButton } from "../../../infrastructure/components/PrimaryButton";
 import { useApiCall } from "../../../infrastructure/hooks/useApiCall";
 import { useDashboardContext } from "../context/useDashboarContext";
+import GenesPagination from "./GenesPagination";
 const CustomTextField = styled(TextField)({
   '&.MuiTextField-root': {
     input: {
@@ -29,11 +34,6 @@ const CustomTextField = styled(TextField)({
     borderRadius: 20,
   }
 });
-const ComorbiditiesField = styled(TextField)({
-  '.MuiOutlinedInput-root': {
-    alignItems: 'flex-start',
-  }
-})
 const options = {
   weight: {
     type: 'number',
@@ -59,11 +59,17 @@ const options = {
   },
   geo: {
     type: 'radio',
-    values: ["asia", "europe", "africa", "oceania", "carribbean", "russia", "c. America", "n. America", "s. America"]
+    values: ["Middle East", "asia", "europe", "africa", "oceania", "carribbean", "russia", "c. America", "n. America", "s. America"]
   },
   ethnicities: {
     type: 'radio',
-    values: ["White", "Latino", "Asian", "African American", "American Indian", "Alaska Native", "Native Hawaiian", "Pacific Islander"]
+    values: [
+      "White", "Latino", "Asian", "African American", "American Indian", "Alaska Native", "Native Hawaiian", "Pacific Islander", 
+      "Arabs", "Han Chinese", "Afrikaners", "Afro-Brazilian", "Afro-Carribean", "Albanians", "Amish", "Armenians", "Assyrians", "Balochs",
+      "Bahama", "Baiti", "Basque", "Belarusian", "Bosniak", "Burgher", "Bwa", "Camminanti", "Catalan", "Circassian", "Copt", "Corsican",
+      "Dane", "Dutch", "Dogon", "English", "Fantefolk", "Finn", "French", "Galician", "German", "Greek", "Gujaratie", "Italian",
+      "Japanese", "Korean", "Kurd", "Malay", "Maltese", "Maya"
+    ]
   },
   bmi: {
     type: 'radio',
@@ -96,7 +102,9 @@ export const DemographicModal = ({onClose, open, id}) => {
     }
   }, [state.demographics]);
   const [information, setInformation] = useState(() => initialState);
-  const [comorbiditiesInputValue, setComorbiditiesInputValue] = useState('')
+  const [diseaseInputValue, setDiseaseInputValue] = useState('')
+  const [isFetchGenes, setIsFetchGenes] = useState(false)
+  const [moreEthnicities, setMoreEthnicities] = useState(true)
 
   const isValid = useMemo(() => {
     return Object.keys(information).every(key => information[key] !== null);
@@ -107,29 +115,57 @@ export const DemographicModal = ({onClose, open, id}) => {
     onClose();
   }
 
-  const onRun = useCallback(searchTerm => {
-    fetch(Endpoints.genephenotype.s, 'POST', { query: searchTerm });
-  }, [comorbiditiesInputValue]);
+  const getDiseases = searchTerm => {
+    fetch(Endpoints.genephenotype.search, 'POST', { query: searchTerm });
+  }
 
-  const renderRadio = (type) => {
+  const getDiseaseData = (_, v) => {
+    if (v && v.length) {
+      setIsFetchGenes(true)
+      api.post(Endpoints.genephenotype.genes, { query: v }).then(res => {
+        const { hpoResult, phenolyzerResult } = res.data
+        const hpoData = hpoResult.map(hpo => ({ ...hpo, genes: [...new Set([...hpo.genes, ...phenolyzerResult])] }))
+        const diseaseData = { hpoResult: hpoData, id: Date.now().toString(), disease: v }
+        setInformation(prev => ({...prev, diseases: prev.diseases ? [...prev.diseases, diseaseData] : [diseaseData]}))
+      }).finally(() => {
+        setIsFetchGenes(false)
+      })
+    }
+  }
+
+  const renderRadio = (type, showMore) => {
     return (
-      <FormControl>
-        <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
-          name="radio-buttons-group"
-          onChange={(e, v) => setInformation(prev => ({...prev, [type]: v}))}
-          value={information[type]}
-          row
-        >
-          {options[type].values.map(value => <FormControlLabel 
-            value={value}
-            control={<Radio checkedIcon={<CheckBoxOutlined />} icon={<CheckBoxOutlineBlank />} 
-            sx={(type === 'geo' || type === 'ethnicities') ? { pr: 0.7 } : {}} color="info" />}
-            label={capitalize(value)}
-            key={value} 
-          />)}
-        </RadioGroup>
-      </FormControl>
+      <>
+        <FormControl>
+          <RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            name="radio-buttons-group"
+            onChange={(_, v) => setInformation(prev => ({...prev, [type]: v}))}
+            value={information[type]}
+            row
+            >
+            {options[type].values.slice(0, moreEthnicities ? 10 : options[type].values.length).map(value => <FormControlLabel 
+              value={value}
+              control={<Radio checkedIcon={<CheckBoxOutlined />} icon={<CheckBoxOutlineBlank />} 
+              sx={(type === 'geo' || type === 'ethnicities') ? { pr: 0.7 } : {}} color="info" />}
+              label={capitalize(value)}
+              key={value} 
+            />)}
+          </RadioGroup>
+        </FormControl>
+        {type === 'ethnicities' && 
+          <div style={{display: 'flex'}}>
+            <Chip 
+              clickable 
+              sx={{ m: 'auto' }} 
+              onClick={() => setMoreEthnicities(prev => !prev)} 
+              label={showMore ? 'MORE' : 'LESS'} 
+              color='primary' 
+              variant='outlined' 
+            />
+          </div>
+        }
+      </>
     )
   }
 
@@ -165,38 +201,65 @@ export const DemographicModal = ({onClose, open, id}) => {
       </FormControl>
   )
 
-  const comorbiditiesAutoComplete = () => (
-    <Autocomplete
-      multiple
-      options={comorbiditiesInputValue.length > 3 && data ? data : []}
-      freeSolo
-      value={information.comorbidities || []}
-      onChange={(_, v) => {
-        setInformation(prev => ({...prev, comorbidities: v}))
-      }}
-      loading={loading}
-      renderTags={(value, getTagProps) => {
-        return value.map((option, index) => (
-          <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-        ))
-        }
-      }
-      renderInput={params => (
-        <ComorbiditiesField 
-          sx={{display: 'flex'}} 
-          multiline 
-          value={comorbiditiesInputValue} 
-          onChange={e => {
-            if (e.target.value.length > 3) {
-              onRun(e.target.value)
-            };
-            setComorbiditiesInputValue(e.target.value)
-          }} 
-          rows={3} 
-          {...params} 
-        />
-      )}
-    />
+  const diseasesAutoComplete = () => {
+    return (
+      <Autocomplete
+        disabled={isFetchGenes}
+        options={diseaseInputValue.length > 3 && data ? data : []}
+        onChange={getDiseaseData}
+        loading={loading}
+        renderInput={params => (
+          <TextField
+            {...params}
+            disabled={isFetchGenes}
+            label="Search Disease"
+            fullWidth
+            value={diseaseInputValue} 
+            onChange={e => {
+              if (e.target.value.length > 3) {
+                getDiseases(e.target.value)
+              };
+              setDiseaseInputValue(e.target.value)
+            }}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {isFetchGenes ? <CircularProgress color="inherit" size={20} /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+          />
+        )}
+      />
+    )
+  }
+
+  const renderDiseasesData = () => (
+    <div style={{marginTop: 20}}> 
+      {Array.isArray(information.diseases) && information.diseases.map(diseaseData => (
+        <Accordion key={diseaseData.id}>
+          <AccordionSummary expandIcon={<ExpandMore />} aria-controls="panel1a-content">
+            <Typography variant="h6">{diseaseData.disease}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {diseaseData.hpoResult.map((hpoData, i) => (
+              <div key={i}>
+                <Box sx={{display: 'flex', alignItems: 'center', gap: 1, mb: 1}}>
+                  <Typography variant="subtitle2">HPO:</Typography>
+                  <Typography>{hpoData.hpoId}</Typography>
+                </Box>
+                {hpoData.genes.length && <>
+                  <Typography variant="subtitle2">Genes</Typography>
+                  <GenesPagination genes={hpoData.genes} />
+                </>}
+              </div>
+            ))}
+          </AccordionDetails>
+        </Accordion>
+      ))}
+    </div>
   )
 
   useEffect(() => {
@@ -213,7 +276,7 @@ export const DemographicModal = ({onClose, open, id}) => {
     }
   }, [information.height, information.weight]);
 
-  return <Modal open={open} onClose={onClose}>
+  return <><Modal open={open} onClose={onClose}>
     <Box sx={{
       position: "absolute",
       top: "50%",
@@ -268,24 +331,29 @@ export const DemographicModal = ({onClose, open, id}) => {
         </Box>
         <Box>
           <Typography variant="h6">Ethnicities</Typography>
-          {renderRadio('ethnicities')}
+          {renderRadio('ethnicities', moreEthnicities)}
         </Box>
         <Box>
-          {comorbiditiesAutoComplete()}
+          {diseasesAutoComplete()}
+          {renderDiseasesData()}
         </Box>
         <Stack direction="row" spacing={2} sx={{justifyContent: "flex-end"}}>
           <PrimaryButton
+            disabled={isFetchGenes}
             variant="outlined"
             onClick={onClose}
-            title="Cancel"/>
+            title="Cancel" 
+          />
           <PrimaryButton
-            disabled={!isValid}
+            disabled={!isValid || isFetchGenes}
             onClick={onSubmit}
-            title="Submit"/>
+            title="Submit"
+          />
         </Stack>
       </Stack>
     </Box>
-  </Modal>;
+  </Modal>
+  </>
 }
 
 DemographicModal.propTypes = {
