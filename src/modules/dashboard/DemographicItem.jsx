@@ -1,11 +1,11 @@
-import {Box, capitalize, Grid, IconButton, Stack, Typography, useTheme} from "@mui/material";
+import { Box, capitalize, Grid, Stack, Typography, useTheme } from "@mui/material";
 import * as PropTypes from "prop-types";
-import {useDashboardContext} from "./context/useDashboarContext";
-import {useDrag} from "react-dnd";
-import {memo, useMemo} from "react";
+import { memo, useMemo } from "react";
+import { useDrag } from "react-dnd";
 import Person from '../../assets/svg/Person.svg';
 import PersonOutlined from '../../assets/svg/PersonOutlined.svg';
-import {hexToRgba} from "../../infrastructure/utils";
+import { hexToRgba } from "../../infrastructure/utils";
+import { useDashboardContext } from "./context/useDashboarContext";
 
 const DemographicItemComponent = ({demographic, onClick}) => {
   console.log('demographic', demographic)
@@ -57,9 +57,9 @@ const DemographicItemComponent = ({demographic, onClick}) => {
             <Grid item xs={6}>
               <Stack>
                 <Typography sx={{whiteSpace: 'nowrap'}}>{demographic.age}</Typography>
-                <Typography>{demographic.bmi}</Typography>
-                <Typography>{capitalize(demographic.geo)}</Typography>
-                <Typography>{capitalize(demographic.gender)}</Typography>
+                <Typography sx={{whiteSpace: 'nowrap'}}>{demographic.bmi}</Typography>
+                <Typography sx={{whiteSpace: 'nowrap'}}>{demographic.geo && capitalize(demographic.geo)}</Typography>
+                <Typography sx={{whiteSpace: 'nowrap'}}>{demographic.gender && capitalize(demographic.gender)}</Typography>
               </Stack>
             </Grid>
           </Grid>
