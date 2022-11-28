@@ -1,4 +1,5 @@
 import { Grid, TextField } from "@mui/material";
+import {encodeQuery} from '../../../infrastructure/hooks/useApiCall';
 import { DrugSynthesisToXDL } from "./DrugSynthesisToXDL";
 import * as PropTypes from "prop-types";
 import { Endpoints } from "../../../config/Consts";
@@ -16,9 +17,14 @@ export function DrugSynthesis({searchText, filter}) {
       // reset pdflists and selected pdf object on click drug name
       setPdfList([]);
       setSelectedPdfObj("");
-      axios.get(`${url}?query=${list}&page=0&pageSize=10`).then((resp) => {
+      axios.get(`${url}?query=${encodeQuery(list.replaceAll(' ',''))}&page=0&pageSize=10`).then((resp) => {
+        console.log('response')
         if (resp.data.items) {
           setPdfList(resp.data.items);
+          if (resp.data.items.length > 0) {
+            setSelectedPdf(resp.data.items[0].title);
+            setSelectedPdfObj(resp.data.items[0]);
+          }
         }
       });
     }
@@ -40,7 +46,7 @@ export function DrugSynthesis({searchText, filter}) {
       <div className="title">Drug Synthesis</div>
       <div className="line"></div>
       {!!filter && filter}
-      <div className="title">
+      {/*<div className="title">
         <TextField sx={{"width": "200px", "background": "#fff", "maxWidth": "200px"}}
                    id="outlined-select-currency" select label="Select Pdf" value={selectedPdf}
                    onChange={handlePdfChange}>
@@ -48,7 +54,7 @@ export function DrugSynthesis({searchText, filter}) {
             pdfList.map(text => <MenuItem key={text.id} value={text.title}>{text.title}</MenuItem>)
           }
         </TextField>
-      </div>
+      </div>*/}
     </section>
 
     <Grid container spacing={2}>

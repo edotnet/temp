@@ -1,6 +1,6 @@
 import { Button, Grid, TextField } from "@mui/material";
 import * as PropTypes from "prop-types";
-
+import GlobalResponse from '../../../assets/img/graid.png';
 export function SearchInput(props) {
   return  <Grid container sx={{mt: 4, mb: 4}}>
     <Grid item xs={4}>
@@ -24,6 +24,9 @@ export function SearchInput(props) {
     <Grid item>
       <Button className="searchEngin-headerbtn btn-white" variant="outlined" onClick={() => props.onClick()}>Search</Button>
     </Grid>
+    <Grid item>
+      <img src={GlobalResponse} width={200} style={{cursor: 'pointer', marginTop: '-25px'}} onClick={() => props.onClickGraid()}/>
+    </Grid>
   </Grid>;
 }
 
@@ -32,5 +35,6 @@ SearchInput.propTypes = {
   onChange: PropTypes.func,
   onKeyPress: PropTypes.func,
   onClick: PropTypes.func,
+  onClickGraid: PropTypes.func,
   placeholder: PropTypes.string
 };

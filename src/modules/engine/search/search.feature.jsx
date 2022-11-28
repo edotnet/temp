@@ -261,7 +261,7 @@ export const SearchFeature = () => {
             setSearchText(e.target.value);
             onRun(e.target.value);
           }
-        }} onClick={onRun} />
+        }} onClick={onRun} onClickGraid={() => navigate('/globalresponse')}/>
         {sortedSuggestions.length > 0 &&
           <>
             <SectionTitle text="Suggestions for better results:" />
