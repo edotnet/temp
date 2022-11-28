@@ -2,7 +2,7 @@ import { Avatar, Box, Grid, IconButton, Menu, MenuItem, Tooltip, Typography } fr
 import { useState } from 'react';
 // import moleculeimg from "../../assets/img/group-11.png";
 import {NavLink, useNavigate} from 'react-router-dom';
-import GlobalResponse from '../../assets/img/graid.png';
+import GlobalResponse from '../../assets/img/graidicon.png';
 import Logo from '../../assets/svg/logo.svg';
 import { useAuth } from '../../infrastructure/authentication/useAuth';
 import { Session } from "../../infrastructure/session/Session";
@@ -48,13 +48,15 @@ export const Navbar = () => {
           <nav className="headernavlink">
             <NavLink to="/engine/search">SEARCH ENGINE</NavLink>
             <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
-            <NavLink to="/globalresponse">GLOBAL RESPONSE AID</NavLink>
+            <NavLink to="/globalresponse">
+              <img src={GlobalResponse} width={10} height={10} style={{ marginTop: '-5px', marginRight: 20, transform:'scale(3.5)'}} />
+              GLOBAL RESPONSE AID
+            </NavLink>
             {/*<NavLink to="/surface">SURFACE</NavLink>*/}
           </nav>
         </Grid>
         <Grid flexGrow={1} item sx={{display: 'flex', justifyContent: 'right', alignContent: 'center', alignItems: 'center'}}>
           <Session />
-          <img src={GlobalResponse} width={100} height={50} style={{cursor: 'pointer', marginTop: '-5px', marginRight: 30, marginLeft: 10}} onClick={() => navigate('globalresponse')}/>
         </Grid>
         <Grid item>
           <Box sx={{flexGrow: 0, justifyContent: 'flex-end', display: 'flex', pr: 3}}>
