@@ -5,6 +5,7 @@ import {Drugbank} from "./pages/Drugbank";
 import {DrugInteractionPage} from "./pages/DrugInteraction";
 import {DTIPage} from "./pages/DTI";
 import {DrugbankCategories} from "./pages/DrugbankCategories";
+import {GlobalResponse} from './pages/GlobalResponse';
 import {Login} from './pages/login/login.page';
 import {StartView} from './pages/start.page';
 import {NotFoundPage} from './pages/NotFoundPage';
@@ -29,6 +30,7 @@ export const Router = () => (
       <Route exact path="/home" element={<HomePage/>}/>
       <Route element={<RequireAuth><Base /></RequireAuth>}>
         <Route path="dashboard" element={<Dashboard/>}/>
+        <Route path="globalresponse" element={<GlobalResponse/>}/>
         <Route path="drugbank" element={<Drugbank/>} />
         <Route path="categories" element={<DrugbankCategories/>}/>
         <Route path="drug-interaction" element={<DrugInteractionPage/>}/>

@@ -46,6 +46,7 @@ export const Navbar = () => {
           <nav className="headernavlink">
             <NavLink to="/engine/search">SEARCH ENGINE</NavLink>
             <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
+            <NavLink to="/globalresponse">GLOBAL RESPONSE AID</NavLink>
             {/*<NavLink to="/surface">SURFACE</NavLink>*/}
           </nav>
         </Grid>
