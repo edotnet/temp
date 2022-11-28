@@ -24,9 +24,6 @@ export function SearchInput(props) {
     <Grid item>
       <Button className="searchEngin-headerbtn btn-white" variant="outlined" onClick={() => props.onClick()}>Search</Button>
     </Grid>
-    <Grid item>
-      <img src={GlobalResponse} width={200} style={{cursor: 'pointer', marginTop: '-25px'}} onClick={() => props.onClickGraid()}/>
-    </Grid>
   </Grid>;
 }
 
@@ -35,6 +32,5 @@ SearchInput.propTypes = {
   onChange: PropTypes.func,
   onKeyPress: PropTypes.func,
   onClick: PropTypes.func,
-  onClickGraid: PropTypes.func,
   placeholder: PropTypes.string
 };

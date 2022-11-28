@@ -1,7 +1,8 @@
 import { Avatar, Box, Grid, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 import { useState } from 'react';
 // import moleculeimg from "../../assets/img/group-11.png";
-import { NavLink } from 'react-router-dom';
+import {NavLink, useNavigate} from 'react-router-dom';
+import GlobalResponse from '../../assets/img/graid.png';
 import Logo from '../../assets/svg/logo.svg';
 import { useAuth } from '../../infrastructure/authentication/useAuth';
 import { Session } from "../../infrastructure/session/Session";
@@ -10,6 +11,7 @@ import './NavBar.scss';
 export const Navbar = () => {
   const { user, logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -50,8 +52,9 @@ export const Navbar = () => {
             {/*<NavLink to="/surface">SURFACE</NavLink>*/}
           </nav>
         </Grid>
-        <Grid flexGrow={1} item sx={{display: 'flex', justifyContent: 'right', alignContent: 'center'}}>
+        <Grid flexGrow={1} item sx={{display: 'flex', justifyContent: 'right', alignContent: 'center', alignItems: 'center'}}>
           <Session />
+          <img src={GlobalResponse} width={100} height={50} style={{cursor: 'pointer', marginTop: '-5px', marginRight: 30, marginLeft: 10}} onClick={() => navigate('globalresponse')}/>
         </Grid>
         <Grid item>
           <Box sx={{flexGrow: 0, justifyContent: 'flex-end', display: 'flex', pr: 3}}>
