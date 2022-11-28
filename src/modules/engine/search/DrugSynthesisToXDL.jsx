@@ -62,7 +62,7 @@ export function DrugSynthesisToXDL(props) {
           <p>Please download the pdf <a style={{'color': theme.palette.primary.main, 'cursor': 'pointer', fontWeight: 'bold'}}
                                         onClick={downloadpdf(props.pdfObj.filePath)}>{props.pdfObj.title}</a></p> : ''
       }
-    <Accordion>
+    <Accordion defaultExpanded={true}>
     <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel5a-content" id="panel5a-header">
       <Typography>Drug Synthesis Translated to XDL Code</Typography>
     </AccordionSummary>
