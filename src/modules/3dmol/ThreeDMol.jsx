@@ -90,16 +90,18 @@ export const ThreeDMol = () => {
   useEffect(() => {
     if (state.pdbid && state.pdbid !== ESM_FOLD_PDB && state.pdbid !== ALPHA_FOLD_PDB) {
       renderPdb();
+      return;
     }
     if (state.pdbid === ESM_FOLD_PDB) {
       renderFold('esmfold');
+      return;
     }
     if (state.pdbid === ALPHA_FOLD_PDB) {
       if (state.alphafold && state.alphafold.url) {
         renderFold('alphafold');
       }
     }
-  }, [renderPdb, state.pdbid])
+  }, [renderFold, renderPdb, state.alphafold, state.pdbid])
 
   useEffect(() => {
     if (selectedCustomPdb) {

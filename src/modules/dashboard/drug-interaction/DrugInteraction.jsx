@@ -103,10 +103,13 @@ export const DrugInteraction = memo(({onNewItems}) => {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        position: 'relative'
+        position: 'relative',
+        pt: 2
       }} id="blob-circle">
         <PredictiveWorld/>
-        <InteractingDrugsTable interactingMolecules={state.interactingMolecules}/>
+        <Box pt={1}>
+          <InteractingDrugsTable interactingMolecules={state.interactingMolecules}/>
+        </Box>
       </Box>
     </Box>
   );

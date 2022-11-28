@@ -18,9 +18,16 @@ export const PDBSelector = ({}) => {
     }
     dispatch({type: 'selectPdb', payload: ESM_FOLD_PDB});
     if (!state.esmfold) {
-      loadESMFold();
+      loadESMFold().then(() => {
+        dockingESMFold();
+      }).catch(e => {
+        console.log(e);
+      });
       return;
     }
+    dockingESMFold();
+  }
+  const dockingESMFold = () => {
     if (state.molecules.length > 0) {
       state.molecules.forEach(molecule => {
         dockingFetcher(null, molecule, dispatch, state.esmfold?.pdbPath, ESM_FOLD_PDB);
@@ -29,12 +36,15 @@ export const PDBSelector = ({}) => {
   }
 
   const loadESMFold = () => {
-    if (state.organism.sequence.length > 400) {
-      return;
-    }
-    api.post(Endpoints.proteins.ESMFold, {sequence: state.organism.sequence}).then((res) => {
-      dispatch({type: 'setEsmfold', payload: res.data});
-    });
+    return new Promise((resolve, reject) => {
+      if (state.organism.sequence.length > 400) {
+        return;
+      }
+      api.post(Endpoints.proteins.ESMFold, {sequence: state.organism.sequence}).then((res) => {
+        dispatch({type: 'setEsmfold', payload: res.data});
+        resolve(res.data)
+      }).catch(reject);
+    })
   }
 
   const setAlphaFold = () => {
@@ -80,6 +90,12 @@ export const PDBSelector = ({}) => {
       loadESMFold();
     }
   }, [state.organism.sequence]);
+
+  useEffect(() => {
+    if (state.pdbid === ESM_FOLD_PDB) {
+      setESMFold();
+    }
+  }, [state.pdbid]);
 
   function renderBox() {
     if (pdb === null || !open) {
