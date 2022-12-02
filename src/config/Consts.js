@@ -75,6 +75,10 @@ export const Endpoints = {
   genephenotype: {
     search: `${useApi}/genephenotype/search`,
     genes: `${useApi}/genephenotype/genes`
+  },
+  diseaseMaps: {
+    list: `${useApi}/disease-maps`,
+    details: id => `${useApi}/disease-maps/${id}`
   }
 };
 
