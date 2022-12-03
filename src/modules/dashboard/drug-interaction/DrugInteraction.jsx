@@ -1,4 +1,4 @@
-import {Box} from "@mui/material";
+import {Box, IconButton} from "@mui/material";
 import {useDrop} from "react-dnd";
 import {memo, useEffect} from "react";
 import {useApiCall} from "../../../infrastructure/hooks/useApiCall";
@@ -7,6 +7,8 @@ import {PredictiveWorld} from "../predictive-world/PredictiveWorld";
 import {DemographicYears, Endpoints} from "../../../config/Consts";
 import {InteractingDrugsTable} from "../InteractingDrugsTable";
 import {api} from "../../../infrastructure/api/instance";
+import {Close} from "@mui/icons-material";
+import {Animation} from "./Animation";
 
 const url = Endpoints.ml.drugInteraction;
 
