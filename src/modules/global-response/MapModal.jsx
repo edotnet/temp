@@ -58,15 +58,12 @@ const MapModal = ({ data, setData }) => {
             {data.modalType === 'PrepaireEvent' && (
               <>
                 <div style={{ display: 'flex', alignItems: 'end', mb: 2.5 }}>
-                  <Typography variant='subtitle2'>{data.title}</Typography>
                   {modalCloseButton()}
                 </div>
                 <div style={{ paddingRight: 10 }}>
-                  {data.type !== 'event' && (
-                    <Typography textTransform='uppercase' fontWeight={700} variant='h6'>
-                      {data.type}
-                    </Typography>
-                  )}
+                  <Typography textTransform='uppercase' fontWeight={700} variant='h6'>
+                    {data.title}
+                  </Typography>
                   <Typography variant='body1' fontWeight={700} sx={{ mb: 1.5 }}>
                     {data.city.name}
                   </Typography>
@@ -90,7 +87,6 @@ const MapModal = ({ data, setData }) => {
                 <div style={{ height: 2, backgroundColor: '#000', marginBottom: 12 }}></div>
                 {showStatistic({ title: cases }, { title: 'Total cases (confirmed)' })}
                 {showStatistic({ title: deaths }, { title: 'Total deaths (confirmed)' })}
-                {/* {showStatistic({ title: 74, typographyProps: { sx: { mt: 3 }, variant: 'body1' } }, { title: 'Total events Last 7 days' })} */}
               </>
             )}
           </div>

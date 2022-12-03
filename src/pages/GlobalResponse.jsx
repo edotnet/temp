@@ -38,7 +38,6 @@ export const GlobalResponse = () => {
   const [newPrepaireEvent, setNewPrepaireEvent] = useState(null)
   const [prepaireEvents, setPrepaireEvents] = useState([])
   const [pageLoading, setPageLoading] = useState(true)
-  const [prepaireEventInfo, setPrepaireEventInfo] = useState({})
   const [newPrepaireEventPos, setNewPrepaireEventPos] = useState(null)
 
   const getPrepaireEvents = useCallback(
@@ -51,12 +50,7 @@ export const GlobalResponse = () => {
           const ref = createRef()
           ref.current = document.createElement('div')
           ReactDOM.render(
-            <PrepaireEvent
-              onClick={() => handlePrepaireEventClick(item)}
-              prepaireEventInfo={prepaireEventInfo}
-              data={item}
-              created
-            />,
+            <PrepaireEvent onClick={() => handlePrepaireEventClick(item)} data={item} created />,
             ref.current
           )
           const { longitude, latitude } = item.city
@@ -222,13 +216,6 @@ export const GlobalResponse = () => {
   useEffect(() => {
     newPrepaireEventPos && showPrepaireEventCreating(...newPrepaireEventPos)
   }, [prepaireEvent.type])
-
-  // useEffect(() => {
-  //   if (!map.current) return;
-  //   map.current.on('click', (e) => {
-  //     console.log(e)
-  //   });
-  // }, []);
 
   useEffect(() => {
     if (!map.current) return
