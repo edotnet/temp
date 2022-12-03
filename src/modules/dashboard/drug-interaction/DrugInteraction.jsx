@@ -108,7 +108,6 @@ export const DrugInteraction = memo(({onNewItems}) => {
         position: 'relative',
         pt: 2
       }} id="blob-circle">
-        <Animation />
         <PredictiveWorld/>
         <Box pt={1}>
           <InteractingDrugsTable interactingMolecules={state.interactingMolecules}/>
