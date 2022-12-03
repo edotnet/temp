@@ -1,7 +1,7 @@
 import { Avatar, Box, Grid, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 import { useState } from 'react';
 // import moleculeimg from "../../assets/img/group-11.png";
-import {NavLink, useNavigate} from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import GlobalResponse from '../../assets/img/graidicon.png';
 import Logo from '../../assets/svg/logo.svg';
 import { useAuth } from '../../infrastructure/authentication/useAuth';
@@ -38,7 +38,7 @@ export const Navbar = () => {
     {/* <Box component="div" className="dashboardcircle">
       <Box component="img" alt="image" className="moleculeimg" src={moleculeimg}/>
     </Box> */}
-    <Box className="dashboardheader">
+    <Box bgcolor='white' className="dashboardheader">
       <Grid container spacing={2} wrap={'nowrap'}>
         <Grid item xs={1} className="logoWrapper">
           <Box component="img" alt="logo" className="logoresponsive"
