@@ -1,10 +1,8 @@
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from "react";
 import './Orb.css'
-import { Fullorb } from "./FullOrb";
-import { useDashboardContext } from "../context/useDashboarContext";
-import { fetchFromObject } from "../../../infrastructure/utils";
-import { InteractingDrugsTable } from "../InteractingDrugsTable";
-import {Stack, Typography, useTheme} from "@mui/material";
+import {useDashboardContext} from "../context/useDashboarContext";
+import {fetchFromObject} from "../../../infrastructure/utils";
+import {useTheme} from "@mui/material";
 import Orb from '../../../assets/orb.mp4';
 
 export const PredictiveWorld = () => {
@@ -86,7 +84,8 @@ export const PredictiveWorld = () => {
 
   const drawarc = () => {
     ctx.current.lineWidth = 4;
-    ctx.current.strokeStyle = theme.palette.primary.main;;
+    ctx.current.strokeStyle = theme.palette.primary.main;
+
     ctx.current.beginPath();
     ctx.current.moveTo(102, 74);
     // ctx.current.bezierCurveTo(286, 253, 218, 225, 44, 196);
@@ -131,7 +130,7 @@ export const PredictiveWorld = () => {
     let canvasAdapted = value - 50;
     const isIn = inValues.includes(lineDeg * degrees)
     if (!isIn) {
-     canvasAdapted = -canvasAdapted;
+      canvasAdapted = -canvasAdapted;
     }
     const totalDeg = lineDeg * degrees;
     let x = radius * Math.cos(degrees_to_radians(totalDeg));
@@ -235,14 +234,14 @@ export const PredictiveWorld = () => {
       return;
     }
     drawMolecules();
-    if(state.interactingMolecules.length > 0){
+    if (state.interactingMolecules.length > 0) {
       drawLines();
     }
   }, [state.interactingMolecules])
 
   useEffect(() => {
     if (state.protein && state.interactingMoleculesResult) {
-     //  drawarc();
+      //  drawarc();
     }
   }, [state]);
 
@@ -305,6 +304,7 @@ export const PredictiveWorld = () => {
         break;
       }
     }
+
     if (!hit) {
       tipCtx.current.clearRect(0, 0, tooltipCanvas.current.width, tooltipCanvas.current.height);
       tooltipCanvas.current.style.left = -500 + 'px';
