@@ -3,11 +3,10 @@ export const Consts = {
   API_URL: process.env.REACT_APP_API_URL,
 }
 
-const isApi = !window.location.search.includes("isApi=true");
-const useApi = isApi ?
-    Consts.API_URL : Consts.BACKEND_API_URL;
+const isApi = !window.location.search.includes('isApi=true')
+const useApi = isApi ? Consts.API_URL : Consts.BACKEND_API_URL
 
-const isProd = window.location.hostname === "app.prepaire.com";
+const isProd = window.location.hostname === 'app.prepaire.com'
 
 export const Endpoints = {
   drugbank: {
@@ -33,14 +32,14 @@ export const Endpoints = {
     upload: `${useApi}/xdl/upload`,
     xdl: `${useApi}/pdf-xdl`,
     add: `${useApi}/xdl/add`,
-    download: `${useApi}/xdl/getfile/`
+    download: `${useApi}/xdl/getfile/`,
   },
   text2xdl: {
-    xdl: `${useApi}/text-to-xdl`
+    xdl: `${useApi}/text-to-xdl`,
   },
   search: {
-    pdf : `${useApi}/xdl/search`,
-    drug: `${useApi}/drug-search${isProd ? "" : "-new"}`,
+    pdf: `${useApi}/xdl/search`,
+    drug: `${useApi}/drug-search${isProd ? '' : '-new'}`,
   },
   musyc: {
     query: `${useApi}/3d/calculate`,
@@ -57,7 +56,7 @@ export const Endpoints = {
   },
   notifications: {
     register: `${Consts.API_URL}/notifications/devices/add`,
-    list: `${Consts.API_URL}/notifications/list`
+    list: `${Consts.API_URL}/notifications/list`,
   },
   proteins: {
     name: `${useApi}/proteins/names`,
@@ -68,22 +67,44 @@ export const Endpoints = {
   session: {
     list: `${Consts.API_URL}/session`,
     create: `${Consts.API_URL}/session`,
-    delete: id =>`${Consts.API_URL}/session/${id}`,
+    delete: id => `${Consts.API_URL}/session/${id}`,
     update: id => `${Consts.API_URL}/session/${id}`,
     get: id => `${Consts.API_URL}/session/${id}`,
   },
   genephenotype: {
     search: `${useApi}/genephenotype/search`,
-    genes: `${useApi}/genephenotype/genes`
+    genes: `${useApi}/genephenotype/genes`,
   },
   diseaseMaps: {
     list: `${useApi}/disease-maps`,
-    details: id => `${useApi}/disease-maps/${id}`
-  }
-};
+    details: id => `${useApi}/disease-maps/${id}`,
+  },
+  map: {
+    countriesList: query => `${useApi}/map/countries?query=${query}&pageSize=10&pageNumber=0`,
+    citiesList: (countryId, query) =>
+      `${useApi}/map/cities?countryId=${countryId}&query=${query}&pageSize=10&pageNumber=0`,
+    diseasesList: query => `${useApi}/map/diseases?query=${query}&pageSize=10&pageNumber=0`,
+    info: (countryId, cityId, diseaseId) =>
+      `${useApi}/map/info?countryId=${countryId}&cityId=${cityId}&diseaseId=${diseaseId}`,
+    allInfo: `${useApi}/map/info`,
+    event: `${useApi}/map/events`,
+  },
+}
 
-export const DemographicYears = ["0-15 years (pediatrics)", "16-24 years (youths)", "25-64 years (adults)", "65+ years"];
-export const DemographicBmi = ["Below 18.5", "18.5-24.9", "25-29.9", "30-34.9", "35-39.9", "Above 40"];
+export const DemographicYears = [
+  '0-15 years (pediatrics)',
+  '16-24 years (youths)',
+  '25-64 years (adults)',
+  '65+ years',
+]
+export const DemographicBmi = [
+  'Below 18.5',
+  '18.5-24.9',
+  '25-29.9',
+  '30-34.9',
+  '35-39.9',
+  'Above 40',
+]
 
-export const ESM_FOLD_PDB = 'ESMFold';
-export const ALPHA_FOLD_PDB = 'AlphaFold';
+export const ESM_FOLD_PDB = 'ESMFold'
+export const ALPHA_FOLD_PDB = 'AlphaFold'
