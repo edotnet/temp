@@ -17,6 +17,7 @@ import {DemographicFeature} from "../modules/dashboard/DemographicFeature";
 import {dockingFetcher} from "../modules/dashboard/DockingFetcher";
 import HAILO from '../assets/svg/HAILO.svg'
 import {DeleteOutline, Navigation, Refresh} from '@mui/icons-material';
+import {Animation} from "../modules/dashboard/drug-interaction/Animation";
 
 export const Dashboard = () => {
     const {state, dispatch} = useDashboardContext();
@@ -110,12 +111,13 @@ export const Dashboard = () => {
                                 </Grid>
                                 <DemographicFeature/>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={6} sx={{position: 'relative'}}>
                                 <Stack spacing={2} mt={2}>
                                     <img src={HAILO} alt="HAILO" style={{width: '7em', alignSelf: 'center'}}/>
                                     <Typography variant="subtitle1" align="center" >Drop molecules here for checking
                                         interactions </Typography>
                                 </Stack>
+                                <Animation/>
                                 <DrugInteraction/>
                             </Grid>
                             <Grid item xs={3}>
