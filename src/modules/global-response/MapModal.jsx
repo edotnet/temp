@@ -3,7 +3,7 @@ import { Backdrop, Button, Fade, IconButton, Modal, Typography } from '@mui/mate
 import { Box } from '@mui/system'
 import React, { memo } from 'react'
 
-const MapModal = ({ data, setData }) => {
+const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
   const { isOpen, cases, deaths, name: country, disease } = data
 
   const showStatistic = (num, info) => (
@@ -90,13 +90,24 @@ const MapModal = ({ data, setData }) => {
               </>
             )}
           </div>
-          <Button
-            variant='contained'
-            color='primary'
-            size='small'
-            onClick={() => setData({ ...data, isOpen: false })}>
-            send
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
+            <Button
+              variant='contained'
+              color='primary'
+              size='small'
+              onClick={() => setData({ ...data, isOpen: false })}>
+              send
+            </Button>
+            {data.modalType === 'PrepaireEvent' && (
+              <Typography
+                variant='caption'
+                color={'red'}
+                sx={{ mr: 1, cursor: 'pointer' }}
+                onClick={() => handlePrepaireEventDelete(data.id)}>
+                Delete
+              </Typography>
+            )}
+          </div>
         </Box>
       </Fade>
     </Modal>

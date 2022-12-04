@@ -5,12 +5,13 @@ import vector from './vector.png'
 
 const PrepaireEvent = ({ onClick, created, prepaireEvent, data }) => {
   if ((data && data.type !== 'event') || (prepaireEvent && prepaireEvent.type !== 'event')) {
+    const color = diseaseToColor(prepaireEvent?.type || data?.type)
     return (
       <div
         onClick={onClick}
         className='prepaire-event__round'
         style={{
-          backgroundColor: diseaseToColor(prepaireEvent?.type || data?.type),
+          backgroundColor: color,
           opacity: created ? 1 : 0.7,
         }}
       />

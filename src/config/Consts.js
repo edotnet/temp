@@ -88,6 +88,7 @@ export const Endpoints = {
       `${useApi}/map/info?countryId=${countryId}&cityId=${cityId}&diseaseId=${diseaseId}`,
     allInfo: `${useApi}/map/info`,
     event: `${useApi}/map/events`,
+    deleteEvent: id => `${useApi}/map/events/${id}`,
   },
 }
 

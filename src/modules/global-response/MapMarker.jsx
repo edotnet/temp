@@ -1,18 +1,19 @@
 import { memo } from 'react'
-import { diseaseToColor } from '.'
+import { diseaseToColor, getRoundSize } from '.'
+import './styles.scss'
 
 const MapMarker = ({ onClick, markerData }) => {
-  const { disease } = markerData
+  const { disease, cases } = markerData
+  const color = diseaseToColor(disease)
+  const size = getRoundSize(cases)
 
   return (
     <div
+      className='prepaire-event__round'
       style={{
-        width: 15,
-        height: 15,
-        backgroundColor: diseaseToColor(disease),
-        border: '1px solid #000',
-        borderRadius: '50%',
-        cursor: 'pointer',
+        backgroundColor: color,
+        width: size,
+        height: size,
       }}
       onClick={() => onClick(markerData)}
     />
