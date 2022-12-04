@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@mui/material";
+import {Box, Grid, TextField} from "@mui/material";
 import {encodeQuery} from '../../../infrastructure/hooks/useApiCall';
 import { DrugSynthesisToXDL } from "./DrugSynthesisToXDL";
 import * as PropTypes from "prop-types";
@@ -7,7 +7,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 
-export function DrugSynthesis({searchText, filter}) {
+export function DrugSynthesis({searchText, filter, children}) {
   const [pdfList, setPdfList] = useState([]);
   const [selectedPdf, setSelectedPdf] = useState('');
   const [selectedPdfObj, setSelectedPdfObj] = useState("");
@@ -56,6 +56,9 @@ export function DrugSynthesis({searchText, filter}) {
         </TextField>
       </div>*/}
     </section>
+    <Box sx={{display: 'flex', justifyContent: 'flex-end', mb: 2}}>
+      {children}
+    </Box>
 
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -68,6 +71,7 @@ export function DrugSynthesis({searchText, filter}) {
 DrugSynthesis.propTypes = {
   searchText: PropTypes.string,
   filter: PropTypes.node,
+  children: PropTypes.node
 };
 
 DrugSynthesis.defaultProps = {

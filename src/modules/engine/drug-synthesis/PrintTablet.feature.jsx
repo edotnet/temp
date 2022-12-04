@@ -1,0 +1,179 @@
+import {
+  Box,
+  Button,
+  Dialog,
+  Divider,
+  IconButton,
+  LinearProgress,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography
+} from "@mui/material";
+import {ModalPaper} from "../../../infrastructure/components/ModalPaper";
+import {useState} from "react";
+import {DatePicker, DesktopDatePicker} from "@mui/x-date-pickers";
+import {Close} from "@mui/icons-material";
+import Automatic from '../../../assets/img/automatic.png';
+export const PrintTabletFeature = ({drugName}) => {
+  const [open, setOpen] = useState(false);
+  const [numPills, setNumPills] = useState(undefined);
+
+  const [request, setRequest] = useState({
+    drugName,
+    numPills,
+    name: '',
+    dateOfBirth: undefined,
+    clientNo: '',
+    shippingMethod: '',
+    shipToName: '',
+    shipToBuildingName: '',
+    shipToFloor: '',
+    shipToStreetAddress: '',
+    shipToPostalCode: '',
+    tel: '',
+    contactNumber: '',
+    specialInstructions: ''
+  });
+
+  const submit = () => {
+
+  }
+
+  return (<>
+    <Stack>
+      <TextField
+        select
+        onChange={e => {
+          setNumPills(e.target.value);
+          setOpen(true);
+        }}
+        sx={{"width": "200px", "background": "#fff", "maxWidth": "200px"}}
+        label="Select table quantity"
+      >
+        {Array.from(Array(60).keys()).map((i) => (<MenuItem key={i} value={i + 1}>
+          {i + 1}
+        </MenuItem>))}
+      </TextField>
+      <LinearProgress variant="indeterminate" sx={{width:185}}/>
+    </Stack>
+
+    <Dialog open={open} onClose={() => setOpen(false)}>
+      <IconButton sx={{position: 'absolute', right: 10, top: 0}} onClick={() => setOpen(false)}><Close /></IconButton>
+      <Box sx={{p: 3,}}>
+        <Typography variant="h6" sx={{fontWeight: 700, textAlign: 'center', pb: 2}}>Personalized Prescription
+          Order</Typography>
+        <Box pb={2}>
+          <Stack direction="row" spacing={2}>
+            <Typography variant="body1" sx={{fontWeight: 700}}>Drug Name:</Typography>
+            <Typography variant="body1">{drugName}</Typography>
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <Typography variant="body1" sx={{fontWeight: 700}}>Number of Pills:</Typography>
+            <Typography variant="body1">{numPills??0}</Typography>
+          </Stack>
+        </Box>
+        <Divider sx={{mb:4}}/>
+        <Stack spacing={2} sx={{minHeight: '50vh'}}>
+          <Stack spacing={2} direction="row">
+            <TextField
+              fullWidth
+              label="Name"
+              value={request.name}
+              onChange={e => setRequest({...request, name: e.target.value})}
+            />
+            <DesktopDatePicker
+              label="Date of Birth"
+              inputFormat="YYYY/MM/DD"
+              value={request.dateOfBirth}
+              onChange={(newValue) => setRequest({...request, dateOfBirth: newValue})}
+              renderInput={(params) => <TextField {...params} fullWidth/>}
+            />
+          </Stack>
+          <Stack spacing={2} direction="row">
+            <TextField
+              label="Client No."
+              value={request.clientNo}
+              fullWidth
+              onChange={e => setRequest({...request, clientNo: e.target.value})}
+            />
+            <TextField
+              label="Shipping Method"
+              fullWidth
+              select
+              value={request.shippingMethod}
+              onChange={e => setRequest({...request, shippingMethod: e.target.value})}
+            >
+              <MenuItem value="Post">Post</MenuItem>
+              <MenuItem value="FedEx">FedEx</MenuItem>
+            </TextField>
+          </Stack>
+          <Divider sx={{pt:2}}/>
+          <Typography fontWeight="700">Ship to</Typography>
+          <Stack spacing={2} direction="row">
+            <TextField
+              label="Name"
+              fullWidth
+              value={request.shipToName}
+              onChange={e => setRequest({...request, shipToName: e.target.value})}
+            />
+            <TextField
+              label="Building Name"
+              fullWidth
+              value={request.shipToBuildingName}
+              onChange={e => setRequest({...request, shipToBuildingName: e.target.value})}
+            />
+          </Stack>
+          <Stack spacing={2} direction="row">
+            <TextField
+              label="Apt No. Floor"
+              fullWidth
+              value={request.shipToFloor}
+              onChange={e => setRequest({...request, shipToFloor: e.target.value})}
+            />
+            <TextField
+              label="Postal Code"
+              fullWidth
+              value={request.shipToPostalCode}
+              onChange={e => setRequest({...request, shipToPostalCode: e.target.value})}
+            />
+          </Stack>
+          <TextField
+            label="Street Address"
+            fullWidth
+            value={request.shipToStreetAddress}
+            onChange={e => setRequest({...request, shipToStreetAddress: e.target.value})}
+          />
+          <Stack spacing={2} direction="row">
+            <TextField
+              label="Tel."
+              fullWidth
+              value={request.tel}
+              onChange={e => setRequest({...request, tel: e.target.value})}
+            />
+            <TextField
+              label="Contact Name"
+              fullWidth
+              value={request.contactNumber}
+              onChange={e => setRequest({...request, contactNumber: e.target.value})}
+            />
+          </Stack>
+          <TextField
+            label="Special Instructions"
+            fullWidth
+            value={request.specialInstructions}
+            multiline
+            rows={3}
+            onChange={e => setRequest({...request, specialInstructions: e.target.value})}
+          />
+          <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+            <img src={Automatic} alt="Automatic" style={{width: 100}}/>
+            <Box>
+              <Button variant="contained" onClick={submit}>Print your tablets</Button>
+            </Box>
+          </Box>
+        </Stack>
+      </Box>
+    </Dialog>
+  </>)
+}
