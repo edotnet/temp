@@ -24,7 +24,7 @@ export const allDiseases = [
 export const diseaseToColor = str => {
   switch (str) {
     case 'COVID-19':
-      return '#C00029'
+      return '#CA0F14'
     case 'Monkeypox':
       return '#FEEA00'
     case 'HIV':
