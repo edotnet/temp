@@ -12,8 +12,7 @@ import {
   Typography,
 } from '@mui/material'
 import React, { memo } from 'react'
-import { diseaseToColor } from '.'
-import { needToRemove } from './MapSidebar'
+import { allDiseases, diseaseToColor } from '.'
 import vector from './vector.png'
 
 const MapLegend = () => {
@@ -45,7 +44,7 @@ const MapLegend = () => {
                   <ListItemText primary={disease} />
                 </ListItem>
               ))} */}
-          {needToRemove.map((disease, i) => (
+          {allDiseases.map((disease, i) => (
             <ListItem key={i} sx={{ pt: 0 }}>
               <ListItemIcon>
                 <Circle fontSize='small' sx={{ color: diseaseToColor(disease) }} />

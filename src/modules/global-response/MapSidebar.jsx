@@ -5,8 +5,6 @@ import DiseaseCountry from './DiseaseCountry'
 import MapFilter from './MapFilter'
 import MapLegend from './MapLegend'
 
-export const needToRemove = ['COVID-19', 'Monkeypox', 'Marburg Virus', 'Ebola Virus', 'Lassa Fever']
-
 const MapSidebar = ({
   diseasesData,
   selectedId,
