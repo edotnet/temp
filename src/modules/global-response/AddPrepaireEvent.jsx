@@ -13,10 +13,9 @@ import {
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { memo, useState } from 'react'
-import { diseaseToColor } from '.'
+import { allDiseases, diseaseToColor } from '.'
 import { Endpoints } from '../../config/Consts'
 import { api } from '../../infrastructure/api/instance'
-import { needToRemove } from './MapSidebar'
 
 const AddPrepaireEvent = ({
   loading,
@@ -122,7 +121,7 @@ const AddPrepaireEvent = ({
           <Grid item flexGrow={1}>
             <Typography>Select a marker</Typography>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              {needToRemove.map((disease, i) => (
+              {allDiseases.map((disease, i) => (
                 <div
                   style={{
                     borderRadius: '50%',

@@ -12,18 +12,29 @@ export const stringToColor = str => {
   return color
 }
 
+export const allDiseases = [
+  'COVID-19',
+  'Monkeypox',
+  'HIV',
+  'Marburg Virus',
+  'Ebola Virus',
+  'Lassa Fever',
+]
+
 export const diseaseToColor = str => {
   switch (str) {
     case 'COVID-19':
-      return '#CB0133'
+      return '#C00029'
     case 'Monkeypox':
-      return '#FB9E1B'
+      return '#FEEA00'
+    case 'HIV':
+      return '#FF68B4'
     case 'Marburg Virus':
-      return '#808000'
+      return '#A01FF0'
     case 'Ebola Virus':
       return '#000'
     case 'Lassa Fever':
-      return '#FF5F1F'
+      return '#808080'
     default:
       return stringToColor(str)
   }
