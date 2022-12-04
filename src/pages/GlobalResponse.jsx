@@ -1,5 +1,6 @@
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { useSnackbar } from 'notistack'
 import { createRef, useCallback, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { Endpoints } from '../config/Consts'
@@ -39,6 +40,7 @@ export const GlobalResponse = () => {
   const [prepaireEvents, setPrepaireEvents] = useState([])
   const [pageLoading, setPageLoading] = useState(true)
   const [newPrepaireEventPos, setNewPrepaireEventPos] = useState(null)
+  const { enqueueSnackbar } = useSnackbar()
 
   const getPrepaireEvents = useCallback(
     (zoom, lng, lat) =>
@@ -62,13 +64,14 @@ export const GlobalResponse = () => {
         })
         setPrepaireEvents(data)
         lng && lat && zoom && map.current.flyTo({ center: [lng, lat], zoom })
+        !lng && !lat && zoom && map.current.flyTo({ zoom })
       }),
     [prepaireEvents]
   )
 
   const resetPrepaireEvent = () => {
     const { lng, lat } = newPrepaireEvent._lngLat
-    setPrepaireEvent(initialPrepaireEvent)
+    setPrepaireEvent({ ...initialPrepaireEvent, type: prepaireEvent.type })
     setCountries(null)
     setCountryValue('')
     setCities(null)
@@ -166,6 +169,21 @@ export const GlobalResponse = () => {
       longitude,
       latitude
     )
+  }
+
+  const handlePrepaireEventDelete = id => {
+    setPageLoading(true)
+    api
+      .delete(Endpoints.map.deleteEvent(id))
+      .then(() => {
+        enqueueSnackbar('Prepaire event was deleted successfully', { variant: 'success' })
+        setModalData(prev => ({ ...prev, isOpen: false }))
+        getPrepaireEvents(3)
+      })
+      .catch(() => enqueueSnackbar('Prepaire event has not been deleted', { variant: 'error' }))
+      .finally(() => {
+        setPageLoading(false)
+      })
   }
 
   useEffect(() => {
@@ -286,7 +304,11 @@ export const GlobalResponse = () => {
         getPrepaireEvents={getPrepaireEvents}
         resetPrepaireEvent={resetPrepaireEvent}
       />
-      <MapModal data={modalData} setData={setModalData} />
+      <MapModal
+        handlePrepaireEventDelete={handlePrepaireEventDelete}
+        data={modalData}
+        setData={setModalData}
+      />
       <div
         style={{ height: '100%', width: '100vw' }}
         ref={mapContainer}

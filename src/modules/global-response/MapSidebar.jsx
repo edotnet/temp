@@ -1,24 +1,9 @@
-import { Circle, ExpandMore } from '@mui/icons-material'
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Avatar,
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import React, { memo, useState } from 'react'
-import { diseaseToColor } from '.'
 import AddPrepaireEvent from './AddPrepaireEvent'
 import DiseaseCountry from './DiseaseCountry'
 import MapFilter from './MapFilter'
-import vector from './vector.png'
+import MapLegend from './MapLegend'
 
 export const needToRemove = ['COVID-19', 'Monkeypox', 'Marburg Virus', 'Ebola Virus', 'Lassa Fever']
 
@@ -97,20 +82,22 @@ const MapSidebar = ({
           setPrepaireEvent={setPrepaireEvent}
           resetPrepaireEvent={resetPrepaireEvent}
         />
-        {diseasesData.length && (
-          <Typography variant='h6' mt={2}>
-            Diseases
-          </Typography>
-        )}
-        {diseasesData.length &&
-          diseasesData.map((diseaseData, i) => (
-            <DiseaseCountry
-              diseaseData={diseaseData}
-              i={i}
-              handleMarkerClick={handleMarkerClick}
-              selectedId={selectedId}
-            />
-          ))}
+        {diseasesData.length ? (
+          <>
+            <Typography variant='h6' mt={2}>
+              Diseases
+            </Typography>
+            {diseasesData.map((diseaseData, i) => (
+              <DiseaseCountry
+                key={i}
+                diseaseData={diseaseData}
+                i={i}
+                handleMarkerClick={handleMarkerClick}
+                selectedId={selectedId}
+              />
+            ))}
+          </>
+        ) : null}
       </Box>
       <Box
         sx={{
@@ -124,44 +111,7 @@ const MapSidebar = ({
           height: 'auto',
           maxHeight: '100vh',
         }}>
-        <Accordion defaultExpanded={true}>
-          <AccordionSummary
-            expandIcon={<ExpandMore />}
-            aria-controls='panel1a-content'
-            id='panel1a-header'>
-            <Typography variant='h6'>Map Legend</Typography>
-          </AccordionSummary>
-          <AccordionDetails sx={{ pt: 0 }}>
-            <List sx={{ p: 0 }}>
-              <ListItem sx={{ pt: 0 }}>
-                <ListItemAvatar>
-                  <Avatar
-                    sx={{ borderRadius: 0, width: 20, height: 20 }}
-                    alt='Prepaire Event'
-                    src={vector}
-                  />
-                </ListItemAvatar>
-                <ListItemText primary='Prepaire Event' />
-              </ListItem>
-              {/* {diseasesData.map(({ disease }) => (
-                <ListItem sx={{ pt: 0 }}>
-                  <ListItemIcon>
-                    <Circle fontSize='small' sx={{ color: diseaseToColor(disease) }} />
-                  </ListItemIcon>
-                  <ListItemText primary={disease} />
-                </ListItem>
-              ))} */}
-              {needToRemove.map(disease => (
-                <ListItem sx={{ pt: 0 }}>
-                  <ListItemIcon>
-                    <Circle fontSize='small' sx={{ color: diseaseToColor(disease) }} />
-                  </ListItemIcon>
-                  <ListItemText primary={disease} />
-                </ListItem>
-              ))}
-            </List>
-          </AccordionDetails>
-        </Accordion>
+        <MapLegend />
       </Box>
     </>
   )
