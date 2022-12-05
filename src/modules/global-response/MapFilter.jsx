@@ -1,5 +1,16 @@
 import { ExpandMore } from '@mui/icons-material'
-import { Accordion, AccordionDetails, AccordionSummary, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, TextField, Typography } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel,
+  TextField,
+  Typography,
+} from '@mui/material'
 import React, { memo } from 'react'
 
 const MapFilter = ({ mapFilter, setMapFilter }) => {
@@ -12,22 +23,35 @@ const MapFilter = ({ mapFilter, setMapFilter }) => {
         <FormControl>
           <FormLabel>Diseases</FormLabel>
           <FormGroup>
-            {Object.entries(mapFilter.diseases).map(([key, value]) => <FormControlLabel
-              key={key}
-              label={key}
-              control={
-                <Checkbox 
-                  checked={value} 
-                  onChange={e => setMapFilter(prev => ({ ...prev, diseases: { ...prev.diseases, [e.target.name]: e.target.checked } }))} 
-                  name={key} 
-                />
-              }
-            />)}
+            {Object.entries(mapFilter.diseases).map(([key, value]) => (
+              <FormControlLabel
+                key={key}
+                label={key}
+                control={
+                  <Checkbox
+                    checked={value}
+                    onChange={e =>
+                      setMapFilter(prev => ({
+                        ...prev,
+                        diseases: { ...prev.diseases, [e.target.name]: e.target.checked },
+                      }))
+                    }
+                    name={key}
+                  />
+                }
+              />
+            ))}
           </FormGroup>
         </FormControl>
         <div style={{ marginTop: 20 }}>
           <Typography>By country</Typography>
-          <TextField variant='standard' label='Country' fullWidth value={mapFilter.byCountry} onChange={e => setMapFilter(prev => ({ ...prev, byCountry: e.target.value }))} />
+          <TextField
+            variant='standard'
+            label='Country'
+            fullWidth
+            value={mapFilter.byCountry}
+            onChange={e => setMapFilter(prev => ({ ...prev, byCountry: e.target.value }))}
+          />
         </div>
       </AccordionDetails>
     </Accordion>

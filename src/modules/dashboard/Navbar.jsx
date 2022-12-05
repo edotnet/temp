@@ -56,7 +56,7 @@ export const Navbar = () => {
           </nav>
         </Grid>
         <Grid flexGrow={1} item sx={{display: 'flex', justifyContent: 'right', alignContent: 'center', alignItems: 'center'}}>
-          <Session />
+          {window.location.hash !== '#/globalresponse' && <Session />}
         </Grid>
         <Grid item>
           <Box sx={{flexGrow: 0, justifyContent: 'flex-end', display: 'flex', pr: 3}}>
