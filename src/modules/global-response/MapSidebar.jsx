@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from '@mui/material'
 import React, { memo, useState } from 'react'
+import { numberWithCommas } from '.'
 import AddPrepaireEvent from './AddPrepaireEvent'
 import DiseaseCountry from './DiseaseCountry'
 import MapFilter from './MapFilter'
@@ -52,7 +53,7 @@ const MapSidebar = ({
           zIndex: 9,
           overflowY: 'scroll',
           p: 3,
-          pr: 0,
+          pr: 1.25,
           transition: '1s',
         }}>
         <Box sx={{ mb: 2, mt: 9.5 }}></Box>
@@ -97,6 +98,28 @@ const MapSidebar = ({
           </>
         ) : null}
       </Box>
+      {Object.entries(mapFilter).length ? <div
+        style={{
+          zIndex: 10,
+          position: 'absolute',
+          right: 53,
+          top: 90,
+          width: 231,
+          padding: '10px 15px',
+          backgroundColor: '#fff',
+          boxShadow: '0 0 0 2px rgb(0 0 0 / 10%)',
+          borderRadius: 4,
+          textAlign: 'center',
+        }}>
+        <Typography fontSize={13}>Total Cases Worldwide</Typography>
+        <Typography fontSize={28} fontWeight={700}>
+          {numberWithCommas(diseasesData.filter(({ disease }) => mapFilter.diseases[disease]).reduce((acc, v) => acc + v.totalCases, 0))}
+        </Typography>
+        <Typography fontSize={12}>Total Deaths</Typography>
+        <Typography fontSize={26} fontWeight={500}>
+          {numberWithCommas(diseasesData.filter(({ disease }) => mapFilter.diseases[disease]).reduce((acc, v) => acc + v.totalDeaths, 0))}
+        </Typography>
+      </div> : null}
       <Box
         sx={{
           position: 'absolute',

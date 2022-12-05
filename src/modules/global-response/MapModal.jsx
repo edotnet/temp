@@ -2,13 +2,16 @@ import { Close } from '@mui/icons-material'
 import { Backdrop, Button, Fade, IconButton, Modal, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import React, { memo } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { numberWithCommas } from '.'
 
 const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
   const { isOpen, cases, deaths, name: country, disease } = data
+  const navigate = useNavigate()
 
   const showStatistic = (num, info) => (
     <>
-      <Typography variant='h5' fontWeight={700} fontSize={20} {...num?.typographyProps}>
+      <Typography variant='h6' fontWeight={700} fontSize={20} {...num?.typographyProps}>
         {num.title}
       </Typography>
       <Typography variant='body2' {...info?.typographyProps}>
@@ -30,8 +33,6 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
       <Close sx={{ color: '#fff' }} />
     </IconButton>
   )
-
-  console.log(data)
 
   return (
     <Modal
@@ -85,19 +86,39 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
                   {country}
                 </Typography>
                 <div style={{ height: 2, backgroundColor: '#000', marginBottom: 12 }}></div>
-                {showStatistic({ title: cases }, { title: 'Total cases (confirmed)' })}
-                {showStatistic({ title: deaths }, { title: 'Total deaths (confirmed)' })}
+                <Typography fontWeight={700} fontSize={26} color='red'>
+                  Current cases
+                </Typography>
+                <Typography fontWeight={700} variant='h5' lineHeight={1.1} color='red'>
+                  {numberWithCommas(data.newCases || 0)}
+                </Typography>
+                <Typography variant='h6' fontWeight={700} sx={{ mt: 1 }}>
+                  Historical Data
+                </Typography>
+                {showStatistic(
+                  { title: numberWithCommas(cases) },
+                  { title: 'Total cases (confirmed)' }
+                )}
+                {showStatistic(
+                  { title: numberWithCommas(deaths) },
+                  { title: 'Total deaths (confirmed)' }
+                )}
               </>
             )}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
-            <Button
-              variant='contained'
-              color='primary'
-              size='small'
-              onClick={() => setData({ ...data, isOpen: false })}>
-              send
-            </Button>
+            <Link
+              style={{ textDecoration: 'none' }}
+              to='/engine/search'
+              state={{ searchValue: disease || data.title }}>
+              <Button
+                variant='contained'
+                color='primary'
+                size='small'
+                onClick={() => setData({ ...data, isOpen: false })}>
+                send
+              </Button>
+            </Link>
             {data.modalType === 'PrepaireEvent' && (
               <Typography
                 variant='caption'
