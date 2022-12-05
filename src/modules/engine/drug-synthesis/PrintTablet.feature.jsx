@@ -13,11 +13,12 @@ import {
 import {ModalPaper} from "../../../infrastructure/components/ModalPaper";
 import {useState} from "react";
 import {DatePicker, DesktopDatePicker} from "@mui/x-date-pickers";
-import {Close} from "@mui/icons-material";
+import {Close, Folder, History, Refresh} from "@mui/icons-material";
 import Automatic from '../../../assets/img/automatic.png';
 export const PrintTabletFeature = ({drugName}) => {
   const [open, setOpen] = useState(false);
   const [numPills, setNumPills] = useState(undefined);
+  const [message, setMessage] = useState('');
 
   const [request, setRequest] = useState({
     drugName,
@@ -37,11 +38,16 @@ export const PrintTabletFeature = ({drugName}) => {
   });
 
   const submit = () => {
-
+    //api.post()
+    setMessage("Your request has been submitted. You will receive an email with the tracking number once your order has been shipped.");
+    setTimeout(() => {
+      setOpen(false);
+      setMessage('');
+    },8000);
   }
 
   return (<>
-    <Stack>
+    <Stack direction="row">
       <TextField
         select
         onChange={e => {
@@ -49,13 +55,15 @@ export const PrintTabletFeature = ({drugName}) => {
           setOpen(true);
         }}
         sx={{"width": "200px", "background": "#fff", "maxWidth": "200px"}}
-        label="Select table quantity"
+        label="Tablet quantity"
       >
         {Array.from(Array(60).keys()).map((i) => (<MenuItem key={i} value={i + 1}>
           {i + 1}
         </MenuItem>))}
       </TextField>
-      <LinearProgress variant="indeterminate" sx={{width:185}}/>
+      {/*<IconButton onClick={() => {}}>
+        <History/>
+      </IconButton>*/}
     </Stack>
 
     <Dialog open={open} onClose={() => setOpen(false)}>
@@ -84,7 +92,7 @@ export const PrintTabletFeature = ({drugName}) => {
             />
             <DesktopDatePicker
               label="Date of Birth"
-              inputFormat="YYYY/MM/DD"
+              inputFormat="D"
               value={request.dateOfBirth}
               onChange={(newValue) => setRequest({...request, dateOfBirth: newValue})}
               renderInput={(params) => <TextField {...params} fullWidth/>}
@@ -169,8 +177,11 @@ export const PrintTabletFeature = ({drugName}) => {
           <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
             <img src={Automatic} alt="Automatic" style={{width: 100}}/>
             <Box>
-              <Button variant="contained" onClick={submit}>Print your tablets</Button>
+              <Typography variant="body1" sx={{fontWeight: 700}}>{message}</Typography>
             </Box>
+            {!message && <Box>
+              <Button variant="contained" onClick={submit}>Print your tablets</Button>
+            </Box>}
           </Box>
         </Stack>
       </Box>

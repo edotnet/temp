@@ -90,6 +90,10 @@ export const Endpoints = {
     event: `${useApi}/map/events`,
     deleteEvent: id => `${useApi}/map/events/${id}`,
   },
+  prescriptionOrders: {
+    history: `${Consts.API_URL}/personalizedPrescriptionOrders`,
+    add: `${Consts.API_URL}/personalizedPrescriptionOrders`,
+  }
 }
 
 export const DemographicYears = [
