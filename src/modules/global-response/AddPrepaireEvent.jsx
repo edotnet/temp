@@ -9,7 +9,7 @@ import {
   Grid,
   TextareaAutosize,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { memo, useState } from 'react'
@@ -66,7 +66,7 @@ const AddPrepaireEvent = ({
                 <TextField
                   value={countryValue || ''}
                   onChange={onChangeCountry}
-                  label='SEARCH COUNTRY OR CITY'
+                  label='SEARCH COUNTRY'
                   fullWidth
                   variant='standard'
                   {...params}
@@ -85,7 +85,7 @@ const AddPrepaireEvent = ({
                   <TextField
                     value={cityValue || ''}
                     onChange={onChangeCity}
-                    label='SEARCH COUNTRY OR CITY'
+                    label='SEARCH CITY'
                     fullWidth
                     variant='standard'
                     {...params}
