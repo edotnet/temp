@@ -100,7 +100,7 @@ const MapSidebar = ({
       </Box>
       <div
         style={{
-          zIndex: 999999,
+          zIndex: 10,
           position: 'absolute',
           right: 53,
           top: 90,
