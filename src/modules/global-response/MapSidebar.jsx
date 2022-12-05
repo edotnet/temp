@@ -98,7 +98,7 @@ const MapSidebar = ({
           </>
         ) : null}
       </Box>
-      <div
+      {Object.entries(mapFilter).length ? <div
         style={{
           zIndex: 10,
           position: 'absolute',
@@ -113,13 +113,13 @@ const MapSidebar = ({
         }}>
         <Typography fontSize={13}>Total Cases Worldwide</Typography>
         <Typography fontSize={28} fontWeight={700}>
-          {numberWithCommas(diseasesData.reduce((acc, v) => acc + v.totalCases, 0))}
+          {numberWithCommas(diseasesData.filter(({ disease }) => mapFilter.diseases[disease]).reduce((acc, v) => acc + v.totalCases, 0))}
         </Typography>
         <Typography fontSize={12}>Total Deaths</Typography>
         <Typography fontSize={26} fontWeight={500}>
-          {numberWithCommas(diseasesData.reduce((acc, v) => acc + v.totalDeaths, 0))}
+          {numberWithCommas(diseasesData.filter(({ disease }) => mapFilter.diseases[disease]).reduce((acc, v) => acc + v.totalDeaths, 0))}
         </Typography>
-      </div>
+      </div> : null}
       <Box
         sx={{
           position: 'absolute',

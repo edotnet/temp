@@ -42,6 +42,8 @@ export const GlobalResponse = () => {
   const [newPrepaireEventPos, setNewPrepaireEventPos] = useState(null)
   const { enqueueSnackbar } = useSnackbar()
 
+  console.log(diseasesData)
+
   const getPrepaireEvents = useCallback(
     (zoom, lng, lat) =>
       api.get(Endpoints.map.event).then(res => {
