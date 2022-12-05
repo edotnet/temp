@@ -39,7 +39,7 @@ export const PrintTabletFeature = ({drugName}) => {
 
   const submit = () => {
     //api.post()
-    setMessage("Your request has been submitted. You will receive an email with the tracking number once your order has been shipped.");
+    setMessage("Thank you ! Your order has been sent to AutoMedic for printing.");
     setTimeout(() => {
       setOpen(false);
       setMessage('');
@@ -77,7 +77,7 @@ export const PrintTabletFeature = ({drugName}) => {
             <Typography variant="body1">{drugName}</Typography>
           </Stack>
           <Stack direction="row" spacing={2}>
-            <Typography variant="body1" sx={{fontWeight: 700}}>Number of Pills:</Typography>
+            <Typography variant="body1" sx={{fontWeight: 700}}>Number of Tablets:</Typography>
             <Typography variant="body1">{numPills??0}</Typography>
           </Stack>
         </Box>
