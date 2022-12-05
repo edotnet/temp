@@ -6,24 +6,25 @@ import {DashboardContextProvider} from "./modules/dashboard/context/DashboardCon
 import {EngineContextProvider} from "./modules/engine/EngineContext";
 import {AuthProvider} from "./infrastructure/authentication/AuthProvider";
 import { Notifications } from './infrastructure/Notifications';
-
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import {LocalizationProvider} from "@mui/x-date-pickers";
 function App() {
-  
+
 
   return (
-    <>
+    <LocalizationProvider dateAdapter={AdapterLuxon}>
       <AuthProvider>
         <EventEmitter>
           <CssBaseline/>
           <DashboardContextProvider>
-            <EngineContextProvider>              
+            <EngineContextProvider>
               <Notifications />
               <Router/>
             </EngineContextProvider>
           </DashboardContextProvider>
         </EventEmitter>
       </AuthProvider>
-    </>
+    </LocalizationProvider>
   );
 }
 

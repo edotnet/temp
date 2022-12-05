@@ -2,6 +2,7 @@ import { MenuItem, TextField } from "@mui/material";
 import {useEffect, useState} from 'react';
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
 import { DrugSynthesis } from "../search/DrugSynthesis";
+import {PrintTabletFeature} from "../drug-synthesis/PrintTablet.feature";
 
 export const Drug2XDLFeature = () => {
   const [molecule, setMolecule] = useState('');
@@ -27,7 +28,9 @@ export const Drug2XDLFeature = () => {
           <MenuItem value={combonames}>
             {combonames}
           </MenuItem>
-      </TextField>}/>
+      </TextField>}>
+        <PrintTabletFeature drugName={molecule}/>
+      </DrugSynthesis>
     </>
   )
 }
