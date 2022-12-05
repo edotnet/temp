@@ -24,7 +24,7 @@ export const allDiseases = [
 export const diseaseToColor = str => {
   switch (str) {
     case 'COVID-19':
-      return '#CA0F14'
+      return '#f00201'
     case 'Monkeypox':
       return '#FEEA00'
     case 'HIV':
@@ -43,6 +43,9 @@ export const diseaseToColor = str => {
 export const getRoundSize = cases => {
   if (cases < 99999) return 13
   if (cases < 999999) return 17
-  if (cases < 9999999) return 25
-  return 40
+  if (cases < 9999999) return 23
+  return 30
 }
+
+export const numberWithCommas = num =>
+  num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
