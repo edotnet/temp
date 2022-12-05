@@ -180,7 +180,7 @@ export const Session = () => {
         {drawer()}
         <Stack spacing={2} direction="row">
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography>{currentSession && data ? data.items.find(i => i.id === currentSession)?.title : 'Not saved...'}</Typography>
+                <Typography>{currentSession && data ? data.items.find(i => i.id === currentSession)?.title : ''}</Typography>
             </Box>
             <IconButton onClick={handleOpenMenu}>
                 <ArrowDropDown/>

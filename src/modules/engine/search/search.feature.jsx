@@ -1,7 +1,7 @@
 import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 import axios from 'axios';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Endpoints } from '../../../config/Consts';
 import { CircularProgressComponent } from '../../../infrastructure/components/CircularProgress.component';
 import { encodeQuery, useApiCall } from '../../../infrastructure/hooks/useApiCall';
@@ -24,6 +24,7 @@ export const SearchFeature = () => {
   const {state: dashboardState, dispatch: dashboardDispatch} = useDashboardContext();
   const {state, dispatch} = useEngineContext();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [searchText, setSearchText] = useState('');
   const [clickedRow, setClickedRow] = useState('');
@@ -218,6 +219,10 @@ export const SearchFeature = () => {
   }, [state.targetSelection, dispatch, targets]);
 
   useEffect(() => {
+    location.state?.searchValue && onRun(location.state?.searchValue);
+  }, [location.state?.searchValue])
+
+  useEffect(() => {
     if (data && data.results && data.results.length) {
       const defaultDrug = searchText.toLowerCase();
       const defaultDrugRow = drugs.find((row) => row.name.toLowerCase() === defaultDrug);
@@ -256,7 +261,7 @@ export const SearchFeature = () => {
   return (
     <div className="searchDefault">
       <Box>
-        <SearchInput value={searchText} onChange={e => setSearchText(e.target.value)} onKeyPress={(e) => {
+        <SearchInput value={searchText || location.state?.searchValue || ''} onChange={e => setSearchText(e.target.value)} onKeyPress={(e) => {
           if (e.key === 'Enter') {
             setSearchText(e.target.value);
             onRun(e.target.value);
