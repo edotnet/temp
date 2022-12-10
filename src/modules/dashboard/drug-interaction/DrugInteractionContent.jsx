@@ -53,7 +53,7 @@ export const DrugInteractionContent = () => {
   }
 
   const _onDrugToXDL = () => {
-    navigate('/engine/drug2xdl');
+    navigate('/tools/drug2xdl');
   };
 
   function renderPills() {

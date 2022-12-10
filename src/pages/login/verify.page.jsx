@@ -41,7 +41,7 @@ export const Verify = () => {
       loginRef.current.classList.toggle('hidden');
       successRef.current.classList.toggle('open')
       login(location.state.email, location.state.password).then(() => {
-        navigate('/engine/search');
+        navigate('/engine');
       });
     }).catch(err => {
       setMessage(err.message ?? 'Something went, please try again.');
