@@ -129,15 +129,15 @@ export const PDBSelector = ({}) => {
           (<>
             {pdb.id === ESM_FOLD_PDB && <>
               <Typography fontSize={16}>ESMF</Typography>
-              <Typography fontSize={14}>Fast (aprox 1 sec)</Typography>
-              <Typography fontSize={14}>Poor accuracy</Typography>
-              <Typography fontSize={14}>Size up to 400</Typography>
+              <Typography fontSize={14}>Predicts the 3D structure of a protein from its amino acid sequence. </Typography>
+              <Typography fontSize={14}>Best suited for initial screening.</Typography>
+              <Typography fontSize={14}>Processing time: few seconds to 5min.</Typography>
               </>}
             {pdb.id === ALPHA_FOLD_PDB && <>
               <Typography fontSize={16}>AlphaFold</Typography>
-              <Typography fontSize={14}>Slow (20min to 1h)</Typography>
-              <Typography fontSize={14}>High accuracy</Typography>
-              <Typography fontSize={14}>Work regardless of the size</Typography>
+              <Typography fontSize={14}>Predicts the 3D structure of a protein from its amino acid sequence with high accuracy. </Typography>
+              <Typography fontSize={14}>Best suited for advanced drug discovery.</Typography>
+              <Typography fontSize={14}>Processing time: 20min to 1h.</Typography>
               </>}
           </>)}
       </Box>
