@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
+import {Avatar, Box, Chip, Grid, Stack, Typography} from '@mui/material';
 import axios from 'axios';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -30,11 +30,12 @@ export const SearchFeature = () => {
   const [clickedRow, setClickedRow] = useState('');
   const [secondaryLoader, setSecondaryLoader] = useState(false);
 
-  const {drugs, naturalProducts, targets, suggestions} = useMemo(() => {
+  const {drugs, naturalProducts, cannabis, targets, suggestions} = useMemo(() => {
     const keys = {
       drug: 'drugs',
       natural_product: 'naturalProducts',
       protein: 'targets',
+      cannabis: 'cannabis',
     };
     const res = {
       drugs: [],
@@ -50,6 +51,19 @@ export const SearchFeature = () => {
       }
       if (data.suggestions) {
         res.suggestions = data.suggestions;
+      }
+      if (res.naturalProducts.length) {
+        const cannabis = [];
+        const naturalProducts = [];
+        res.naturalProducts.forEach(item => {
+          if (item.source === 'cannabis') {
+            cannabis.push(item);
+          } else {
+            naturalProducts.push(item);
+          }
+        });
+        res.naturalProducts = naturalProducts;
+        res.cannabis = cannabis;
       }
     }
     return res;
@@ -115,11 +129,13 @@ export const SearchFeature = () => {
   const uploadSelectedNaturalProducts = useCallback(() => {
     return new Promise((resolve, reject) => {
       const promises = [];
-      if (!state.naturalProductSelection.length) {
+      if (!state.naturalProductSelection.length && !state.cannabisSelection.length) {
         resolve();
         return;
       }
-      state.naturalProductSelection.forEach(naturalProduct => {
+      const allSelection = [...state.naturalProductSelection, ...state.cannabisSelection];
+      const allSelectionLowerCase = allSelection.map(el => el.toLowerCase());
+      allSelection.forEach(naturalProduct => {
         const url = `${Endpoints.naturalProducts.query}${encodeQuery(naturalProduct)}?exact=1`;
         promises.push(axios.get(url));
         setSecondaryLoader(true);
@@ -128,7 +144,7 @@ export const SearchFeature = () => {
           responses.forEach((resp, drugIndex) => {
             if (resp.data) {
               resp.data.items.forEach((item) => {
-                if ('cn' in item && state.naturalProductSelection.map(el => el.toLowerCase()).includes(item.cn.toLowerCase())) {
+                if ('cn' in item && allSelectionLowerCase.includes(item.cn.toLowerCase())) {
                   const molecule = {
                     name: item.cn,
                     drugbank_id: item.UNPD_ID,
@@ -236,6 +252,7 @@ export const SearchFeature = () => {
       }
       dispatch({type: 'setDrugs', payload: drugs});
       dispatch({type: 'setNaturalProducts', payload: naturalProducts});
+      dispatch({type: 'setCannabis', payload: cannabis});
       if (!targets || targets.length === 0) {
         return;
       }
@@ -295,7 +312,9 @@ export const SearchFeature = () => {
                            }}
                            rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                            onClick={uploadDrugsAndNavigate} />
-              <NaturalProductsResults naturalProducts={state.naturalProducts}
+              <NaturalProductsResults
+                title={<Typography>Natural Products</Typography>}
+                naturalProducts={state.naturalProducts}
                                       onRowClick={(param) => {
                                         drugHandleClick(param.row);
                                         setClickedRow(param.row.name.toLowerCase());
@@ -308,7 +327,19 @@ export const SearchFeature = () => {
                                       onClick={uploadNaturalProductsAndNavigate} />
             </Grid>
             <Grid item xs={6}>
-              <DrugLiterature drug={state.selectedDrug} />
+              <NaturalProductsResults
+              title={<><Avatar alt="Cannabis" sx={{bgcolor: 'green', width: 25, height: 25, fontSize: 15, mr: 2}}>C</Avatar><Typography>Cannabis</Typography></>}
+                naturalProducts={state.cannabis}
+                                      onRowClick={(param) => {
+                                        drugHandleClick(param.row);
+                                        setClickedRow(param.row.name.toLowerCase());
+                                      }}
+                                      selectionModel={state.cannabisSelection}
+                                      onSelectionModelChange={(ids) => {
+                                        dispatch({type: 'setCannabisSelection', payload: ids});
+                                      }}
+                                      rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
+                                      onClick={uploadNaturalProductsAndNavigate} />
             </Grid>
           </Grid>
         </>

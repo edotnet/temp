@@ -4,11 +4,13 @@ const initialState = {
   targets: [],
   drugs: [],
   naturalProducts: [],
+  cannabis: [],
   selectedTarget: null,
   selectedDrug: null,
   targetSelection: [],
   drugSelection: [],
   naturalProductSelection: [],
+  cannabisSelection: [],
 }
 
 const EngineContext = createContext({state: initialState});
@@ -18,11 +20,13 @@ const reducer = (state, action) => {
     setTargets: (targets) => ({...state, targets}),
     setDrugs: (drugs) => ({...state, drugs}),
     setNaturalProducts: (naturalProducts) => ({...state, naturalProducts}),
+    setCannabis: (cannabis) => ({...state, cannabis}),
     setSelectedTarget: (selectedTarget) => ({...state, selectedTarget}),
     setSelectedDrug: (selectedDrug) => ({...state, selectedDrug}),
     setTargetSelection: (targetSelection) => ({...state, targetSelection}),
     setDrugSelection: (drugSelection) => ({...state, drugSelection}),
     setNaturalProductSelection: (naturalProductSelection) => ({...state, naturalProductSelection}),
+    setCannabisSelection: (cannabisSelection) => ({...state, cannabisSelection}),
     clean: () => initialState,
     restore: (state) => state,
   };

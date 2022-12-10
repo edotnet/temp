@@ -23,7 +23,6 @@ const drugsColumns = [
     renderCell: (params) => (<Box sx={{display: 'flex', justifyContent: 'space-between', width: '90%'}}>
       <span className='link-btn'>{params.value}</span>
         <AvatarGroup max={2} sx={{alignSelf: 'flex-end'}}>
-          {params.row.source === 'cannabis' && <Avatar alt="Cannabis" sx={{bgcolor: 'green', width: 35, height: 35}}>C</Avatar>}
           {params.row.articles_item_only === 0 && <Avatar alt="Research" sx={{bgcolor: 'brown', width: 35, height: 35, color: 'white'}}>R</Avatar>}
         </AvatarGroup>
       </Box>
