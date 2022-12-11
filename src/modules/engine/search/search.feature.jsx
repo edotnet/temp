@@ -18,6 +18,8 @@ import './search.scss';
 import { SearchInput } from './SearchInput';
 import { SectionTitle } from './SectionTitle';
 import { TargetLiterature } from './TargetLiterature';
+import CannabisPill from '../../../assets/img/cannabis-pill.png';
+const CannabisChip = () => <img src={CannabisPill} width={10} style={{transform: 'scale(5)', objectFit: 'contain', marginLeft: 10, marginRight: 10}}/>;
 
 export const SearchFeature = () => {
   const {loading, data, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
@@ -328,7 +330,7 @@ export const SearchFeature = () => {
             </Grid>
             <Grid item xs={6}>
               <NaturalProductsResults
-              title={<><Avatar alt="Cannabis" sx={{bgcolor: 'green', width: 25, height: 25, fontSize: 15, mr: 2}}>C</Avatar><Typography>Cannabis</Typography></>}
+                title={<><CannabisChip /> <Typography pl={2}>Cannabinoids</Typography></>}
                 naturalProducts={state.cannabis}
                                       onRowClick={(param) => {
                                         drugHandleClick(param.row);

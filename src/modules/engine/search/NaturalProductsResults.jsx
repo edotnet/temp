@@ -20,7 +20,7 @@ import {encodeQuery} from '../../../infrastructure/hooks/useApiCall';
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
 
 const naturalProductsColumns = [
-  { field: `name`, headerName: 'Drug Name', minWidth: 150, flex: 1,
+  { field: `name`, headerName: 'Name', minWidth: 150, flex: 1,
     renderCell: (params) => (<Box sx={{display: 'flex', justifyContent: 'space-between', width: '90%'}}>
         <span className='link-btn'>{params.value}</span>
         <AvatarGroup max={2} sx={{alignSelf: 'flex-end'}}>
