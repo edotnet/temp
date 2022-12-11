@@ -81,7 +81,7 @@ export function NaturalProductsResults(props) {
       {props.title}
     </AccordionSummary>
     <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
-      {props.naturalProducts.length > 0 &&
+      {props.naturalProducts && props.naturalProducts.length > 0 &&
         <DataGrid
           rows={[...props.naturalProducts].sort((a, b) => b.f_score - a.f_score)}
           columns={naturalProductsColumns}
