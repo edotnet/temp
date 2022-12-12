@@ -50,8 +50,9 @@ export const Navbar = () => {
         </Grid>
         <Grid item xs={7} style={{paddingTop: '25px'}}>
           <nav className="headernavlink">
-            <NavLink to="/engine/search">SEARCH ENGINE</NavLink>
+            <NavLink to="/engine">SEARCH ENGINE</NavLink>
             <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
+            <NavLink to="/tools">TOOLS</NavLink>
             <NavLink to="/globalresponse">
               <img src={GlobalResponse} width={10} height={10} style={{ marginTop: '-5px', marginRight: 20, transform:'scale(3.5)'}} />
               GLOBAL RESPONSE AID

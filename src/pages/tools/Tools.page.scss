@@ -1,0 +1,39 @@
+@import '../../scss/utils/variables';
+.tools-page {
+  .searchnavlink {
+    a {
+      cursor: pointer;
+      user-select: none;
+      text-decoration: none;
+      line-height: 1.25;
+      text-transform: uppercase;
+      max-width: 360px;
+      min-width: 90px;
+      min-height: 48px;
+      padding: 12px 30px;
+      overflow: hidden;
+      text-align: center;
+      color: #000;
+      font-weight: 400;
+      height: 50px;
+      border: solid 1px #cbcbcb;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    .active {
+      background: linear-gradient(to top, #5498ef 100%, #4366BB);
+      color: #fff;
+    }
+  }
+
+  .searchEngin-headerbtn {
+    height: 50px !important;
+    text-transform: none !important;
+    border: solid 1px #cbcbcb !important;
+    font-size: 16px !important;
+    border-left: none !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+
+  }
+}

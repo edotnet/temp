@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
+import {Avatar, Box, Chip, Grid, Stack, Typography} from '@mui/material';
 import axios from 'axios';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -18,6 +18,10 @@ import './search.scss';
 import { SearchInput } from './SearchInput';
 import { SectionTitle } from './SectionTitle';
 import { TargetLiterature } from './TargetLiterature';
+import CannabisPill from '../../../assets/img/cannabis-pill.png';
+import DrugPill from '../../../assets/img/drug-pill.png';
+import NPPill from '../../../assets/img/np-pill.png';
+const PillImage = ({img}) => <img src={img} width={10} style={{transform: 'scale(5)', objectFit: 'contain', marginLeft: 10, marginRight: 10}}/>;
 
 export const SearchFeature = () => {
   const {loading, data, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
@@ -30,11 +34,12 @@ export const SearchFeature = () => {
   const [clickedRow, setClickedRow] = useState('');
   const [secondaryLoader, setSecondaryLoader] = useState(false);
 
-  const {drugs, naturalProducts, targets, suggestions} = useMemo(() => {
+  const {drugs, naturalProducts, cannabis, targets, suggestions} = useMemo(() => {
     const keys = {
       drug: 'drugs',
       natural_product: 'naturalProducts',
       protein: 'targets',
+      cannabis: 'cannabis',
     };
     const res = {
       drugs: [],
@@ -50,6 +55,19 @@ export const SearchFeature = () => {
       }
       if (data.suggestions) {
         res.suggestions = data.suggestions;
+      }
+      if (res.naturalProducts.length) {
+        const cannabis = [];
+        const naturalProducts = [];
+        res.naturalProducts.forEach(item => {
+          if (item.source === 'cannabis') {
+            cannabis.push(item);
+          } else {
+            naturalProducts.push(item);
+          }
+        });
+        res.naturalProducts = naturalProducts;
+        res.cannabis = cannabis;
       }
     }
     return res;
@@ -115,11 +133,13 @@ export const SearchFeature = () => {
   const uploadSelectedNaturalProducts = useCallback(() => {
     return new Promise((resolve, reject) => {
       const promises = [];
-      if (!state.naturalProductSelection.length) {
+      if (!state.naturalProductSelection.length && !state.cannabisSelection.length) {
         resolve();
         return;
       }
-      state.naturalProductSelection.forEach(naturalProduct => {
+      const allSelection = [...state.naturalProductSelection, ...state.cannabisSelection];
+      const allSelectionLowerCase = allSelection.map(el => el.toLowerCase());
+      allSelection.forEach(naturalProduct => {
         const url = `${Endpoints.naturalProducts.query}${encodeQuery(naturalProduct)}?exact=1`;
         promises.push(axios.get(url));
         setSecondaryLoader(true);
@@ -128,7 +148,7 @@ export const SearchFeature = () => {
           responses.forEach((resp, drugIndex) => {
             if (resp.data) {
               resp.data.items.forEach((item) => {
-                if ('cn' in item && state.naturalProductSelection.map(el => el.toLowerCase()).includes(item.cn.toLowerCase())) {
+                if ('cn' in item && allSelectionLowerCase.includes(item.cn.toLowerCase())) {
                   const molecule = {
                     name: item.cn,
                     drugbank_id: item.UNPD_ID,
@@ -152,7 +172,7 @@ export const SearchFeature = () => {
         }).catch(reject);
       });
     });
-  }, [state.naturalProductSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
+  }, [state.naturalProductSelection, state.cannabisSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
 
   const uploadSelectedProtein = useCallback(() => {
     return new Promise((resolve, reject) => {
@@ -236,6 +256,7 @@ export const SearchFeature = () => {
       }
       dispatch({type: 'setDrugs', payload: drugs});
       dispatch({type: 'setNaturalProducts', payload: naturalProducts});
+      dispatch({type: 'setCannabis', payload: cannabis});
       if (!targets || targets.length === 0) {
         return;
       }
@@ -284,7 +305,9 @@ export const SearchFeature = () => {
           <SectionTitle text="Related Remedies" />
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <DrugResults drugs={state.drugs}
+              <DrugResults
+                title={<><PillImage img={DrugPill}/> <Typography pl={2}>Drugs</Typography></>}
+                drugs={state.drugs}
                            onRowClick={(param) => {
                              drugHandleClick(param.row);
                              setClickedRow(param.row.name.toLowerCase());
@@ -295,7 +318,9 @@ export const SearchFeature = () => {
                            }}
                            rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                            onClick={uploadDrugsAndNavigate} />
-              <NaturalProductsResults naturalProducts={state.naturalProducts}
+              <NaturalProductsResults
+                title={<><PillImage img={NPPill}/> <Typography pl={2}>Natural Products</Typography></>}
+                naturalProducts={state.naturalProducts}
                                       onRowClick={(param) => {
                                         drugHandleClick(param.row);
                                         setClickedRow(param.row.name.toLowerCase());
@@ -308,7 +333,19 @@ export const SearchFeature = () => {
                                       onClick={uploadNaturalProductsAndNavigate} />
             </Grid>
             <Grid item xs={6}>
-              <DrugLiterature drug={state.selectedDrug} />
+              <NaturalProductsResults
+                title={<><PillImage img={CannabisPill}/> <Typography pl={2}>Cannabinoids</Typography></>}
+                naturalProducts={state.cannabis}
+                                      onRowClick={(param) => {
+                                        drugHandleClick(param.row);
+                                        setClickedRow(param.row.name.toLowerCase());
+                                      }}
+                                      selectionModel={state.cannabisSelection}
+                                      onSelectionModelChange={(ids) => {
+                                        dispatch({type: 'setCannabisSelection', payload: ids});
+                                      }}
+                                      rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
+                                      onClick={uploadNaturalProductsAndNavigate} />
             </Grid>
           </Grid>
         </>

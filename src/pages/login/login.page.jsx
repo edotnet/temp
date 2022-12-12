@@ -34,7 +34,7 @@ export const Login = () => {
       loginRef.current.classList.toggle('hidden');
       successRef.current.classList.toggle('open')
       setTimeout(() => {
-        navigate('/engine/search', true);
+        navigate('/engine', true);
       }, 500);
     }).catch(err => {
       setMessage('Wrong email or password, please try again.');

@@ -20,11 +20,10 @@ import {encodeQuery} from '../../../infrastructure/hooks/useApiCall';
 import { useDashboardContext } from "../../dashboard/context/useDashboarContext";
 
 const naturalProductsColumns = [
-  { field: `name`, headerName: 'Drug Name', minWidth: 150, flex: 1,
+  { field: `name`, headerName: 'Name', minWidth: 150, flex: 1,
     renderCell: (params) => (<Box sx={{display: 'flex', justifyContent: 'space-between', width: '90%'}}>
         <span className='link-btn'>{params.value}</span>
         <AvatarGroup max={2} sx={{alignSelf: 'flex-end'}}>
-          {params.row.source === 'cannabis' && <Avatar alt="Cannabis" sx={{bgcolor: 'green', width: 35, height: 35}}>C</Avatar>}
           {params.row.articles_item_only === 0 && <Avatar alt="Research" sx={{bgcolor: 'brown', width: 35, height: 35, color: 'white'}}>R</Avatar>}
         </AvatarGroup>
       </Box>
@@ -78,11 +77,11 @@ export function NaturalProductsResults(props) {
   };
   return (
     <Accordion>
-    <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel3a-content" id="panel3a-header">
-      <Typography>Natural Products</Typography>
+    <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel3a-content" id="panel3a-header" style={{display: 'flex', flexDirection: 'row', alignContent: 'center'}}>
+      {props.title}
     </AccordionSummary>
     <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
-      {props.naturalProducts.length > 0 &&
+      {props.naturalProducts && props.naturalProducts.length > 0 &&
         <DataGrid
           rows={[...props.naturalProducts].sort((a, b) => b.f_score - a.f_score)}
           columns={naturalProductsColumns}
@@ -103,7 +102,7 @@ export function NaturalProductsResults(props) {
       {/*onClick={uploadSelectedDrugs} for button */}
       <Button variant="outlined" onClick={props.onClick} className="table-footer uploadbtn">
         <img style={{paddingRight: "10px"}} src={dtiimage} alt="image"/>
-        Upload selected naturalProduct
+        Upload selected
       </Button>
     </AccordionDetails>
   </Accordion>
@@ -117,5 +116,6 @@ NaturalProductsResults.propTypes = {
   onCellClick: PropTypes.func,
   onSelectionModelChange: PropTypes.func,
   rowClassName: PropTypes.func,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  title: PropTypes.node,
 };

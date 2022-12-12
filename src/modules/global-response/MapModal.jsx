@@ -153,7 +153,7 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
             <Link
               style={{ textDecoration: 'none' }}
-              to='/engine/search'
+              to='/engine'
               state={{ searchValue: disease || data.title }}>
               <Button
                 variant='contained'

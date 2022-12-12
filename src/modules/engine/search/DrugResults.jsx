@@ -19,11 +19,10 @@ import { useDashboardContext } from "../../dashboard/context/useDashboarContext"
 import {encodeQuery} from "../../../infrastructure/hooks/useApiCall";
 
 const drugsColumns = [
-  { field: `name`, headerName: 'Drug Name', minWidth: 150, flex: 1,
+  { field: `name`, headerName: 'Name', minWidth: 150, flex: 1,
     renderCell: (params) => (<Box sx={{display: 'flex', justifyContent: 'space-between', width: '90%'}}>
       <span className='link-btn'>{params.value}</span>
         <AvatarGroup max={2} sx={{alignSelf: 'flex-end'}}>
-          {params.row.source === 'cannabis' && <Avatar alt="Cannabis" sx={{bgcolor: 'green', width: 35, height: 35}}>C</Avatar>}
           {params.row.articles_item_only === 0 && <Avatar alt="Research" sx={{bgcolor: 'brown', width: 35, height: 35, color: 'white'}}>R</Avatar>}
         </AvatarGroup>
       </Box>
@@ -70,7 +69,7 @@ export function DrugResults(props) {
   return (
     <Accordion>
     <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel3a-content" id="panel3a-header">
-      <Typography>Drug Results</Typography>
+      {props.title}
     </AccordionSummary>
     <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
       {props.drugs.length > 0 &&
@@ -113,5 +112,6 @@ DrugResults.propTypes = {
   onCellClick: PropTypes.func,
   onSelectionModelChange: PropTypes.func,
   rowClassName: PropTypes.func,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  title: PropTypes.node,
 };
