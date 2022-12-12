@@ -6,8 +6,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { numberWithCommas } from '.'
 
 const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
-  const { isOpen, cases, deaths, name: country, disease } = data
+  const { isOpen, name: country, disease } = data
   const navigate = useNavigate()
+
+  console.log('DATA ====>>>>> ',data)
 
   const showStatistic = (num, info) => (
     <>
@@ -19,6 +21,24 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
       </Typography>
     </>
   )
+
+  const generateFontSize = (cases, deaths) => {
+    const fontSize = ((cases || 0).toString().length + (deaths || 0).toString().length + 3) > 13 ? 20 : 28
+
+    return (
+      <div style={{ display: 'flex', alignItems:'center', flexWrap: 'wrap', marginBottom: 8 }}>
+        <Typography fontWeight={700} fontSize={fontSize} lineHeight={1.1} color='red'>
+          {numberWithCommas(cases || 0)}
+        </Typography>
+        <Typography fontWeight={700} fontSize={fontSize} lineHeight={1.1} sx={{ mx: 1 }}>
+          |
+        </Typography>
+        <Typography fontWeight={700} fontSize={fontSize} lineHeight={1.1} sx={{ color: '#555' }}>
+          {numberWithCommas(deaths || 0)}
+        </Typography>
+      </div>
+    )
+  }
 
   const modalCloseButton = () => (
     <IconButton
@@ -86,21 +106,45 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
                   {country}
                 </Typography>
                 <div style={{ height: 2, backgroundColor: '#000', marginBottom: 12 }}></div>
-                <Typography fontWeight={700} fontSize={26} color='red'>
-                  Current cases
-                </Typography>
-                <Typography fontWeight={700} variant='h5' lineHeight={1.1} color='red'>
-                  {numberWithCommas(data.newCases || 0)}
-                </Typography>
+                <div style={{ display: 'flex', alignItems:'center' }}>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                    24hrs 
+                  </Typography>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                    Cases
+                  </Typography>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                    &
+                  </Typography>
+                  <Typography fontWeight={700} fontSize={18}>
+                    Deaths
+                  </Typography>
+                </div>
+                {generateFontSize(data.newCases, data.newDeaths)}
+                <div style={{ display: 'flex', alignItems:'center' }}>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                    Current
+                  </Typography>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                    Cases
+                  </Typography>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                    &
+                  </Typography>
+                  <Typography fontWeight={700} fontSize={18}>
+                    Deaths
+                  </Typography>
+                </div>
+                {generateFontSize(data.lastCases28, data.lastDeaths28)}
                 <Typography variant='h6' fontWeight={700} sx={{ mt: 1 }}>
                   Historical Data
                 </Typography>
                 {showStatistic(
-                  { title: numberWithCommas(cases) },
+                  { title: numberWithCommas(data.cases) },
                   { title: 'Total cases (confirmed)' }
                 )}
                 {showStatistic(
-                  { title: numberWithCommas(deaths) },
+                  { title: numberWithCommas(data.deaths) },
                   { title: 'Total deaths (confirmed)' }
                 )}
               </>

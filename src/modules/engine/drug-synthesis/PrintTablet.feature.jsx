@@ -1,20 +1,20 @@
+import { Close } from "@mui/icons-material";
 import {
   Box,
   Button,
   Dialog,
   Divider,
-  IconButton,
-  LinearProgress,
-  MenuItem,
+  IconButton, MenuItem,
   Stack,
   TextField,
   Typography
 } from "@mui/material";
-import {ModalPaper} from "../../../infrastructure/components/ModalPaper";
-import {useState} from "react";
-import {DatePicker, DesktopDatePicker} from "@mui/x-date-pickers";
-import {Close, Folder, History, Refresh} from "@mui/icons-material";
+import { DesktopDatePicker } from "@mui/x-date-pickers";
+import { useState } from "react";
 import Automatic from '../../../assets/img/automatic.png';
+
+const tabletQuantity = [1, 10, 20, 50, 100, 500, 1000, 5000, 10000]
+
 export const PrintTabletFeature = ({drugName}) => {
   const [open, setOpen] = useState(false);
   const [numPills, setNumPills] = useState(undefined);
@@ -57,8 +57,8 @@ export const PrintTabletFeature = ({drugName}) => {
         sx={{"width": "200px", "background": "#fff", "maxWidth": "200px"}}
         label="Tablet quantity"
       >
-        {Array.from(Array(60).keys()).map((i) => (<MenuItem key={i} value={i + 1}>
-          {i + 1}
+        {tabletQuantity.map((i) => (<MenuItem key={i} value={i}>
+          {i}
         </MenuItem>))}
       </TextField>
       {/*<IconButton onClick={() => {}}>
@@ -69,8 +69,9 @@ export const PrintTabletFeature = ({drugName}) => {
     <Dialog open={open} onClose={() => setOpen(false)}>
       <IconButton sx={{position: 'absolute', right: 10, top: 0}} onClick={() => setOpen(false)}><Close /></IconButton>
       <Box sx={{p: 3,}}>
-        <Typography variant="h6" sx={{fontWeight: 700, textAlign: 'center', pb: 2}}>Personalized Prescription
-          Order</Typography>
+        <Typography variant="h6" sx={{fontWeight: 700, textAlign: 'center', pb: 2}}>
+          Delivery Order
+        </Typography>
         <Box pb={2}>
           <Stack direction="row" spacing={2}>
             <Typography variant="body1" sx={{fontWeight: 700}}>Drug Name:</Typography>
