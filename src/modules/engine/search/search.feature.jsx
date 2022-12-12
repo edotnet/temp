@@ -19,7 +19,9 @@ import { SearchInput } from './SearchInput';
 import { SectionTitle } from './SectionTitle';
 import { TargetLiterature } from './TargetLiterature';
 import CannabisPill from '../../../assets/img/cannabis-pill.png';
-const CannabisChip = () => <img src={CannabisPill} width={10} style={{transform: 'scale(5)', objectFit: 'contain', marginLeft: 10, marginRight: 10}}/>;
+import DrugPill from '../../../assets/img/drug-pill.png';
+import NPPill from '../../../assets/img/np-pill.png';
+const PillImage = ({img}) => <img src={img} width={10} style={{transform: 'scale(5)', objectFit: 'contain', marginLeft: 10, marginRight: 10}}/>;
 
 export const SearchFeature = () => {
   const {loading, data, fetch} = useApiCall(Endpoints.search.drug, 'POST', null, false);
@@ -303,7 +305,9 @@ export const SearchFeature = () => {
           <SectionTitle text="Related Remedies" />
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <DrugResults drugs={state.drugs}
+              <DrugResults
+                title={<><PillImage img={DrugPill}/> <Typography pl={2}>Drugs</Typography></>}
+                drugs={state.drugs}
                            onRowClick={(param) => {
                              drugHandleClick(param.row);
                              setClickedRow(param.row.name.toLowerCase());
@@ -315,7 +319,7 @@ export const SearchFeature = () => {
                            rowClassName={(params) => params.id === clickedRow ? 'selected-bg' : ''}
                            onClick={uploadDrugsAndNavigate} />
               <NaturalProductsResults
-                title={<Typography>Natural Products</Typography>}
+                title={<><PillImage img={NPPill}/> <Typography pl={2}>Natural Products</Typography></>}
                 naturalProducts={state.naturalProducts}
                                       onRowClick={(param) => {
                                         drugHandleClick(param.row);
@@ -330,7 +334,7 @@ export const SearchFeature = () => {
             </Grid>
             <Grid item xs={6}>
               <NaturalProductsResults
-                title={<><CannabisChip /> <Typography pl={2}>Cannabinoids</Typography></>}
+                title={<><PillImage img={CannabisPill}/> <Typography pl={2}>Cannabinoids</Typography></>}
                 naturalProducts={state.cannabis}
                                       onRowClick={(param) => {
                                         drugHandleClick(param.row);

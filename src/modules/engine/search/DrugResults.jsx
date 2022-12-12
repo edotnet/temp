@@ -69,7 +69,7 @@ export function DrugResults(props) {
   return (
     <Accordion>
     <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel3a-content" id="panel3a-header">
-      <Typography>Drug Results</Typography>
+      {props.title}
     </AccordionSummary>
     <AccordionDetails id="style-3" style={{height: "400px", overflowY: "auto"}}>
       {props.drugs.length > 0 &&
@@ -112,5 +112,6 @@ DrugResults.propTypes = {
   onCellClick: PropTypes.func,
   onSelectionModelChange: PropTypes.func,
   rowClassName: PropTypes.func,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  title: PropTypes.node,
 };
