@@ -170,7 +170,7 @@ export const SearchFeature = () => {
         }).catch(reject);
       });
     });
-  }, [state.naturalProductSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
+  }, [state.naturalProductSelection, state.cannabisSelection, state.molecules, dashboardDispatch, dashboardState.pdbid, navigate]);
 
   const uploadSelectedProtein = useCallback(() => {
     return new Promise((resolve, reject) => {

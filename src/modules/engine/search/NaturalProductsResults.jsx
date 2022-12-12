@@ -102,7 +102,7 @@ export function NaturalProductsResults(props) {
       {/*onClick={uploadSelectedDrugs} for button */}
       <Button variant="outlined" onClick={props.onClick} className="table-footer uploadbtn">
         <img style={{paddingRight: "10px"}} src={dtiimage} alt="image"/>
-        Upload selected naturalProduct
+        Upload selected
       </Button>
     </AccordionDetails>
   </Accordion>
