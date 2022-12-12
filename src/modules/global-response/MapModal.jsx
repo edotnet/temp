@@ -106,7 +106,7 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
                 <div style={{ height: 2, backgroundColor: '#000', marginBottom: 12 }}></div>
                 <div style={{ display: 'flex', alignItems:'center', flexWrap: 'wrap' }}>
                   <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
-                    {disease === 'COVID-19' ? 'Weekly' : '24hrs'}
+                    24hrs
                   </Typography>
                   <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
                     Cases
