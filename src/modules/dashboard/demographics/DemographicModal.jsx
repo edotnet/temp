@@ -178,7 +178,7 @@ export const DemographicModal = ({onClose, open, id}) => {
         <CustomTextField
           size="small"
           value={information[type]}
-          onChange={e => setInformation(prev => ({...prev, [type]: parseFloat(e.target.value)}))}/>
+          onChange={e => setInformation(prev => ({...prev, [type]: (parseFloat(e.target.value))}))}/>
         <IconButton onClick={() => setInformation(prev => ({...prev, [type]: (parseInt(prev[type]) || 0) - 1}))}>
           <Remove color="info"/>
         </IconButton>

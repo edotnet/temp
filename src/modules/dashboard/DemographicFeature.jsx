@@ -1,12 +1,12 @@
-import {Box, Button, Stack, Typography} from "@mui/material";
-import {DemographicItem} from "./DemographicItem";
-import {useState} from "react";
-import {useDashboardContext} from "./context/useDashboarContext";
-import {styled} from "@mui/material/styles";
-import {DemographicModal} from "./demographics/DemographicModal";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useState } from "react";
+import { useDashboardContext } from "./context/useDashboarContext";
+import { DemographicItem } from "./DemographicItem";
+import { DemographicModal } from "./demographics/DemographicModal";
 
 
-const PillButton = styled(Button)({
+export const PillButton = styled(Button)({
   '&.MuiButton-root': {
     borderRadius: 50,
     width: '50%',
@@ -14,7 +14,7 @@ const PillButton = styled(Button)({
     border: '1px dashed #ccc',
     paddingTop: 10,
     paddingBottom: 10,
-    float: 'left',
+    // float: 'left',
     fontSize: 12,
   },
   '&.MuiLabel': {
