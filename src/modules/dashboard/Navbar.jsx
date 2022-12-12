@@ -15,7 +15,6 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const [openProfile, setOpenProfile] = useState(false)
   const [profile, setProfile] = useState(user.user)
-  console.log('USER ====>>>>> ', user)
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);

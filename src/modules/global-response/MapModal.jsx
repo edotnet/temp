@@ -2,15 +2,12 @@ import { Close } from '@mui/icons-material'
 import { Backdrop, Button, Fade, IconButton, Modal, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import React, { memo } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { numberWithCommas } from '.'
 import { PillButton } from '../dashboard/DemographicFeature'
 
 const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
   const { isOpen, name: country, disease } = data
-  const navigate = useNavigate()
-
-  console.log('DATA ====>>>>> ',data)
 
   const showStatistic = (num, info) => (
     <>
@@ -107,9 +104,9 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
                   {country}
                 </Typography>
                 <div style={{ height: 2, backgroundColor: '#000', marginBottom: 12 }}></div>
-                <div style={{ display: 'flex', alignItems:'center' }}>
+                <div style={{ display: 'flex', alignItems:'center', flexWrap: 'wrap' }}>
                   <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
-                    24hrs 
+                    {disease === 'COVID-19' ? 'Weekly' : '24hrs'}
                   </Typography>
                   <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
                     Cases
@@ -122,7 +119,7 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
                   </Typography>
                 </div>
                 {generateFontSize(data.newCases, data.newDeaths)}
-                <div style={{ display: 'flex', alignItems:'center' }}>
+                <div style={{ display: 'flex', alignItems:'center', flexWrap: 'wrap' }}>
                   <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
                     Current
                   </Typography>
