@@ -1,17 +1,20 @@
-import { ExpandMore } from '@mui/icons-material'
+import { ExpandMore } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Checkbox,
   FormControl,
   FormControlLabel,
   FormGroup,
   FormLabel,
   TextField,
-  Typography,
-} from '@mui/material'
-import React, { memo } from 'react'
+  Typography
+} from '@mui/material';
+import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
+import React, { memo } from 'react';
+import { diseaseToColor } from '.';
+
+
 
 const MapFilter = ({ mapFilter, setMapFilter }) => {
   return (
@@ -29,6 +32,11 @@ const MapFilter = ({ mapFilter, setMapFilter }) => {
                 label={key}
                 control={
                   <Checkbox
+                    sx={{
+                      [`&, &.${checkboxClasses.checked}`]: {
+                        color: diseaseToColor(key),
+                      },
+                    }}
                     checked={value}
                     onChange={e =>
                       setMapFilter(prev => ({

@@ -26,15 +26,15 @@ export const diseaseToColor = str => {
     case 'COVID-19':
       return '#f00201'
     case 'Monkeypox':
-      return '#FEEA00'
+      return '#808080'
     case 'HIV':
       return '#FF68B4'
     case 'Marburg Virus':
       return '#A01FF0'
     case 'Ebola Virus':
       return '#000'
-    case 'Lassa Fever':
-      return '#808080'
+    // case 'Lassa Fever':
+    //   return '#808080'
     default:
       return stringToColor(str)
   }

@@ -4,7 +4,6 @@ import { numberWithCommas } from '.'
 import AddPrepaireEvent from './AddPrepaireEvent'
 import DiseaseCountry from './DiseaseCountry'
 import MapFilter from './MapFilter'
-import MapLegend from './MapLegend'
 
 const MapSidebar = ({
   diseasesData,
@@ -132,7 +131,7 @@ const MapSidebar = ({
           height: 'auto',
           maxHeight: '100vh',
         }}>
-        <MapLegend />
+        {/* <MapLegend /> */}
       </Box>
     </>
   )

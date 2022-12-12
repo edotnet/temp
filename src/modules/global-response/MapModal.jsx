@@ -4,6 +4,7 @@ import { Box } from '@mui/system'
 import React, { memo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { numberWithCommas } from '.'
+import { PillButton } from '../dashboard/DemographicFeature'
 
 const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
   const { isOpen, name: country, disease } = data
@@ -150,6 +151,10 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
               </>
             )}
           </div>
+          <PillButton 
+            sx={{ '&.MuiButton-root': {width: '100%'}, mb: 2 }}>
+            + Add National Genome Library
+          </PillButton>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
             <Link
               style={{ textDecoration: 'none' }}
