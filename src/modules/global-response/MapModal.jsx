@@ -21,10 +21,11 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
   )
 
   const generateFontSize = (cases, deaths) => {
-    const fontSize = ((cases || 0).toString().length + (deaths || 0).toString().length + 3) > 13 ? 20 : 28
+    const fontSize =
+      (cases || 0).toString().length + (deaths || 0).toString().length + 3 > 13 ? 20 : 28
 
     return (
-      <div style={{ display: 'flex', alignItems:'center', flexWrap: 'wrap', marginBottom: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', marginBottom: 8 }}>
         <Typography fontWeight={700} fontSize={fontSize} lineHeight={1.1} color='red'>
           {numberWithCommas(cases || 0)}
         </Typography>
@@ -104,14 +105,14 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
                   {country}
                 </Typography>
                 <div style={{ height: 2, backgroundColor: '#000', marginBottom: 12 }}></div>
-                <div style={{ display: 'flex', alignItems:'center', flexWrap: 'wrap' }}>
-                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr: 1 }}>
                     24hrs
                   </Typography>
-                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr: 1 }}>
                     Cases
                   </Typography>
-                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr: 1 }}>
                     &
                   </Typography>
                   <Typography fontWeight={700} fontSize={18}>
@@ -119,14 +120,14 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
                   </Typography>
                 </div>
                 {generateFontSize(data.newCases, data.newDeaths)}
-                <div style={{ display: 'flex', alignItems:'center', flexWrap: 'wrap' }}>
-                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr: 1 }}>
                     Current
                   </Typography>
-                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr: 1 }}>
                     Cases
                   </Typography>
-                  <Typography fontWeight={700} fontSize={18} sx={{ mr:1 }}>
+                  <Typography fontWeight={700} fontSize={18} sx={{ mr: 1 }}>
                     &
                   </Typography>
                   <Typography fontWeight={700} fontSize={18}>
@@ -148,8 +149,11 @@ const MapModal = ({ handlePrepaireEventDelete, data, setData }) => {
               </>
             )}
           </div>
-          <PillButton 
-            sx={{ '&.MuiButton-root': {width: '100%'}, mb: 2 }}>
+          <PillButton
+            sx={{
+              '&.MuiButton-root': { width: '100%', borderColor: '#555', color: '#5498ff' },
+              mb: 2,
+            }}>
             + Add National Genome Library
           </PillButton>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
