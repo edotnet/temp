@@ -21,6 +21,7 @@ import {Base} from "./infrastructure/authentication/Base";
 import {Signup} from "./pages/login/signup.page";
 import {Verify} from "./pages/login/verify.page";
 import {ToolsPage} from "./pages/tools/Tools.page";
+import {LucaPage} from "./pages/Luca.page";
 
 export const Router = () => (<Routes>
     <Route index element={<Navigate replace to={"/dashboard"}/>}/>
@@ -41,6 +42,7 @@ export const Router = () => (<Routes>
         <Route path="drugsynthesis" element={<DrugSynthesisFeature/>}/>
         <Route path="drug2xdl" element={<Drug2XDLFeature/>}/>
       </Route>
+      <Route path="luca" element={<LucaPage/>}/>
       <Route path="surface" element={<SurfacePage/>}/>
       <Route path="start" element={<StartView/>}/>
       {/* <Route component={NotFoundPage} />  */}

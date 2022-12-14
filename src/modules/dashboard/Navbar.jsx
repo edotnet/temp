@@ -27,14 +27,11 @@ export const Navbar = () => {
     cb();
   }
 
-  const settings = [
-    {
-      name: 'Profile', cb: () => setOpenProfile(true),
-    },
-    {
-      name: 'Logout', cb: logout,
-    },
-  ];
+  const settings = [{
+    name: 'Profile', cb: () => setOpenProfile(true),
+  }, {
+    name: 'Logout', cb: logout,
+  },];
   return <Box>
     {/* <Box component="div" className="dashboardcircle">
       <Box component="img" alt="image" className="moleculeimg" src={moleculeimg}/>
@@ -50,16 +47,19 @@ export const Navbar = () => {
             <NavLink to="/engine">SEARCH ENGINE</NavLink>
             <NavLink to="/dashboard">DRUG INTERACTION</NavLink>
             <NavLink to="/tools">TOOLS</NavLink>
-            <NavLink to="/globalresponse">
-              <img src={GlobalResponse} width={10} height={10}
-                   style={{marginTop: '-5px', marginRight: 20, transform: 'scale(3.5)'}}/>
-              GLOBAL RESPONSE AID
-            </NavLink>
+            <NavLink to="/luca">LUCA</NavLink>
             {/*<NavLink to="/surface">SURFACE</NavLink>*/}
           </nav>
         </Grid>
         <Grid flexGrow={1} item
               sx={{display: 'flex', justifyContent: 'right', alignContent: 'center', alignItems: 'center'}}>
+          <nav className="headernavlink">
+            <NavLink to="/globalresponse">
+              <img src={GlobalResponse} width={10} height={10}
+                   style={{marginTop: '-5px', marginRight: 20, transform: 'scale(3.5)'}}/>
+              GLOBAL RESPONSE AID
+            </NavLink>
+          </nav>
           <Session/>
         </Grid>
         <Grid item>
@@ -79,11 +79,9 @@ export const Navbar = () => {
               transformOrigin={{vertical: 'top', horizontal: 'right'}}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}>
-              {settings.map(({name, cb}) => (
-                <MenuItem key={name} onClick={settingClick(cb)}>
+              {settings.map(({name, cb}) => (<MenuItem key={name} onClick={settingClick(cb)}>
                   <Typography textAlign="center">{name}</Typography>
-                </MenuItem>
-              ))}
+                </MenuItem>))}
             </Menu>
           </Box>
         </Grid>
