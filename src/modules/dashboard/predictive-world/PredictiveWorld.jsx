@@ -2,7 +2,7 @@ import {useEffect, useRef} from "react";
 import './Orb.css'
 import {useDashboardContext} from "../context/useDashboarContext";
 import {fetchFromObject} from "../../../infrastructure/utils";
-import {useTheme} from "@mui/material";
+import {Stack, Typography, useTheme} from "@mui/material";
 import Orb from '../../../assets/orb.mp4';
 
 export const PredictiveWorld = () => {
@@ -220,9 +220,7 @@ export const PredictiveWorld = () => {
     const x = (scaleValue) * Math.cos(degrees_to_radians(totalDeg));
     const y = (scaleValue) * Math.sin(degrees_to_radians(totalDeg));
 
-    toolTips.current.push(
-      {x: x + 250, y: 250 + y, rXr: 36, tip: tipValue, title: tipTitle}
-    );
+    toolTips.current.push({x: x + 250, y: 250 + y, rXr: 36, tip: tipValue, title: tipTitle});
 
   }
 
@@ -270,6 +268,12 @@ export const PredictiveWorld = () => {
       }
       return <div style={{position: 'absolute', fontSize: '30px'}}><Typography>{parseFloat(state.demographicsResult[state.selectedDemographics.id].maintenanceDosage).toFixed(3)} ml/hr</Typography></div>;
     }*/
+    if (state.drugsProtein?.result?.length) {
+      return <Stack spacing={1} style={{position: 'absolute', fontSize: '30px', justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', alignContent: 'center', width: 200}}>
+        <Typography sx={{fontWeight: '700', fontSize: 18, textAlign: 'center'}}>{state.drugsProtein.bestResult.name}</Typography>
+        <Typography sx={{fontSize: 25}}>{state.drugsProtein.bestResult.meanPercentage.toFixed(2)}%</Typography>
+      </Stack>;
+    }
     if (!state.interactingMolecules.length) {
       return renderDropMolecule("1st")
     }
@@ -311,12 +315,10 @@ export const PredictiveWorld = () => {
     }
   }
 
-  return (
-    <>
+  return (<>
       <canvas ref={canvas} style={{position: 'absolute', height: 500, width: 500}} onMouseMove={handleMouseMove}/>
       <canvas ref={tooltipCanvas} style={{position: 'absolute', height: 50, width: 100, zIndex: 10}}/>
       {renderCenter()}
       <video src={Orb} autoPlay width="50%" loop style={{transform: 'scale(2.5)', zIndex: -1}}/>
-    </>
-  );
+    </>);
 }

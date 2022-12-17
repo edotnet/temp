@@ -92,7 +92,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
         console.warn(e);
       }
     }
-  }, [state.selectedDemographics])
+  }, [state.selectedDemographics, state.interactingMolecules])
 
 
   return (

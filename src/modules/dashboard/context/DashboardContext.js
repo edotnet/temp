@@ -16,7 +16,11 @@ const initialState = {
   moleculeDocking: {},
   docking: 0,
   esmfold: null,
-  alphafold: null
+  alphafold: null,
+  drugsProtein: {
+    bestResult: null,
+    result: []
+  }
 };
 
 const DashboardContext = createContext({state: initialState});
@@ -202,6 +206,10 @@ const reducer = (state, action) => {
     }),
     clean: () => initialState,
     restore: (state) => state,
+    setDrugsProtein: (drugsProtein) => ({
+      ...state,
+      drugsProtein,
+    }),
     };
 return actions[action.type](action.payload);
 }
