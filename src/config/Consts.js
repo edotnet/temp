@@ -64,6 +64,7 @@ export const Endpoints = {
     organisms: `${useApi}/proteins/organisms`,
     ESMFold: `${useApi}/proteins/esmatlasFold`,
     AlphaFold: `${useApi}/alphafold/calculate`,
+    checkAlphaFold: `${useApi}/alphafold/check`,
   },
   session: {
     list: `${Consts.API_URL}/session`,

@@ -1,5 +1,5 @@
 import {Box, CircularProgress, FormControl, InputLabel, MenuItem, Select, Stack, Typography} from '@mui/material';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useDashboardContext} from '../dashboard/context/useDashboarContext';
 import {dockingFetcher} from '../dashboard/DockingFetcher';
 import {api} from "../../infrastructure/api/instance";
@@ -10,6 +10,11 @@ export const PDBSelector = ({}) => {
   const [pdb, setPdb] = useState(null);
   const [open, setOpen] = useState(false);
   const [alphafoldLoading, setAlphafoldLoading] = useState(false);
+  const [alphafoldData, setAlphafoldData] = useState({
+    calculated: false,
+    error: false,
+  });
+
 
   const setESMFold = () => {
     if (state.organism.sequence.length > 400) {
@@ -57,6 +62,23 @@ export const PDBSelector = ({}) => {
         status = 'success';
       }
       dispatch({type: 'setAlphafold', payload: {...res.data, status}});
+    }).finally(() => {
+      setAlphafoldLoading(false);
+    });
+  }
+
+  const loadAlphaFold = () => {
+    setAlphafoldLoading(true);
+    api.post(Endpoints.proteins.checkAlphaFold, {sequence: state.organism.sequence}).then((res) => {
+      if (res.data.alphafold){
+        dispatch({type: 'setAlphafold', payload: {...res.data.alphafold, status: 'success'}});
+        setAlphafoldData({
+          calculated: res.data.calculated,
+          error: res.data.error,
+        })
+      }
+    }).finally(() => {
+      setAlphafoldLoading(false);
     });
   }
 
@@ -88,6 +110,9 @@ export const PDBSelector = ({}) => {
   useEffect(() => {
     if (!!state.organism && !!state.organism.sequence && state.organism.sequence.length <= 400) {
       loadESMFold();
+    }
+    if (state.organism && state.organism.sequence) {
+      loadAlphaFold();
     }
   }, [state.organism.sequence]);
 
@@ -144,6 +169,16 @@ export const PDBSelector = ({}) => {
     );
   }
 
+  const AlphaFoldOption = useMemo(() => {
+    return (
+      <MenuItem value={ALPHA_FOLD_PDB} key={ALPHA_FOLD_PDB} onMouseOver={() => setPdb({id: ALPHA_FOLD_PDB})} onMouseOut={() => setPdb(null)} disabled={alphafoldData.error} sx={{color: alphafoldData.error ? 'red' : 'black'}}>
+        {alphafoldLoading && <CircularProgress style={{height: 15, width: 15, marginRight: 10}}/>}
+        {!alphafoldData.calculated && '(+) '}
+        AlphaFold
+      </MenuItem>
+    )
+  }, [alphafoldData, alphafoldLoading]);
+
   return (
     <div style={{position: 'relative'}}>
       <FormControl fullWidth variant="standard">
@@ -166,9 +201,7 @@ export const PDBSelector = ({}) => {
           {!!state.organism && !!state.organism.sequence && state.organism.sequence.length <= 400 && <MenuItem value={ESM_FOLD_PDB} key={ESM_FOLD_PDB} onMouseOver={() => setPdb({id: ESM_FOLD_PDB})} onMouseOut={() => setPdb(null)}>
             {!state.esmfold && '(+)'} ESMFold
           </MenuItem>}
-          <MenuItem value={ALPHA_FOLD_PDB} key={ALPHA_FOLD_PDB} onMouseOver={() => setPdb({id: ALPHA_FOLD_PDB})} onMouseOut={() => setPdb(null)} >
-            {alphafoldLoading ? <CircularProgress style={{height: 15, width: 15, marginRight: 10}}/> : '(+)'} AlphaFold
-          </MenuItem>
+          {AlphaFoldOption}
         </Select>
       </FormControl>
       {renderBox()}
