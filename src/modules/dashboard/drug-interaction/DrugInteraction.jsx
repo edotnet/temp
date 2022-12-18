@@ -1,4 +1,4 @@
-import {Box, IconButton} from "@mui/material";
+import {Box} from "@mui/material";
 import {useDrop} from "react-dnd";
 import {memo, useEffect} from "react";
 import {useApiCall} from "../../../infrastructure/hooks/useApiCall";
@@ -7,8 +7,7 @@ import {PredictiveWorld} from "../predictive-world/PredictiveWorld";
 import {DemographicYears, Endpoints} from "../../../config/Consts";
 import {InteractingDrugsTable} from "../InteractingDrugsTable";
 import {api} from "../../../infrastructure/api/instance";
-import {Close} from "@mui/icons-material";
-import {Animation} from "./Animation";
+import {DTITable} from "../../dti/DTITable";
 
 const url = Endpoints.ml.drugInteraction;
 
@@ -37,40 +36,27 @@ export const DrugInteraction = memo(({onNewItems}) => {
   })
 
   useEffect(() => {
-    if (state.interactingMolecules.length === 2 && !state.interactingMoleculesResult) {
+    if (state.interactingMolecules.length >= 2) {
       try {
-        const smile1 = state.interactingMolecules[0].calculated_properties.SMILES;
-        const smile2 = state.interactingMolecules[1].calculated_properties.SMILES;
-        fetch(url, 'POST', {smile1, smile2})
+        fetch(url, 'POST', {
+          compounds: state.interactingMolecules.map(m => ({
+            name: m.name,
+            smiles: m.calculated_properties.SMILES
+          }))
+        }).then(r => {
+          dispatch({type: 'setInteractingMoleculesResult', payload: r.data});
+        });
       } catch (e) {
         console.log('[DRUG-INTERACTION] Wrong smiles')
       }
     }
   }, [state.interactingMolecules])
 
-  useEffect(() => {
-    if (!data || (data && 'code' in data && data.code !== 200)) {
-      console.log('[DRUG-INTERACTION] Response code is wrong')
-      return;
-    }
-    try {
-      const result = 'result' in data ? data.result : data;
-      const therapeuticEffect = {
-        label: 'Synergy',
-        value: parseFloat(result[0])
-      }
-      setTimeout(() => {
-        dispatch({type: 'setInteractingMoleculesResult', payload: therapeuticEffect});
-      }, 2000)
-    } catch (e) {
-      console.warn(e)
-    }
-  }, [data])
 
   useEffect(() => {
     if ((state.selectedDemographics && state.demographicsResult
         && (!Object.keys(state.demographicsResult).includes(state.selectedDemographics.id) || !state.demographicsResult[state.selectedDemographics.id]))
-    || (state.selectedDemographics && !state.demographicsResult)) {
+      || (state.selectedDemographics && !state.demographicsResult)) {
       try {
         const yearLabels = DemographicYears;
         const yearValues = [7.5, 20, 39, 70];
@@ -110,8 +96,12 @@ export const DrugInteraction = memo(({onNewItems}) => {
       }} id="blob-circle">
         <PredictiveWorld/>
         <Box pt={1}>
-          <InteractingDrugsTable interactingMolecules={state.interactingMolecules}/>
+          {/*<InteractingDrugsTable interactingMolecules={state.interactingMolecules}/>*/}
         </Box>
+      </Box>
+      <Box pt={4}>
+        <DTITable />
+
       </Box>
     </Box>
   );

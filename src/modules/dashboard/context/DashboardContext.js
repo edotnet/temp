@@ -93,7 +93,6 @@ const reducer = (state, action) => {
         selectedMolecule: null,
       }),
       addInteractingMolecule: (molecule) => (
-        state.interactingMolecules.length === 2 ||
         state.interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id) ?
           {...state} :
           {
@@ -113,10 +112,7 @@ const reducer = (state, action) => {
       }),
       setInteractingMoleculesResult: (interactingMoleculesResult) => ({
         ...state,
-        interactingMoleculesResult: {
-          ...interactingMoleculesResult,
-          value: interactingMoleculesResult.value.toFixed(1),
-        },
+        interactingMoleculesResult
       }),
       addProtein: (protein) => ({
         ...state,

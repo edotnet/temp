@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useReducer } from 'react';
+import {useCallback, useEffect, useReducer} from 'react';
 import axios from 'axios';
-import { Consts } from "../../config/Consts";
-import { useAuth } from "../authentication/useAuth";
+import {Consts} from "../../config/Consts";
+import {useAuth} from "../authentication/useAuth";
+
 axios.defaults.baseURL = Consts.API_URL;
 
 const initialState = {
@@ -48,12 +49,13 @@ export function encodeQuery(url) {
 
 export const useApiCall = (url, method = 'GET', body = null, autofetch = true) => {
   const controller = new AbortController();
-  const [state, dispatch] = useReducer(reducer, initialState, () => {});
+  const [state, dispatch] = useReducer(reducer, initialState, () => {
+  });
   const {user} = useAuth();
   const execute = useCallback(
-    (url, method, body=null) => {
+    (url, method, body = null) => {
       dispatch({type: 'ATTEMPT'});
-      axios({
+      const call = axios({
         method,
         url,
         data: body,
@@ -62,11 +64,12 @@ export const useApiCall = (url, method = 'GET', body = null, autofetch = true) =
           auth: user.accessToken,
           'X-API-KEY': user.user.apiKey
         }
+      });
+      call.then(res => dispatch({type: 'SUCCESS', payload: res.data}))
+      .catch((...err) => {
+        dispatch({type: 'FAILURE', payload: err.message})
       })
-        .then(res => dispatch({type: 'SUCCESS', payload: res.data}))
-        .catch((...err) => {
-          dispatch({type: 'FAILURE', payload: err.message})
-        })
+      return call;
     },
     [url, method, body],
   );

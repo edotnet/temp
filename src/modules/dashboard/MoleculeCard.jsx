@@ -17,8 +17,8 @@ export const MoleculeCard = ({molecule, onClick, onDelete, selected}) => {
     })
   })
 
-  const {hue, saturation, luminosity} = molecule.color;
-  const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.4)`;
+  /*const {hue, saturation, luminosity} = molecule.color;
+  const moleculeColor = `hsla(${hue},${saturation}%, ${luminosity}%, 0.4)`;*/
 
   const style = {
     //boxShadow: `0 4px 13px 0 ${moleculeColor}`,

@@ -29,8 +29,10 @@ export const PresentationModal = () => {
         <Close/>
       </IconButton>
       <Box p={4} pt={17}>
-        <DrugInteractionContentFirst/>
-        <DrugInteractionContent/>
+        <Box pb={2}>
+          <DrugInteractionContentFirst/>
+          <DrugInteractionContent/>
+        </Box>
         {(isDIFirstMolecule || isDI) && isDTI && <Hr block/>}
         <ThreeDMolFeature />
         <DTI/>

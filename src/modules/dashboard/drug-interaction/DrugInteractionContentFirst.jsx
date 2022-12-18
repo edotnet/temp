@@ -45,7 +45,7 @@ export const DrugInteractionContentFirst = () => {
                 molecule={drug1}
                 onClick={() => {}}
                 onDelete={() => {
-                  dispatch({type: 'removeInteractingMolecule', payload: drug1});
+                  dispatch({type: 'removeInteractingMolecule', payload: drug1.name});
                 }}
               />
             </Box>

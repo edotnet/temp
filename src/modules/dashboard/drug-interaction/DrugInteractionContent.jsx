@@ -37,17 +37,15 @@ export const DrugInteractionContent = () => {
   const navigate = useNavigate();
   const [drugInteractionsOpen, setDrugInteractionsOpen] = useState(false);
 
-  if (state.interactingMolecules.length !== 2) {
+  if (state.interactingMolecules.length < 2) {
     return null;
   }
-  const [drug1, drug2] = state.interactingMolecules;
 
-  if (!state.interactingMoleculesResult) {
+  if (state.interactingMolecules.length && !state.interactingMoleculesResult) {
     return (<>
       <Typography variant="subtitle1" gutterBottom>Drug Interaction molecules</Typography>
       <Box sx={{display: 'flex'}}>
         <CircularProgress style={{width: 100, height: 100}} color="primary" />
-        {renderPills()}
       </Box>
     </>);
   }
@@ -57,34 +55,38 @@ export const DrugInteractionContent = () => {
   };
 
   function renderPills() {
+    if (!state.interactingMoleculesResult?.bestResult){
+      return null;
+    }
+    const {name1, name2} = state.interactingMoleculesResult?.bestResult;
     return <Box sx={{px: 2, pt: 1, flexGrow: 1}}>
       <Box sx={{display: 'flex', flexDirection: 'column'}}>
         <Box sx={{pb: 1, display: 'flex', justifyContent: 'space-between', flexGrow: 1}}>
           <MoleculeCard
-            molecule={drug1}
+            molecule={{name: name1}}
             onClick={() => {
             }}
             onDelete={() => {
-              dispatch({type: 'removeInteractingMolecule', payload: drug1});
+              dispatch({type: 'removeInteractingMolecule', payload: name1});
             }}
           />
           {!!state.demographicsResult && <Stack direction="row" alignItems="center">
             <Science color="info" />
-            <Typography>{parseFloat(getMaintenanceDosage(state.demographicsResult, state.selectedDemographics.id, drug1.name)).toFixed(3)} ml/hr</Typography>
+            <Typography>{parseFloat(getMaintenanceDosage(state.demographicsResult, state.selectedDemographics.id, name1)).toFixed(3)} ml/hr</Typography>
           </Stack>}
         </Box>
         <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
           <MoleculeCard
-            molecule={drug2}
+            molecule={{name: name2}}
             onClick={() => {
             }}
             onDelete={() => {
-              dispatch({type: 'removeInteractingMolecule', payload: drug2});
+              dispatch({type: 'removeInteractingMolecule', payload: name2});
             }}
           />
           {!!state.demographicsResult && <Stack direction="row" alignItems="center">
             <Science color="info" />
-            <Typography>{parseFloat(getMaintenanceDosage(state.demographicsResult, state.selectedDemographics.id, drug2.name)).toFixed(3)} ml/hr</Typography>
+            <Typography>{parseFloat(getMaintenanceDosage(state.demographicsResult, state.selectedDemographics.id, name2)).toFixed(3)} ml/hr</Typography>
           </Stack>}
         </Box>
       </Box>
@@ -97,7 +99,7 @@ export const DrugInteractionContent = () => {
       sx={{bgcolor: '#5498ef', width: 100, height: 100}}>
       <Typography sx={{
         fontSize: 30, color: 'white', fontWeight: 500,
-      }}>{state.interactingMoleculesResult.value}%</Typography>
+      }}>{parseFloat(state.interactingMoleculesResult?.bestResult?.synergy).toFixed(1)}%</Typography>
     </Avatar></Paper>;
   }
 
@@ -138,5 +140,7 @@ export const DrugInteractionContent = () => {
 };
 
 DrugInteractionContent.propTypes = {
-  maxValue: PropTypes.func, items: PropTypes.arrayOf(PropTypes.any), data: PropTypes.any, prop3: PropTypes.func,
+  maxValue: PropTypes.func,
+  items: PropTypes.arrayOf(PropTypes.any),
+  data: PropTypes.any,
 };
