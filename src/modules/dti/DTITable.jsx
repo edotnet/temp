@@ -6,7 +6,7 @@ import {useMemo} from "react";
 export const DTITable = () => {
   const {state, dispatch} = useDashboardContext();
 
-  const {result} = state.interactingMoleculesResult;
+
   const columns = [{
     field: 'name1', headerName: 'Drug1', align: 'center'
   }, {
@@ -20,6 +20,7 @@ export const DTITable = () => {
   if (!state.interactingMoleculesResult) {
     return;
   }
+  const {result} = state.interactingMoleculesResult;
 
   return (<div style={{height: 400, width: 500}}>
     <Grid container spacing={2} ml={0} width={500}>

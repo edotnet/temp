@@ -44,6 +44,7 @@ export const DrugProperties = () => {
   if (!state.selectedMolecule) {
     return null;
   }
+  console.log(state.selectedMolecule)
   if (state.selectedMolecule.cid) {
     setTimeout(() => {
       const element = $('#container-01');
@@ -141,7 +142,7 @@ export const DrugProperties = () => {
         </IconButton>
         <Box p={2} pb={3}>
           <Box>
-            <Typography variant="subtitle1"> Drug Properties </Typography>
+            <Typography variant="subtitle1"> Properties </Typography>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
               <Box sx={{display: 'flex', justifyContent: 'space-between', width: '100%'}}>
                 <Typography sx={{color: '#383874', fontWeight: 400, fontSize: 25}} gutterBottom
