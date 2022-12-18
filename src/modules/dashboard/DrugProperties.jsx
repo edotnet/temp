@@ -2,7 +2,7 @@ import $3Dmol from '3dmol';
 import {Close} from '@mui/icons-material';
 import {Box, Grid, IconButton, Stack, Typography} from '@mui/material';
 import $ from 'jquery/dist/jquery.min.js';
-import {Fragment} from 'react';
+import {Fragment, useMemo} from 'react';
 import {CopyComponent} from '../../infrastructure/components/Copy.component';
 import {Hr} from '../../infrastructure/components/Hr.component';
 import {ModalPaper} from '../../infrastructure/components/ModalPaper';
@@ -41,16 +41,20 @@ const naturalProductKeys = [
 
 export const DrugProperties = () => {
   const {state, dispatch} = useDashboardContext();
+
+
+  const cid = useMemo( () => state.selectedMolecule && (state.selectedMolecule.cid || state.selectedMolecule.calculated_properties.cid),
+    [state.selectedMolecule]);
+
   if (!state.selectedMolecule) {
     return null;
   }
-  console.log(state.selectedMolecule)
-  if (state.selectedMolecule.cid) {
+  if (cid) {
     setTimeout(() => {
       const element = $('#container-01');
       const config = {backgroundColor: 'white'};
       const viewer = $3Dmol.createViewer(element, config);
-      $3Dmol.download(`cid:${state.selectedMolecule.cid}`, viewer, {}, function () {
+      $3Dmol.download(`cid:${cid}`, viewer, {}, function () {
         viewer.setStyle({}, {stick: {}});
         viewer.render();
       });
@@ -167,7 +171,7 @@ export const DrugProperties = () => {
           {renderToxicity()}
           <AdverseEffectsInfo />
           <Hr />
-          {!!state.selectedMolecule.cid && <div id="container-01" className="mol-container"></div>}
+          {!!cid && <div id="container-01" className="mol-container"></div>}
         </Box>
       </ModalPaper>
     </Box>
