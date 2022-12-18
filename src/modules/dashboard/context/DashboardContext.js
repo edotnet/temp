@@ -5,6 +5,7 @@ const initialState = {
   molecules: [],
   selectedMolecule: null,
   interactingMolecules: [],
+  interactingMoleculesLoading: false,
   interactingMoleculesResult: null,
   protein: null,
   organism: null,
@@ -69,8 +70,10 @@ const reducer = (state, action) => {
           ...state,
           molecules: state.molecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
           interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
+          interactingMoleculesLoading: true,
           selectedMolecule: state.selectedMolecule && state.selectedMolecule.drugbank_id === molecule.drugbank_id ? null : state.selectedMolecule,
           customPdbs,
+
         });
       },
       cleanMolecules: () => ({
@@ -93,12 +96,12 @@ const reducer = (state, action) => {
         selectedMolecule: null,
       }),
       addInteractingMolecule: (molecule) => (
-        state.interactingMolecules.length === 2 ||
         state.interactingMolecules.map(mol => mol.drugbank_id).includes(molecule.drugbank_id) ?
           {...state} :
           {
             ...state,
             interactingMolecules: [...state.interactingMolecules, molecule],
+            interactingMoleculesLoading: true,
           }
       ),
       resetInteractingMolecules: () => ({
@@ -109,14 +112,13 @@ const reducer = (state, action) => {
       removeInteractingMolecule: (molecule) => ({
         ...state,
         interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
-        interactingMoleculesResult: null,
+        interactingMoleculesResult: state.interactingMolecules.length < 2 ? null : state.interactingMoleculesResult,
+        interactingMoleculesLoading: state.interactingMolecules.length < 2 ? false : state.interactingMoleculesLoading,
       }),
       setInteractingMoleculesResult: (interactingMoleculesResult) => ({
         ...state,
-        interactingMoleculesResult: {
-          ...interactingMoleculesResult,
-          value: interactingMoleculesResult.value.toFixed(1),
-        },
+        interactingMoleculesResult,
+        interactingMoleculesLoading: false,
       }),
       addProtein: (protein) => ({
         ...state,

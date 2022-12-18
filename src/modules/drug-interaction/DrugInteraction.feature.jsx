@@ -51,12 +51,12 @@ export const DrugInteractionFeature = () => {
   ];
 
   useEffect(() => {
-    if (state.interactingMolecules.length !== 2) {
+    if (state.interactingMolecules.length < 2) {
       return;
     }
     try {
-      const smile1 = state.interactingMolecules[0].calculated_properties.SMILES;
-      const smile2 = state.interactingMolecules[1].calculated_properties.SMILES;
+      const smile1 = state.interactingMoleculesResult.bestResult.smiles1;
+      const smile2 = state.interactingMoleculesResult.bestResult.smiles2;
       fetch(url, 'POST', {smile1, smile2});
     } catch (e) {
       console.log('[DRUG-INTERACTION] Wrong smiles');
