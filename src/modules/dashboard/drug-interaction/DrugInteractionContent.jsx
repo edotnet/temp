@@ -1,22 +1,10 @@
 import {ArrowRight, Close, Science} from '@mui/icons-material';
-import {
-  Avatar,
-  Box,
-  CircularProgress,
-  ClickAwayListener,
-  IconButton,
-  Paper,
-  Portal,
-  Stack,
-  Typography,
-} from '@mui/material';
+import {Avatar, Box, CircularProgress, IconButton, Paper, Stack, Typography,} from '@mui/material';
 import * as PropTypes from 'prop-types';
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Endpoints} from '../../../config/Consts';
 import {ModalPaper} from '../../../infrastructure/components/ModalPaper';
 import {PrimaryButton} from '../../../infrastructure/components/PrimaryButton';
-import {useApiCall} from '../../../infrastructure/hooks/useApiCall';
 import {DrugInteractionFeature} from '../../drug-interaction/DrugInteraction.feature';
 import {useDashboardContext} from '../context/useDashboarContext';
 import {MoleculeCard} from '../MoleculeCard';
@@ -41,11 +29,12 @@ export const DrugInteractionContent = () => {
     return null;
   }
 
-  if (state.interactingMolecules.length && !state.interactingMoleculesResult) {
+  if ((state.interactingMolecules.length && !state.interactingMoleculesResult)
+    || state.interactingMoleculesLoading) {
     return (<>
       <Typography variant="subtitle1" gutterBottom>Drug Interaction molecules</Typography>
       <Box sx={{display: 'flex'}}>
-        <CircularProgress style={{width: 100, height: 100}} color="primary" />
+        <CircularProgress style={{width: 100, height: 100}} color="primary"/>
       </Box>
     </>);
   }
@@ -55,7 +44,7 @@ export const DrugInteractionContent = () => {
   };
 
   function renderPills() {
-    if (!state.interactingMoleculesResult?.bestResult){
+    if (!state.interactingMoleculesResult?.bestResult) {
       return null;
     }
     const {name1, name2} = state.interactingMoleculesResult?.bestResult;
@@ -71,7 +60,7 @@ export const DrugInteractionContent = () => {
             }}
           />
           {!!state.demographicsResult && <Stack direction="row" alignItems="center">
-            <Science color="info" />
+            <Science color="info"/>
             <Typography>{parseFloat(getMaintenanceDosage(state.demographicsResult, state.selectedDemographics.id, name1)).toFixed(3)} ml/hr</Typography>
           </Stack>}
         </Box>
@@ -85,7 +74,7 @@ export const DrugInteractionContent = () => {
             }}
           />
           {!!state.demographicsResult && <Stack direction="row" alignItems="center">
-            <Science color="info" />
+            <Science color="info"/>
             <Typography>{parseFloat(getMaintenanceDosage(state.demographicsResult, state.selectedDemographics.id, name2)).toFixed(3)} ml/hr</Typography>
           </Stack>}
         </Box>
@@ -106,7 +95,7 @@ export const DrugInteractionContent = () => {
   return (<>
     <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
       <Typography variant="subtitle1" gutterBottom>Molecule Synergy probability</Typography>
-      <PrimaryButton onClick={_onDrugToXDL} title="to XDL" endIcon={<ArrowRight />} />
+      <PrimaryButton onClick={_onDrugToXDL} title="to XDL" endIcon={<ArrowRight/>}/>
     </Box>
     <Box sx={{display: 'flex'}}>
       {renderPercentage()}
@@ -120,10 +109,11 @@ export const DrugInteractionContent = () => {
       zIndex: 10,
     }}>
       <ModalPaper sx={{width: '50vw', overflow: 'scroll', display: drugInteractionsOpen ? 'block' : 'none'}}>
-        <IconButton sx={{position: 'absolute', top: 0, right: 0}} size="large" onClick={() => setDrugInteractionsOpen(false)}>
-          <Close />
+        <IconButton sx={{position: 'absolute', top: 0, right: 0}} size="large"
+                    onClick={() => setDrugInteractionsOpen(false)}>
+          <Close/>
         </IconButton>
-        <DrugInteractionFeature />
+        <DrugInteractionFeature/>
       </ModalPaper>
     </Box>
 

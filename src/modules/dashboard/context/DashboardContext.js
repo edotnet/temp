@@ -5,6 +5,7 @@ const initialState = {
   molecules: [],
   selectedMolecule: null,
   interactingMolecules: [],
+  interactingMoleculesLoading: false,
   interactingMoleculesResult: null,
   protein: null,
   organism: null,
@@ -69,8 +70,10 @@ const reducer = (state, action) => {
           ...state,
           molecules: state.molecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
           interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
+          interactingMoleculesLoading: true,
           selectedMolecule: state.selectedMolecule && state.selectedMolecule.drugbank_id === molecule.drugbank_id ? null : state.selectedMolecule,
           customPdbs,
+
         });
       },
       cleanMolecules: () => ({
@@ -98,6 +101,7 @@ const reducer = (state, action) => {
           {
             ...state,
             interactingMolecules: [...state.interactingMolecules, molecule],
+            interactingMoleculesLoading: true,
           }
       ),
       resetInteractingMolecules: () => ({
@@ -108,11 +112,13 @@ const reducer = (state, action) => {
       removeInteractingMolecule: (molecule) => ({
         ...state,
         interactingMolecules: state.interactingMolecules.filter(mol => mol.drugbank_id !== molecule.drugbank_id),
-        interactingMoleculesResult: null,
+        interactingMoleculesResult: state.interactingMolecules.length < 2 ? null : state.interactingMoleculesResult,
+        interactingMoleculesLoading: state.interactingMolecules.length < 2 ? false : state.interactingMoleculesLoading,
       }),
       setInteractingMoleculesResult: (interactingMoleculesResult) => ({
         ...state,
-        interactingMoleculesResult
+        interactingMoleculesResult,
+        interactingMoleculesLoading: false,
       }),
       addProtein: (protein) => ({
         ...state,

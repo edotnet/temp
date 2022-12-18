@@ -99,7 +99,7 @@ export const DrugInteraction = memo(({onNewItems}) => {
           {/*<InteractingDrugsTable interactingMolecules={state.interactingMolecules}/>*/}
         </Box>
       </Box>
-      <Box pt={4}>
+      <Box pt={4} width={500}>
         <DTITable />
 
       </Box>
